@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>VRC_startup</class>
+ <widget class="QWidget" name="VRC_startup">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>234</width>
+    <height>210</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>234</width>
+    <height>210</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>234</width>
+    <height>210</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(121, 121, 121);</string>
+  </property>
+  <layout class="QFormLayout" name="formLayout">
+   <item row="0" column="0" colspan="2">
+    <widget class="QLabel" name="Title">
+     <property name="font">
+      <font>
+       <family>Arial Black</family>
+       <pointsize>14</pointsize>
+       <weight>10</weight>
+       <italic>false</italic>
+       <bold>false</bold>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 87 14pt &quot;Arial Black&quot;;
+background-color: rgba(86, 81, 100, 200);
+color: rgb(255, 255, 255);
+border-radius: 3px;
+border: 2px solid rgb(27, 29, 35);
+padding-left: 5px;</string>
+     </property>
+     <property name="text">
+      <string>VRC PCC Test Tool</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="0" colspan="2">
+    <widget class="QLabel" name="COM_Port_Label">
+     <property name="styleSheet">
+      <string notr="true">font: 87 12pt &quot;Arial Black&quot;;
+color: rgb(255, 255, 255);
+padding-left: 3px;
+</string>
+     </property>
+     <property name="text">
+      <string>COM Port</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="0" colspan="2">
+    <widget class="QComboBox" name="COM_Port_comboBox">
+     <property name="styleSheet">
+      <string notr="true">font: 12pt &quot;Arial Narrow&quot;;
+background-color: rgb(235, 235, 235);</string>
+     </property>
+     <property name="currentText">
+      <string extracomment="COM Port"/>
+     </property>
+     <property name="maxCount">
+      <number>10</number>
+     </property>
+    </widget>
+   </item>
+   <item row="3" column="0" colspan="2">
+    <widget class="QLabel" name="Baud_Rate_Label">
+     <property name="styleSheet">
+      <string notr="true">font: 87 12pt &quot;Arial Black&quot;;
+color: rgb(255, 255, 255);
+padding-left: 3px;
+</string>
+     </property>
+     <property name="text">
+      <string>Baud Rate</string>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" colspan="2">
+    <widget class="QComboBox" name="Baud_Rate_comboBox">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 12pt &quot;Arial Narrow&quot;;
+background-color: rgb(235, 235, 235);</string>
+     </property>
+     <property name="currentText">
+      <string extracomment="COM Port">115200</string>
+     </property>
+     <property name="maxCount">
+      <number>10</number>
+     </property>
+     <item>
+      <property name="text">
+       <string>115200</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2">
+    <widget class="QPushButton" name="Connect_Button">
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>35</height>
+      </size>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">font: 87 12pt &quot;Arial Black&quot;;
+background-color: rgb(255, 85, 0);
+border-radius: 5px;
+padding-left: 5px;
+</string>
+     </property>
+     <property name="text">
+      <string>Connect!</string>
+     </property>
+     <property name="checkable">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

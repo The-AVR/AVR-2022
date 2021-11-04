@@ -1,0 +1,3 @@
+[submodule "PCC/ControlSoftware/libraries/Queue"]
+	path = PCC/ControlSoftware/libraries/Queue
+	url = https://github.com/SMFSW/Queue

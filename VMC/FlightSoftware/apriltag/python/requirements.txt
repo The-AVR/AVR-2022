@@ -1,0 +1,6 @@
+colored==1.4.2
+loguru==0.5.3
+numpy==1.19.5
+paho-mqtt==1.5.1
+setproctitle==1.2.2
+transforms3d==0.3.1

@@ -1,0 +1,137 @@
+diff --git a/src/modules/mavlink/mavlink_bridge_header.h b/src/modules/mavlink/mavlink_bridge_header.h
+index d9c1a66..2f058d4 100644
+--- a/src/modules/mavlink/mavlink_bridge_header.h
++++ b/src/modules/mavlink/mavlink_bridge_header.h
+@@ -86,7 +86,7 @@ void mavlink_end_uart_send(mavlink_channel_t chan, int length);
+ extern mavlink_status_t *mavlink_get_channel_status(uint8_t chan);
+ extern mavlink_message_t *mavlink_get_channel_buffer(uint8_t chan);
+ 
+-#include <v2.0/standard/mavlink.h>
++#include <v2.0/bell/mavlink.h>
+ 
+ __END_DECLS
+ 
+diff --git a/src/modules/mavlink/mavlink_messages.cpp b/src/modules/mavlink/mavlink_messages.cpp
+index 61a55b8..aed0a3a 100644
+--- a/src/modules/mavlink/mavlink_messages.cpp
++++ b/src/modules/mavlink/mavlink_messages.cpp
+@@ -54,6 +54,8 @@
+ #include <systemlib/mavlink_log.h>
+ #include <math.h>
+ 
++#include <v2.0/bell/mavlink.h>
++
+ #include <uORB/topics/actuator_armed.h>
+ #include <uORB/topics/actuator_controls.h>
+ #include <uORB/topics/actuator_outputs.h>
+diff --git a/src/modules/mavlink/mavlink_receiver.cpp b/src/modules/mavlink/mavlink_receiver.cpp
+index d6090fa..b79825c 100644
+--- a/src/modules/mavlink/mavlink_receiver.cpp
++++ b/src/modules/mavlink/mavlink_receiver.cpp
+@@ -245,6 +245,10 @@ MavlinkReceiver::handle_message(mavlink_message_t *msg)
+ 		handle_message_debug_float_array(msg);
+ 		break;
+ 
++	case MAVLINK_MSG_ID_HIL_GPS_HEADING:
++		handle_message_hil_gps_heading(msg);
++		break;
++
+ 	default:
+ 		break;
+ 	}
+@@ -279,7 +283,7 @@ MavlinkReceiver::handle_message(mavlink_message_t *msg)
+ 	}
+ 
+ 
+-	if (_mavlink->get_hil_enabled() || (_mavlink->get_use_hil_gps() && msg->sysid == mavlink_system.sysid)) {
++	if (_mavlink->get_hil_enabled() || (_mavlink->get_use_hil_gps())) {
+ 		switch (msg->msgid) {
+ 		case MAVLINK_MSG_ID_HIL_GPS:
+ 			handle_message_hil_gps(msg);
+@@ -2126,6 +2130,44 @@ MavlinkReceiver::handle_message_hil_gps(mavlink_message_t *msg)
+ 	_gps_pub.publish(hil_gps);
+ }
+ 
++void
++MavlinkReceiver::handle_message_hil_gps_heading(mavlink_message_t *msg)
++{
++	mavlink_hil_gps_heading_t gps;
++	mavlink_msg_hil_gps_heading_decode(msg, &gps);
++
++	const uint64_t timestamp = hrt_absolute_time();
++
++	struct vehicle_gps_position_s hil_gps = {};
++
++	hil_gps.timestamp_time_relative = 0;
++	hil_gps.time_utc_usec = gps.time_usec;
++
++	hil_gps.timestamp = timestamp;
++	hil_gps.lat = gps.lat;
++	hil_gps.lon = gps.lon;
++	hil_gps.alt = gps.alt;
++	hil_gps.eph = (float)gps.eph * 1e-2f; // from cm to m
++	hil_gps.epv = (float)gps.epv * 1e-2f; // from cm to m
++
++	hil_gps.s_variance_m_s = 0.1f;
++
++	hil_gps.vel_m_s = (float)gps.vel * 1e-2f; // from cm/s to m/s
++	hil_gps.vel_n_m_s = gps.vn * 1e-2f; // from cm to m
++	hil_gps.vel_e_m_s = gps.ve * 1e-2f; // from cm to m
++	hil_gps.vel_d_m_s = gps.vd * 1e-2f; // from cm to m
++	hil_gps.vel_ned_valid = true;
++	hil_gps.cog_rad = ((gps.cog == 65535) ? NAN : wrap_2pi(math::radians(gps.cog * 1e-2f)));
++
++	hil_gps.fix_type = gps.fix_type;
++	hil_gps.satellites_used = gps.satellites_visible;  //TODO: rename mavlink_hil_gps_t sats visible to used?
++
++	hil_gps.heading = ((gps.heading == 65535) ? NAN : wrap_2pi(math::radians(gps.heading * 1e-2f)));
++	hil_gps.heading_offset = 0;
++
++	_gps_pub.publish(hil_gps);
++}
++
+ void
+ MavlinkReceiver::handle_message_follow_target(mavlink_message_t *msg)
+ {
+@@ -2646,6 +2688,20 @@ MavlinkReceiver::Run()
+ 							_mavlink->set_proto_version(2);
+ 						}
+ 
++						if (msg.msgid)
++						{
++							debug_key_value_s debug_topic{};
++
++							char test[10] = "mav_recv2";
++
++							debug_topic.timestamp = hrt_absolute_time();
++							memcpy(debug_topic.key, test, sizeof(debug_topic.key));
++							debug_topic.key[sizeof(debug_topic.key) - 1] = '\0'; // enforce null termination
++							debug_topic.value = float(msg.msgid);//pointer inside handle_msg
++
++							_debug_key_value_pub.publish(debug_topic);
++						}
++
+ 						/* handle generic messages and commands */
+ 						handle_message(&msg);
+ 
+diff --git a/src/modules/mavlink/mavlink_receiver.h b/src/modules/mavlink/mavlink_receiver.h
+index 1b90517..bba5f8e 100644
+--- a/src/modules/mavlink/mavlink_receiver.h
++++ b/src/modules/mavlink/mavlink_receiver.h
+@@ -98,6 +98,8 @@
+ #include <uORB/topics/vehicle_status.h>
+ #include <uORB/topics/vehicle_trajectory_waypoint.h>
+ 
++#include <v2.0/bell/mavlink_msg_hil_gps_heading.h>
++
+ class Mavlink;
+ 
+ class MavlinkReceiver : public ModuleParams
+@@ -142,6 +144,7 @@ private:
+ 	void handle_message_gps_rtcm_data(mavlink_message_t *msg);
+ 	void handle_message_heartbeat(mavlink_message_t *msg);
+ 	void handle_message_hil_gps(mavlink_message_t *msg);
++	void handle_message_hil_gps_heading(mavlink_message_t *msg);
+ 	void handle_message_hil_optical_flow(mavlink_message_t *msg);
+ 	void handle_message_hil_sensor(mavlink_message_t *msg);
+ 	void handle_message_hil_state_quaternion(mavlink_message_t *msg);

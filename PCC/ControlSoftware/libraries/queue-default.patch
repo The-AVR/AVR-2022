@@ -1,0 +1,12 @@
+diff --git a/src/cppQueue.h b/src/cppQueue.h
+index 4b71847..b701f28 100755
+--- a/src/cppQueue.h
++++ b/src/cppQueue.h
+@@ -50,6 +50,7 @@ public:
+ 	**	\param [in] overwrite - Overwrite previous records when queue is full
+ 	**	\return nothing
+ 	**/
++	cppQueue() = default;
+ 	cppQueue(const uint16_t size_rec, const uint16_t nb_recs=20, const cppQueueType type=FIFO, const bool overwrite=false);
+ 
+ 	/*!	\brief cppQueue destructor: release dynamically allocated queue
