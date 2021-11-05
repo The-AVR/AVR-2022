@@ -1,19 +1,17 @@
 import asyncio
-import queue
 import json
-from typing import Any, Callable, Dict
+import queue
+from typing import Any
 
-from loguru import logger
 import paho.mqtt.client as mqtt
-from setproctitle import setproctitle
-
-
+from loguru import logger
 from mavsdk import System
 
 try:
-    from fcc_library import FCC, PyMAVLinkAgent # type: ignore
+    from fcc_library import FCC, PyMAVLinkAgent  # type: ignore
 except ImportError:
     from .fcc_library import FCC, PyMAVLinkAgent
+
 
 class FCCModule(object):
     def __init__(self):
@@ -45,7 +43,7 @@ class FCCModule(object):
 
     def on_message(self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage):
         try:
-            #logger.debug(f"{msg.topic}: {str(msg.payload)}")
+            # logger.debug(f"{msg.topic}: {str(msg.payload)}")
             if msg.topic in self.mqtt_topics.keys():
                 data = json.loads(msg.payload)
                 self.mqtt_topics[msg.topic].put(data)
@@ -64,8 +62,7 @@ class FCCModule(object):
             logger.debug(f"FCCModule: Subscribed to: {topic}")
             client.subscribe(topic)
 
-
-     # @decorators.async_try_except()
+    # @decorators.async_try_except()
     async def run(self) -> None:
         """
         Main entry point.
@@ -105,9 +102,8 @@ class FCCModule(object):
         while True:
             await asyncio.sleep(3)
 
-if __name__ == "__main__":
-    setproctitle("FlightControlModule")
 
+if __name__ == "__main__":
     fcc = FCCModule()
     loop = asyncio.get_event_loop()
     loop.run_until_complete(fcc.run())

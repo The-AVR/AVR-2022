@@ -19,9 +19,9 @@ mkdir -p build
 mkdir -p target
 cd "$basedir/build"
 
-echo "--- Cloning MAVLink"
-mavlinkdir="$basedir/build/mavlink"
-git clone https://github.com/mavlink/mavlink.git "$mavlinkdir" --recursive
+echo "--- Cloning pymavlink"
+pymavlinkdir="$basedir/build/pymavlink"
+git clone https://github.com/ardupilot/pymavlink "$pymavlinkdir"
 
 echo "--- Creating Python venv"
 deactivate || true
@@ -29,7 +29,7 @@ rm -rf .tmpvenv/
 python3 -m venv .tmpvenv
 source .tmpvenv/bin/activate
 python3 -m pip install pip wheel --upgrade
-python3 -m pip install -r "$mavlinkdir/pymavlink/requirements.txt"
+python3 -m pip install -r "$pymavlinkdir/requirements.txt"
 
 echo "--- Cloning PX4 $PX4_VERSION"
 cd "$basedir/build"
@@ -43,36 +43,37 @@ git apply "$basedir/hil_gps_heading_$PX4_VERSION.patch"
 
 echo "--- Injecting Bell MAVLink message"
 cp "$basedir/bell.xml" "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/bell.xml"
-cd "$mavlinkdir"
+cd "$pymavlinkdir/.."
 python3 -m pymavlink.tools.mavgen --lang=C --wire-protocol=2.0 --output="$px4dir/mavlink/include/mavlink/v2.0/" "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/bell.xml"
 cd "$px4dir"
 
-# changes need to be committeed to build
+# changes need to be committed to build
 git add . 
 git commit -m "Local commit to facilitate build"
 
-echo "--- Copying MAVLink dialect"
-# need to match the dialect used by the FCC and pymavlink, otherwise we'll have a bad time
-python3 -m pip install -r "$basedir/../vmc/flight_control_module/requirements.txt"
+# echo "--- Copying MAVLink dialect"
+# cp "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/bell.xml" "$basedir/target/bell.xml"
+# cp "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/common.xml" "$basedir/target/common.xml"
+# cp "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/minimal.xml" "$basedir/target/minimal.xml"
 
-mkdir -p "$basedir/target"
-py=$(ls "$basedir/build/.tmpvenv/lib/")
-cp "$basedir/build/.tmpvenv/lib/$py/site-packages/pymavlink/message_definitions/v1.0/common.xml" "$basedir/target/common.xml"
-cp "$basedir/build/.tmpvenv/lib/$py/site-packages/pymavlink/message_definitions/v1.0/minimal.xml" "$basedir/target/minimal.xml"
-cp "$basedir/bell.xml" "$basedir/target/bell.xml"
+# echo "--- Generating Python MAVLink code"
+# cd "$pymavlinkdir/.."
+# python3 -m pymavlink.tools.mavgen --lang=Python --wire-protocol=2.0 --output="$basedir/target/bell.py" "$basedir/target/bell.xml"
+# python3 -m pymavlink.tools.mavgen --lang=Python --wire-protocol=2.0 --output="$basedir/target/common.py" "$basedir/target/common.xml"
+# python3 -m pymavlink.tools.mavgen --lang=Python --wire-protocol=2.0 --output="$basedir/target/minimal.py" "$basedir/target/minimal.xml"
 
-# generate Python code
-echo "--- Generating Python MAVLink code"
-cd "$mavlinkdir"
-python3 -m pymavlink.tools.mavgen --lang=Python --wire-protocol=2.0 --output="$basedir/target/bell.py" "$basedir/target/bell.xml"
-python3 -m pymavlink.tools.mavgen --lang=Python --wire-protocol=2.0 --output="$basedir/target/common.py" "$basedir/target/common.xml"
-python3 -m pymavlink.tools.mavgen --lang=Python --wire-protocol=2.0 --output="$basedir/target/minimal.py" "$basedir/target/minimal.xml"
+# echo "--- Generating Wireshark MAVLink Lua plugins"
+# # https://mavlink.io/en/guide/wireshark.html
+# python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output="$basedir/target/bell.lua" "$basedir/target/bell.xml"
+# python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output="$basedir/target/common.lua" "$basedir/target/common.xml"
+# python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output="$basedir/target/minimal.lua" "$basedir/target/minimal.xml"
 
-echo "--- Generating Wireshark MAVLink Lua plugins"
-# https://mavlink.io/en/guide/wireshark.html
-python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output="$basedir/target/bell.lua" "$basedir/target/bell.xml"
-python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output="$basedir/target/common.lua" "$basedir/target/common.xml"
-python3 -m pymavlink.tools.mavgen --lang=WLua --wire-protocol=2.0 --output="$basedir/target/minimal.lua" "$basedir/target/minimal.xml"
+echo "--- Generating pymavlink package"
+cd "$pymavlinkdir"
+mkdir -p message_definitions/v1.0
+cp -r "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/" message_definitions/v1.0/
+python3 setup.py bdist_wheel
+cp dist/* "$basedir/target/"
 
 cd "$px4dir"
 base_docker_cmd="docker run --rm -w \"$px4dir\" --volume=\"$px4dir\":\"$px4dir\":rw px4io/px4-dev-nuttx-focal:latest /bin/bash -c"
@@ -98,8 +99,6 @@ cd "$basedir"
 deactivate
 
 echo "--- Copying outputs"
-cp target/*.xml ../VMC/FlightSoftware/fcc/mavlink/
-cp target/*.py ../VMC/FlightSoftware/fcc/mavlink/
-cp target/*.lua ../VMC/FlightSoftware/fcc/mavlink/
+cp -r target/ ../VMC/FlightSoftware/fcc/
 
 cd "$startdir"

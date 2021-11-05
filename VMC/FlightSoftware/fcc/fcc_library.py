@@ -230,7 +230,7 @@ class FCC(MAVMQTTBase):
         async for battery in self.drone.telemetry.battery():
 
             update = {}
-            update["voltage"] = battery.voltage_v * 4 #bc 4 cell
+            update["voltage"] = battery.voltage_v * 4  # bc 4 cell
             # TODO see if mavsdk supports battery current
             # TODO see is mavsdk supports power draw
             update["soc"] = battery.remaining_percent * 100.0
@@ -524,9 +524,7 @@ class FCC(MAVMQTTBase):
                 """
                 try:
                     await asyncio.wait_for(task(**payload), timeout=self.timeout)
-                    self._publish_event(
-                        "request_" + name + "_completed_event"
-                    )
+                    self._publish_event("request_" + name + "_completed_event")
                     # Logging.normal(prefix, f"Task '{name}' returned")
                     self.currently_running_task = None
 
@@ -1056,13 +1054,13 @@ class PyMAVLinkAgent(MAVMQTTBase):
             the last time statistics were printed.
             """
             if time.time() - last_print_time > 1:
-                #logger.debug(f"Number of mocap messages {num_mocaps}")
+                # logger.debug(f"Number of mocap messages {num_mocaps}")
                 self.mqtt_client.publish(
-                f"{self.topic_prefix}/hil_gps/stats",
-                json.dumps({"num_frames":num_mocaps}),
-                retain=False,
-                qos=0,
-            )
+                    f"{self.topic_prefix}/hil_gps/stats",
+                    json.dumps({"num_frames": num_mocaps}),
+                    retain=False,
+                    qos=0,
+                )
                 return time.time()
             return last_print_time
 
@@ -1079,10 +1077,14 @@ class PyMAVLinkAgent(MAVMQTTBase):
             hilgps["fix_type"] = int(mocap_msg["fix_type"])
             hilgps["lat"] = int(mocap_msg["lat"])
             hilgps["lon"] = int(mocap_msg["lon"])
-            hilgps["alt"] = int(mocap_msg["alt"])  
-            hilgps["eph"] = int(mocap_msg["eph"])  # horizontal dilution of precision in ?
-            hilgps["epv"] = int(mocap_msg["epv"])  # vertical duilution of precision in ?
-            hilgps["vel"] = int(mocap_msg["vel"] )
+            hilgps["alt"] = int(mocap_msg["alt"])
+            hilgps["eph"] = int(
+                mocap_msg["eph"]
+            )  # horizontal dilution of precision in ?
+            hilgps["epv"] = int(
+                mocap_msg["epv"]
+            )  # vertical duilution of precision in ?
+            hilgps["vel"] = int(mocap_msg["vel"])
             hilgps["v_north"] = int(mocap_msg["vn"])
             hilgps["v_east"] = int(mocap_msg["ve"])
             hilgps["v_down"] = int(mocap_msg["vd"])

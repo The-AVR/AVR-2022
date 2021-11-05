@@ -15,7 +15,7 @@ services:
       - "18830:18830"
     restart: on-failure
     volumes:
-      - ./vmc/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
 
   fcc:
     depends_on:
@@ -60,5 +60,5 @@ services:
   # sandbox:
   #   depends_on:
   #     - mqtt
-  #   build: vrc_sandbox
+  #   build: sandbox
   #   restart: on-failure

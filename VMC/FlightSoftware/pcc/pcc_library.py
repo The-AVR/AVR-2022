@@ -4,8 +4,8 @@ import time
 from struct import pack
 from typing import Any, List, Literal, Union
 
-from loguru import logger
 import serial
+from loguru import logger
 
 
 class VRC_Peripheral(object):
@@ -54,7 +54,7 @@ class VRC_Peripheral(object):
         # wrgb + code = 5
         if len(wrgb) != 4:
             wrgb = [0, 0, 0, 0]
-            
+
         for i, color in enumerate(wrgb):
             if not isinstance(color, int) or color > 255 or color < 0:
                 wrgb[i] = 0
@@ -89,7 +89,9 @@ class VRC_Peripheral(object):
             logger.debug("VRC_Peripheral serial data: ")
             logger.debug(data)
 
-    def set_servo_open_close(self, servo: int, action: Literal["open", "close"]) -> None:
+    def set_servo_open_close(
+        self, servo: int, action: Literal["open", "close"]
+    ) -> None:
         valid_command = False
 
         command = self.commands["SET_SERVO_OPEN_CLOSE"]

@@ -1,18 +1,16 @@
-# python standard library
+import json
 import time
 from math import pi
-import json
 
-# pip installed packages
 import numpy as np
 import transforms3d as t3d
-from colored import fore, back, style
 from loguru import logger
 
 try:
-    from t265_library import T265 # type: ignore
+    from t265_library import T265  # type: ignore
 except ImportError:
     from .t265_library import T265
+
 
 class T265CoordinateTransformation(object):
     """
@@ -21,7 +19,7 @@ class T265CoordinateTransformation(object):
     """
 
     def __init__(self):
-        self.tm = dict()
+        self.tm = {}
 
         sensor_pos_in_aeroBody = [17, 0, 8.5]  # cm - ned
         sensor_att_in_aeroBody = [0, -pi / 2, pi / 2]  # rad [-pi, pi]
@@ -83,9 +81,7 @@ class T265CoordinateTransformation(object):
 
         # compute the difference between our global reference, and what our sensor is reading for heading
         heading_offset = heading_ref - (heading * rad2deg)
-        logger.debug(
-            f"{fore.CYAN_2}T265: Resync: Heading Offset:{heading_offset}{style.RESET}"  # type: ignore
-        )
+        logger.debug(f"T265: Resync: Heading Offset:{heading_offset}")
 
         # build a rotation matrix about the global Z axis to apply the heading offset we computed
         H_rot_correction = t3d.affines.compose(
@@ -101,7 +97,7 @@ class T265CoordinateTransformation(object):
 
         ## Find the position offset
         pos_offset = [pos_ref["n"] - T[0], pos_ref["e"] - T[1], pos_ref["d"] - T[2]]
-        logger.debug(f"{fore.CYAN_2}T265: Resync: Pos offset:{pos_offset}{style.RESET}")  # type: ignore
+        logger.debug(f"T265: Resync: Pos offset:{pos_offset}")
 
         # build a translation matrix that corrects the difference between where the sensor thinks we are and were our reference thinks we are
         H_aeroRefSync_aeroRef = t3d.affines.compose(
@@ -199,57 +195,53 @@ class VIO(object):
     ):
         try:
 
-            if not np.isnan(ned_pos).any():
-                n = float(ned_pos[0])
-                e = float(ned_pos[1])
-                d = float(ned_pos[2])
-                ned_update = {"n": n, "e": e, "d": d}  # cm  # cm  # cm
-                self.mqtt_client.publish(
-                    f"{self.topic_prefix}/position/ned",
-                    json.dumps(ned_update),
-                    retain=False,
-                    qos=0,
-                )
-            else:
+            if np.isnan(ned_pos).any():
                 raise ValueError("T265 has NaNs for position")
 
-            if not np.isnan(rpy).any():
-                deg = [rad * 180 / pi for rad in rpy]
-                eul_update = {"psi": rpy[0], "theta": rpy[1], "phi": rpy[2]}
-                self.mqtt_client.publish(
-                    f"{self.topic_prefix}/orientation/eul",
-                    json.dumps(eul_update),
-                    retain=False,
-                    qos=0,
-                )
-                # print(fore.CYAN_2 + "T265: Heading: {}".format(eul_update["eul"]["phi"]), style.RESET)
-
-                heading = rpy[2]
-                if heading < 0:
-                    heading += 2 * pi
-                heading = np.rad2deg(heading)
-                heading_update = {"degrees": heading}
-                self.mqtt_client.publish(
-                    f"{self.topic_prefix}/heading",
-                    json.dumps(heading_update),
-                    retain=False,
-                    qos=0,
-                )
-                # coord_trans.heading = rpy[2]
-            else:
+            n = float(ned_pos[0])
+            e = float(ned_pos[1])
+            d = float(ned_pos[2])
+            ned_update = {"n": n, "e": e, "d": d}  # cm  # cm  # cm
+            self.mqtt_client.publish(
+                f"{self.topic_prefix}/position/ned",
+                json.dumps(ned_update),
+                retain=False,
+                qos=0,
+            )
+            if np.isnan(rpy).any():
                 raise ValueError("T265 has NaNs for orientation")
 
-            if not np.isnan(ned_vel).any():
-                vel_update = {"n": ned_vel[0], "e": ned_vel[1], "d": ned_vel[2]}
-                self.mqtt_client.publish(
-                    f"{self.topic_prefix}/velocity/ned",
-                    json.dumps(vel_update),
-                    retain=False,
-                    qos=0,
-                )
-            else:
+            deg = [rad * 180 / pi for rad in rpy]
+            eul_update = {"psi": rpy[0], "theta": rpy[1], "phi": rpy[2]}
+            self.mqtt_client.publish(
+                f"{self.topic_prefix}/orientation/eul",
+                json.dumps(eul_update),
+                retain=False,
+                qos=0,
+            )
+            # print(fore.CYAN_2 + "T265: Heading: {}".format(eul_update["eul"]["phi"]), style.RESET)
+
+            heading = rpy[2]
+            if heading < 0:
+                heading += 2 * pi
+            heading = np.rad2deg(heading)
+            heading_update = {"degrees": heading}
+            self.mqtt_client.publish(
+                f"{self.topic_prefix}/heading",
+                json.dumps(heading_update),
+                retain=False,
+                qos=0,
+            )
+            if np.isnan(ned_vel).any():
                 raise ValueError("T265 has NaNs for velocity")
 
+            vel_update = {"n": ned_vel[0], "e": ned_vel[1], "d": ned_vel[2]}
+            self.mqtt_client.publish(
+                f"{self.topic_prefix}/velocity/ned",
+                json.dumps(vel_update),
+                retain=False,
+                qos=0,
+            )
             mapper_tracker = {
                 "mapper": mapper_confidence,
                 "tracker": tracker_confidence,
@@ -265,28 +257,25 @@ class VIO(object):
 
     def run(self):
 
-        #setup the t265
+        # setup the t265
         logger.debug("Setting up T265")
         self.t265.setup()
 
-        #start the loop
+        # start the loop
         logger.debug("Beginning data loop")
         while True:
             data = self.t265.get_pipe_data()
-            if data is not None:
-                # collect data from the sensor and transform it into "global" NED frame
-                ned_pos, ned_vel, rpy = self.coord_trans.transform_t265_to_global_ned(
-                    data
-                )
-
-                self.publish_updates(
-                    ned_pos,
-                    ned_vel,
-                    rpy,
-                    data.tracker_confidence,
-                    data.mapper_confidence,
-                )
-            else:
+            if data is None:
                 continue
 
+            # collect data from the sensor and transform it into "global" NED frame
+            ned_pos, ned_vel, rpy = self.coord_trans.transform_t265_to_global_ned(data)
+
+            self.publish_updates(
+                ned_pos,
+                ned_vel,
+                rpy,
+                data.tracker_confidence,
+                data.mapper_confidence,
+            )
             time.sleep(1 / self.T265_UPDATE_FREQ)

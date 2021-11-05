@@ -11,9 +11,10 @@ from typing import Any, Callable, Dict
 # https://github.com/eclipse/paho.mqtt.python
 import paho.mqtt.client as mqtt
 
+
 # This creates a new class that will contain multiple functions
 # which are known as "methods"
-class Sandbox():
+class Sandbox:
     # The "__init__" method of any class is special in Python. It's what runs when
     # you create a class like `sandbox = Sandbox()`. In here, we usually put
     # first-time initialization and setup code. The "self" argument is a magic
@@ -76,9 +77,15 @@ class Sandbox():
     # As we described above, this method runs after the Paho MQTT client has connected
     # to the server. This is generally used to do any setup work after the connection
     # and subscribe to topics.
-    def on_connect(self, client: mqtt.Client, userdata: Any, rc: int, properties: mqtt.Properties = None) -> None:
+    def on_connect(
+        self,
+        client: mqtt.Client,
+        userdata: Any,
+        rc: int,
+        properties: mqtt.Properties = None,
+    ) -> None:
         # Print the result code to the console for debugging purposes.
-        print(f"Connected with result code {str(rc)}")
+        print(f"Connected with result code {rc}")
         # After the MQTT client has connected to the server, this line has the client
         # connect to all topics that begin with our common prefix. The "#" character
         # acts as a wildcard. If you only wanted to subscribe to certain topics,
@@ -96,10 +103,12 @@ class Sandbox():
 
     # As we described above, this method runs after any message on a topic
     # that has been subscribed to has been recieved.
-    def on_message(self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage) -> None:
+    def on_message(
+        self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage
+    ) -> None:
         # Print the topic name and the message payload to the console
         # for debugging purposes.
-        print(f"{msg.topic}: f{str(msg.payload)}")
+        print(f"{msg.topic}: {msg.payload}")
 
         # First, check if the topic of the message we've recieved is inside the topic
         # map we've created.
@@ -147,7 +156,10 @@ class Sandbox():
 
         # Finally, we publish the payload to the topic, once again using f-strings to
         # re-use our common prefix.
-        self.mqtt_client.publish(topic=f"{self.topic_prefix}/pcc/set_servo_open_close", payload=payload)
+        self.mqtt_client.publish(
+            topic=f"{self.topic_prefix}/pcc/set_servo_open_close", payload=payload
+        )
+
 
 if __name__ == "__main__":
     box = Sandbox()

@@ -1,13 +1,14 @@
 import json
 from typing import Any, List
 
-from loguru import logger
 import paho.mqtt.client as mqtt
+from loguru import logger
 
 try:
-    from pcc_library import VRC_Peripheral # type: ignore
+    from pcc_library import VRC_Peripheral  # type: ignore
 except ImportError:
     from .pcc_library import VRC_Peripheral
+
 
 class PCCModule(object):
     def __init__(self, serial_port):
@@ -56,7 +57,11 @@ class PCCModule(object):
             logger.exception(f"Error handling message on {msg.topic}")
 
     def on_connect(
-        self, client: mqtt.Client, userdata: Any, rc: int, properties: mqtt.Properties=None
+        self,
+        client: mqtt.Client,
+        userdata: Any,
+        rc: int,
+        properties: mqtt.Properties = None,
     ) -> None:
         logger.debug(f"Connected with result code {str(rc)}")
         for topic in self.topic_map.keys():
@@ -78,7 +83,7 @@ class PCCModule(object):
     def set_servo_open_close(self, payload: dict) -> None:
         servo: int = payload["servo"]
         action: str = payload["action"]
-        self.pcc.set_servo_open_close(servo, action) #type: ignore #TODO - nathan, why is this mad?
+        self.pcc.set_servo_open_close(servo, action)  # type: ignore #TODO - nathan, why is this mad?
 
     def set_servo_min(self, payload: dict) -> None:
         servo: int = payload["servo"]

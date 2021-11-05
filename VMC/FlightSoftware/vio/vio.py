@@ -1,12 +1,12 @@
 import json
-from typing import Any, Callable, Dict
 import signal
 import sys
 import threading
 import time
+from typing import Any, Callable, Dict
 
-from loguru import logger
 import paho.mqtt.client as mqtt
+from loguru import logger
 
 try:
     from vio_library import VIO  # type: ignore
