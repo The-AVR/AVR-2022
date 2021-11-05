@@ -75,24 +75,26 @@ cp -r "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/" message_defini
 python3 setup.py bdist_wheel
 cp dist/* "$basedir/target/"
 
-cd "$px4dir"
-base_docker_cmd="docker run --rm -w \"$px4dir\" --volume=\"$px4dir\":\"$px4dir\":rw px4io/px4-dev-nuttx-focal:latest /bin/bash -c"
+if [ "$1" == "--firmware" ]; then
+    cd "$px4dir"
+    base_docker_cmd="docker run --rm -w \"$px4dir\" --volume=\"$px4dir\":\"$px4dir\":rw px4io/px4-dev-nuttx-focal:latest /bin/bash -c"
 
-# echo "--- Building PX4 SITL"
-# echo "$base_docker_cmd 'make px4_sitl_default'"
-# eval "$base_docker_cmd 'make px4_sitl_default -j$(nproc)'"
+    # echo "--- Building PX4 SITL"
+    # echo "$base_docker_cmd 'make px4_sitl_default'"
+    # eval "$base_docker_cmd 'make px4_sitl_default -j$(nproc)'"
 
-# build Pixhawk firmware
-echo "--- Building Pixhawk firmware"
-echo "$base_docker_cmd 'make px4_fmu-v5_default'"
-eval "$base_docker_cmd 'make px4_fmu-v5_default -j$(nproc)'"
-cp "$px4dir/build/px4_fmu-v5_default/px4_fmu-v5_default.px4" "$basedir/target/px4_fmu-v5_default.$PX4_VERSION.px4"
+    # build Pixhawk firmware
+    echo "--- Building Pixhawk firmware"
+    echo "$base_docker_cmd 'make px4_fmu-v5_default'"
+    eval "$base_docker_cmd 'make px4_fmu-v5_default -j$(nproc)'"
+    cp "$px4dir/build/px4_fmu-v5_default/px4_fmu-v5_default.px4" "$basedir/target/px4_fmu-v5_default.$PX4_VERSION.px4"
 
-# build NXP firmware
-echo "--- Building NXP firmware"
-echo "$base_docker_cmd 'make nxp_fmuk66-v3_default'"
-eval "$base_docker_cmd 'make nxp_fmuk66-v3_default -j$(nproc)'"
-cp "$px4dir/build/nxp_fmuk66-v3_default/nxp_fmuk66-v3_default.px4" "$basedir/target/nxp_fmuk66-v3_default.$PX4_VERSION.px4"
+    # build NXP firmware
+    echo "--- Building NXP firmware"
+    echo "$base_docker_cmd 'make nxp_fmuk66-v3_default'"
+    eval "$base_docker_cmd 'make nxp_fmuk66-v3_default -j$(nproc)'"
+    cp "$px4dir/build/nxp_fmuk66-v3_default/nxp_fmuk66-v3_default.px4" "$basedir/target/nxp_fmuk66-v3_default.$PX4_VERSION.px4"
+fi
 
 echo "--- Cleaning up"
 cd "$basedir"

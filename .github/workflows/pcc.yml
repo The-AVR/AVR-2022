@@ -2,9 +2,11 @@ name: Build PCC Firmware
 
 on:
   workflow_dispatch:
-#   push:
-#     branches:
-#       - main
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'PCC/ControlSoftware/'
 
 jobs:
   build:
@@ -12,6 +14,12 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
+      - name: Get latest release
+        id: latest_release
+        uses: pozetroninc/github-action-get-latest-release@master
+        with:
+          repository: ${{ github.repository }}
+
       - name: Checkout code
         uses: actions/checkout@v2
         with:
@@ -35,4 +43,14 @@ jobs:
         run: pio run --verbose
         working-directory: PCC/ControlSoftware
 
-      # Firmware file is in PCC/ControlSoftware/.pio/build/adafruit_feather_m4/firmware.bin
+      - name: Rename firmware
+        run: cp firmware.bin pcc_firmware.bin
+        working-directory: PCC/ControlSoftware/.pio/build/adafruit_feather_m4
+
+      - name: Upload firmware to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: PCC/ControlSoftware/.pio/build/adafruit_feather_m4/pcc_firmware.bin
+          tag: ${{ steps.latest_release.release }}
+          overwrite: true

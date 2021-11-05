@@ -6,7 +6,7 @@ on:
   #   branches:
   #     - main
   #   paths:
-  #     - 'VMC/FlightSoftware'
+  #     - 'VMC/FlightSoftware/'
 
 jobs:
   build:
@@ -16,44 +16,48 @@ jobs:
     strategy:
       matrix:
         # april tag module needs to be built on-device
-        image: [flight_control_module, fusion_module, mavp2p, peripheral_control_module, vio_module]
+        image: [fcc, fusion, mavp2p, pcc, vio]
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v2
 
-    - name: Cache Docker Layers
-      uses: actions/cache@v2
-      with:
-        path: /tmp/.buildx-cache
-        key: buildx-${{ hashFiles(format('{0}{1}/**', 'vmc/', matrix.image)) }}
-        restore-keys: |
-          buildx
+      - name: Cache Docker Layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: buildx-${{ hashFiles(format('{0}{1}/**', 'VMC/FlightSoftware/', matrix.image)) }}
+          restore-keys: |
+            buildx
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v1
-      with:
-        platforms: arm64
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+        with:
+          platforms: arm64
 
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v1
-      with:
-        version: latest
-        install: false
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+        with:
+          version: latest
+          install: false
 
-    - name: Github CR Login
-      uses: docker/login-action@v1
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Github CR Login
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Build and push
-      uses: docker/build-push-action@v2
-      with:
-        context: vmc/${{ matrix.image }}
-        push: true
-        tags: ghcr.io/bellflight/vrc_${{ matrix.image }}:latest
-        platforms: linux/arm64
-        cache-from: type=local,src=/tmp/.buildx-cache
-        cache-to: type=local,dest=/tmp/.buildx-cache
+      - name: Generate custom pymavlink package
+        if: matrix.image == fcc
+        run: PX4/generate.sh
+
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: VMC/FlightSoftware/${{ matrix.image }}
+          push: true
+          tags: ghcr.io/bellflight/vrc_${{ matrix.image }}:latest
+          platforms: linux/arm64
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
