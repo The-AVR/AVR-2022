@@ -1,0 +1,59 @@
+name: Build Containers
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'VMC/FlightSoftware'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+
+    strategy:
+      matrix:
+        # april tag module needs to be built on-device
+        image: [flight_control_module, fusion_module, mavp2p, peripheral_control_module, vio_module]
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    - name: Cache Docker Layers
+      uses: actions/cache@v2
+      with:
+        path: /tmp/.buildx-cache
+        key: buildx-${{ hashFiles(format('{0}{1}/**', 'vmc/', matrix.image)) }}
+        restore-keys: |
+          buildx
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+      with:
+        platforms: arm64
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+      with:
+        version: latest
+        install: false
+
+    - name: Github CR Login
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build and push
+      uses: docker/build-push-action@v2
+      with:
+        context: vmc/${{ matrix.image }}
+        push: true
+        tags: ghcr.io/bellflight/vrc_${{ matrix.image }}:latest
+        platforms: linux/arm64
+        cache-from: type=local,src=/tmp/.buildx-cache
+        cache-to: type=local,dest=/tmp/.buildx-cache
