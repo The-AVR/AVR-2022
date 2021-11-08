@@ -52,6 +52,10 @@ jobs:
         if: matrix.image == fcc
         run: PX4/generate.sh
 
+      - name: Copy PCC library
+        if: matrix.image == pcc
+        run: cp Libraries/pcc_library.py VMC/FlightSoftware/pcc/pcc_library.py
+
       - name: Build and push
         uses: docker/build-push-action@v2
         with:

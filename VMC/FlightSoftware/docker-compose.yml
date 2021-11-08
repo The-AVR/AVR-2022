@@ -21,14 +21,14 @@ services:
     depends_on:
       - mqtt
       - mavp2p
-    image: ghcr.io/bellflight/vrc_flight_control_module:latest
+    image: ghcr.io/bellflight/vrc_fcc:latest
     network_mode: "host"
     restart: on-failure
 
   pcc:
     depends_on:
       - mqtt
-    image: ghcr.io/bellflight/vrc_peripheral_control_module:latest
+    image: ghcr.io/bellflight/vrc_pcc:latest
     restart: on-failure
     devices:
       - "/dev/ttyACM0:/dev/ttyACM0"
@@ -36,7 +36,7 @@ services:
   vio:
     depends_on:
       - mqtt
-    image: ghcr.io/bellflight/vrc_vio_module:latest
+    image: ghcr.io/bellflight/vrc_vio:latest
     privileged: true
     restart: on-failure
 
@@ -54,7 +54,7 @@ services:
       - mqtt
       - vio
       - apriltag
-    image: ghcr.io/bellflight/vrc_fusion_module:latest
+    image: ghcr.io/bellflight/vrc_fusion:latest
     restart: on-failure
 
   # sandbox:

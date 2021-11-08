@@ -48,7 +48,7 @@ python3 -m pymavlink.tools.mavgen --lang=C --wire-protocol=2.0 --output="$px4dir
 cd "$px4dir"
 
 # changes need to be committed to build
-git add . 
+git add .
 git commit -m "Local commit to facilitate build"
 
 # echo "--- Copying MAVLink dialect"

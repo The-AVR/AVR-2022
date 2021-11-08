@@ -8,7 +8,10 @@ from typing import Any, Dict, List, Optional, Tuple
 import paho.mqtt.client as mqtt
 from PySide6 import QtCore, QtGui, QtWidgets
 
-IMG_DIR = os.path.join(os.path.dirname(__file__), "img")
+if getattr(sys, "frozen", False):
+    IMG_DIR = os.path.join(sys._MEIPASS, "img")  # type: ignore
+else:
+    IMG_DIR = os.path.join(os.path.dirname(__file__), "img")
 
 
 def set_icon(widget: QtWidgets.QWidget) -> None:
@@ -484,7 +487,7 @@ class ExpandCollapseQTreeWidget(QtWidgets.QTreeWidget):
         # https://doc.qt.io/qt-5/qtreeview.html#expandRecursively
         # expandRecursively exists, but not collapseRecursively, so reimplement
         # it ourselves
-        
+
         # set root item
         item.setExpanded(expand)
 
