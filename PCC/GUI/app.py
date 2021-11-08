@@ -8,7 +8,7 @@ from UI_pcc import Ui_VRC_PCC
 from startup_widget import Ui_VRC_startup
 from serial_utils import serial_ports
 
-from pcc_library import VRC_peripheral
+from pcc_library import VRC_Peripheral
 
 import sys
 import time
@@ -68,9 +68,9 @@ class MainWindow(QMainWindow):
             baud = self.setup.ui.Baud_Rate_comboBox.currentText()
 
             if port == "":
-                self.pcc = VRC_peripheral(port, use_serial=False)
+                self.pcc = VRC_Peripheral(port, use_serial=False)
             else:
-                self.pcc = VRC_peripheral(port, use_serial=True)
+                self.pcc = VRC_Peripheral(port, use_serial=True)
 
             #TODO - actually write a handshake for the PCC, its all 1 way right now
             #try:
