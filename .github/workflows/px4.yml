@@ -23,6 +23,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # this really isn't necessary, but we need to to make one local commit
+      - name: Configure git
+        run:
+          git config --global user.email "github-bot@bellflight.com"
+          git config --global user.name "Github Actions"
+
       - name: Build PX4 firmware
         shell: bash
         run: |
