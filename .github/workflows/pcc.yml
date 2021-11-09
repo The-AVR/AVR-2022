@@ -15,12 +15,11 @@ jobs:
 
     steps:
       - name: Get latest release
-        id: latest_release
-        uses: rez0n/actions-github-release@main
-        env:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          repository: ${{ github.repository }}
-          type: stable
+        uses: InsonusK/get-latest-release@v1.0.1
+        with:
+          myToken: ${{ secrets.GITHUB_TOKEN }}
+          exclude_types: "draft|prerelease"
+          view_top: 1
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -54,5 +53,5 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: PCC/ControlSoftware/.pio/build/adafruit_feather_m4/pcc_firmware.bin
-          tag: ${{ steps.latest_release.outputs.release }}
+          tag: ${{ steps.latest_release.outputs.tag_name }}
           overwrite: true
