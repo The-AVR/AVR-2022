@@ -70,9 +70,12 @@ git commit -m "Local commit to facilitate build"
 
 echo "--- Generating pymavlink package"
 cd "$pymavlinkdir"
+
 mkdir -p message_definitions/v1.0
 cp -a "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/." message_definitions/v1.0/
-python3 setup.py sdist bdist_wheel
+
+# only build the Bell dialect
+MAVLINK_DIALECT=bell python3 setup.py sdist bdist_wheel
 cp -a dist/. "$basedir/target/"
 
 if [ "$1" == "--firmware" ]; then
