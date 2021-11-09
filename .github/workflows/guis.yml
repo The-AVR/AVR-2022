@@ -16,11 +16,12 @@ jobs:
 
     steps:
       - name: Get latest release
-        uses: InsonusK/get-latest-release@v1.0.1
+        uses: joutvhu/get-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          myToken: ${{ secrets.GITHUB_TOKEN }}
-          exclude_types: "draft|prerelease"
-          view_top: 1
+          prerelease: false
+          throwing: true
 
       - name: Checkout code
         uses: actions/checkout@v2
