@@ -10,7 +10,7 @@
 # image. The version tag (after the colon), is the Python version (3.9)
 # along with the version of Debian (buster) we are building off.
 # https://hub.docker.com/_/python
-FROM python:3.9-buster
+FROM docker.io/library/python:3.9-buster
 
 # Change the working directory to /app
 WORKDIR /app

@@ -15,9 +15,10 @@ RUN python -m pip install pip wheel --upgrade && \
 
 COPY . .
 
-RUN python -m pip install /app/pymavlink*.whl
+# need to install from source as it's difficult to generate a .whl file for ARM
+RUN python -m pip install /app/pymavlink*.tar.gz
 
 ENV MAVLINK20=1
 ENV MAVLINK_DIALECT=bell
 
-CMD ["python3", "-u", "fcc.py"]
+CMD ["python", "fcc.py"]

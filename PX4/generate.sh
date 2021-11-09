@@ -5,7 +5,7 @@ set -x
 shopt -s dotglob
 
 # warning, v1.10.2 does not appear to build anymore
-PX4_VERSION=v1.11.0
+PX4_VERSION=v1.12.3
 
 # record starting directory
 startdir=$(pwd)
@@ -71,9 +71,9 @@ git commit -m "Local commit to facilitate build"
 echo "--- Generating pymavlink package"
 cd "$pymavlinkdir"
 mkdir -p message_definitions/v1.0
-cp -r "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/" message_definitions/v1.0/
-python3 setup.py bdist_wheel
-cp dist/* "$basedir/target/"
+cp -a "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/." message_definitions/v1.0/
+python3 setup.py sdist bdist_wheel
+cp -a dist/. "$basedir/target/"
 
 if [ "$1" == "--firmware" ]; then
     cd "$px4dir"
@@ -101,6 +101,7 @@ cd "$basedir"
 deactivate
 
 echo "--- Copying outputs"
-cp -r target/ ../VMC/FlightSoftware/fcc/
+cp -a target/*.whl ../VMC/FlightSoftware/fcc/
+cp -a target/*.tar.gz ../VMC/FlightSoftware/fcc/
 
 cd "$startdir"

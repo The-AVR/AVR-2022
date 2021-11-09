@@ -2,6 +2,11 @@ name: Build PX4
 
 on:
   workflow_dispatch:
+  # pull_request:
+  #   branches:
+  #     - main
+  #   paths:
+  #     - 'PX4/'
   # push:
   #   branches:
   #     - main
@@ -36,6 +41,7 @@ jobs:
           PX4/generate.sh --firmware
 
       - name: Upload firmware to release
+        if: github.event_name != 'pull_request'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
