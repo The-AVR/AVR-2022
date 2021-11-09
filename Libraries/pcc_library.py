@@ -2,13 +2,13 @@
 # Written by Casey Hanner
 import time
 from struct import pack
-from typing import Any, List, Literal, Union
+from typing import Any, List, Literal, Optional, Union
 
 import serial
 from loguru import logger
 
 
-class VRC_Peripheral(object):
+class VRC_Peripheral:
     def __init__(self, port: int, use_serial: bool = True) -> None:
         self.port = port
 
@@ -95,20 +95,21 @@ class VRC_Peripheral(object):
         valid_command = False
 
         command = self.commands["SET_SERVO_OPEN_CLOSE"]
-        length = 3  # command + servo + action
         data = []
 
         # 128 is inflection point, over 128 == open; under 128 == close
 
-        if action == "open":
-            data = [servo, 150]
-            valid_command = True
-        elif action == "close":
+        if action == "close":
             data = [servo, 100]
+            valid_command = True
+
+        elif action == "open":
+            data = [servo, 150]
             valid_command = True
 
         if valid_command:
             if self.use_serial is True:
+                length = 3  # command + servo + action
                 self.ser.write(self._construct_payload(command, length, data))
             else:
                 logger.debug("VRC_Peripheral serial data: ")
@@ -118,7 +119,6 @@ class VRC_Peripheral(object):
         valid_command = False
 
         command = self.commands["SET_SERVO_MIN"]
-        length = 3  # command + servo + min pwm
         data = []
 
         if isinstance(minimum, (float, int)) and minimum < 1000 and minimum > 0:
@@ -127,6 +127,7 @@ class VRC_Peripheral(object):
 
         if valid_command:
             if self.use_serial is True:
+                length = 3  # command + servo + min pwm
                 self.ser.write(self._construct_payload(command, length, data))
             else:
                 logger.debug("VRC_Peripheral serial data: ")
@@ -136,7 +137,6 @@ class VRC_Peripheral(object):
         valid_command = False
 
         command = self.commands["SET_SERVO_MAX"]
-        length = 3  # command + servo + min pwm
         data = []
 
         if isinstance(maximum, (float, int)) and maximum < 1000 and maximum > 0:
@@ -145,6 +145,7 @@ class VRC_Peripheral(object):
 
         if valid_command:
             if self.use_serial is True:
+                length = 3  # command + servo + min pwm
                 self.ser.write(self._construct_payload(command, length, data))
             else:
                 logger.debug("VRC_Peripheral serial data: ")
@@ -154,7 +155,6 @@ class VRC_Peripheral(object):
         valid_command = False
 
         command = self.commands["SET_SERVO_PCT"]
-        length = 3  # command + servo + percent
         data = []
 
         if isinstance(pct, (float, int)) and pct < 100 and pct > 0:
@@ -163,6 +163,7 @@ class VRC_Peripheral(object):
 
         if valid_command:
             if self.use_serial is True:
+                length = 3  # command + servo + percent
                 self.ser.write(self._construct_payload(command, length, data))
             else:
                 logger.debug("VRC_Peripheral serial data: ")
@@ -170,9 +171,9 @@ class VRC_Peripheral(object):
 
     def reset_vrc_peripheral(self) -> None:
         command = self.commands["RESET_VRC_PERIPH"]
-        length = 1  # just the reset command
-
         if self.use_serial:
+
+            length = 1  # just the reset command
 
             self.ser.write(self._construct_payload(command, length))
             self.ser.close()
@@ -190,9 +191,14 @@ class VRC_Peripheral(object):
             length = 1
             self.ser.write(self._construct_payload(command, length))
 
-    def _construct_payload(self, code: int, size: int = 0, data: list = []):
+    def _construct_payload(
+        self, code: int, size: int = 0, data: Optional[list] = None
+    ) -> bytes:
         # [$][P][>][LENGTH-HI][LENGTH-LOW][DATA][CRC]
         payload = bytes()
+
+        if data is None:
+            data = []
 
         new_data = (
             ("<3b", self.HEADER_OUTGOING),
@@ -215,17 +221,14 @@ class VRC_Peripheral(object):
 
         return [byte for byte in bytez]
 
-    def crc8_dvb_s2(self, crc, a):
+    def crc8_dvb_s2(self, crc: int, a: int) -> int:
         # https://stackoverflow.com/a/52997726
         crc ^= a
         for _ in range(8):
-            if crc & 0x80:
-                crc = ((crc << 1) ^ 0xD5) % 256
-            else:
-                crc = (crc << 1) % 256
+            crc = ((crc << 1) ^ 0xD5) % 256 if crc & 0x80 else (crc << 1) % 256
         return crc
 
-    def calc_crc(self, string: Union[str, bytes], length: int):
+    def calc_crc(self, string: bytes, length: int) -> int:
         crc = 0
         for i in range(length):
             crc = self.crc8_dvb_s2(crc, string[i])

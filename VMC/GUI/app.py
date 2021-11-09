@@ -7,18 +7,7 @@ from typing import Any, Dict, List, Optional, Tuple
 
 import paho.mqtt.client as mqtt
 from PySide6 import QtCore, QtGui, QtWidgets
-
-if getattr(sys, "frozen", False):
-    IMG_DIR = os.path.join(sys._MEIPASS, "img")  # type: ignore
-else:
-    IMG_DIR = os.path.join(os.path.dirname(__file__), "img")
-
-
-def set_icon(widget: QtWidgets.QWidget) -> None:
-    """
-    Set a QtWidget window icon.
-    """
-    widget.setWindowIcon(QtGui.QIcon(os.path.join(IMG_DIR, "logo.png")))
+from qt_icon import IMG_DIR, set_icon
 
 
 class MQTTClient(QtCore.QObject):
@@ -174,7 +163,7 @@ class MainWidget(QtWidgets.QWidget):
 
 
 class StatusLabel(QtWidgets.QWidget):
-    # Subclass of QLabel to add a status icon
+    # Combination of 2 QLabels to add a status icon
     def __init__(self, text: str):
         super().__init__()
 

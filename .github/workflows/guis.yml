@@ -24,8 +24,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Copy PCC library
-        run: cp Libraries/pcc_library.py PCC/GUI/pcc_library.py
+      - name: Copy libraries
+        run: |
+          cp Libraries/pcc_library.py PCC/GUI/
+          cp Libraries/qt_icon.py PCC/GUI/
+          mkdir -p PCC/GUI/img
+          cp -r Libraries/img PCC/GUI/img
+
+          cp Libraries/qt_icon.py VMC/GUI/
+          mkdir -p VMC/GUI/img
+          cp -r Libraries/img VMC/GUI/img
 
       - name: Setup Python
         uses: actions/setup-python@v2
