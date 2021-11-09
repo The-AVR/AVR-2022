@@ -25,7 +25,7 @@ jobs:
 
       # this really isn't necessary, but we need to to make one local commit
       - name: Configure git
-        run:
+        run: |
           git config --global user.email "github-bot@bellflight.com"
           git config --global user.name "Github Actions"
 
