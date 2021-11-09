@@ -24,7 +24,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Build PX4 firmware
-        run: PX4/generate.sh --firmware
+        shell: bash
+        run: |
+          chmod +x PX4/generate.sh
+          PX4/generate.sh --firmware
 
       - name: Upload firmware to release
         uses: svenstaro/upload-release-action@v2
