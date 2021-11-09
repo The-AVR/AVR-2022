@@ -9,7 +9,7 @@ from loguru import logger
 
 
 class VRC_Peripheral:
-    def __init__(self, port: int, use_serial: bool = True) -> None:
+    def __init__(self, port: str, use_serial: bool = True) -> None:
         self.port = port
 
         self.PREAMBLE = (0x24, 0x50)

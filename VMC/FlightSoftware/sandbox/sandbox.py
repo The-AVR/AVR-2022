@@ -162,5 +162,11 @@ class Sandbox:
 
 
 if __name__ == "__main__":
+    # This is what actually initializes the Sandbox class, and executes it.
+    # This is nested under the above condition, as otherwise, if this file
+    # were imported by another file, these lines would execute, as the interpreter
+    # reads and executes the file top-down. However, whenever a file is called directly
+    # `python file.py`, the magic `__name__` variable is set to "__main__". Thus, this
+    # code will only execute if the file is called directly.
     box = Sandbox()
     box.run()

@@ -11,6 +11,9 @@ from qt_icon import set_icon
 
 
 def list_serial_ports() -> List[str]:
+    """
+    Returns a list of serial ports on the system
+    """
     if sys.platform.startswith("win"):
         ports = ["COM%s" % (i + 1) for i in range(256)]
     elif sys.platform.startswith("linux") or sys.platform.startswith("cygwin"):
@@ -47,6 +50,9 @@ class MainWidget(QtWidgets.QWidget):
         self.control_widget.show()
 
     def connect(self) -> None:
+        """
+        Creates the connection to the PCC
+        """
         try:
             self.pcc_connection = VRC_Peripheral(
                 self.setup_widget.com_port_combo.currentText(), use_serial=True
@@ -208,6 +214,9 @@ class ControlWidget(QtWidgets.QWidget):
         layout.addWidget(led_groupbox, 4, 0, 1, 4)
 
     def update_leds(self) -> None:
+        """
+        Update the value of the LEDs based on the current position of the sliders
+        """
         red = self.red_led_slider.value()
         green = self.green_led_slider.value()
         blue = self.blue_led_slider.value()
@@ -215,12 +224,18 @@ class ControlWidget(QtWidgets.QWidget):
         self.parent_.pcc_connection.set_base_color([0, red, green, blue])
 
     def update_servos(self) -> None:
+        """
+        Update the position of the servos based on the current position of the dials
+        """
         self.parent_.pcc_connection.set_servo_pct(0, self.servo_1_dial.value())
         self.parent_.pcc_connection.set_servo_pct(1, self.servo_2_dial.value())
         self.parent_.pcc_connection.set_servo_pct(2, self.servo_3_dial.value())
         self.parent_.pcc_connection.set_servo_pct(3, self.servo_4_dial.value())
 
     def toggle_servo(self, servo: int) -> None:
+        """
+        Toggle a servo open or closed
+        """
         if self.servo_states[servo] == "open":
             self.servo_states[servo] = "close"
         else:
