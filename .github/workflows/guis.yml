@@ -26,6 +26,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Copy libraries
+        shell: bash
         run: |
           cp Libraries/pcc_library.py PCC/GUI/
           cp Libraries/qt_icon.py PCC/GUI/
@@ -47,14 +48,14 @@ jobs:
           python -m pip install pyinstaller
 
       - name: Build PCC GUI
-        run : |
+        run: |
           python -m pip install -r PCC/GUI/requirements.txt
-          pyinstaller PCC/GUI/app.py --onefile --name VRCPCCTest --noconfirm
+          pyinstaller PCC/GUI/app.py --onefile --name VRCPCCTest --icon Libraries/img/logo.ico --add-data "Libraries/img;img" --noconfirm
 
       - name: Build VMC GUI
-        run : |
+        run: |
           python -m pip install -r VMC/GUI/requirements.txt
-          pyinstaller VMC/GUI/app.py --onefile --name VRCControlGUI --add-data "VMC/GUI/img;img" --noconfirm
+          pyinstaller VMC/GUI/app.py --onefile --name VRCControlGUI --icon Libraries/img/logo.ico --add-data "Libraries/img;img" --noconfirm
 
       - name: Upload GUIs to release
         uses: svenstaro/upload-release-action@v2
