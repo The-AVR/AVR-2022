@@ -16,13 +16,9 @@ jobs:
 
     steps:
       - name: Get latest release
-        uses: joutvhu/get-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: thebritican/fetch-latest-release@v1
         with:
-          latest: true
-          prerelease: false
-          throwing: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
         uses: actions/checkout@v2
