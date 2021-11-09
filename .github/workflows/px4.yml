@@ -16,9 +16,11 @@ jobs:
     steps:
       - name: Get latest release
         id: latest_release
-        uses: pozetroninc/github-action-get-latest-release@master
-        with:
+        uses: rez0n/actions-github-release@main
+        env:
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
+          type: stable
 
       - name: Checkout code
         uses: actions/checkout@v2
@@ -32,5 +34,5 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: PX4/target/*.px4
           file_glob: true
-          tag: ${{ steps.latest_release.release }}
+          tag: ${{ steps.latest_release.outputs.release }}
           overwrite: true
