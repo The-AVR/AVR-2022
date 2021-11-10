@@ -3,11 +3,10 @@ version: "3"
 services:
   mavp2p:
     build: mavp2p
-    command: serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 udpc:127.0.0.1:14541 udpc:127.0.0.1:14542 --print-errors
+    network_mode: host
     restart: unless-stopped
     devices:
-      - "/dev/ttyTHS1:/dev/ttyTHS1"
-    network_mode: "host"
+      - /dev/ttyTHS1:/dev/ttyTHS1
 
   mqtt:
     image: docker.io/library/eclipse-mosquitto:2.0.11
@@ -22,7 +21,7 @@ services:
       - mqtt
       - mavp2p
     build: fcc
-    network_mode: "host"
+    network_mode: host
     restart: on-failure
 
   pcc:
@@ -31,7 +30,7 @@ services:
     build: pcc
     restart: on-failure
     devices:
-      - "/dev/ttyACM0:/dev/ttyACM0"
+      - /dev/ttyACM0:/dev/ttyACM0
 
   vio:
     depends_on:
