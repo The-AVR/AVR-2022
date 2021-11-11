@@ -23,13 +23,14 @@ def local_script_tags(soup: bs4.BeautifulSoup) -> None:
         filename = os.path.basename(parsed.path)
 
         # if we don't have the script locally
-        if not os.path.exists(os.path.join(THIS_DIR, "public", "js", filename)):
+        local_filename = os.path.join(THIS_DIR, "public", "js", filename)
+        if not os.path.exists(local_filename):
             # download the script
             print(f"Downloading {script_src}")
             response = requests.get(script_src)
 
             # write the script to disk
-            with open(os.path.join(THIS_DIR, "public", "js", filename), "wb") as f:
+            with open(local_filename, "wb") as f:
                 f.write(response.content)
 
         # update the script tag
