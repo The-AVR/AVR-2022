@@ -16,7 +16,7 @@ LIGHTGREEN='\033[1;32m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-VRC_DIR=~/Documents/VRC-2021-Phase-II
+VRC_DIR=~VRC
 
 # see if sudo is installed
 # mainly for testing with Docker, that doesn't have sudo
@@ -28,7 +28,7 @@ fi
 # check to make sure code has already been cloned
 if [[ ! -d $VRC_DIR ]]; then
     echo "VRC repository has not been cloned to $VRC_DIR"
-    echo "Do this with '$s apt update && $s apt install -y git && git clone https://github.com/bellflight/VRC-2021-Phase-II $VRC_DIR'"
+    echo "Do this with '$s apt update && $s apt install -y git && git clone https://github.com/bellflight/VRC-2022 $VRC_DIR'"
     exit 1
 fi
 
@@ -124,7 +124,7 @@ bar
 
 # downgrade docker to specific version
 # this got pulled from apt sources for some reason
-wget https://github.com/bellflight/VRC-2021-Phase-II/releases/download/v0.0.2/docker.io_20.10.7-0ubuntu1_18.04.2_arm64.deb
+wget https://github.com/bellflight/VRC-2022/releases/download/0.0.0/docker.io_20.10.7-0ubuntu1_18.04.2_arm64.deb
 $s DEBIAN_FRONTEND=noninteractive apt install -y --allow-downgrades ./docker.io_20.10.7-0ubuntu1_18.04.2_arm64.deb
 rm docker.io_20.10.7-0ubuntu1_18.04.2_arm64.deb
 
