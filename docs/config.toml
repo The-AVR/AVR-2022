@@ -23,9 +23,9 @@ pygmentsStyle = "monokai"
 
 # Needed for some shortcodes
 [markup]
-  [markup.goldmark]
-    [markup.goldmark.renderer]
-      unsafe = true
+[markup.goldmark]
+[markup.goldmark.renderer]
+unsafe = true
 
 # Image processing configuration.
 [imaging]
@@ -55,7 +55,7 @@ github_subdir = "docs"
 
 # Uncomment this if you have a newer GitHub repo with "main" as the default branch,
 # or specify a new value if you want to reference another branch in your GitHub links
-github_branch= "main"
+github_branch = "main"
 
 # Enable Algolia DocSearch
 algolia_docsearch = false
@@ -92,24 +92,24 @@ enable = true
 
 [params.links]
 [[params.links.user]]
-	name = "Bell Flight"
-	url = "https://bellflight.com"
-	icon = "fa fa-helicopter"
-  desc = "Welcome to the Future of Flight"
+name = "Bell Flight"
+url = "https://bellflight.com"
+icon = "fa fa-helicopter"
+desc = "Welcome to the Future of Flight"
 
 [[params.links.user]]
-  name = "Job Opportunities"
-  url = "https://textron.taleo.net/careersection/bell/jobsearch.ftl?lang=en"
-  icon = "fa fa-briefcase"
+name = "Job Opportunities"
+url = "https://textron.taleo.net/careersection/bell/jobsearch.ftl?lang=en"
+icon = "fa fa-briefcase"
 
 [[menu.main]]
-  name = "GitHub"
-  weight = 50
-  pre = "<i class='fab fa-github'></i>"
-  url = "https://github.com/bellflight/VRC-2022/"
+name = "GitHub"
+weight = 50
+pre = "<i class='fab fa-github'></i>"
+url = "https://github.com/bellflight/VRC-2022/"
 
 [[menu.main]]
-  name = "Microsoft Teams"
-  weight = 100
-  pre = "<i class='fa fa-users'></i>"
-  url = "https://teams.microsoft.com/l/team/19%3a21c615dc691c4f289fb9fda44c862df3%40thread.tacv2/conversations?groupId=6baa0f71-7580-4c72-905f-2b6ee58685c3&tenantId=771923a0-2465-44c5-8531-b9366e228aad"
+name = "Microsoft Teams"
+weight = 100
+pre = "<i class='fa fa-users'></i>"
+url = "https://teams.microsoft.com/l/team/19%3a21c615dc691c4f289fb9fda44c862df3%40thread.tacv2/conversations?groupId=6baa0f71-7580-4c72-905f-2b6ee58685c3&tenantId=771923a0-2465-44c5-8531-b9366e228aad"
