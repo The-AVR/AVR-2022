@@ -52,7 +52,7 @@ jobs:
 
       - name: Run Postprocessing
         working-directory: docs
-        run: python ./decdnify.py
+        run: python ./postprocess.py
 
       - name: Deploy Site
         if: github.event_name != 'pull_request'
