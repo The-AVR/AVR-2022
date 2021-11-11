@@ -1,3 +1,6 @@
 [submodule "PCC/ControlSoftware/libraries/Queue"]
 	path = PCC/ControlSoftware/libraries/Queue
 	url = https://github.com/SMFSW/Queue
+[submodule "docs/themes/docsy"]
+	path = docs/themes/docsy
+	url = https://github.com/google/docsy.git
