@@ -1,11 +1,15 @@
-from typing import List
+from typing import List, Optional, Tuple
 
 import cv2
 
 
-class CaptureDevice(object):
+class CaptureDevice:
     def __init__(
-        self, protocol: str, video_device: str, res: List[int], framerate=None
+        self,
+        protocol: str,
+        video_device: str,
+        res: List[int],
+        framerate: Optional[int] = None,
     ):
         self.protocol = protocol
         self.dev = video_device
@@ -51,9 +55,6 @@ class CaptureDevice(object):
                     + "/1"
                 )
 
-            # connection_string = 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720,format=NV12, framerate=60/1 ! tee name=t ! queue ! nvv4l2h265enc bitrate=10000000 iframeinterval=40 ! video/x-h265, stream-format=byte-stream ! rndbuffersize min=1500 max=1500 ! udpsink host=192.168.1.112 port=5000 t. ! queue ! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! ' + frame_string + ',width=' + str(res[0]) +',height='+ str(res[1]) + ' ! appsink'
-
-            # connection_string = 'nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720,format=NV12, framerate=60/1 ! tee name=t ! queue ! nvv4l2h264enc maxperf-enable=1 preset-level=1 bitrate=1000000 ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.1.129 port=5000 t. ! queue ! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! ' + frame_string + ',width=' + str(res[0]) +',height='+ str(res[1]) + ' ! appsink'
             connection_string = (
                 "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720,format=NV12, framerate=60/1 ! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! "
                 + frame_string
@@ -71,10 +72,10 @@ class CaptureDevice(object):
         # this is how we might have to capture from csi cameras..
         # self.cv = cv2.VideoCapture("nvarguscamerasrc ! 'video/x-raw(memory:NVMM), width=1920, height=1080, framerate=30/1, format=NV12' ! videoconvert ! appsink sync=false",)
 
-    def read(self):
+    def read(self) -> Tuple[bool, Optional[cv2.Mat]]:
         return self.cv.read()
 
-    def read_gray(self):
+    def read_gray(self) -> Tuple[bool, Optional[cv2.Mat]]:
         ret, img = self.cv.read()
         if ret:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)

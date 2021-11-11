@@ -11,9 +11,6 @@ import paho.mqtt.client as mqtt
 import transforms3d as t3d
 from loguru import logger
 
-# find the file path to this file
-# __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
-
 warnings.simplefilter("ignore", np.RankWarning)
 
 
@@ -44,7 +41,7 @@ warnings.simplefilter("ignore", np.RankWarning)
 # }]
 
 
-class VRCAprilTag(object):
+class VRCAprilTag:
     def __init__(self):
         self.default_config: dict = {
             "cam": {
@@ -60,7 +57,7 @@ class VRCAprilTag(object):
             "AT_HEARTBEAT_THRESH": 0.25,
         }
 
-        self.tm = dict()
+        self.tm = {}
 
         self.setup_transforms()
 
@@ -170,17 +167,16 @@ class VRCAprilTag(object):
             }
 
             # add some more info if we had the truth data for the tag
-            if pos_world is not None:
-                if pos_world.any():
+            if pos_world is not None and pos_world.any():
 
-                    tag["pos_world"] = {
-                        "x": pos_world[0],  # type: ignore
-                        "y": pos_world[1],  # type: ignore
-                        "z": pos_world[2],  # type: ignore
-                    }
-                    if horizontal_distance < min_dist:
-                        min_dist = horizontal_distance
-                        closest_tag = index
+                tag["pos_world"] = {
+                    "x": pos_world[0],  # type: ignore
+                    "y": pos_world[1],  # type: ignore
+                    "z": pos_world[2],  # type: ignore
+                }
+                if horizontal_distance < min_dist:
+                    min_dist = horizontal_distance
+                    closest_tag = index
 
             tag_list.append(tag)
 
@@ -273,7 +269,7 @@ class VRCAprilTag(object):
         self.tm[H_to_from] = H_tag_cam
 
         # H_cam_tag = np.linalg.inv(H_tag_cam)
-        H_cam_tag = self.H_inv(H_tag_cam)
+        H_cam_tag = self.H_inv(H_tag_cam)  # type: ignore
 
         H_aerobody_tag = H_cam_tag.dot(self.tm["H_aeroBody_cam"])  # type: ignore
 

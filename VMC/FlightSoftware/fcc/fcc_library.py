@@ -88,11 +88,7 @@ class MAVMQTTBase:
         """
         Create and publish state machine event.
         """
-        event = {}
-
-        event["name"] = name
-        event["payload"] = payload
-        event["timestamp"] = self._timestamp()
+        event = {"name": name, "payload": payload, "timestamp": self._timestamp()}
 
         self.mqtt_client.publish(
             f"{self.topic_prefix}/events", json.dumps(event), retain=False, qos=0

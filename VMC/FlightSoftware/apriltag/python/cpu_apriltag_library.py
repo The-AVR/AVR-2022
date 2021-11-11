@@ -8,7 +8,7 @@ from pupil_apriltags import Detector
 # camera_params=[584.3866,583.3444,661.2944,320.7182],tag_size=0.057
 
 
-class AprilTagWrapper(object):
+class AprilTagWrapper:
     def __init__(self, camera_params, tag_size):
         self.camera_params = camera_params
         self.tag_size = tag_size
@@ -35,7 +35,7 @@ class AprilTagWrapper(object):
         )
 
 
-class AprilTagVPS(object):
+class AprilTagVPS:
     def __init__(
         self,
         protocol,

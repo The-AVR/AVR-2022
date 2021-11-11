@@ -1,6 +1,6 @@
 #include "vrc_led.hpp"
 
-VRCLED::VRCLED(uint8_t pin, uint8_t num_pixels,neoPixelType t) : Adafruit_NeoPixel(num_pixels,pin,t)
+VRCLED::VRCLED(uint8_t pin, uint8_t num_pixels, neoPixelType t) : Adafruit_NeoPixel(num_pixels, pin, t)
 {
     current_color = 255 << 24;
 }
@@ -28,7 +28,6 @@ void VRCLED::set_temp_color_target(uint8_t white, uint8_t red, uint8_t green, ui
     c |= blue;
     //record the color
     temp_color = c;
-
 }
 
 void VRCLED::set_base_color_target(uint8_t white, uint8_t red, uint8_t green, uint8_t blue)
@@ -47,12 +46,12 @@ void VRCLED::set_base_color_target(uint8_t white, uint8_t red, uint8_t green, ui
 void VRCLED::set_strip_color()
 {
     //update the memory matrix for the strip color
-    uint16_t i=0;
-    for(i=0; i<numPixels(); i++) 
+    uint16_t i = 0;
+    for (i = 0; i < numPixels(); i++)
     {
         setPixelColor(i, current_color);
     }
-    
+
     needs_color_update = true;
 }
 
@@ -68,11 +67,11 @@ void VRCLED::run(void)
             temp_running = false;
             current_color = base_color;
             set_strip_color();
-        } 
+        }
     }
-    else 
+    else
     {
-        if(current_color != base_color)
+        if (current_color != base_color)
         {
             current_color = base_color;
             set_strip_color();

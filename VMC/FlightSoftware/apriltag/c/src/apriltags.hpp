@@ -1,9 +1,9 @@
 #include <opencv2/core/version.hpp>
 
 #if CV_MAJOR_VERSION >= 3
-#    include <opencv2/imgcodecs.hpp>
+#include <opencv2/imgcodecs.hpp>
 #else
-#    include <opencv2/highgui/highgui.hpp>
+#include <opencv2/highgui/highgui.hpp>
 #endif
 
 #include <iostream>
@@ -15,7 +15,8 @@
 
 #include <opencv2/imgproc/imgproc.hpp>
 
-struct AprilTagsImpl {
+struct AprilTagsImpl
+{
     // Handle used to interface with the stereo library.
     nvAprilTagsHandle april_tags_handle = nullptr;
     // Camera intrinsics
@@ -39,11 +40,12 @@ struct AprilTagsImpl {
     int max_tags;
 
     void initialize(const uint32_t width,
-                    const uint32_t height, 
+                    const uint32_t height,
                     const size_t image_buffer_size,
                     const size_t pitch_bytes,
                     const float fx, const float fy, const float cx, const float cy,
-                    float tag_edge_size_, int max_tags_) {
+                    float tag_edge_size_, int max_tags_)
+    {
         assert(!april_tags_handle), "Already initialized.";
 
         // Get camera intrinsics
@@ -51,12 +53,13 @@ struct AprilTagsImpl {
 
         // Create AprilTags detector instance and get handle
         const int error = nvCreateAprilTagsDetector(
-                &april_tags_handle, width, height, nvAprilTagsFamily::NVAT_TAG36H11,
-                &cam_intrinsics, tag_edge_size_);
-        if (error != 0) {
+            &april_tags_handle, width, height, nvAprilTagsFamily::NVAT_TAG36H11,
+            &cam_intrinsics, tag_edge_size_);
+        if (error != 0)
+        {
             throw std::runtime_error(
-                    "Failed to create NV April Tags detector (error code " +
-                    std::to_string(error) + ")");
+                "Failed to create NV April Tags detector (error code " +
+                std::to_string(error) + ")");
         }
 
         // Create stream for detection
@@ -67,8 +70,9 @@ struct AprilTagsImpl {
         max_tags = max_tags_;
         // Setup input image CUDA buffer.
         const cudaError_t cuda_error =
-                cudaMalloc(&input_image_buffer, image_buffer_size);
-        if (cuda_error != cudaSuccess) {
+            cudaMalloc(&input_image_buffer, image_buffer_size);
+        if (cuda_error != cudaSuccess)
+        {
             throw std::runtime_error("Could not allocate CUDA memory (error code " +
                                      std::to_string(cuda_error) + ")");
         }
@@ -81,8 +85,10 @@ struct AprilTagsImpl {
         input_image.pitch = pitch_bytes;
     }
 
-    ~AprilTagsImpl() {
-        if (april_tags_handle != nullptr) {
+    ~AprilTagsImpl()
+    {
+        if (april_tags_handle != nullptr)
+        {
             cudaStreamDestroy(main_stream);
             nvAprilTagsDestroy(april_tags_handle);
             cudaFree(input_image_buffer);
@@ -90,4 +96,4 @@ struct AprilTagsImpl {
     }
 };
 
-uint32_t process_frame(cv::Mat img_rgba8, AprilTagsImpl* impl_);
+uint32_t process_frame(cv::Mat img_rgba8, AprilTagsImpl *impl_);

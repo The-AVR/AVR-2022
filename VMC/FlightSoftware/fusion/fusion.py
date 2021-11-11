@@ -10,13 +10,8 @@ import paho.mqtt.client as mqtt
 import pymap3d
 from loguru import logger
 
-# find the file path to this file
-__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-INTERRUPTED = False
-
-
-class Fusion(object):
+class Fusion:
     def __init__(self):
         self.config = {
             "origin": {"lat": 32.807650, "lon": -97.157153, "alt": 161.5},
@@ -90,7 +85,7 @@ class Fusion(object):
         rc: int,
         properties: mqtt.Properties = None,
     ) -> None:
-        logger.debug(f" FUS: Connected with result code {str(rc)}")
+        logger.debug(f"FUS: Connected with result code {rc}")
         for topic in self.topic_map.keys():
             logger.debug(f"FUS: Subscribed to: {topic}")
             client.subscribe(topic)
@@ -300,19 +295,17 @@ class Fusion(object):
         except Exception as e:
             logger.exception("FUS: Error fusing att/heading sources")
 
-    def assemble_hil_gps_message(self):
+    def assemble_hil_gps_message(self) -> None:
         """
         This code takes the pos data from fusion and formats it into a special message that is exactly
         what the FCC needs to generate the hil_gps message (with heading)
         """
-
         time.sleep(10)
         while not self.vio_init:
             time.sleep(1)
         while True:
             time.sleep(0.1)
             try:
-
                 lat = int(
                     self.local_copy["geo"]["lat"] * 10000000
                 )  # convert to int32 format
@@ -359,7 +352,7 @@ class Fusion(object):
                 # raise e
                 continue
 
-    def on_apriltag_message(self, msg: dict):
+    def on_apriltag_message(self, msg: dict) -> None:
         try:
             if self.vio_init:
                 now = time.time()
@@ -411,7 +404,7 @@ class Fusion(object):
             logger.exception("FUS: Error in t265 resync")
             raise e
 
-    def run(self):
+    def run(self) -> None:
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
 
         hil_thread = threading.Thread(

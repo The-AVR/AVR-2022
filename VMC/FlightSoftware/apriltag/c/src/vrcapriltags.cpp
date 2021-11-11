@@ -17,7 +17,7 @@ using json = nlohmann::basic_json<std::map, std::vector, std::string, bool, std:
 json jsonify_tag(nvAprilTagsID_t detection)
 {
     // create an empty structure (null)
-    json j; 
+    json j;
 
     j["id"] = detection.id;
 
@@ -25,41 +25,43 @@ json jsonify_tag(nvAprilTagsID_t detection)
     j["pos"]["y"] = detection.translation[1];
     j["pos"]["z"] = detection.translation[2];
 
-    j["rotation"] = {   {detection.orientation[0],detection.orientation[3],detection.orientation[6]},
-                        {detection.orientation[1],detection.orientation[4],detection.orientation[7]},
-                        {detection.orientation[2],detection.orientation[5],detection.orientation[8]}};
+    j["rotation"] = {{detection.orientation[0], detection.orientation[3], detection.orientation[6]},
+                     {detection.orientation[1], detection.orientation[4], detection.orientation[7]},
+                     {detection.orientation[2], detection.orientation[5], detection.orientation[8]}};
 
     return j;
 }
 
-
-int main() {
+int main()
+{
     //############################################# SETUP MQTT ####################################################################################
-    const std::string SERVER_ADDRESS { "tcp://mqtt:18830" };
-    const std::string CLIENT_ID { "nvapriltags" };
-    const std::string TAG_TOPIC { "vrc/apriltags/raw" };
-    const std::string FPS_TOPIC { "vrc/apriltags/fps" };
+    const std::string SERVER_ADDRESS{"tcp://mqtt:18830"};
+    const std::string CLIENT_ID{"nvapriltags"};
+    const std::string TAG_TOPIC{"vrc/apriltags/raw"};
+    const std::string FPS_TOPIC{"vrc/apriltags/fps"};
 
     const int QOS = 0;
     mqtt::client client(SERVER_ADDRESS, CLIENT_ID);
 
     mqtt::connect_options connOpts;
-	connOpts.set_keep_alive_interval(20);
-	connOpts.set_clean_session(true);
+    connOpts.set_keep_alive_interval(20);
+    connOpts.set_clean_session(true);
 
-    try {
-		std::cout << "\nConnecting..." << std::endl;
-		client.connect(connOpts);
-		std::cout << "...OK" << std::endl;
+    try
+    {
+        std::cout << "\nConnecting..." << std::endl;
+        client.connect(connOpts);
+        std::cout << "...OK" << std::endl;
     }
-    catch (const mqtt::exception& exc) {
-		std::cerr << exc.what() << std::endl;
-		return 1;
-	}
+    catch (const mqtt::exception &exc)
+    {
+        std::cerr << exc.what() << std::endl;
+        return 1;
+    }
 
     //############################################# SETUP VIDEO CAPTURE ##################################################################################################
     cv::VideoCapture capture("nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720,format=NV12, framerate=15/1 ! nvvidconv ! video/x-raw,format=BGRx !  videoconvert ! videorate ! video/x-raw,format=BGR,framerate=5/1 ! appsink", cv::CAP_GSTREAMER);
-    std::cout<<"made it past cap device"<<std::endl;
+    std::cout << "made it past cap device" << std::endl;
 
     cv::Mat frame;
     cv::Mat img_rgba8;
@@ -72,10 +74,10 @@ int main() {
     //create the apriltag handler
     auto *impl_ = new AprilTagsImpl();
     impl_->initialize(img_rgba8.cols, img_rgba8.rows,
-                      img_rgba8.total() * img_rgba8.elemSize(),  img_rgba8.step,
-                      fx,fy,ppx,ppy, //camera params
-                      0.174, //tag edge length
-                      6); //max number of tags 
+                      img_rgba8.total() * img_rgba8.elemSize(), img_rgba8.step,
+                      fx, fy, ppx, ppy, //camera params
+                      0.174,            //tag edge length
+                      6);               //max number of tags
 
     //################################################################### MAIN LOOP ##########################################################################################
     while (capture.isOpened())
@@ -92,14 +94,15 @@ int main() {
 
             //convert the frame to rgba
             cv::cvtColor(frame, img_rgba8, cv::COLOR_BGR2RGBA);
-            
+
             //send the frame to GPU memory and run the detections
             uint32_t num_detections = process_frame(img_rgba8, impl_);
 
             std::string payload = "[";
-            
+
             //handle the detections
-            for (int i = 0; i < num_detections; i++) {
+            for (int i = 0; i < num_detections; i++)
+            {
                 const nvAprilTagsID_t &detection = impl_->tags[i];
 
                 json j = jsonify_tag(detection);
@@ -109,40 +112,36 @@ int main() {
                 {
                     payload.append(",");
                 }
-                
             }
 
             payload.append("]");
 
             auto end = std::chrono::system_clock::now();
 
-            if (num_detections > 0) 
+            if (num_detections > 0)
             {
-                const char * const_payload = payload.c_str();
-                client.publish(TAG_TOPIC, const_payload, strlen(const_payload));        
+                const char *const_payload = payload.c_str();
+                client.publish(TAG_TOPIC, const_payload, strlen(const_payload));
             }
-            
-            
-            int fps = int(1000 / ( std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() + 1));
+
+            int fps = int(1000 / (std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() + 1));
 
             std::string fps_str = std::to_string(fps);
-            const char * const_fps_str = fps_str.c_str();
+            const char *const_fps_str = fps_str.c_str();
             client.publish(FPS_TOPIC, const_fps_str, strlen(const_fps_str));
         }
     }
-    delete(impl_);
+    delete (impl_);
     return 0;
 }
 
-
-
-    // while(capture.isOpened())
-    // {
-    //     std::cout<<"while"<<std::endl;
-    //     capture.read(frame);
-    //     cv::namedWindow("frame", 0);
-    //     cv::resizeWindow("frame", 1280,720);
-    //     cv::imshow("frame", frame);
-    //     if (cv::waitKey(1)==27)
-    //         break;
-    // }
+// while(capture.isOpened())
+// {
+//     std::cout<<"while"<<std::endl;
+//     capture.read(frame);
+//     cv::namedWindow("frame", 0);
+//     cv::resizeWindow("frame", 1280,720);
+//     cv::imshow("frame", frame);
+//     if (cv::waitKey(1)==27)
+//         break;
+// }

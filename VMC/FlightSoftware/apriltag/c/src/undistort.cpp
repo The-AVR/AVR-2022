@@ -1,6 +1,5 @@
 #include "undistort.hpp"
 
-
 // VPI objects that will be used
 VPIStream stream = NULL;
 VPIPayload remap = NULL;
@@ -8,36 +7,35 @@ VPIImage tmpIn = NULL, tmpOut = NULL;
 VPIImage vimg = nullptr;
 
 // Camera intrinsic parameters, initially identity (will be estimated by calibration process).
-using Mat3     = cv::Matx<double, 3, 3>;
+using Mat3 = cv::Matx<double, 3, 3>;
 Mat3 camMatrix = Mat3::eye();
 
 // Allocate a dense map.
-VPIWarpMap map            = {};
+VPIWarpMap map = {};
 
 // Initialize the fisheye lens model with the coefficients given by calibration procedure.
 VPIFisheyeLensDistortionModel distModel = {};
 
-
 void setup_vpi(cv::Mat img_rgba8)
 {
-    camMatrix(0,0) = (double)fx;
-    camMatrix(1,1) = (double)fy;
-    camMatrix(0,2) = (double)ppx;
-    camMatrix(1,2) = (double)ppy;
+    camMatrix(0, 0) = (double)fx;
+    camMatrix(1, 1) = (double)fy;
+    camMatrix(0, 2) = (double)ppx;
+    camMatrix(1, 2) = (double)ppy;
 
-    map.grid.numHorizRegions  = 1;
-    map.grid.numVertRegions   = 1;
-    map.grid.regionWidth[0]   = img_rgba8.cols;
-    map.grid.regionHeight[0]  = img_rgba8.rows;
+    map.grid.numHorizRegions = 1;
+    map.grid.numVertRegions = 1;
+    map.grid.regionWidth[0] = img_rgba8.cols;
+    map.grid.regionHeight[0] = img_rgba8.rows;
     map.grid.horizInterval[0] = 1;
-    map.grid.vertInterval[0]  = 1;
+    map.grid.vertInterval[0] = 1;
     CHECK_STATUS(vpiWarpMapAllocData(&map));
 
-    distModel.mapping                       = VPI_FISHEYE_EQUIDISTANT;
-    distModel.k1                            = -0.013826167055651659;
-    distModel.k2                            = -0.11999744016996756;
-    distModel.k3                            = 0.2825695466585381;
-    distModel.k4                            = -0.22616481734332383;
+    distModel.mapping = VPI_FISHEYE_EQUIDISTANT;
+    distModel.k1 = -0.013826167055651659;
+    distModel.k2 = -0.11999744016996756;
+    distModel.k3 = 0.2825695466585381;
+    distModel.k4 = -0.22616481734332383;
 
     // Fill up the camera intrinsic parameters given by camera calibration procedure.
     VPICameraIntrinsic K;
@@ -70,7 +68,6 @@ void setup_vpi(cv::Mat img_rgba8)
     // Temporary input and output images in NV12 format.
     CHECK_STATUS(vpiImageCreate(1280, 720, VPI_IMAGE_FORMAT_NV12_ER, 0, &tmpIn));
     CHECK_STATUS(vpiImageCreate(1280, 720, VPI_IMAGE_FORMAT_NV12_ER, 0, &tmpOut));
-
 };
 
 void undistort_frame(cv::Mat frame)

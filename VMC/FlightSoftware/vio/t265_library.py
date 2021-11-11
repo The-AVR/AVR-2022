@@ -5,7 +5,7 @@ import pyrealsense2 as rs
 from loguru import logger
 
 
-class T265(object):
+class T265:
     """
     Realsense T265 Tracking Camera interface. Manages pulling data off of the camera for use by the transforms to get it in the correct reference frame.
     """

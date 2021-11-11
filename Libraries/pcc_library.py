@@ -118,7 +118,6 @@ class VRC_Peripheral:
     def set_servo_min(self, servo: int, minimum: float) -> None:
         valid_command = False
 
-        command = self.commands["SET_SERVO_MIN"]
         data = []
 
         if isinstance(minimum, (float, int)) and minimum < 1000 and minimum > 0:
@@ -126,6 +125,7 @@ class VRC_Peripheral:
             data = [servo, minimum]
 
         if valid_command:
+            command = self.commands["SET_SERVO_MIN"]
             if self.use_serial is True:
                 length = 3  # command + servo + min pwm
                 self.ser.write(self._construct_payload(command, length, data))
@@ -136,7 +136,6 @@ class VRC_Peripheral:
     def set_servo_max(self, servo: int, maximum: float) -> None:
         valid_command = False
 
-        command = self.commands["SET_SERVO_MAX"]
         data = []
 
         if isinstance(maximum, (float, int)) and maximum < 1000 and maximum > 0:
@@ -144,6 +143,7 @@ class VRC_Peripheral:
             data = [servo, maximum]
 
         if valid_command:
+            command = self.commands["SET_SERVO_MAX"]
             if self.use_serial is True:
                 length = 3  # command + servo + min pwm
                 self.ser.write(self._construct_payload(command, length, data))
@@ -154,7 +154,6 @@ class VRC_Peripheral:
     def set_servo_pct(self, servo: int, pct: float) -> None:
         valid_command = False
 
-        command = self.commands["SET_SERVO_PCT"]
         data = []
 
         if isinstance(pct, (float, int)) and pct < 100 and pct > 0:
@@ -162,6 +161,7 @@ class VRC_Peripheral:
             data = [servo, int(pct)]
 
         if valid_command:
+            command = self.commands["SET_SERVO_PCT"]
             if self.use_serial is True:
                 length = 3  # command + servo + percent
                 self.ser.write(self._construct_payload(command, length, data))

@@ -13,7 +13,7 @@ except ImportError:
     from .fcc_library import FCC, PyMAVLinkAgent
 
 
-class FCCModule(object):
+class FCCModule:
     def __init__(self):
 
         self.mqtt_host = "localhost"
@@ -41,7 +41,9 @@ class FCCModule(object):
             f"{self.topic_prefix}/fusion/hil_gps": self.mocap_queue,
         }
 
-    def on_message(self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage):
+    def on_message(
+        self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage
+    ) -> None:
         try:
             # logger.debug(f"{msg.topic}: {str(msg.payload)}")
             if msg.topic in self.mqtt_topics.keys():

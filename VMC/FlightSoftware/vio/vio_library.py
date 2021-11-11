@@ -12,7 +12,7 @@ except ImportError:
     from .t265_library import T265
 
 
-class T265CoordinateTransformation(object):
+class T265CoordinateTransformation:
     """
     This class handles all the coordinate transformations we need to use to get
     relevant data from the Intel Realsense T265 camera
@@ -166,8 +166,8 @@ class T265CoordinateTransformation(object):
         return T, vel, eul
 
 
-class VIO(object):
-    def __init__(self, mqtt_client):
+class VIO:
+    def __init__(self, mqtt_client: MQTT_Client):
 
         self.init = False
         self.continuous_sync = True
@@ -255,7 +255,7 @@ class VIO(object):
         except ValueError as e:
             logger.exception(str(e))
 
-    def run(self):
+    def run(self) -> None:
 
         # setup the t265
         logger.debug("Setting up T265")
