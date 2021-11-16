@@ -39,7 +39,7 @@ git clone https://github.com/PX4/PX4-Autopilot --depth 5 "$px4dir" --branch $PX4
 echo "--- Applying PX4 patch"
 # apply patch
 cd "$px4dir"
-git apply "$basedir/hil_gps_heading_$PX4_VERSION.patch"
+git apply --ignore-space-change --ignore-whitespace "$basedir/hil_gps_heading_$PX4_VERSION.patch"
 
 echo "--- Injecting Bell MAVLink message"
 cp "$basedir/bell.xml" "$px4dir/mavlink/include/mavlink/v2.0/message_definitions/bell.xml"
