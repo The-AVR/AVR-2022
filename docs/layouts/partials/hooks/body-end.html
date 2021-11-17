@@ -19,6 +19,7 @@
         });
     });
 </script>
+
 <!-- https://spdevuk.com/how-to-create-code-copy-button/ -->
 <style>
     div.highlight button {
@@ -35,5 +36,24 @@
         top: 0;
         right: 0;
         border-radius: 0 0.15rem;
+    }
+</style>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css" />
+<script src="https://cdn.jsdelivr.net/gh/mcstudios/glightbox/dist/js/glightbox.min.js"></script>
+
+<script type="text/javascript">
+    lightbox = GLightbox({});
+</script>
+
+<style>
+    /* Fix page scroll being reset on image open */
+    .glightbox-open {
+        overflow: initial;
+    }
+
+    /* Add magnifying glass icon to image on hover */
+    .glightbox:hover {
+        cursor: zoom-in;
     }
 </style>
