@@ -1,5 +1,5 @@
 # .vscode folder
-.vscode
+.vscode/**
 !.vscode/extensions.json
 
 # python cache files
