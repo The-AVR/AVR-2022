@@ -56,7 +56,7 @@ Finally, the carbon fiber plate goes over the screws and a locknut goes on the e
 Tighten the nuts slightly by hand, so they don't fall off.
 Follow this process for all four motors.
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 Don't fully tighten the nuts with a wrench yet, because we have to put the
 carbon fiber tubes through first, and then we will tighten them around the tube.
 {{% /alert %}}
@@ -73,7 +73,7 @@ slightly beyond the motor mount, but just a few millimeters should be enough.
 Once the tube is inserted, you can tighten the screws using the provided
 H2.0 hex tool and 5.5BOX tool.
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 The motor wires should be on the opposite side of the carbon fiber tubes.
 These wires will later plug into extension cables that will come from
 inside the carbon tubes.

@@ -40,7 +40,7 @@ compass calibration process. This still applies to the VRC drone.
 
 ![Begin the process of rotating the VRC drone around the highlighted axis.](qgc_compass_progress.png)
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 You may find it difficult to rotate the VRC drone with USB connected. 
 It is helpful to have someone keep the cable out of the way while another 
 rotates the drone around its designated axis.

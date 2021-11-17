@@ -22,7 +22,7 @@ position and rotation test.
 
 {{< youtube 0tx5MmgKcWw >}}
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 It is not necessary to do this motor test every time you fly,
 but it is highly recommended if any wiring modifications have been
 made to your VRC drone.

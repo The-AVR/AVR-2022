@@ -43,7 +43,7 @@ Because the ESCs are mounted in a very tight space,
 it might be hard to find which wire is coming from which ESC,
 and which ESC is connected to which motor.
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 To more easily identify the correct motor you can pull out the extension
 cables and follow them to the ESC. On the other side of the
 ESC will be the black/white servo cable that you'll plug into

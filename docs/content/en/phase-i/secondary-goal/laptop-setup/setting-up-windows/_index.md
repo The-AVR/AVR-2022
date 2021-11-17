@@ -56,7 +56,7 @@ to set up an offline account.
 - Enter a name for your team's laptop
 - Enter a password for your team's laptop
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 This goes without saying, but make sure to **WRITE DOWN YOUR PASSWORD**
 {{% /alert %}}
 

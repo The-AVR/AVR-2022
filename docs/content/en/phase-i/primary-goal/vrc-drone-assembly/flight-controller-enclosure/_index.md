@@ -41,7 +41,7 @@ you can put the top case on and turn the whole enclosure upside down.
 Use four screws to mount the top case to the bottom. Once again,
 be careful when tightening.
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 Now is a good time to insert the 16GB micro SD card into the FC as
 shown in the photo below. The SD card will come in handy throughout
 VRC and will allow for data logging.

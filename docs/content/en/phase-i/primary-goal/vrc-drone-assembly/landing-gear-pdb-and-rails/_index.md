@@ -34,7 +34,7 @@ sides, there are four small holes for screws. The black M3 socket head cap screw
 go down these holes and should screw directly into the leg mounts.
 Nuts are not needed for this part.
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 The T-connector is vulnerable to cracking with hard landings.
 We have found that adding a zip tie around the connector can help protect it.
 {{% /alert %}}
@@ -48,7 +48,7 @@ pre-soldered board included with your kit. This should be located in Box 4
 (soft, black case). It already has bullet connectors for your ESCs.
 It also has a yellow XT60 connector for the FC power module.
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 The PDB is supplied and soldered by a 3rd party.
 Some participants have noticed a white residue on the backside of the PDB.
 This may be flux residue leftover from soldering. We recommend cleaning this
@@ -122,7 +122,7 @@ or any other accessory. More of this will be covered as you progress further int
 
 ![Accessory plate mounted at front of the frame](camera_mount.jpg)
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 It might also be useful to apply a **threadlocking adhesive** (such as Loctite 243)
 to the screws for the rails and connected plates. In any case make sure to check
 the screws regularly, especially if you have any payload attached

@@ -24,7 +24,7 @@ The next step is to place the top plate on the bolts and tube clamps.
 Make sure to place the top plate facing the correct direction.
 This will become clear as you go through the rest of this section.
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 Before you put the top plate on, it is convenient to pull all signal cables coming
 from the ESCs (black and white) to the back. Pull them through the gap
 in the top plate below the servo rail of the FC.
@@ -32,7 +32,7 @@ in the top plate below the servo rail of the FC.
 
 ![Rear of drone frame, ESC signal cables, and servo rail from FC](top_plate_rear.jpg)
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 You should pull the two cables coming from the RC receiver and FC power module
 through the gap underneath the FC, from the right side as seen in the photo above.
 It will be a lot easier if you do this now as the cables will be

@@ -17,7 +17,7 @@ The rubber dampers can be a challenge to work with.
 **Don't hesitate to use force** and pinch them with your fingers to
 push them through. You can also wet them a bit so they "glide" through the holes.
 
-{{% alert title="Tip" color="info" %}}
+{{% alert title="Tip" color="tip" %}}
 If you continue to have problems one suggestion is to use the
 side of the small hex tool to push the dampers into the holes.
 Be sure to come at the damper from the side and do not poke directly into it.
