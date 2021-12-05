@@ -30,22 +30,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Copy libraries
-        shell: bash
-        run: |
-          cp Libraries/pcc_library.py PCC/GUI/
-          cp Libraries/qt_icon.py PCC/GUI/
-          mkdir -p PCC/GUI/img
-          cp -r Libraries/img PCC/GUI/img
-
-          cp Libraries/qt_icon.py VMC/GUI/
-          mkdir -p VMC/GUI/img
-          cp -r Libraries/img VMC/GUI/img
-
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
           python-version: "3.9"
+
+      - name: Copy libraries
+        run: python scripts/copy_libraries.py
 
       - name: Prepare Python
         run: |

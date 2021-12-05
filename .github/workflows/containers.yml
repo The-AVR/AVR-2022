@@ -58,13 +58,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Copy libraries
+        run: python scripts/copy_libraries.py
+
       - name: Generate custom pymavlink package
         if: matrix.image == fcc
         run: PX4/generate.sh
-
-      - name: Copy PCC library
-        if: matrix.image == pcc
-        run: cp Libraries/pcc_library.py VMC/FlightSoftware/pcc/pcc_library.py
 
       - name: Build and push
         uses: docker/build-push-action@v2

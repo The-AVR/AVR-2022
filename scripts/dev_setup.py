@@ -10,7 +10,7 @@ def main():
     )
 
     # Get the base directory
-    basepath = Path(__file__).parent
+    basepath = Path(__file__).parent.parent
 
     # Get the top level directories
     directories = basepath.glob("*")

@@ -10,6 +10,7 @@
   - `GUI`: PCC test GUI
 - `PX4`: PX4 and MAVLink files
 - `RVR`: RVR files
+- `scripts`: Development scripts
 - `VMC`: VMC files
   - `FlightSoftware`: VMC flight software
   - `GUI`: VMC control GUI

@@ -1,5 +1,4 @@
-colored==1.4.2
 loguru==0.5.3
-numpy==1.19.5
-paho-mqtt==1.5.1
-pymap3d==2.7.0
+numpy==1.21.4
+paho-mqtt==1.6.1
+pymap3d==2.7.2
