@@ -53,7 +53,7 @@ Mount all four prop adapters and then add one of the provided aluminum washers
 on each of the four shafts. The washers come in a separate bag and are necessary
 to make sure the propeller is nicely seated on the adapter.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 It is good practice to check the prop adapter screws before each flight. 
 Simple pre-flight checks can prevent catastrophic failures while in the air.
 {{% /alert %}}

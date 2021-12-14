@@ -63,7 +63,7 @@ top and signal wire (white) on the bottom.
 
 ![ESC servo connections with ground (black) on top and signal (white) on bottom](escs_connected.jpg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Motor rotation is important to make sure the drone can gain altitude and hover.
 This will be covered shortly, but know that swapping any two of the three motor
 leads will reverse the motor rotation.

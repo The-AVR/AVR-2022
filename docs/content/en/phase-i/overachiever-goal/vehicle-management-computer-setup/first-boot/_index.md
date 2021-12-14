@@ -18,7 +18,7 @@ Follow this guide in order to get through the Jetson's initial setup.
 
 ![](comport.PNG)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Look under Ports ( COM & LPT ). My Jetson enumerated as COM4
 {{% /alert %}}
 
@@ -32,7 +32,7 @@ Look under Ports ( COM & LPT ). My Jetson enumerated as COM4
 
 ![](jetson_hello.PNG)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 All the navigation here on out will be done via your keyboard when using PuTTY
 {{% /alert %}}
 

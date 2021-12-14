@@ -84,7 +84,7 @@ There are four ESCs or motor controllers included in the VRC kit.
 The ESCs control the current to the motors based on output from the FC.
 The motors are connected to the ESCs with three bullet connectors.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 The three bullet connectors can be connected in any order.
 However, when a motor does not turn in the desired direction,
 two of the three cables should be swapped. The motor will then turn

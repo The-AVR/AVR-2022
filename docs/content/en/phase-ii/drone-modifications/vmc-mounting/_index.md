@@ -40,7 +40,7 @@ The VMC blocks will attach to the two holes on the right and left of
 the frame with zip ties. This will position the VMC over the FC.
 Make sure the telemetry cable is hanging off to the left side of the frame.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 For added security we recommend placing a small piece of double-sided
 tape on each side of the drone frame in between the mounting holes as seen below.
 {{% /alert %}}
@@ -71,7 +71,7 @@ Place your cooling fan on top of the heat sink and insert all four bolts
 through the fan and the heat sink. Using needle nose pliers you can hold 
 the nut into place and screw the bolt tight with a Phillips head screwdiver.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 The nuts provided with the cooling fan are not self-locking. 
 It's a good idea to check them from time to time or use a small amount 
 of thread locker to keep them secure.
@@ -83,7 +83,7 @@ After mounting the cooling fan plug the connector into your VMC as shown below.
 
 ![Cooling fan connected to VMC](vmc_cooling_plugged_in.jpg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 The cooling fan only operates when your VMC exceeds a certain temperature. 
 Once it cools the VMC beneath the temperature threshold it will shut off.
 {{% /alert %}}

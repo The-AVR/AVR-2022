@@ -87,7 +87,7 @@ pictured below.
 - **00016** Indicates the approximate amount of mAh that have gone into the
   battery since the charge was initiated.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 While the battery has a capacity of 5000mAh, you will likely not put 5000mAh
 into the battery on charging. We can only put in what we have taken out.
 A LiPO battery cannot be run down to 0.0V per cell, it cannot go lower

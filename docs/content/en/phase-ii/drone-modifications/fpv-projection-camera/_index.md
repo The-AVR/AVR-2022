@@ -32,7 +32,7 @@ as show in the photo below. Fasten two zip ties together to create enough
 length to wrap around both the camera and ring mount. This will ensure that
 the camera does not come loose while in the air.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Be gentle with the camera as the solder joint for the antenna is fragile.
 You do not want to accidentally have the antenna come loose!
 {{% /alert %}}
@@ -45,7 +45,7 @@ and the VRC drone.
 
 ![XT-60 connector of camera sitting between the batter and the FC's power module](fpv_projection_cam_powered.jpg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 There will be some slack in the power cable between the camera and
 the XT-60 connector. Use your best judgment regarding how much slack to
 leave available. Given you will be powering the system with the Venom battery

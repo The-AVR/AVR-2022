@@ -10,13 +10,13 @@ develop for the VRC platform.**
 
 You can find the download links [here](https://www.anaconda.com/products/individual).
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Install the Graphical Installer for Windows.
 {{% /alert %}}
 
 ![](image.png)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Use the default options presented by the installer.
 {{% /alert %}}
 

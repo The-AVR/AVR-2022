@@ -11,7 +11,7 @@ It should fit in a hole in the side, next to the hole for the micro USB connecto
 
 ![Reset button mounted in place](fc_reset_button.jpg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 The FC will ship with small pieces of tape on top of its connectors.
 You should take them off using an exacto knife or small tool.
 Be sure not to damage any of the connectors.

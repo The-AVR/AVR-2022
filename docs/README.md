@@ -110,7 +110,7 @@ Here are the 4 types of callout blocks I like to use to stay consistent:
 
 {{% alert title="Warning" color="warning" %}}
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 
 {{% alert title="Tip" color="tip" %}}
 ```

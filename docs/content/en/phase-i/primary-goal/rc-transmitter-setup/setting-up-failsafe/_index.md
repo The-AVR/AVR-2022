@@ -40,7 +40,7 @@ disable the motors.
 
 ![Default stick/switch positions with SWD kill switch enabled (toggled down)](failsafe_positions.jpg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Channel values are normally represented by a range of -100% to 100%.
 For example, the throttle stick (left stick vertical axis) is assigned to CH3.
 When the throttle stick is all the way down CH3 is set to -100% and when it

@@ -10,7 +10,7 @@ for the listed sensors. This step is very important for stable flights.
 It is required to do the calibration at least once and should be repeated whenever
 adding new components to the VRC drone or if flight becomes less stable. 
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Given Phase 2 of VRC will require additional autonomy components and peripherals, 
 it is a good practice to understand the calibration process in detail.
 {{% /alert %}}
@@ -33,7 +33,7 @@ Click **Ok** to proceed with the compass calibration.
 QGC will automatically recognize the orientation of the VRC drone and
 provide a yellow highlight as shown in the image below.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Don't be thrown off by the images of an airplane in the QGC 
 compass calibration process. This still applies to the VRC drone.
 {{% /alert %}}

@@ -85,7 +85,7 @@ voltage, and then cycle through showing the voltage of each individual cell.
 
 ![Cell checker in action](image2.jpg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 When using the cell checker, you need to plug it in with the contacts
 (silver tabs) facing up and (black plastic arrows facing down)
 and the plug towards the left side of the checker.

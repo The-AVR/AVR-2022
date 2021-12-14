@@ -48,7 +48,7 @@ charge status screen pictured below.
 **STO** in this case indicates that the charger is taking the battery
 to a safe storage voltage. All other indicators are the same as when charging.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Typically the charger will charge up to and past storage voltage.
 It will then discharge in order to accurately hit the target storage voltage.  
 This is normal.
@@ -60,7 +60,7 @@ to 3 months in this state.
 
 ![Battery storage discharge complete](battery_end.jpeg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Storage charging may take hours to perform properly based on the
 starting voltage of the pack. A storage cycle should never be conducted
 without direct supervision. In cases where the time for a proper storage

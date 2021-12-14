@@ -18,7 +18,7 @@ You will see the following screen.
 
 ![Firmware upload screen in QGC](qgc_firmware_default.png)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Make your FC is **NOT** plugged in when accessing the firmware setup screen.
 First access the firmware screen and **THEN** plug in your FC.
 It will recognize the connection and initiate the process.

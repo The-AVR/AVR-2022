@@ -57,7 +57,7 @@ Take one of the arms and feed the motor cables into the tube all the way through
 to the opposite end. The bullet connectors will barely extend beyond the
 tube as seen in the photo below.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 You may notice in the following photos that we have braided
 our motor and ESC extension cables. This is not necessary but does
 help make managing all of the cables a bit easier.
@@ -94,7 +94,7 @@ This is important as it will provide for the most stable and consistent flight.
 You can now tighten the bolts that go through the tube clamps using
 the provided hex tool and socket wrench. Repeat this process for all four arms.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 After tightening all the tube clamps it is a good idea to go around one
 more time to make sure the hex nuts are nice and tight.
 {{% /alert %}}

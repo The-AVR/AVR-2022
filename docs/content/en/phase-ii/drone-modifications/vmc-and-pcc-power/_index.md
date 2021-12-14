@@ -22,7 +22,7 @@ male bullet connectors as seen below.
 
 ![Heat shrink tubing, bullet connectors, and buck converter](bullet_connectors1.jpg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 The heat shrink tubing will be longer than necessary. Cut two pieces of tubing
 approximately 2" in length using scissors.
 {{% /alert %}}
@@ -31,7 +31,7 @@ Place heat shrink tubing over the black and red leads of the buck converter.
 Clamp one of the bullet connectors using the tool of your choice and fill
 the cup with solder.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 If you don't have a tool to hold the bullet connector one thing you
 can do is drill a hole into a small piece of wood, such as an old
 piece of 2x4, and place the bullet connector into the hole with the cup facing up.
@@ -90,7 +90,7 @@ Otherwise you will not be able to do so after soldering is complete.
 Soldering two leads together isn't always the easiest chore so be
 sure to use the right tool to keep the leads steady and then solder them together.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 It's incredibly important that you solder the
 <span style="background-color: red;">**RED**</span> lead from the barrel plug to the
 <span style="background-color: yellow;">**YELLOW**</span> lead of the buck converter.
@@ -145,7 +145,7 @@ we are referring to the right side with the nose of the VRC drone pointed away
 from us and looking down on the frame.
 {{% /alert %}}
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Be sure to plug the red lead from the buck converter into the positive terminal
 on the PDB. It will also be red as shown in the photo below. Then proceed
 with black to black.

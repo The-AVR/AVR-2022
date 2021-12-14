@@ -20,7 +20,7 @@ Power on the laptop
 
 ## Set up your network
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 You need a network with an internet connection to fully set up your laptop.
 {{% /alert %}}
 
@@ -40,7 +40,7 @@ assumes you have clicked "Get it" on the update screen
 - Read and Accept the terms and conditions for running Windows on this machine
 - Click "Set up for personal use"
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 At this point, Windows will encourage you to login or sign up using a
 Microsoft account. This is a great feature for your personal machine,
 but since this will be a shared resource for your whole team, we're going
@@ -68,7 +68,7 @@ This goes without saying, but make sure to **WRITE DOWN YOUR PASSWORD**
 - Decide whether or not to use activity history
 - Choose the privacy settings that are right for your team
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 If you're unsure about which privacy settings to choose,
 consult with your team's faculty sponsor.
 {{% /alert %}}

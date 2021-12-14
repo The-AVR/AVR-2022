@@ -52,7 +52,7 @@ the tape as seen in the photo below.
 
 ![Double-stacked tape ready for FC mounting](top_plate_with_tape.jpg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 As we discussed previously, there is a little triangle cutout in the bottom and top
 lates that represent the front of the frame. Be sure to mount the front of the
 FC pointing to the front of the top plate as seen in the photo below.

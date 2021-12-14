@@ -37,7 +37,7 @@ The PCC ships in 4 plastic bags consisting of the following:
   - 3 x 12x1 Female Pin Headers
   - 3 x 16x1 Female Pin Headers
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 The picture only has a 9 pin header for the Prop Maker, because mine broke
 off in shipping. Don't worry this isn't an issue, just place them
 together when it's time to solder.

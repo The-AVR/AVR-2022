@@ -19,7 +19,7 @@ Open the installer and follow the prompts. You may experience the following:
 **This is normal for QGC**. It is an open-source application that for some releases
 is not signed. Go ahead and click **Run anyway**, because we trust this developer.
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 If asked, make sure to allow access for firewalls on public AND private networks.
 {{% /alert %}}
 

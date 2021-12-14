@@ -40,7 +40,7 @@ and into one of the ports on the VMC.
 
 ![T-265 mounted and connected to VMC](t265_short_cable.jpg)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 As you're going through the build process make note of any cables that may
 obstruct the drone's propellers. The photos provided throughout this GitBook
 show how we've mounted things and provide an sufficient amount of clearance.

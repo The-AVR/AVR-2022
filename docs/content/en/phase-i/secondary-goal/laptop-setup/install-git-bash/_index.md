@@ -8,13 +8,13 @@ start programs and interact with the Vehicle Management Computer.**
 
 You can find the download links [here](https://git-scm.com/downloads).
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Install Git for Windows. Make sure to check "Additional Icons -> On the Desktop".
 {{% /alert %}}
 
 ![](image.png)
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Make sure to choose "Use Visual Studio Code as Git's default editor as shown below.
 We'll install that in a few steps.
 {{% /alert %}}

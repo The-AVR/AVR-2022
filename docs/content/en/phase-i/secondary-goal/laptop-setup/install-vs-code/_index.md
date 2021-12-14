@@ -10,7 +10,7 @@ as well as our ground control station computer.**
 
 You can find the download links [here](https://code.visualstudio.com/).
 
-{{% alert title="Note" color="info" %}}
+{{% alert title="Note" color="note" %}}
 Follow the installer setup, making sure to check the box for "Create a Desktop Icon",
 "Add 'Open with Code' action to Windows Explorer file context menu",
 "Register Code as an editor for supported file types", and
