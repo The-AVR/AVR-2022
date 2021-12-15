@@ -95,15 +95,15 @@ small screws. A velcro strap is included to keep the battery in place.
 When mounting the battery plate to the arm clamps be sure to use the side of
 the plate with recessed screw holes.
 
-It's also smart to check these screws before each flight to make sure they 
+It's also smart to check these screws before each flight to make sure they
 are secure. You never want to lose a battery during flight!
 {{% /alert %}}
 
-The battery arm clamps have a bit of bend to them. You should be able to easily, 
+The battery arm clamps have a bit of bend to them. You should be able to easily,
 without much force, clamp them to the rails as seen below.
 
 ![](battery_plate_mounted.jpg)
 
-Nice work! The bottom assembly of the drone is pretty much complete. 
-In an upcoming section, we'll cover battery safety and mounting with the 
+Nice work! The bottom assembly of the drone is pretty much complete.
+In an upcoming section, we'll cover battery safety and mounting with the
 included strap. The strap will mount through the slits in the battery plate.

@@ -53,27 +53,27 @@ into position and then secure with zip ties.
 
 ![VMC mounted over FC and secured with zip ties](attaching_vmc_to_frame_closeup.jpg)
 
-At this point you can go ahead and connect the 2x20 crimp housing 
+At this point you can go ahead and connect the 2x20 crimp housing
 and barrel plug into the VMC as shown in the photo below.
 
 ![VMC with telemetry cable and power connected](vmc_attached_with_telemetry_and_power.jpg)
 
 ## Cooling
 
-During Phase II testing you will be running the VRC software stack on your VMC. 
-Since we make extensive use of the VMC's CPU and GPU it can heat up significantly. 
-It's important to keep your VMC cool and in this section you will install a cooling 
+During Phase II testing you will be running the VRC software stack on your VMC.
+Since we make extensive use of the VMC's CPU and GPU it can heat up significantly.
+It's important to keep your VMC cool and in this section you will install a cooling
 fan onto the top of the VMC heat sink.
 
 ![VMC cooling fan with mounting bolts and nuts](vmc_cooling_fan.jpg)
 
-Place your cooling fan on top of the heat sink and insert all four bolts 
-through the fan and the heat sink. Using needle nose pliers you can hold 
+Place your cooling fan on top of the heat sink and insert all four bolts
+through the fan and the heat sink. Using needle nose pliers you can hold
 the nut into place and screw the bolt tight with a Phillips head screwdiver.
 
 {{% alert title="Note" color="note" %}}
-The nuts provided with the cooling fan are not self-locking. 
-It's a good idea to check them from time to time or use a small amount 
+The nuts provided with the cooling fan are not self-locking.
+It's a good idea to check them from time to time or use a small amount
 of thread locker to keep them secure.
 {{% /alert %}}
 
@@ -84,6 +84,6 @@ After mounting the cooling fan plug the connector into your VMC as shown below.
 ![Cooling fan connected to VMC](vmc_cooling_plugged_in.jpg)
 
 {{% alert title="Note" color="note" %}}
-The cooling fan only operates when your VMC exceeds a certain temperature. 
+The cooling fan only operates when your VMC exceeds a certain temperature.
 Once it cools the VMC beneath the temperature threshold it will shut off.
 {{% /alert %}}
