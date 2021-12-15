@@ -196,7 +196,7 @@ class FCC(MAVMQTTBase):
         flip_time = time.time()
         debounce_time = 2
 
-        logger.debug(f"connected_status loop started")
+        logger.debug("connected_status loop started")
         async for connection_status in self.drone.core.connection_state():
             connected = connection_status.is_connected
             now = time.time()
@@ -222,15 +222,14 @@ class FCC(MAVMQTTBase):
         """
         Runs the battery telemetry loop
         """
-        logger.debug(f"battery_telemetry loop started")
+        logger.debug("battery_telemetry loop started")
         async for battery in self.drone.telemetry.battery():
 
-            update = {}
-            update["voltage"] = battery.voltage_v * 4  # bc 4 cell
-            # TODO see if mavsdk supports battery current
-            # TODO see is mavsdk supports power draw
-            update["soc"] = battery.remaining_percent * 100.0
-            update["timestamp"] = self._timestamp()
+            update = {
+                "voltage": battery.voltage_v * 4,
+                "soc": battery.remaining_percent * 100.0,
+                "timestamp": self._timestamp(),
+            }
 
             self.mqtt_client.publish(
                 f"{self.topic_prefix}/battery", json.dumps(update), retain=False, qos=0
@@ -241,7 +240,7 @@ class FCC(MAVMQTTBase):
         """
         Runs the in_air telemetry loop
         """
-        logger.debug(f"in_air loop started")
+        logger.debug("in_air loop started")
         async for in_air in self.drone.telemetry.in_air():
             self.in_air = in_air
 
@@ -251,7 +250,7 @@ class FCC(MAVMQTTBase):
         Runs the is_armed telemetry loop
         """
         was_armed = False
-        logger.debug(f"is_armed loop started")
+        logger.debug("is_armed loop started")
         async for armed in self.drone.telemetry.armed():
 
             # if the arming status is different than last time
@@ -263,11 +262,11 @@ class FCC(MAVMQTTBase):
             was_armed = armed
             self.is_armed = armed
 
-            update = {}
-
-            update["armed"] = armed
-            update["mode"] = str(self.fcc_mode)
-            update["timestamp"] = self._timestamp()
+            update = {
+                "armed": armed,
+                "mode": str(self.fcc_mode),
+                "timestamp": self._timestamp(),
+            }
 
             self.mqtt_client.publish(
                 f"{self.topic_prefix}/status", json.dumps(update), retain=False, qos=0
@@ -322,22 +321,22 @@ class FCC(MAVMQTTBase):
 
         fcc_mode = "UNKNOWN"
 
-        logger.debug(f"flight_mode_telemetry loop started")
+        logger.debug("flight_mode_telemetry loop started")
 
         async for mode in self.drone.telemetry.flight_mode():
 
-            update = {}
-
-            update["mode"] = str(mode)
-            update["armed"] = self.is_armed
-            update["timestamp"] = self._timestamp()
+            update = {
+                "mode": str(mode),
+                "armed": self.is_armed,
+                "timestamp": self._timestamp(),
+            }
 
             self.mqtt_client.publish(
                 f"{self.topic_prefix}/status", json.dumps(update), retain=False, qos=0
             )
 
             if mode != fcc_mode:
-                if mode in fcc_mode_map.keys():
+                if mode in fcc_mode_map:
                     self._publish_event(fcc_mode_map[str(mode)])
                 else:
                     self._publish_event("fcc_mode_error_event")
@@ -349,19 +348,14 @@ class FCC(MAVMQTTBase):
         """
         Runs the position_ned telemetry loop
         """
-        logger.debug(f"position_ned telemetry loop started")
+        logger.debug("position_ned telemetry loop started")
         async for position in self.drone.telemetry.position_velocity_ned():
 
             n = position.position.north_m
             e = position.position.east_m
             d = position.position.down_m
 
-            update = {}
-
-            update["dX"] = n
-            update["dY"] = e
-            update["dZ"] = d
-            update["timestamp"] = self._timestamp()
+            update = {"dX": n, "dY": e, "dZ": d, "timestamp": self._timestamp()}
 
             self.mqtt_client.publish(
                 f"{self.topic_prefix}/location/local",
@@ -375,14 +369,15 @@ class FCC(MAVMQTTBase):
         """
         Runs the position_lla telemetry loop
         """
-        logger.debug(f"position_lla telemetry loop started")
+        logger.debug("position_lla telemetry loop started")
         async for position in self.drone.telemetry.position():
-            update = {}
-            update["lat"] = position.latitude_deg
-            update["lon"] = position.longitude_deg
-            update["alt"] = position.relative_altitude_m
-            update["hdg"] = self.heading
-            update["timestamp"] = self._timestamp()
+            update = {
+                "lat": position.latitude_deg,
+                "lon": position.longitude_deg,
+                "alt": position.relative_altitude_m,
+                "hdg": self.heading,
+                "timestamp": self._timestamp(),
+            }
 
             self.mqtt_client.publish(
                 f"{self.topic_prefix}/location/global",
@@ -396,13 +391,14 @@ class FCC(MAVMQTTBase):
         """
         Runs the home_lla telemetry loop
         """
-        logger.debug(f"home_lla telemetry loop started")
+        logger.debug("home_lla telemetry loop started")
         async for home_position in self.drone.telemetry.home():
-            update = {}
-            update["lat"] = home_position.latitude_deg
-            update["lon"] = home_position.longitude_deg
-            update["alt"] = home_position.relative_altitude_m  # agl
-            update["timestamp"] = self._timestamp()
+            update = {
+                "lat": home_position.latitude_deg,
+                "lon": home_position.longitude_deg,
+                "alt": home_position.relative_altitude_m,
+                "timestamp": self._timestamp(),
+            }
 
             self.mqtt_client.publish(
                 f"{self.topic_prefix}/location/home",
@@ -417,7 +413,7 @@ class FCC(MAVMQTTBase):
         Runs the attitude_euler telemetry loop
         """
 
-        logger.debug(f"attitude_euler telemetry loop started")
+        logger.debug("attitude_euler telemetry loop started")
         async for attitude in self.drone.telemetry.attitude_euler():
             # logger.debug( str(attitude))
 
@@ -428,18 +424,14 @@ class FCC(MAVMQTTBase):
             # TODO data validation?
 
             # do any necessary wrapping here
-            update = {}
+            update = {
+                "roll": psi,
+                "pitch": theta,
+                "yaw": phi,
+                "timestamp": self._timestamp(),
+            }
 
-            update["roll"] = psi
-            update["pitch"] = theta
-            update["yaw"] = phi
-            update["timestamp"] = self._timestamp()
-
-            if phi < 0:
-                heading = (2 * math.pi) + phi
-            else:
-                heading = phi
-
+            heading = (2 * math.pi) + phi if phi < 0 else phi
             heading = math.degrees(heading)
 
             self.heading = heading
@@ -458,14 +450,14 @@ class FCC(MAVMQTTBase):
         Runs the velocity_ned telemetry loop
         """
 
-        logger.debug(f"velocity_ned telemetry loop started")
+        logger.debug("velocity_ned telemetry loop started")
         async for velocity in self.drone.telemetry.velocity_ned():
-            update = {}
-
-            update["vX"] = velocity.north_m_s
-            update["vY"] = velocity.east_m_s
-            update["vZ"] = velocity.down_m_s
-            update["timestamp"] = self._timestamp()
+            update = {
+                "vX": velocity.north_m_s,
+                "vY": velocity.east_m_s,
+                "vZ": velocity.down_m_s,
+                "timestamp": self._timestamp(),
+            }
 
             self.mqtt_client.publish(
                 f"{self.topic_prefix}/velocity", json.dumps(update), retain=False, qos=0
@@ -496,15 +488,13 @@ class FCC(MAVMQTTBase):
                 """
                 logger.debug(f"Scheduling a task for '{name}'")
                 # if the dispatcher is ok to take on a new task
-                if self.currently_running_task is None:
+                if (
+                    self.currently_running_task is not None
+                    and self.currently_running_task.done()
+                ) or self.currently_running_task is None:
                     await self.create_task(task, payload, name)
-                # or if there is already a running task
-                else:  # see if the task is done
-                    if self.currently_running_task.done():
-                        await self.create_task(task, payload, name)
-                    # or tell the caller to go away
-                    else:
-                        raise DispatcherBusy
+                else:
+                    raise DispatcherBusy
 
             async def create_task(self, task: Callable, payload: dict, name: str):
                 """
@@ -556,6 +546,7 @@ class FCC(MAVMQTTBase):
         dispatch = DispatcherManager(self.mqtt_client)
 
         while True:
+            action = {}
             try:
                 # TODO - Casey, 6/27 start here and make action into a dict instead of proto
                 action = self.action_queue.get_nowait()
@@ -821,6 +812,7 @@ class MissionAPI(MAVMQTTBase):
 
     @async_try_except(reraise=True)
     async def build(self, waypoints: List[dict]) -> List[MissionItem]:
+        # sourcery skip: hoist-statement-from-loop, switch, use-assigned-variable
         """
         Convert a list of waypoints (dict) to a list of MissionItems.
         """
@@ -920,9 +912,7 @@ class MissionAPI(MAVMQTTBase):
             await self.drone.mission_raw.upload_mission(mission_items)
             self._publish_event("mission_upload_success_event")
         except MissionRawError as e:
-            logger.warning(
-                f"Mission upload failed because: {str(e._result.result_str)}"
-            )
+            logger.warning(f"Mission upload failed because: {e._result.result_str}")
             self._publish_event(
                 "mission_upload_failed_event", str(e._result.result_str)
             )
@@ -1067,28 +1057,22 @@ class PyMAVLinkAgent(MAVMQTTBase):
             Function to convert the msg coming over the wire to the hil msg
             needed for the hil_gps message
             """
-            hilgps = {}
-
-            hilgps["time_usec"] = int(mocap_msg["time_usec"])  # microseconds
-            hilgps["fix_type"] = int(mocap_msg["fix_type"])
-            hilgps["lat"] = int(mocap_msg["lat"])
-            hilgps["lon"] = int(mocap_msg["lon"])
-            hilgps["alt"] = int(mocap_msg["alt"])
-            hilgps["eph"] = int(
-                mocap_msg["eph"]
-            )  # horizontal dilution of precision in ?
-            hilgps["epv"] = int(
-                mocap_msg["epv"]
-            )  # vertical duilution of precision in ?
-            hilgps["vel"] = int(mocap_msg["vel"])
-            hilgps["v_north"] = int(mocap_msg["vn"])
-            hilgps["v_east"] = int(mocap_msg["ve"])
-            hilgps["v_down"] = int(mocap_msg["vd"])
-            hilgps["cog"] = int(mocap_msg["cog"])
-            hilgps["sats_visible"] = int(mocap_msg["satellites_visible"])
-            hilgps["heading"] = int(mocap_msg["heading"])
-
-            return hilgps
+            return {
+                "time_usec": int(mocap_msg["time_usec"]),
+                "fix_type": int(mocap_msg["fix_type"]),
+                "lat": int(mocap_msg["lat"]),
+                "lon": int(mocap_msg["lon"]),
+                "alt": int(mocap_msg["alt"]),
+                "eph": int(mocap_msg["eph"]),
+                "epv": int(mocap_msg["epv"]),
+                "vel": int(mocap_msg["vel"]),
+                "v_north": int(mocap_msg["vn"]),
+                "v_east": int(mocap_msg["ve"]),
+                "v_down": int(mocap_msg["vd"]),
+                "cog": int(mocap_msg["cog"]),
+                "sats_visible": int(mocap_msg["satellites_visible"]),
+                "heading": int(mocap_msg["heading"]),
+            }
 
         def send_hil_gps(gps_data: dict) -> None:
             """

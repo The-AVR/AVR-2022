@@ -1,0 +1,2 @@
+# only for typing
+pyrealsense2

@@ -1,5 +1,4 @@
 import json
-import os
 import threading
 import time
 from math import atan2, pi

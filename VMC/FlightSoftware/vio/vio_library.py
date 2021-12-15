@@ -5,6 +5,7 @@ from math import pi
 import numpy as np
 import transforms3d as t3d
 from loguru import logger
+import paho.mqtt.client as mqtt
 
 try:
     from t265_library import T265  # type: ignore
@@ -167,7 +168,7 @@ class T265CoordinateTransformation:
 
 
 class VIO:
-    def __init__(self, mqtt_client: MQTT_Client):
+    def __init__(self, mqtt_client: mqtt.Client):
 
         self.init = False
         self.continuous_sync = True
