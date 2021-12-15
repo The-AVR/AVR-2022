@@ -1,4 +1,4 @@
 ---
-title: "Checkpoint 21: Flight Test"
+title: "Checkpoint #2: Flight Test"
 weight: 5
 ---
