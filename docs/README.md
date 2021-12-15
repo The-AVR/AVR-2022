@@ -7,10 +7,14 @@ it is very nice to have installed in order to preview the site.
 Make sure to install the extended version of Hugo, as we utilize some of the
 asset processing functionality only in the extended version.
 
-`npm` is not required to preview the site, it is required to build it.
+`npm` is not required to preview the site, but it is required to build it.
 
 Additionally we also use the [Docsy](https://docsy.dev) theme by Google for this.
-This is a `git` submodule, so make sure you've initialized this repo's submodules.
+This is a `git` submodule, so make sure you've initialized this repo's submodules:
+
+```bash
+git submodule update --init --recursive
+```
 
 To preview the site, `cd` into this `docs` directory and run:
 
@@ -150,6 +154,8 @@ shortcode.
 {{< /card >}}
 ```
 
+The header can be omitted if desired.
+
 ### Banners
 
 Similar to the `alert` shortcode, you can use the `pageinfo` shortcode to create
@@ -165,3 +171,41 @@ This is placeholder content.
 
 For all other functionality, see the
 [Docsy documentation](https://www.docsy.dev/docs/adding-content/shortcodes/).
+
+## Building
+
+To build the site, you must have `hugo` extended installed. Additionally,
+you must install the required `npm` packages from this directory
+(these facilitate SCSS compilation):
+
+```bash
+npm install
+```
+
+To build the website, just run:
+
+```bash
+hugo
+```
+
+This will build the site to the `public` directory. Finally, you need to run the
+script `postprocess.py`.
+
+```bash
+python -m pip install -r requirements.txt
+python postprocess.py
+```
+
+This script does 2 things.
+
+1. First, this script finds all of the JS and CSS files hosted on 3rd party CDNs
+   and downloads them to a local directory and rewrites the
+   the HTML tag. I don't really like how the theme uses like 4 different CDNs,
+   and I rather we host all of the required assets.
+2. Second, this script rewrites all of the `src` attributes of the `img` tags.
+   Because we use
+   [Hugo Page Bundles](https://gohugo.io/content-management/page-bundles/)
+   and for writer convenience, image URLS are all relative. There are some pages
+   in the theme where content gets rendered in a different URL, such as the full section
+   view. In these cases, the image URLS are broken. Thus, this script goes and rewrites
+   all of them to be absolute URLs.

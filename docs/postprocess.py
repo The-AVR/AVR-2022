@@ -8,33 +8,38 @@ import requests
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def local_script_tags(soup: bs4.BeautifulSoup) -> None:
-    # for each script tag
-    for script_tag in soup.find_all("script"):
-        script_src = script_tag.get("src")
+def download_tags(soup: bs4.BeautifulSoup, tag_type: str, attr: str, name: str) -> None:
+    # for each link tag
+    for tag in soup.find_all(tag_type):
+        tag_attr = tag.get(attr)
         # skip items with local references
-        if not script_src.startswith("http"):
+        if not tag_attr.startswith("http"):
             continue
 
-        print(f"Updating {script_tag}")
+        print(f"Updating {tag}")
 
         # get the script filename
-        parsed = urllib.parse.urlparse(script_src)
+        parsed = urllib.parse.urlparse(tag_attr)
         filename = os.path.basename(parsed.path)
 
         # if we don't have the script locally
-        local_filename = os.path.join(THIS_DIR, "public", "js", filename)
+        local_filename = os.path.join(THIS_DIR, "public", name, filename)
         if not os.path.exists(local_filename):
             # download the script
-            print(f"Downloading {script_src}")
-            response = requests.get(script_src)
+            print(f"Downloading {tag_attr}")
+            response = requests.get(tag_attr)
 
             # write the script to disk
             with open(local_filename, "wb") as f:
                 f.write(response.content)
 
         # update the script tag
-        script_tag["src"] = "/js/" + filename
+        tag[attr] = f"/{name}/{filename}"
+
+
+def local_tags(soup: bs4.BeautifulSoup) -> None:
+    download_tags(soup, "script", "src", "js")
+    download_tags(soup, "link", "href", "css")
 
 
 def absolute_image_paths(soup: bs4.BeautifulSoup, filepath: Path) -> None:
@@ -61,7 +66,7 @@ def main() -> None:
         with open(html_file, "r", encoding="utf-8") as f:
             soup = bs4.BeautifulSoup(f, "html.parser")
 
-        local_script_tags(soup)
+        local_tags(soup)
         absolute_image_paths(soup, html_file)
 
         with open(html_file, "w", encoding="utf-8") as f:
