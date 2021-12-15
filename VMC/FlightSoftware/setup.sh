@@ -171,7 +171,7 @@ $s mv tmp.json /etc/docker/daemon.json
 popd
 
 # needed so that the shared libs are included in the docker container creation from the host
-$s cp vmc/apriltag_module/linux/vrc.csv /etc/nvidia-container-runtime/host-files-for-container.d/
+$s cp VMC/FlightSoftware/apriltag/linux/vrc.csv /etc/nvidia-container-runtime/host-files-for-container.d/
 
 $s service docker stop
 $s service docker start
