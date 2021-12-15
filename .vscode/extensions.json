@@ -1,9 +1,22 @@
 {
     "recommendations": [
+        // for docs
         "kisstkondoros.vscode-gutter-preview",
         "davidanson.vscode-markdownlint",
         "tyriar.luna-paint",
         "mushan.vscode-paste-image",
-        "jack89ita.copy-filename"
+        "jack89ita.copy-filename",
+        "esbenp.prettier-vscode",
+        // for PCC
+        "platformio.platformio-ide",
+        "ms-vscode.cpptools",
+        "twxs.cmake",
+        // for Python
+        "ms-python.python",
+        "njqdev.vscode-python-typehint",
+        // for Docker/bash
+        "ms-azuretools.vscode-docker",
+        "foxundermoon.shell-format",
+        "timonwong.shellcheck",
     ]
 }
