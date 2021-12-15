@@ -1,7 +1,14 @@
+// (supposed to) hide add child page button
 .td-page-meta--child {
     display: none !important;
 }
 
+// give alerts a background color
 .alert {
     background-color: #ebebeb;
+}
+
+// disable transitions on sidebar
+nav.foldable-nav *::before {
+    transition: none !important;
 }
