@@ -46,6 +46,10 @@ jobs:
           python -m pip install pip wheel --upgrade
           python -m pip install -r requirements.txt
 
+      - name: Check Formatting
+        working-directory: docs
+        run: npx prettier --check .\content\
+
       - name: Build Site
         working-directory: docs
         run: hugo --gc --cleanDestinationDir
