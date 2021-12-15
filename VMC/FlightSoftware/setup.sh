@@ -16,7 +16,7 @@ LIGHTGREEN='\033[1;32m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
-VRC_DIR=~VRC
+VRC_DIR=~/VRC-2022
 
 # see if sudo is installed
 # mainly for testing with Docker, that doesn't have sudo
