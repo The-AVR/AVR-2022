@@ -5,7 +5,9 @@ static site generator. While not strictly needed to develop the site,
 it is very nice to have installed in order to preview the site.
 
 Make sure to install the extended version of Hugo, as we utilize some of the
-asset processing functionality only in the extended version.
+asset processing functionality only in the extended version
+(You may be able to install this with the `hugo-bin-extended` `npm` package.
+Run it with `npx hugo` instead.)
 
 `npm` is not required to preview the site, but it is required to build it.
 
