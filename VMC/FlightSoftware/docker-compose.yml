@@ -9,12 +9,10 @@ services:
       - /dev/ttyTHS1:/dev/ttyTHS1
 
   mqtt:
-    image: docker.io/library/eclipse-mosquitto:2.0.11
+    image: ghcr.io/bellflight/vrc_mqtt:latest
     ports:
       - "18830:18830"
     restart: on-failure
-    volumes:
-      - ./mqtt/mosquitto.conf:/mosquitto/config/mosquitto.conf
 
   fcc:
     depends_on:
