@@ -12,11 +12,12 @@ def download_tags(soup: bs4.BeautifulSoup, tag_type: str, attr: str, name: str) 
     # for each link tag
     for tag in soup.find_all(tag_type):
         tag_attr = tag.get(attr)
-        # skip items with local references
-        if not tag_attr.startswith("http"):
+        
+        # skip items with local references, or not a remote url
+        if tag_attr is None or not tag_attr.startswith("http"):
             continue
 
-        print(f"Updating {tag}")
+        print(f"Updating remote resource {tag}")
 
         # get the script filename
         parsed = urllib.parse.urlparse(tag_attr)
@@ -50,7 +51,7 @@ def absolute_image_paths(soup: bs4.BeautifulSoup, filepath: Path) -> None:
         if img_src.startswith("http"):
             continue
 
-        print(f"Updating {img_tag}")
+        print(f"Updating image path {img_tag}")
 
         # update the img tag
         # fmt:off
@@ -60,7 +61,7 @@ def absolute_image_paths(soup: bs4.BeautifulSoup, filepath: Path) -> None:
 
 def main() -> None:
     for html_file in Path(THIS_DIR, "public").glob("**/*.html"):
-        print(f"Updating {html_file}")
+        print(f"Checking file {html_file}")
 
         # open the html file and parse it
         with open(html_file, "r", encoding="utf-8") as f:
