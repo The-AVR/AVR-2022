@@ -152,11 +152,13 @@ shortcode.
 
 ```markdown
 {{< card header="**FlySky FS-i6S User Manual**" >}}
-[FS-i6S-User-manual-20170706-compressed.pdf](FS-i6S-User-manual-20170706-compressed.pdf)
+[FS-i6S-User-manual-20170706-compressed.pdf](/files/FS-i6S-User-manual-20170706-compressed.pdf)
 {{< /card >}}
 ```
 
 The header can be omitted if desired.
+
+Please put static files like PDF manuals in the `static/files` folder.
 
 ### Banners
 
@@ -198,16 +200,7 @@ python -m pip install -r requirements.txt
 python postprocess.py
 ```
 
-This script does 2 things.
-
-1. First, this script finds all of the JS and CSS files hosted on 3rd party CDNs
-   and downloads them to a local directory and rewrites the
-   the HTML tag. I don't really like how the theme uses like 4 different CDNs,
-   and I rather we host all of the required assets.
-2. Second, this script rewrites all of the `src` attributes of the `img` tags.
-   Because we use
-   [Hugo Page Bundles](https://gohugo.io/content-management/page-bundles/)
-   and for writer convenience, image URLS are all relative. There are some pages
-   in the theme where content gets rendered in a different URL, such as the full section
-   view. In these cases, the image URLS are broken. Thus, this script goes and rewrites
-   all of them to be absolute URLs.
+This script finds all of the JS and CSS files hosted on 3rd party CDNs
+and downloads them to a local directory and rewrites the
+the HTML tag. I don't really like how the theme uses like 4 different CDNs,
+and I rather we host all of the required assets.

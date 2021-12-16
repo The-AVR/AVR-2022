@@ -31,14 +31,14 @@ Once the setting on your charger matches the setting shown above,
 press and hold the START/ENTER button until the display reads,
 "Battery check wait…". You can release the START/ENTER button at that point.
 
-![Battery check in progress](image21.png)
+![Battery check in progress](image21.jpg)
 
 The charger will now ask you to confirm that the cell count it detects is the
 same cell count that you entered.
 R=Recognized (by the charger) S=Selected (by the user.)
 Provided those values match, press ENTER to begin the storage process.
 
-![Battery cell confirmation](image19.png)
+![Battery cell confirmation](image19.jpg)
 
 Once you have initiated the storage charge, you will see the
 charge status screen pictured below.

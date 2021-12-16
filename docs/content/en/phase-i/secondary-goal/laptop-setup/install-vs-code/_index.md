@@ -26,7 +26,7 @@ to help us in our Python development.
 - Once loaded, click the extensions button on the left toolbar
   (or press Ctrl + Shift + X)
 
-![](vscode_extensions_button.png)
+![](vscode_extensions_button.JPG)
 
 Search for "Python" and click the green install button next to the Python extension.
 There's a good chance it's already installed, in which the button

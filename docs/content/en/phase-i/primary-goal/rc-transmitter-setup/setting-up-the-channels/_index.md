@@ -17,7 +17,7 @@ switch to change the current flight mode of the drone.
 You can press the icon to change the kind of input
 (STX = stick, SWX = switch, VRX = dial, KEY = button). Pressing the text label
 you can specify which exact input should be mapped to the channel.
-It is also explained in [section 6.7 of the transmitter manual](/phase-i/primary-goal/rc-transmitter-setup/FS-i6S-User-manual-20170706-compressed.pdf).
+It is also explained in [section 6.7 of the transmitter manual](/files/FS-i6S-User-manual-20170706-compressed.pdf).
 
 For the VRC drone, we provide a default channel setup which allows for maximum
 utility of the available channels, which can be found below. In future references,

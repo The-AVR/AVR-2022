@@ -8,54 +8,64 @@ import requests
 THIS_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
-def download_tags(soup: bs4.BeautifulSoup, tag_type: str, attr: str, name: str) -> None:
-    # for each link tag
+def process_local_tags(
+    soup: bs4.BeautifulSoup, tag_type: str, attr: str, name: str
+) -> None:
+    # for each tag
     for tag in soup.find_all(tag_type):
         tag_attr = tag.get(attr)
-        
-        # skip items with local references, or not a remote url
+
+        # skip empty items or without a remote url
         if tag_attr is None or not tag_attr.startswith("http"):
             continue
 
         print(f"Updating remote resource {tag}")
 
-        # get the script filename
+        # get the filename
         parsed = urllib.parse.urlparse(tag_attr)
         filename = os.path.basename(parsed.path)
 
-        # if we don't have the script locally
+        # if we don't have the file locally
         local_filename = os.path.join(THIS_DIR, "public", name, filename)
         if not os.path.exists(local_filename):
-            # download the script
+            # download the file
             print(f"Downloading {tag_attr}")
             response = requests.get(tag_attr)
 
-            # write the script to disk
+            # write the file to disk
             with open(local_filename, "wb") as f:
                 f.write(response.content)
 
-        # update the script tag
+        # update the html tag
         tag[attr] = f"/{name}/{filename}"
 
 
 def local_tags(soup: bs4.BeautifulSoup) -> None:
-    download_tags(soup, "script", "src", "js")
-    download_tags(soup, "link", "href", "css")
+    # download javascript
+    process_local_tags(soup, "script", "src", "js")
+    # download css
+    process_local_tags(soup, "link", "href", "css")
 
 
-def absolute_image_paths(soup: bs4.BeautifulSoup, filepath: Path) -> None:
-    # for each image tag
-    for img_tag in soup.find_all("img"):
-        img_src = img_tag.get("src")
-        # skip items without local references
-        if img_src.startswith("http"):
+def process_absolute_paths(
+    soup: bs4.BeautifulSoup, filepath: Path, tag_type: str, attr: str
+) -> None:
+    # this ended up not working, because of the _print pages, and flattening
+    # the tree structure.
+    
+    # for each tag
+    for tag in soup.find_all(tag_type):
+        tag_attr = tag.get(attr)
+
+        # skip empty items, with a remote url, or starts with #
+        if tag_attr is None or tag_attr.startswith("http") or tag_attr.startswith("#"):
             continue
 
-        print(f"Updating image path {img_tag}")
+        print(f"Updating tag path {tag}")
 
         # update the img tag
         # fmt:off
-        img_tag["src"] = f"/{filepath.parent.relative_to(os.path.join(THIS_DIR, 'public'))}/{img_src}".replace("\\", "/")
+        tag[attr] = f"/{filepath.parent.relative_to(os.path.join(THIS_DIR, 'public'))}/{tag_attr}".replace("\\", "/")
         # fmt:on
 
 
@@ -68,7 +78,7 @@ def main() -> None:
             soup = bs4.BeautifulSoup(f, "html.parser")
 
         local_tags(soup)
-        absolute_image_paths(soup, html_file)
+        # absolute_paths(soup, html_file)
 
         with open(html_file, "w", encoding="utf-8") as f:
             f.write(str(soup))

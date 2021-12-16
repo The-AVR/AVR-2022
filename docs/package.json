@@ -5,6 +5,13 @@
     "postcss-cli": "^9.0.2"
   },
   "devDependencies": {
-    "prettier": "^2.5.1"
+    "broken-link-checker": "^0.7.8",
+    "prettier": "^2.5.1",
+    "start-server-and-test": "^1.14.0"
+  },
+  "scripts": {
+    "check-links": "blc -reo http://localhost:1313",
+    "run-check-links": "start-server-and-test server http://localhost:1313 check-links",
+    "server": "hugo server -p 1313"
   }
 }
