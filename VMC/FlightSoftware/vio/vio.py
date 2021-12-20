@@ -12,7 +12,7 @@ from loguru import logger
 try:
     from vio_library import VIO  # type: ignore
 except ImportError:
-    from .vio_library import VIO  # type: ignore
+    from .vio_library import VIO
 
 
 class VIOModule:

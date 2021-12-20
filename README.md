@@ -25,7 +25,7 @@ Clone the repository with submodules:
 git clone --recurse-submodules https://github.com/bellflight/VRC-2022
 ```
 
-Create a Python virtual environment:
+Create a Python 3.8+ virtual environment:
 
 ```bash
 python -m venv .venv
@@ -33,7 +33,7 @@ python -m venv .venv
 
 Activate the virtual environment:
 
-```bash
+```powershell
 .venv\Scripts\Activate # Windows
 source .venv/bin/activate # Linux
 ```
@@ -51,3 +51,12 @@ python scripts/copy_libraries.py
 ```
 
 Finally, install recommended VS Code extensions.
+
+If you want to build PX4 on Windows, you need WSL with the
+`python3-venv`, `python3-dev` and `build-essential` packages installed.
+
+If you have trouble installing the `pupil-apriltags` package on Windows,
+try installing
+[https://aka.ms/vs/15/release/vs_buildtools.exe](https://aka.ms/vs/15/release/vs_buildtools.exe)
+or the `visualstudio2017buildtools` Chocolately package.
+You may need to add the VS 2017 Desktop Development C++ tools.
