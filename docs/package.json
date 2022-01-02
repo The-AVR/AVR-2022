@@ -12,6 +12,7 @@
   "scripts": {
     "check-links": "blc -reo http://localhost:1313",
     "run-check-links": "start-server-and-test server http://localhost:1313 check-links",
-    "server": "hugo server -p 1313"
+    "server": "hugo server -p 1313",
+    "format": "prettier --write content/"
   }
 }
