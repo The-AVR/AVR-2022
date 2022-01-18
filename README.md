@@ -1,5 +1,9 @@
 # VRC-2022
 
+## Project Management
+
+For Bell employees and partners, work items are tracked on [Trello](https://trello.com/bellvrc).
+
 ## Structure
 
 - `.github`: GitHub Actions files
