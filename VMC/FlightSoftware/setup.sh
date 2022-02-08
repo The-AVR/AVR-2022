@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# flag to turn off some steps during testing and development
+TESTING=true
+
 # exit when any command fails
 set -e
 
@@ -94,9 +97,8 @@ bar
 echo -e "${CYAN}Installing prerequisites${NC}"
 bar
 # install some useful prereqs
-$s apt install -y git apt-transport-https ca-certificates apt-utils software-properties-common gnupg lsb-release unzip curl wget rsync htop nano python3 python3-wheel python3-pip jq
+$s apt install -y git apt-transport-https ca-certificates apt-utils software-properties-common wget htop nano python3 python3-wheel python3-pip jq
 $s -H python3 -m pip install pip wheel --upgrade
-$s -H python3 -m pip install -U jetson-stats --upgrade
 # set to high-power 10W mode. 1 is 5W mode
 $s nvpmodel -m 0
 
@@ -106,17 +108,9 @@ git config --global credential.helper cache
 # update repo
 git pull
 # switch to main branch
-git checkout main
-bar
-
-echo -e "${CYAN}Installing and configuring librealsense${NC}"
-bar
-
-# this is (possibly) needed to setup the udev rules on the host
-$s apt-key adv --keyserver keys.gnupg.net --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE || sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE
-$s add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo bionic main" -u
-$s apt install -y librealsense2-udev-rules librealsense2-utils librealsense2-dev
-
+if [ "$TESTING" != true ] ; then
+    git checkout main
+fi
 bar
 
 echo -e "${CYAN}Installing and configuring Docker${NC}"
@@ -124,41 +118,10 @@ bar
 
 # downgrade docker to specific version
 # this got pulled from apt sources for some reason
+# replacing the installed system Docker with the latest version breaks stuff, so leave as legacy docker.io package
 wget http://launchpadlibrarian.net/561342197/docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
 $s DEBIAN_FRONTEND=noninteractive apt install -y --allow-downgrades ./docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
 rm docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
-
-# # replacing the installed system Docker with the latest version breaks stuff
-# # remove old docker installation
-# $s apt remove -y docker || true
-# $s apt remove -y docker-engine|| true
-# $s apt remove -y docker.io || true
-# $s apt remove -y containerd || true
-# $s apt remove -y runc || true
-
-# # add docker GPG key
-# curl -fsSL https://download.docker.com/linux/ubuntu/gpg | $s gpg --batch --yes --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-# # add docker repository
-# echo \
-#   "deb [arch=arm64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-#   $(lsb_release -cs) stable" | $s tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-# # install docker
-# $s apt update
-# $s apt install -y docker-ce:arm64 docker-ce-cli:arm64 containerd.io:arm64 docker-compose:arm64
-
-# # install nvidia-docker
-# distribution=$(. /etc/os-release;echo $ID$VERSION_ID) \
-#    && curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | $s apt-key add - \
-#    && curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | $s tee /etc/apt/sources.list.d/nvidia-docker.list
-# $s apt update
-# $s apt install -y --allow-downgrades \
-#        jq \
-#        nvidia-docker2:arm64=2.5.0-1 \
-#        libnvidia-container-tools:arm64=1.3.3-1 \
-#        nvidia-container-runtime:arm64=3.4.2-1 \
-#        libnvidia-container1:arm64=1.3.3-1 \
-#        nvidia-container-toolkit:arm64=1.4.2-1
 
 # upgrade compose
 $s -H python3 -m pip install docker-compose --upgrade
@@ -173,6 +136,7 @@ popd
 # needed so that the shared libs are included in the docker container creation from the host
 $s cp VMC/FlightSoftware/apriltag/linux/vrc.csv /etc/nvidia-container-runtime/host-files-for-container.d/
 
+# restart docker so new runtime takes into effect
 $s service docker stop
 $s service docker start
 
@@ -200,30 +164,13 @@ bar
 echo -e "${CYAN}Performing self-test${NC}"
 bar
 
-# make sure jtop got installed
-echo -n "Making sure 'jtop' works... "
-if [ -n "$(which jtop)" ]; then
-    echo -e "${LIGHTGREEN}Passed!${NC}"
-else
-    echo -e "${LIGHTRED}Failed!${NC}"
-    exit 1
-fi
-
-# make sure rs-enumerate-devices
-echo -n "Making sure 'rs-enumerate-devices' works... "
-if [ -n "$(which rs-enumerate-devices)" ]; then
-    echo -e "${LIGHTGREEN}Passed!${NC}"
-else
-    echo -e "${LIGHTRED}Failed!${NC}"
-    exit 1
-fi
-
 # ensure the container runtime works
+# KEEP THIS, saved our bacon once
 echo -n "Testing Nvidia container runtime... "
 ($s docker run --rm --gpus all --env NVIDIA_DISABLE_REQUIRE=1 nvcr.io/nvidia/cuda:11.4.1-base-ubuntu18.04 echo -e "${LIGHTGREEN}Passed!${NC}") || (echo -e "${LIGHTRED}Failed!${NC}" && exit 1)
 
 bar
 
-echo -e "${GREEN}VRC Phase 2 finished setting up!${NC}"
-echo -e "${GREEN}Please reboot your VMC now.${NC}"
+echo -e "${GREEN}VRC 2022 finished setting up!${NC}"
+echo -e "${GREEN}Please reboot your VMC.${NC}"
 bar

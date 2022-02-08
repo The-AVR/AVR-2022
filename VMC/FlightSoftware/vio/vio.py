@@ -1,25 +1,22 @@
 import json
-import signal
-import sys
 import threading
 import time
-from types import FrameType
-from typing import Any, Callable, Dict, Optional
+from typing import Any, Callable, Dict
 
 import paho.mqtt.client as mqtt
 from loguru import logger
 
 try:
-    from vio_library import VIO  # type: ignore
+    from vio_library import VIO
 except ImportError:
     from .vio_library import VIO
 
 
-class VIOModule:
+class VIOModule(object):
     def __init__(self):
         self.mqtt_host = "mqtt"
         self.mqtt_port = 18830
-        
+
         self.mqtt_client = mqtt.Client()
 
         self.mqtt_client.on_connect = self.on_connect
@@ -36,7 +33,6 @@ class VIOModule:
         self.mqtt_finished_init = False
 
     def run(self) -> None:
-
         # connect to the MQTT Client
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
 
@@ -44,22 +40,13 @@ class VIOModule:
         thread = threading.Thread(target=self.vio.run, daemon=True, name="vio_thread")
         thread.start()
 
-        # add signal handler for the T265
-        def signal_handler(sig: int, frame: Optional[FrameType]) -> None:
-            self.vio.t265.stop()
-            sys.exit(0)
-
-        signal.signal(signal.SIGTERM, signal_handler)
-
         # service the mqtt connection
         self.mqtt_client.loop_forever()
 
         while True:
             time.sleep(0.1)
 
-    def on_message(
-        self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage
-    ) -> None:
+    def on_message(self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage):
         try:
             logger.debug(f"{msg.topic}: {msg.payload}")
             if msg.topic in self.mqtt_topics.keys():

@@ -65,14 +65,6 @@ git pull
 ./setup.sh
 ```
 
-Additionally, if you have problems with the VIO module not connecting to the T265 camera,
-try the following in order:
-
-1. Run the command `rs-enumerate-devices`. This seems to help `librealsense` pick up the camera.
-2. Run the script `reset_usb.sh` (you may need to do `chmod +x reset_usb.sh` first). This resets all the USB devices.
-3. Unplug the T265 camera and plug it back in.
-4. Restart the Jetson.
-
 ## MQTT Topics
 
 For each topic in the list, the sublist are the keys available in the dictionary
@@ -157,31 +149,23 @@ This is a list of topics that are populated by the apriltag module:
 - vrc/apriltags/raw
 
   - `id` - the id of the tag
-
   - `pos`
-
   - `x` - the position **in meters** of the camera relative to the **tag's x** frame
-
   - `y` - the position **in meters** of the camera relative to the **tag's y** frame
-
   - `z` - the position **in meters** of the camera relative to the **tag's z** frame
-
-  - `rotation` - the 3x3 rotation matrix 
+  - `rotation` - the 3x3 rotation matrix
 
 - vrc/apriltags/visible_tags
-
   - `id` - the id of the tag
     - `horizontal_dist` - the horizontal scalar distance from vehicle to tag, **in cm**
     - `vertical_dist` - the vertical scalar distance from vehicle to tag, **in cm**
     - `angle_to_tag` - the angle formed by the vector pointing from the vehicles body to the tag in world frame relative to world-north
-    - `heading` -  the heading of the vehicle in world frame
-    - `pos_rel` - the relative position of the vehicle to the tag in world frame **in cm** 
-    
-      - `x` -  the x (+north/-south) position of the vehicle relative to the tag in world frame (for reference the mountain is **north** of the beach)
+    - `heading` - the heading of the vehicle in world frame
+    - `pos_rel` - the relative position of the vehicle to the tag in world frame **in cm**
+      - `x` - the x (+north/-south) position of the vehicle relative to the tag in world frame (for reference the mountain is **north** of the beach)
       - `y` - the y (+east/-west) position of the vehicle relative to the tag in world frame
       - `x` - the z (+down/-up) position of the vehicle relative to the tag in world frame (no, this is not a typo, up is really - )
     - `pos_world` - the position of the vehicle in world frame **in cm** (if the tag has no truth data, this will not be present in the output)
-    
       - `x` - the x position of the vehicle relative to the world origin (this is the ship) in world frame (for reference the mountain is **north** of the beach)
       - `y` - the y position of the vehicle relative to the world origin in world frame
       - `z` - the z position of the vehicle relative to the world origin in world frame
