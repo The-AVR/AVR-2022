@@ -581,7 +581,7 @@ class MQTTViewWidget(QtWidgets.QWidget):
 
             # get the existing count
             count = item.text(1)
-            if not count:
+            if not count:  # sourcery skip
                 # empty
                 count = 0
             else:

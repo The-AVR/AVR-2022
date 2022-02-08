@@ -1,13 +1,13 @@
 import json
-from typing import Any, List
+from typing import Any, List, Literal
 
 import paho.mqtt.client as mqtt
 from loguru import logger
 
 try:
-    from pcc_library import VRC_Peripheral  # type: ignore
+    from pcc_library import VRC_Peripheral
 except ImportError:
-    from .pcc_library import VRC_Peripheral  # type: ignore
+    from .pcc_library import VRC_Peripheral
 
 
 class PCCModule:
@@ -68,16 +68,13 @@ class PCCModule:
 
     def set_temp_color(self, payload: dict) -> None:
         wrgb: List = payload["wrgb"]
-        if "time" in payload:
-            time: float = payload["time"]
-        else:
-            time: float = 0.5
+        time: float = payload.get("time", 0.5)
         self.pcc.set_temp_color(wrgb=wrgb, time=time)
 
     def set_servo_open_close(self, payload: dict) -> None:
         servo: int = payload["servo"]
-        action: str = payload["action"]
-        self.pcc.set_servo_open_close(servo, action)  # type: ignore #TODO - nathan, why is this mad?
+        action: Literal["open", "close"] = payload["action"]
+        self.pcc.set_servo_open_close(servo, action)
 
     def set_servo_min(self, payload: dict) -> None:
         servo: int = payload["servo"]
