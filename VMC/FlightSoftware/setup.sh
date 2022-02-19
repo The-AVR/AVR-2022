@@ -152,8 +152,13 @@ bar
 echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 cd $VRC_DIR
-$s docker-compose pull
-$s docker-compose build
+if [ "$TESTING" != true ] ; then
+    $s docker-compose pull -f docker-compose-dev.yml
+    $s docker-compose build -f docker-compose-dev.yml
+else
+    $s docker-compose pull
+    $s docker-compose build
+fi
 bar
 
 echo -e "${CYAN}Cleaning up${NC}"

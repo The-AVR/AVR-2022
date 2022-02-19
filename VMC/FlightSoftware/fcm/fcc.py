@@ -53,7 +53,7 @@ class FCCModule:
         rc: int,
         properties: mqtt.Properties = None,
     ) -> None:
-        logger.debug(f"Connected with result code {str(rc)}")
+        logger.debug(f'Connected with result code {rc}')
         for topic in self.mqtt_topics.keys():
             logger.debug(f"FCCModule: Subscribed to: {topic}")
             client.subscribe(topic)

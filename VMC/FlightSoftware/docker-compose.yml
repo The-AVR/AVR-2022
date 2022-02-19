@@ -14,18 +14,18 @@ services:
       - "18830:18830"
     restart: on-failure
 
-  fcc:
+  fcm:
     depends_on:
       - mqtt
       - mavp2p
-    image: ghcr.io/bellflight/vrc_fcc:latest
+    image: ghcr.io/bellflight/vrc_fcm:latest
     network_mode: host
     restart: on-failure
 
-  pcc:
+  pcm:
     depends_on:
       - mqtt
-    image: ghcr.io/bellflight/vrc_pcc:latest
+    image: ghcr.io/bellflight/vrc_pcm:latest
     restart: on-failure
     devices:
       - /dev/ttyACM0:/dev/ttyACM0

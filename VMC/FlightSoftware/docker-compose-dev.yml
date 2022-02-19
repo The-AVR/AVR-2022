@@ -14,18 +14,18 @@ services:
       - "18830:18830"
     restart: on-failure
 
-  fcc:
+  fcm:
     depends_on:
       - mqtt
       - mavp2p
-    build: fcc
+    build: fcm
     network_mode: host
     restart: on-failure
 
-  pcc:
+  pcm:
     depends_on:
       - mqtt
-    build: pcc
+    build: pcm
     restart: on-failure
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
