@@ -151,7 +151,7 @@ bar
 
 echo -e "${CYAN}Preparing VRC software${NC}"
 bar
-cd $VRC_DIR
+cd $VRC_DIR/VMC/FlightSoftware
 if [ "$TESTING" != true ] ; then
     $s docker-compose -f docker-compose-dev.yml pull
     $s docker-compose -f docker-compose-dev.yml build
