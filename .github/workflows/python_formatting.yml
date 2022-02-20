@@ -36,13 +36,13 @@ jobs:
           python ./scripts/copy_libraries.py
 
       - name: Check Formatting
-        run: python -m black . --check --vvv
+        run: python -m black . --check
 
       - name: Check Import Order
-        run: python -m isort --profile black . --check -vvv
+        run: python -m isort --profile black . --check
 
       - name: Check Unused Imports
-        run: python -m autoflake --recursive . --check -vvv
+        run: python -m autoflake --recursive . --check
 
       - name: Check Typing
         run: npx pyright .

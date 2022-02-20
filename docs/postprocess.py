@@ -52,7 +52,7 @@ def process_absolute_paths(
 ) -> None:
     # this ended up not working, because of the _print pages, and flattening
     # the tree structure.
-    
+
     # for each tag
     for tag in soup.find_all(tag_type):
         tag_attr = tag.get(attr)

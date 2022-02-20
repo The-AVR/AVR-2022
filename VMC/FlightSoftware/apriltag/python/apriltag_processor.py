@@ -1,7 +1,7 @@
 import math
 import subprocess
 import warnings
-from typing import List, Optional, Tuple, Union
+from typing import List, Optional, Tuple
 
 import numpy as np
 import transforms3d as t3d

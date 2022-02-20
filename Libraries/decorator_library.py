@@ -1,6 +1,7 @@
 import functools
-from loguru import logger
 from typing import Callable
+
+from loguru import logger
 
 
 def try_except(reraise: bool = False):
