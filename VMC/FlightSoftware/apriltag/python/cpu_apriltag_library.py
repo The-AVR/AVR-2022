@@ -69,7 +69,7 @@ class AprilTagVPS:
         # record number of images processed
         self.num_images = 0
 
-    def run(self):
+    def run(self) -> None:
         # sourcery skip: use-named-expression
         """
         Kicks off the AprilTagVPS pipeline, capturing images from
@@ -116,7 +116,7 @@ class AprilTagVPS:
             last_loop = now
             i += 1
 
-    def capture_loop(self):
+    def capture_loop(self) -> None:
         """
         Captures frames from the camera and places them into the image queue
         to be consumed downstream by "perception loop". Checks to make sure queue
@@ -140,7 +140,7 @@ class AprilTagVPS:
             time.sleep(0.01)
 
     @try_except(reraise=True)
-    def perception_loop(self):
+    def perception_loop(self) -> None:
         """
         Pulls images off the image queue, hands them to the apriltag detector,
         and then places the results in the tags queue.

@@ -72,7 +72,7 @@ class CameraCoordinateTransformation:
         )
         self.tm["H_nwu_aeroRef"] = H_nwu_aeroRef
 
-    def sync(self, heading_ref, pos_ref):
+    def sync(self, heading_ref: float, pos_ref: dict) -> None:
         """
         Computes offsets between zedcamera ref and "global" frames, to align coord. systems
         """

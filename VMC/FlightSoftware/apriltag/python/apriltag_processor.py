@@ -272,7 +272,7 @@ class AprilTagModule(MQTTModule):
                 heading,
             )
 
-    def run(self):
+    def run(self) -> None:
         subprocess.Popen("/app/c/build/vrcapriltags")
         super().run()
 

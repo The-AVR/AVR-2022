@@ -393,7 +393,9 @@ class FlightControlComputer(MAVMQTTBase):
                 self.currently_running_task = None
                 self.timeout = 10
 
-            async def schedule_task(self, task: Callable, payload: Any, name: str):
+            async def schedule_task(
+                self, task: Callable, payload: Any, name: str
+            ) -> None:
                 """
                 Schedule a task (async func) to be run by the dispatcher with the
                 given payload. Task name is also required for printing.
@@ -408,7 +410,9 @@ class FlightControlComputer(MAVMQTTBase):
                 else:
                     raise DispatcherBusy
 
-            async def create_task(self, task: Callable, payload: dict, name: str):
+            async def create_task(
+                self, task: Callable, payload: dict, name: str
+            ) -> None:
                 """
                 Create a task to be run.
                 """
@@ -416,7 +420,9 @@ class FlightControlComputer(MAVMQTTBase):
                     self.task_waiter(task, payload, name)
                 )
 
-            async def task_waiter(self, task: Callable, payload: dict, name: str):
+            async def task_waiter(
+                self, task: Callable, payload: dict, name: str
+            ) -> None:
                 """
                 Execute a task with a timeout.
                 """

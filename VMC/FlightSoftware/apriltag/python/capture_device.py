@@ -66,7 +66,7 @@ class CaptureDevice:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return ret, img
 
-    def run(self):
+    def run(self) -> None:
         while True:
             # try to read frame
             ret, _ = self.read()
