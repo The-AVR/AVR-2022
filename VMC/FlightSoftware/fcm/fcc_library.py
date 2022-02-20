@@ -13,14 +13,23 @@ from mavsdk.action import ActionError
 from mavsdk.geofence import Point, Polygon
 from mavsdk.mission_raw import MissionItem, MissionRawError
 from mavsdk.offboard import VelocityBodyYawspeed, VelocityNedYaw
-from paho.mqtt.client import Client as MQTTClient
+from mqtt_library import (
+    MQTTModule,
+    VRCFcmAttitudeEulerMessage,
+    VRCFcmBatteryMessage,
+    VRCFcmEventsMessage,
+    VRCFcmHilGpsStatsMessage,
+    VRCFcmLocationGlobalMessage,
+    VRCFcmLocationHomeMessage,
+    VRCFcmLocationLocalMessage,
+    VRCFcmStatusMessage,
+    VRCFcmVelocityMessage,
+    VRCFusionHilGpsMessage,
+)
 from pymavlink import mavutil
 
 
-class MAVMQTTBase:
-    def __init__(self, client: MQTTClient) -> None:
-        self.mqtt_client = client
-
+class FCMMQTTModule(MQTTModule):
     def _timestamp(self) -> str:
         return datetime.datetime.now().isoformat()
 
@@ -29,9 +38,97 @@ class MAVMQTTBase:
         """
         Create and publish state machine event.
         """
-        event = {"name": name, "payload": payload, "timestamp": self._timestamp()}
+        event = VRCFcmEventsMessage(
+            name=name, payload=payload, timestamp=self._timestamp()
+        )
+        self.send_message("vrc/fcm/events", event)
 
-        self.mqtt_client.publish("vrc/fcm/events", json.dumps(event))
+
+class DispatcherBusy(Exception):
+    """
+    Exception for when the action dispatcher is currently busy
+    executing another action
+    """
+
+
+class DispatcherManager(FCMMQTTModule):
+    def __init__(self) -> None:
+        self.currently_running_task = None
+        self.timeout = 10
+
+    async def schedule_task(self, task: Callable, payload: Any, name: str) -> None:
+        """
+        Schedule a task (async func) to be run by the dispatcher with the
+        given payload. Task name is also required for printing.
+        """
+        logger.debug(f"Scheduling a task for '{name}'")
+        # if the dispatcher is ok to take on a new task
+        if (
+            self.currently_running_task is not None
+            and self.currently_running_task.done()
+        ) or self.currently_running_task is None:
+            await self.create_task(task, payload, name)
+        else:
+            raise DispatcherBusy
+
+    async def create_task(self, task: Callable, payload: dict, name: str) -> None:
+        """
+        Create a task to be run.
+        """
+        self.currently_running_task = asyncio.create_task(
+            self.task_waiter(task, payload, name)
+        )
+
+    async def task_waiter(self, task: Callable, payload: dict, name: str) -> None:
+        """
+        Execute a task with a timeout.
+        """
+        try:
+            await asyncio.wait_for(task(**payload), timeout=self.timeout)
+            self._publish_event(f"request_{name}_completed_event")
+            self.currently_running_task = None
+
+        except asyncio.TimeoutError:
+            try:
+                logger.warning(f"Task '{name}' timed out!")
+                self._publish_event("action_timeout_event", name)
+                self.currently_running_task = None
+
+            except Exception as e:
+                logger.exception("ERROR IN TIMEOUT HANDLER")
+
+        except Exception as e:
+            logger.exception("ERROR IN TASK WAITER")
+
+
+class FlightControlComputer(FCMMQTTModule):
+    def __init__(self) -> None:
+        super().__init__()
+
+        # mavlink stuff
+        self.drone = mavsdk.System()
+        self.mission_api = MissionAPI(self.drone)
+
+        # queues
+        self.action_queue = queue.Queue()
+        self.offboard_ned_queue = queue.Queue()
+        self.offboard_body_queue = queue.Queue()
+
+        # current state of offboard mode, acts as a backup for PX4
+        self.offboard_enabled = False
+
+        # telemetry persistent variables
+        self.in_air: bool = False
+        self.is_armed: bool = False
+        self.fcc_mode = "UNKNOWN"
+        self.connected = False
+        self.heading = 0.0
+
+    async def connect(self) -> None:
+        """
+        Connect the Drone object.
+        """
+        await self.drone.connect(system_address="udp://:14541")
 
     async def async_queue_action(
         self, queue_: queue.Queue, action: Callable, frequency: int = 10
@@ -70,41 +167,26 @@ class MAVMQTTBase:
             except Exception as e:
                 logger.exception("Unexpected error in async_queue_action")
 
-
-class FlightControlComputer(MAVMQTTBase):
-    def __init__(
-        self,
-        drone: mavsdk.System,
-        client: MQTTClient,
-        action_queue: queue.Queue,
-        offboard_ned_queue: queue.Queue,
-        offboard_body_queue: queue.Queue,
-    ) -> None:
-        super().__init__(client)
-        self.drone = drone
-
-        self.mission_api = MissionAPI(drone, client)
-
-        # queues
-        self.action_queue = action_queue
-        self.offboard_ned_queue = offboard_ned_queue
-        self.offboard_body_queue = offboard_body_queue
-
-        # current state of offboard mode, acts as a backup for PX4
-        self.offboard_enabled = False
-
-        # telemetry
-        self.in_air = False
-        self.is_armed = False
-        self.fcc_mode = "UNKNOWN"
-        self.connected = False
-        self.heading = 0.0
-
-    async def connect(self) -> None:
+    async def run(self) -> asyncio.Future:
         """
-        Connect the Drone object.
+        Run the Flight Control Computer module
         """
-        await self.drone.connect(system_address="udp://:14541")
+        # start our MQTT client
+        super().run_non_blocking()
+
+        # connect to the fcc
+        await self.connect()
+
+        # start the mission api MQTT client
+        self.mission_api.run_non_blocking()
+
+        # start tasks
+        return asyncio.gather(
+            self.telemetry_tasks(),
+            # uncomment the following lines to enable outside control
+            # self.offboard_tasks(),
+            # self.action_dispatcher(),
+        )
 
     # region ###################  T E L E M E T R Y ###########################
 
@@ -112,6 +194,7 @@ class FlightControlComputer(MAVMQTTBase):
         """
         Gathers the telemetry tasks
         """
+        # i do not know why some of these are commented out
         return asyncio.gather(
             # self.connected_status_telemetry(),
             self.battery_telemetry(),
@@ -164,13 +247,13 @@ class FlightControlComputer(MAVMQTTBase):
         logger.debug("battery_telemetry loop started")
         async for battery in self.drone.telemetry.battery():
 
-            update = {
-                "voltage": battery.voltage_v * 4,
-                "soc": battery.remaining_percent * 100.0,
-                "timestamp": self._timestamp(),
-            }
+            update = VRCFcmBatteryMessage(
+                voltage=battery.voltage_v * 4,
+                soc=battery.remaining_percent * 100.0,
+                timestamp=self._timestamp(),
+            )
 
-            self.mqtt_client.publish("vrc/fcm/battery", json.dumps(update))
+            self.send_message("vrc/fcm/battery", update)
 
     @async_try_except()
     async def in_air_telemetry(self) -> None:
@@ -199,13 +282,13 @@ class FlightControlComputer(MAVMQTTBase):
             was_armed = armed
             self.is_armed = armed
 
-            update = {
-                "armed": armed,
-                "mode": str(self.fcc_mode),
-                "timestamp": self._timestamp(),
-            }
+            update = VRCFcmStatusMessage(
+                armed=armed,
+                mode=str(self.fcc_mode),
+                timestamp=self._timestamp(),
+            )
 
-            self.mqtt_client.publish("vrc/fcm/status", json.dumps(update))
+            self.send_message("vrc/fcm/status", update)
 
     @async_try_except()
     async def landed_state_telemetry(self) -> None:
@@ -260,13 +343,13 @@ class FlightControlComputer(MAVMQTTBase):
 
         async for mode in self.drone.telemetry.flight_mode():
 
-            update = {
-                "mode": str(mode),
-                "armed": self.is_armed,
-                "timestamp": self._timestamp(),
-            }
+            update = VRCFcmStatusMessage(
+                mode=str(mode),
+                armed=self.is_armed,
+                timestamp=self._timestamp(),
+            )
 
-            self.mqtt_client.publish("vrc/fcm/status", json.dumps(update))
+            self.send_message("vrc/fcm/status", update)
 
             if mode != fcc_mode:
                 if mode in fcc_mode_map:
@@ -289,9 +372,11 @@ class FlightControlComputer(MAVMQTTBase):
             e = position.position.east_m
             d = position.position.down_m
 
-            update = {"dX": n, "dY": e, "dZ": d, "timestamp": self._timestamp()}
+            update = VRCFcmLocationLocalMessage(
+                dX=n, dY=e, dZ=d, timestamp=self._timestamp()
+            )
 
-            self.mqtt_client.publish("vrc/fcm/location/local", json.dumps(update))
+            self.send_message("vrc/fcm/location/local", update)
 
     @async_try_except()
     async def position_lla_telemetry(self) -> None:
@@ -300,15 +385,15 @@ class FlightControlComputer(MAVMQTTBase):
         """
         logger.debug("position_lla telemetry loop started")
         async for position in self.drone.telemetry.position():
-            update = {
-                "lat": position.latitude_deg,
-                "lon": position.longitude_deg,
-                "alt": position.relative_altitude_m,
-                "hdg": self.heading,
-                "timestamp": self._timestamp(),
-            }
+            update = VRCFcmLocationGlobalMessage(
+                lat=position.latitude_deg,
+                lon=position.longitude_deg,
+                alt=position.relative_altitude_m,
+                hdg=self.heading,
+                timestamp=self._timestamp(),
+            )
 
-            self.mqtt_client.publish("vrc/fcm/location/global", json.dumps(update))
+            self.send_message("vrc/fcm/location/global", update)
 
     @async_try_except()
     async def home_lla_telemetry(self) -> None:
@@ -317,14 +402,14 @@ class FlightControlComputer(MAVMQTTBase):
         """
         logger.debug("home_lla telemetry loop started")
         async for home_position in self.drone.telemetry.home():
-            update = {
-                "lat": home_position.latitude_deg,
-                "lon": home_position.longitude_deg,
-                "alt": home_position.relative_altitude_m,
-                "timestamp": self._timestamp(),
-            }
+            update = VRCFcmLocationHomeMessage(
+                lat=home_position.latitude_deg,
+                lon=home_position.longitude_deg,
+                alt=home_position.relative_altitude_m,
+                timestamp=self._timestamp(),
+            )
 
-            self.mqtt_client.publish("vrc/fcm/location/home", json.dumps(update))
+            self.send_message("vrc/fcm/location/home", update)
 
     @async_try_except()
     async def attitude_euler_telemetry(self) -> None:
@@ -334,8 +419,6 @@ class FlightControlComputer(MAVMQTTBase):
 
         logger.debug("attitude_euler telemetry loop started")
         async for attitude in self.drone.telemetry.attitude_euler():
-            # logger.debug( str(attitude))
-
             psi = attitude.roll_deg
             theta = attitude.pitch_deg
             phi = attitude.yaw_deg
@@ -343,20 +426,19 @@ class FlightControlComputer(MAVMQTTBase):
             # TODO data validation?
 
             # do any necessary wrapping here
-            update = {
-                "roll": psi,
-                "pitch": theta,
-                "yaw": phi,
-                "timestamp": self._timestamp(),
-            }
+            update = VRCFcmAttitudeEulerMessage(
+                roll=psi,
+                pitch=theta,
+                yaw=phi,
+                timestamp=self._timestamp(),
+            )
 
             heading = (2 * math.pi) + phi if phi < 0 else phi
             heading = math.degrees(heading)
 
             self.heading = heading
 
-            # publish the attitude
-            self.mqtt_client.publish("vrc/fcm/attitude/euler", json.dumps(update))
+            self.send_message("vrc/fcm/attitude/euler", update)
 
     @async_try_except()
     async def velocity_ned_telemetry(self) -> None:
@@ -366,14 +448,14 @@ class FlightControlComputer(MAVMQTTBase):
 
         logger.debug("velocity_ned telemetry loop started")
         async for velocity in self.drone.telemetry.velocity_ned():
-            update = {
-                "vX": velocity.north_m_s,
-                "vY": velocity.east_m_s,
-                "vZ": velocity.down_m_s,
-                "timestamp": self._timestamp(),
-            }
+            update = VRCFcmVelocityMessage(
+                vX=velocity.north_m_s,
+                vY=velocity.east_m_s,
+                vZ=velocity.down_m_s,
+                timestamp=self._timestamp(),
+            )
 
-            self.mqtt_client.publish("vrc/fcm/velocity", json.dumps(update))
+            self.send_message("vrc/fcm/velocity", update)
 
     # endregion ###############################################################
 
@@ -381,69 +463,7 @@ class FlightControlComputer(MAVMQTTBase):
 
     @async_try_except()
     async def action_dispatcher(self) -> None:
-        class DispatcherBusy(Exception):
-            """
-            Exception for when the action dispatcher is currently busy
-            executing another action
-            """
-
-        class DispatcherManager(MAVMQTTBase):
-            def __init__(self, client: MQTTClient) -> None:
-                super().__init__(client)
-                self.currently_running_task = None
-                self.timeout = 10
-
-            async def schedule_task(
-                self, task: Callable, payload: Any, name: str
-            ) -> None:
-                """
-                Schedule a task (async func) to be run by the dispatcher with the
-                given payload. Task name is also required for printing.
-                """
-                logger.debug(f"Scheduling a task for '{name}'")
-                # if the dispatcher is ok to take on a new task
-                if (
-                    self.currently_running_task is not None
-                    and self.currently_running_task.done()
-                ) or self.currently_running_task is None:
-                    await self.create_task(task, payload, name)
-                else:
-                    raise DispatcherBusy
-
-            async def create_task(
-                self, task: Callable, payload: dict, name: str
-            ) -> None:
-                """
-                Create a task to be run.
-                """
-                self.currently_running_task = asyncio.create_task(
-                    self.task_waiter(task, payload, name)
-                )
-
-            async def task_waiter(
-                self, task: Callable, payload: dict, name: str
-            ) -> None:
-                """
-                Execute a task with a timeout.
-                """
-                try:
-                    await asyncio.wait_for(task(**payload), timeout=self.timeout)
-                    self._publish_event(f"request_{name}_completed_event")
-                    self.currently_running_task = None
-
-                except asyncio.TimeoutError:
-                    try:
-                        logger.warning(f"Task '{name}' timed out!")
-                        self._publish_event("action_timeout_event", name)
-                        self.currently_running_task = None
-
-                    except Exception as e:
-                        logger.exception("ERROR IN TIMEOUT HANDLER")
-
-                except Exception as e:
-                    logger.exception("ERROR IN TASK WAITER")
-
-        logger.debug(f"action_dispatcher started")
+        logger.debug("action_dispatcher started")
 
         action_map = {
             "break": self.set_intentional_timeout,
@@ -462,7 +482,8 @@ class FlightControlComputer(MAVMQTTBase):
             "resume_mission": self.resume_mission,
         }
 
-        dispatch = DispatcherManager(self.mqtt_client)
+        dispatcher = DispatcherManager()
+        dispatcher.run_non_blocking()
 
         while True:
             action = {}
@@ -471,19 +492,23 @@ class FlightControlComputer(MAVMQTTBase):
                 action = self.action_queue.get_nowait()
 
                 if action["payload"] == "":
-                    # Logging.normal(prefix,"Creating empty JSON string because payload was empty")
                     action["payload"] = "{}"
 
                 if action["name"] in action_map:
                     payload = json.loads(action["payload"])
-                    await dispatch.schedule_task(
+                    await dispatcher.schedule_task(
                         action_map[action["name"]], payload, action["name"]
                     )
+                else:
+                    logger.warning(f"Unknown action: {action['name']}")
+
             except DispatcherBusy:
                 logger.info("I'm busy running another task, try again later")
                 self._publish_event("fcc_busy_event", payload=action["name"])
+
             except queue.Empty:
                 await asyncio.sleep(0.1)
+
             except Exception as e:
                 logger.exception("ERROR IN MAIN LOOP")
 
@@ -676,9 +701,7 @@ class FlightControlComputer(MAVMQTTBase):
         logger.debug(f"offboard_body loop started")
 
         @async_try_except()
-        async def process_offboard_body(
-            msg: dict,
-        ) -> None:
+        async def process_offboard_body(msg: dict) -> None:
             # if not currently in offboard mode, skip
             if not self.offboard_enabled:
                 return
@@ -700,9 +723,9 @@ class FlightControlComputer(MAVMQTTBase):
     # endregion ###############################################################
 
 
-class MissionAPI(MAVMQTTBase):
-    def __init__(self, drone: mavsdk.System, client: MQTTClient) -> None:
-        super().__init__(client)
+class MissionAPI(FCMMQTTModule):
+    def __init__(self, drone: mavsdk.System) -> None:
+        super().__init__()
         self.drone = drone
 
     @async_try_except(reraise=True)
@@ -907,10 +930,16 @@ class MissionAPI(MAVMQTTBase):
         await self.start()
 
 
-class PyMAVLinkAgent:
-    def __init__(self, client: MQTTClient, hilgps_queue: queue.Queue) -> None:
-        self.mqtt_client = client
-        self.hilgps_queue = hilgps_queue
+class PyMAVLinkAgent(MQTTModule):
+    def __init__(self) -> None:
+        super().__init__()
+
+        self.topic_map = {
+            "vrc/fusion/hil_gps": self.hilgps_msg_handler,
+        }
+
+        self.num_frames = 0
+        self.last_publish_time = time.time()
 
     @async_try_except()
     async def run(self) -> None:
@@ -923,7 +952,7 @@ class PyMAVLinkAgent:
         )
 
         await self.wait_for_heartbeat()
-        await self.set_hil_gps()
+        super().run()
 
     @try_except(reraise=True)
     def wait_for_heartbeat(self) -> Any:
@@ -939,115 +968,34 @@ class PyMAVLinkAgent:
         except Exception as e:
             logger.exception("Issue while waiting for connection heartbeat")
 
-    @async_try_except()
-    async def set_hil_gps(self) -> None:
+    @try_except(reraise=True)
+    def hilgps_msg_handler(self, payload: VRCFusionHilGpsMessage) -> None:
         """
-        Sends GPS position / velocity / heading to PX4,
-        used to fake a GPS signal while we fly indoors.
-
-        This is not the standard hil_gps message in the mavlink common message set,
-        this is a custom mavlink message that includes heading,
-        because the standard message doesn't.
+        Handle a HIL_GPS message.
         """
+        msg = self.mavcon.mav.hil_gps_heading_encode(  # type: ignore
+            payload["time_usec"],
+            payload["fix_type"],
+            payload["lat"],
+            payload["lon"],
+            payload["alt"],
+            payload["eph"],
+            payload["epv"],
+            payload["vel"],
+            payload["vn"],
+            payload["ve"],
+            payload["vd"],
+            payload["cog"],
+            payload["satellites_visible"],
+            payload["heading"],
+        )
+        self.mavcon.mav.send(msg)  # type: ignore
+        self.num_frames += 1
 
-        def publish_stats(last_publish_time: float) -> float:
-            """
-            Takes the last print time, and determines
-            whether or not to print statistics. Returns
-            the last time statistics were printed.
-            """
-            if time.time() - last_publish_time > 1:
-                self.mqtt_client.publish(
-                    "vrc/fcm/hil_gps/stats",
-                    json.dumps({"num_frames": num_frames}),
-                    retain=False,
-                    qos=0,
-                )
-                return time.time()
-
-            return last_publish_time
-
-        def hilgps_msg_to_offboard_msg(
-            hilgps_msg: dict,
-        ) -> dict:
-            """
-            Function to convert the msg coming over the wire to the hil msg
-            needed for the hil_gps message
-            """
-            return {
-                "time_usec": int(hilgps_msg["time_usec"]),
-                "fix_type": int(hilgps_msg["fix_type"]),
-                "lat": int(hilgps_msg["lat"]),
-                "lon": int(hilgps_msg["lon"]),
-                "alt": int(hilgps_msg["alt"]),
-                "eph": int(hilgps_msg["eph"]),
-                "epv": int(hilgps_msg["epv"]),
-                "vel": int(hilgps_msg["vel"]),
-                "v_north": int(hilgps_msg["vn"]),
-                "v_east": int(hilgps_msg["ve"]),
-                "v_down": int(hilgps_msg["vd"]),
-                "cog": int(hilgps_msg["cog"]),
-                "satellites_visible": int(hilgps_msg["satellites_visible"]),
-                "heading": int(hilgps_msg["heading"]),
-            }
-
-        def send_hil_gps(gps_data: dict) -> None:
-            """
-            Sends the HIL GPS message.
-            """
-            try:
-                msg = self.mavcon.mav.hil_gps_heading_encode(  # type: ignore
-                    gps_data["time_usec"],
-                    gps_data["fix_type"],
-                    gps_data["lat"],
-                    gps_data["lon"],
-                    gps_data["alt"],
-                    gps_data["eph"],
-                    gps_data["epv"],
-                    gps_data["vel"],
-                    gps_data["v_north"],
-                    gps_data["v_east"],
-                    gps_data["v_down"],
-                    gps_data["cog"],
-                    gps_data["satellites_visible"],
-                    gps_data["heading"],
-                )
-                self.mavcon.mav.send(msg)  # type: ignore
-            except Exception as e:
-                logger.exception("Issue send HIL GPS")
-
-        HIL_FREQ = 15
-
-        last_publish_time = time.time()
-        last_send_time = time.time()
-
-        # keep track of how many messages we've received
-        num_frames = 0
-
-        while True:
-            try:
-                # publish statistics
-                last_publish_time = publish_stats(last_publish_time)
-
-                # get the next item
-                data = self.hilgps_queue.get_nowait()
-
-                msg = data["hil_gps"]
-                num_frames += 1
-                now = time.time()
-
-                # if time to send a new item, do so
-                if now - last_send_time > (1 / HIL_FREQ):
-                    # prepare hil data
-                    hil_data = hilgps_msg_to_offboard_msg(msg)
-                    # send it
-                    send_hil_gps(hil_data)
-                    last_send_time = time.time()
-
-            except queue.Empty:
-                await asyncio.sleep(0.01)
-                continue
-
-            except Exception as e:
-                logger.exception("Issue sending HIL GPS")
-                continue
+        # publish stats every second
+        if time.time() - self.last_publish_time > 1:
+            self.send_message(
+                "vrc/fcm/hil_gps_stats",
+                VRCFcmHilGpsStatsMessage(num_frames=self.num_frames),
+            )
+            self.last_publish_time = time.time()

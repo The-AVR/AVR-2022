@@ -1,6 +1,13 @@
-from typing import List, Literal
-
-from mqtt_library import MQTTModule
+from mqtt_library import (
+    MQTTModule,
+    VRCPcmResetMessage,
+    VRCPcmSetBaseColorMessage,
+    VRCPcmSetServoMaxMessage,
+    VRCPcmSetServoMinMessage,
+    VRCPcmSetServoOpenCloseMessage,
+    VRCPcmSetServoPctMessage,
+    VRCPcmSetTempColorMessage,
+)
 from pcc_library import PeripheralControlComputer
 
 
@@ -22,36 +29,36 @@ class PeripheralControlModule(MQTTModule):
             "vrc/pcm/reset": self.reset,
         }
 
-    def set_base_color(self, payload: dict) -> None:
-        wrgb: List = payload["wrgb"]
-        self.pcc.set_base_color(wrgb=wrgb)
+    def set_base_color(self, payload: VRCPcmSetBaseColorMessage) -> None:
+        wrgb = payload["wrgb"]
+        self.pcc.set_base_color(wrgb=list(wrgb))
 
-    def set_temp_color(self, payload: dict) -> None:
-        wrgb: List = payload["wrgb"]
-        time: float = payload.get("time", 0.5)
-        self.pcc.set_temp_color(wrgb=wrgb, time=time)
+    def set_temp_color(self, payload: VRCPcmSetTempColorMessage) -> None:
+        wrgb = payload["wrgb"]
+        time = payload.get("time", 0.5)  # default of 0.5 seconds
+        self.pcc.set_temp_color(wrgb=list(wrgb), time=time)
 
-    def set_servo_open_close(self, payload: dict) -> None:
-        servo: int = payload["servo"]
-        action: Literal["open", "close"] = payload["action"]
+    def set_servo_open_close(self, payload: VRCPcmSetServoOpenCloseMessage) -> None:
+        servo = payload["servo"]
+        action = payload["action"]
         self.pcc.set_servo_open_close(servo, action)
 
-    def set_servo_min(self, payload: dict) -> None:
-        servo: int = payload["servo"]
-        pulse: int = payload["min_pulse"]
-        self.pcc.set_servo_min(servo, pulse)
+    def set_servo_min(self, payload: VRCPcmSetServoMinMessage) -> None:
+        servo = payload["servo"]
+        min_pulse = payload["min_pulse"]
+        self.pcc.set_servo_min(servo, min_pulse)
 
-    def set_servo_max(self, payload: dict) -> None:
-        servo: int = payload["servo"]
-        pulse: int = payload["max_pulse"]
-        self.pcc.set_servo_max(servo, pulse)
+    def set_servo_max(self, payload: VRCPcmSetServoMaxMessage) -> None:
+        servo = payload["servo"]
+        max_pulse = payload["max_pulse"]
+        self.pcc.set_servo_max(servo, max_pulse)
 
-    def set_servo_pct(self, payload: dict) -> None:
-        servo: int = payload["servo"]
-        percent: int = payload["percent"]
+    def set_servo_pct(self, payload: VRCPcmSetServoPctMessage) -> None:
+        servo = payload["servo"]
+        percent = payload["percent"]
         self.pcc.set_servo_pct(servo, percent)
 
-    def reset(self, payload: dict) -> None:
+    def reset(self, payload: VRCPcmResetMessage) -> None:
         self.pcc.reset_vrc_peripheral()
 
 

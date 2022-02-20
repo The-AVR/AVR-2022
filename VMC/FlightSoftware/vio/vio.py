@@ -1,15 +1,21 @@
-import threading
-import time
 import math
+import time
+from typing import List, Tuple
+
 import numpy as np
-from typing import List
-
-
 from decorator_library import try_except
-from mqtt_library import MQTTModule
+from loguru import logger
+from mqtt_library import (
+    MQTTModule,
+    VRCVioConfidenceMessage,
+    VRCVioHeadingMessage,
+    VRCVioOrientationEulMessage,
+    VRCVioPositionNedMessage,
+    VRCVioResyncMessage,
+    VRCVioVelocityNedMessage,
+)
 from vio_library import CameraCoordinateTransformation
 from zed_library import ZEDCamera
-from loguru import logger
 
 
 class VIOModule(MQTTModule):
@@ -28,22 +34,22 @@ class VIOModule(MQTTModule):
         # mqtt
         self.topic_map = {"vrc/vio/resync": self.handle_resync}
 
-    def handle_resync(self, payload: dict) -> None:
+    def handle_resync(self, payload: VRCVioResyncMessage) -> None:
         # whenever new data is published to the ZEDCamera resync topic, we need to compute a new correction
         # to compensate for sensor drift over time.
-        # TODO - make sure this is what the message looks like
         if self.init_sync == False or self.continuous_sync == True:
-            pos_ref = payload["ned"]
             heading_ref = payload["heading"]
-            self.coord_trans.sync(heading_ref, pos_ref)
+            self.coord_trans.sync(
+                heading_ref, {"n": payload["n"], "e": payload["e"], "d": payload["d"]}
+            )
             self.init_sync = True
 
     @try_except(reraise=False)
     def publish_updates(
         self,
-        ned_pos: List[float],
-        ned_vel: List[float],
-        rpy: List[float],
+        ned_pos: Tuple[float, float, float],
+        ned_vel: Tuple[float, float, float],
+        rpy: Tuple[float, float, float],
         tracker_confidence: float,
         mapper_confidence: float,
     ) -> None:
@@ -54,7 +60,7 @@ class VIOModule(MQTTModule):
         n = float(ned_pos[0])
         e = float(ned_pos[1])
         d = float(ned_pos[2])
-        ned_update = {"n": n, "e": e, "d": d}  # cm  # cm  # cm
+        ned_update = VRCVioPositionNedMessage(n=n, e=e, d=d)  # cm
 
         self.send_message("vrc/vio/position/ned", ned_update)
 
@@ -62,7 +68,7 @@ class VIOModule(MQTTModule):
             raise ValueError("Camera has NaNs for orientation")
 
         # send orientation update
-        eul_update = {"psi": rpy[0], "theta": rpy[1], "phi": rpy[2]}
+        eul_update = VRCVioOrientationEulMessage(psi=rpy[0], theta=rpy[1], phi=rpy[2])
         self.send_message("vrc/vio/orientation/eul", eul_update)
 
         # send heading update
@@ -71,7 +77,7 @@ class VIOModule(MQTTModule):
         if heading < 0:
             heading += 2 * math.pi
         heading = np.rad2deg(heading)
-        heading_update = {"degrees": heading}
+        heading_update = VRCVioHeadingMessage(degrees=heading)
         self.send_message("vrc/vio/heading", heading_update)
         # coord_trans.heading = rpy[2]
 
@@ -79,22 +85,17 @@ class VIOModule(MQTTModule):
             raise ValueError("Camera has NaNs for velocity")
 
         # send velocity update
-        vel_update = {"n": ned_vel[0], "e": ned_vel[1], "d": ned_vel[2]}
+        vel_update = VRCVioVelocityNedMessage(n=ned_vel[0], e=ned_vel[1], d=ned_vel[2])
         self.send_message("vrc/vio/velocity/ned", vel_update)
 
-        mapper_tracker = {
-            "mapper": mapper_confidence,
-            "tracker": tracker_confidence,
-        }
-        self.send_message("vrc/vio/confidence", mapper_tracker)
+        confidence_update = VRCVioConfidenceMessage(
+            mapper=mapper_confidence,
+            tracker=tracker_confidence,
+        )
+        self.send_message("vrc/vio/confidence", confidence_update)
 
-    def run(self) -> None:
-        super().run_non_blocking()
-
-        # setup the zedcamera
-        logger.debug("Setting up camera connection")
-        self.camera.setup()
-
+    @try_except(reraise=False)
+    def process_camera_data(self) -> None:
         # start the loop
         logger.debug("Beginning data loop")
         while True:
@@ -109,7 +110,7 @@ class VIOModule(MQTTModule):
                 ned_pos,
                 ned_vel,
                 rpy,
-            ) = self.coord_trans.transform_zedcamera_to_global_ned(data)
+            ) = self.coord_trans.transform_trackcamera_to_global_ned(data)
 
             self.publish_updates(
                 ned_pos,
@@ -118,6 +119,16 @@ class VIOModule(MQTTModule):
                 data["tracker_confidence"],
                 data["mapper_confidence"],
             )
+
+    def run(self) -> None:
+        self.run_non_blocking()
+
+        # setup the tracking camera
+        logger.debug("Setting up camera connection")
+        self.camera.setup()
+
+        # begin processing data
+        self.process_camera_data()
 
 
 if __name__ == "__main__":

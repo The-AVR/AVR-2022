@@ -54,7 +54,7 @@ class MainWidget(QtWidgets.QWidget):
         Creates the connection to the PCC
         """
         try:
-            self.pcc_connection = PeripheralControlComputer(
+            self.pcc = PeripheralControlComputer(
                 self.setup_widget.com_port_combo.currentText(), use_serial=True
             )
             self.setup_widget.close()
@@ -221,16 +221,16 @@ class ControlWidget(QtWidgets.QWidget):
         green = self.green_led_slider.value()
         blue = self.blue_led_slider.value()
 
-        self.parent_.pcc_connection.set_base_color([0, red, green, blue])
+        self.parent_.pcc.set_base_color([0, red, green, blue])
 
     def update_servos(self) -> None:
         """
         Update the position of the servos based on the current position of the dials
         """
-        self.parent_.pcc_connection.set_servo_pct(0, self.servo_1_dial.value())
-        self.parent_.pcc_connection.set_servo_pct(1, self.servo_2_dial.value())
-        self.parent_.pcc_connection.set_servo_pct(2, self.servo_3_dial.value())
-        self.parent_.pcc_connection.set_servo_pct(3, self.servo_4_dial.value())
+        self.parent_.pcc.set_servo_pct(0, self.servo_1_dial.value())
+        self.parent_.pcc.set_servo_pct(1, self.servo_2_dial.value())
+        self.parent_.pcc.set_servo_pct(2, self.servo_3_dial.value())
+        self.parent_.pcc.set_servo_pct(3, self.servo_4_dial.value())
 
     def toggle_servo(self, servo: int) -> None:
         """
@@ -241,9 +241,7 @@ class ControlWidget(QtWidgets.QWidget):
         else:
             self.servo_states[servo] = "open"
 
-        self.parent_.pcc_connection.set_servo_open_close(
-            servo, self.servo_states[servo]
-        )
+        self.parent_.pcc.set_servo_open_close(servo, self.servo_states[servo])
 
 
 class ConnectWidget(QtWidgets.QDialog):

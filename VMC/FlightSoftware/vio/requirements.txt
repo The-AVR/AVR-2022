@@ -1,4 +1,4 @@
-loguru==0.5.3
-numpy==1.19.5
-paho-mqtt==1.5.1
+loguru==0.6.0
+numpy==1.21.4
+paho-mqtt==1.6.1
 transforms3d==0.3.1

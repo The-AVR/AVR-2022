@@ -46,12 +46,12 @@ jobs:
       - name: Build PCC GUI
         run: |
           python -m pip install -r PCC/GUI/requirements.txt
-          pyinstaller PCC/GUI/app.py --onefile --name VRCPCCTest --icon Libraries/img/logo.ico --add-data "Libraries/img;img" --noconfirm
+          pyinstaller PCC/GUI/app.py --onefile --name VRCPCCTest --icon PCC/GUI/img/logo.ico --add-data "PCC/GUI/img;img" --noconfirm
 
       - name: Build VMC GUI
         run: |
           python -m pip install -r VMC/GUI/requirements.txt
-          pyinstaller VMC/GUI/app.py --onefile --name VRCControlGUI --icon Libraries/img/logo.ico --add-data "Libraries/img;img" --noconfirm
+          pyinstaller VMC/GUI/app.py --onefile --name VRCControlGUI --icon VMC/GUI/img/logo.ico --add-data "VMC/GUI/img;img" --noconfirm
 
       - name: Upload GUIs to release
         if: github.event_name != 'pull_request'

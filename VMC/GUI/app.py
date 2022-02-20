@@ -337,7 +337,7 @@ class ControlWidget(QtWidgets.QWidget):
 
         reset_button = QtWidgets.QPushButton("Reset Peripheals")
         reset_button.setStyleSheet("background-color: yellow")
-        reset_button.clicked.connect(lambda: self.publish_message("vrc/pcc/reset", {}))  # type: ignore
+        reset_button.clicked.connect(lambda: self.publish_message("vrc/pcm/reset", {}))  # type: ignore
         reset_layout.addWidget(reset_button)
 
         layout.addWidget(reset_groupbox, 3, 3, 1, 1)
@@ -353,12 +353,12 @@ class ControlWidget(QtWidgets.QWidget):
         # data structure to hold timers to reset services to unhealthy
         self.topic_timer: Dict[str, QtCore.QTimer] = {}
 
-        fcc_status = StatusLabel("FCC")
-        self.topic_status_map["vrc/fcc"] = fcc_status
+        fcc_status = StatusLabel("FCM")
+        self.topic_status_map["vrc/fcm"] = fcc_status
         status_layout.addWidget(fcc_status)
 
         # pcc_status = StatusLabel("PCC")
-        # self.topic_status_map["vrc/pcc"] = pcc_status
+        # self.topic_status_map["vrc/pcm"] = pcc_status
         # status_layout.addWidget(pcc_status)
 
         vio_status = StatusLabel("VIO")
@@ -386,7 +386,7 @@ class ControlWidget(QtWidgets.QWidget):
         Set a servo state
         """
         self.publish_message(
-            "vrc/pcc/set_servo_open_close", {"servo": number, "action": action}
+            "vrc/pcm/set_servo_open_close", {"servo": number, "action": action}
         )
 
     def set_servo_all(self, action: str) -> None:
@@ -400,7 +400,7 @@ class ControlWidget(QtWidgets.QWidget):
         """
         Set LED color
         """
-        self.publish_message("vrc/pcc/set_base_color", {"wrgb": color})
+        self.publish_message("vrc/pcm/set_base_color", {"wrgb": color})
 
     def set_autonomous(self, state: bool) -> None:
         """

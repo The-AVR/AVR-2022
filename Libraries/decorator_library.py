@@ -1,10 +1,10 @@
 import functools
-from typing import Callable
+from typing import Any, Callable
 
 from loguru import logger
 
 
-def try_except(reraise: bool = False):
+def try_except(reraise: bool = False) -> Callable:
     """
     Function decorator that acts as a try/except block around the function.
 
@@ -22,7 +22,7 @@ def try_except(reraise: bool = False):
 
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
-        def wrapper(*args, **kwargs):
+        def wrapper(*args, **kwargs) -> Any:
             try:
                 return func(*args, **kwargs)
             except Exception as e:
@@ -35,14 +35,14 @@ def try_except(reraise: bool = False):
     return decorator
 
 
-def async_try_except(reraise: bool = False):
+def async_try_except(reraise: bool = False) -> Callable:
     """
     Same as `try_except()` function, just for async functions.
     """
 
     def decorator(func: Callable) -> Callable:
         @functools.wraps(func)
-        async def wrapper(*args, **kwargs):
+        async def wrapper(*args, **kwargs) -> Any:
             try:
                 return await func(*args, **kwargs)
             except Exception as e:

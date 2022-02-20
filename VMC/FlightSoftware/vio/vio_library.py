@@ -1,12 +1,29 @@
-import math
 import copy
-from typing import Tuple, List
+import math
+from typing import List, Tuple, TypedDict
 
 import numpy as np
 import transforms3d as t3d
+from decorator_library import try_except
 from loguru import logger
 
-from decorator_library import try_except
+
+class ResyncPosRef(TypedDict):
+    n: float
+    e: float
+    d: float
+
+
+class CameraFrameDataTranslation(TypedDict):
+    x: float
+    y: float
+    z: float
+
+
+class CameraFrameData(TypedDict):
+    rotation: Tuple[float, float, float, float]
+    translation: CameraFrameDataTranslation
+    velocity: Tuple[float, float, float]
 
 
 class CameraCoordinateTransformation:
@@ -36,7 +53,7 @@ class CameraCoordinateTransformation:
     def setup_transforms(self) -> None:
         cam_rpy = self.config["cam"]["rpy"]
 
-        H_aeroBody_ZEDCAMBody = t3d.affines.compose(
+        H_aeroBody_TRACKCAMBody = t3d.affines.compose(
             self.config["cam"]["pos"],
             t3d.euler.euler2mat(
                 cam_rpy[0],
@@ -46,13 +63,13 @@ class CameraCoordinateTransformation:
             ),
             [1, 1, 1],
         )
-        self.tm["H_aeroBody_ZEDCAMBody"] = H_aeroBody_ZEDCAMBody
-        self.tm["H_ZEDCAMBody_aeroBody"] = np.linalg.inv(H_aeroBody_ZEDCAMBody)
+        self.tm["H_aeroBody_TRACKCAMBody"] = H_aeroBody_TRACKCAMBody
+        self.tm["H_TRACKCAMBody_aeroBody"] = np.linalg.inv(H_aeroBody_TRACKCAMBody)
 
         pos = copy.deepcopy(self.config["cam"]["pos"])
         pos[2] = -1 * self.config["cam"]["ground_height"]
 
-        H_aeroRef_ZEDCAMRef = t3d.affines.compose(
+        H_aeroRef_TRACKCAMRef = t3d.affines.compose(
             pos,
             t3d.euler.euler2mat(
                 cam_rpy[0],
@@ -62,7 +79,7 @@ class CameraCoordinateTransformation:
             ),
             [1, 1, 1],
         )
-        self.tm["H_aeroRef_ZEDCAMRef"] = H_aeroRef_ZEDCAMRef
+        self.tm["H_aeroRef_TRACKCAMRef"] = H_aeroRef_TRACKCAMRef
 
         H_aeroRefSync_aeroRef = np.eye(4)
         self.tm["H_aeroRefSync_aeroRef"] = H_aeroRefSync_aeroRef
@@ -72,9 +89,9 @@ class CameraCoordinateTransformation:
         )
         self.tm["H_nwu_aeroRef"] = H_nwu_aeroRef
 
-    def sync(self, heading_ref: float, pos_ref: dict) -> None:
+    def sync(self, heading_ref: float, pos_ref: ResyncPosRef) -> None:
         """
-        Computes offsets between zedcamera ref and "global" frames, to align coord. systems
+        Computes offsets between TRACKCAMera ref and "global" frames, to align coord. systems
         """
         # get current readings on where the aeroBody is, according to the sensor
         H = self.tm["H_aeroRef_aeroBody"]
@@ -90,7 +107,7 @@ class CameraCoordinateTransformation:
 
         # compute the difference between our global reference, and what our sensor is reading for heading
         heading_offset = heading_ref - (math.degrees(heading))
-        logger.debug(f"ZEDCAM: Resync: Heading Offset:{heading_offset}")
+        logger.debug(f"TRACKCAM: Resync: Heading Offset:{heading_offset}")
 
         # build a rotation matrix about the global Z axis to apply the heading offset we computed
         H_rot_correction = t3d.affines.compose(
@@ -99,14 +116,14 @@ class CameraCoordinateTransformation:
             [1, 1, 1],
         )
 
-        # apply the heading correction to the position data the ZEDCAM is providing
+        # apply the heading correction to the position data the TRACKCAM is providing
         H = H_rot_correction.dot(H)
         T, R, Z, S = t3d.affines.decompose44(H)
         eul = t3d.euler.mat2euler(R, axes="rxyz")
 
         ## Find the position offset
         pos_offset = [pos_ref["n"] - T[0], pos_ref["e"] - T[1], pos_ref["d"] - T[2]]
-        logger.debug(f"ZEDCAM: Resync: Pos offset:{pos_offset}")
+        logger.debug(f"TRACKCAM: Resync: Pos offset:{pos_offset}")
 
         # build a translation matrix that corrects the difference between where the sensor thinks we are and were our reference thinks we are
         H_aeroRefSync_aeroRef = t3d.affines.compose(
@@ -115,9 +132,13 @@ class CameraCoordinateTransformation:
         self.tm["H_aeroRefSync_aeroRef"] = H_aeroRefSync_aeroRef
 
     @try_except(reraise=False)
-    def transform_zedcamera_to_global_ned(
-        self, data: dict
-    ) -> Tuple[List[float], np.ndarray, Tuple[float, float, float]]:
+    def transform_trackcamera_to_global_ned(
+        self, data: CameraFrameData
+    ) -> Tuple[
+        Tuple[float, float, float],
+        Tuple[float, float, float],
+        Tuple[float, float, float],
+    ]:
         """
         Takes in raw sensor data from the camera frame, does the necessary
         transformations between the sensor, vehicle, and reference frames to
@@ -155,14 +176,16 @@ class CameraCoordinateTransformation:
             ]
         )  # cm/s
 
-        H_ZEDCAMRef_ZEDCAMBody = t3d.affines.compose(
+        H_TRACKCAMRef_TRACKCAMBody = t3d.affines.compose(
             position, t3d.quaternions.quat2mat(quaternion), [1, 1, 1]
         )
 
-        self.tm["H_ZEDCAMRef_ZEDCAMBody"] = H_ZEDCAMRef_ZEDCAMBody
+        self.tm["H_TRACKCAMRef_TRACKCAMBody"] = H_TRACKCAMRef_TRACKCAMBody
 
-        H_aeroRef_aeroBody = self.tm["H_aeroRef_ZEDCAMRef"].dot(
-            self.tm["H_ZEDCAMRef_ZEDCAMBody"].dot(self.tm["H_ZEDCAMBody_aeroBody"])
+        H_aeroRef_aeroBody = self.tm["H_aeroRef_TRACKCAMRef"].dot(
+            self.tm["H_TRACKCAMRef_TRACKCAMBody"].dot(
+                self.tm["H_TRACKCAMBody_aeroBody"]
+            )
         )
 
         self.tm["H_aeroRef_aeroBody"] = H_aeroRef_aeroBody
@@ -175,8 +198,8 @@ class CameraCoordinateTransformation:
         T, R, Z, S = t3d.affines.decompose44(H_aeroRefSync_aeroBody)
         eul = t3d.euler.mat2euler(R, axes="rxyz")
 
-        H_vel = self.tm["H_aeroRefSync_aeroRef"].dot(self.tm["H_aeroRef_ZEDCAMRef"])
+        H_vel = self.tm["H_aeroRefSync_aeroRef"].dot(self.tm["H_aeroRef_TRACKCAMRef"])
 
-        vel = np.transpose(H_vel.dot(velocity))
+        vel = tuple(np.transpose(H_vel.dot(velocity)))
 
         return T, vel, eul

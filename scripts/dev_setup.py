@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 
-def main():
+def main() -> None:
     subprocess.run(
         [sys.executable, "-m", "pip", "install", "wheel", "pip", "--upgrade"],
         check=True,

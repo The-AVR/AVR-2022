@@ -5,7 +5,13 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 import transforms3d as t3d
-from mqtt_library import MQTTModule
+from mqtt_library import (
+    MQTTModule,
+    VRCApriltagsRawMessage,
+    VRCApriltagsSelectedMessage,
+    VRCApriltagsVisibleTagsMessage,
+    VRCApriltagsVisibleTagsPosWorld,
+)
 
 warnings.simplefilter("ignore", np.RankWarning)
 
@@ -62,8 +68,8 @@ class AprilTagModule(MQTTModule):
             H_to_from = f"H_{name}_cam"
             self.tm[H_to_from] = np.eye(4)
 
-    def on_apriltag_message(self, payload: dict) -> None:
-        tag_list = []
+    def on_apriltag_message(self, payload: List[VRCApriltagsRawMessage]) -> None:
+        tag_list: List[VRCApriltagsVisibleTagsMessage] = []
 
         min_dist = 1000000
         closest_tag = None
@@ -83,27 +89,31 @@ class AprilTagModule(MQTTModule):
             if id_ is None:
                 continue
 
-            tag = {
-                "id": id_,
-                "horizontal_dist": horizontal_distance,
-                "vertical_dist": vertical_distance,
-                "angle_to_tag": angle,
-                "heading": heading,
-                "pos_rel": {
+            tag = VRCApriltagsVisibleTagsMessage(
+                id=id_,
+                horizontal_dist=horizontal_distance,
+                vertical_dist=vertical_distance,
+                angle_to_tag=angle,
+                heading=heading,
+                pos_rel={
                     "x": pos_rel[0],
                     "y": pos_rel[1],
                     "z": pos_rel[2],
                 },
-            }
+                pos_world={
+                    "x": None,
+                    "y": None,
+                    "z": None,
+                },
+            )
 
             # add some more info if we had the truth data for the tag
             if pos_world is not None and pos_world.any():
-
-                tag["pos_world"] = {
-                    "x": pos_world[0],
-                    "y": pos_world[1],
-                    "z": pos_world[2],
-                }
+                tag["pos_world"] = VRCApriltagsVisibleTagsPosWorld(
+                    x=pos_world[0],
+                    y=pos_world[1],
+                    z=pos_world[2],
+                )
                 if horizontal_distance < min_dist:
                     min_dist = horizontal_distance
                     closest_tag = index
@@ -113,15 +123,22 @@ class AprilTagModule(MQTTModule):
         self.send_message("vrc/apriltags/visible_tags", tag_list)
 
         if closest_tag is not None:
-            apriltag_position = {
-                "tag_id": tag_list[closest_tag]["id"],
-                "pos": {
-                    "n": tag_list[closest_tag]["pos_world"]["x"],
-                    "e": tag_list[closest_tag]["pos_world"]["y"],
-                    "d": tag_list[closest_tag]["pos_world"]["z"],
+            pos_world = tag_list[closest_tag]["pos_world"]
+
+            # this shouldn't happen
+            assert pos_world["x"] is not None
+            assert pos_world["y"] is not None
+            assert pos_world["z"] is not None
+
+            apriltag_position = VRCApriltagsSelectedMessage(
+                tag_id=tag_list[closest_tag]["id"],
+                pos={
+                    "n": pos_world["x"],
+                    "e": pos_world["y"],
+                    "d": pos_world["z"],
                 },
-                "heading": tag_list[closest_tag]["heading"],
-            }
+                heading=tag_list[closest_tag]["heading"],
+            )
 
             self.send_message("vrc/apriltags/selected", apriltag_position)
 
@@ -176,39 +193,12 @@ class AprilTagModule(MQTTModule):
         return H_rot.dot(H_tran)
 
     def handle_tag(
-        self, tag: dict
+        self, tag: VRCApriltagsRawMessage
     ) -> Tuple[int, float, float, float, Optional[np.ndarray], List[float], float]:
         """
         Calculates the distance, position, and heading of the drone in NED frame
         based on the tag detections.
         """
-
-        # example:
-        # {
-        #     "id": 0,
-        #     "pos": {
-        #         "x": -0.08439404,
-        #         "y": 0.34455082,
-        #         "z": 1.1740385
-        #     },
-        #     "rotation": [
-        #         [
-        #             -0.71274376,
-        #             -0.47412094,
-        #             -0.5169194
-        #         ],
-        #         [
-        #             0.054221954,
-        #             -0.7719936,
-        #             0.6333134
-        #         ],
-        #         [
-        #             -0.6993256,
-        #             0.4233618,
-        #             0.5759414
-        #         ]
-        #     ]
-        # ]
 
         tag_id = tag["id"]
 

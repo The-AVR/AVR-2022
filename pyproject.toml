@@ -1,0 +1,5 @@
+[tool.isort]
+    profile = "black"
+
+[tool.pyright]
+    include = ["VMC/**", "PCC/**", "scripts/**", "docs/**"]

@@ -1,10 +1,25 @@
-from typing import Optional
+from typing import Optional, Tuple, TypedDict
 
 # Getting pyzed installed in a dev environment is very painful unless
 # you already have CUDA and the ZED SDK installed.
 import pyzed.sl as sl  # type: ignore
-from loguru import logger
 from decorator_library import try_except
+from loguru import logger
+
+
+class ZedPipeDataTranslation(TypedDict):
+    x: float
+    y: float
+    z: float
+
+
+class ZedPipeData(TypedDict):
+    rotation: Tuple[float, float, float, float]  # quaternion
+    translation: ZedPipeDataTranslation
+    velocity: Tuple[float, float, float]
+    tracker_confidence: float
+    mapper_confidence: float
+
 
 # Largely adapted from this
 # https://github.com/stereolabs/zed-examples/blob/master/tutorials/tutorial%204%20-%20positional%20tracking/python/positional_tracking.py
@@ -65,7 +80,7 @@ class ZEDCamera(object):
         self.last_time = 0
 
     @try_except(reraise=True)
-    def get_pipe_data(self) -> Optional[dict]:
+    def get_pipe_data(self) -> Optional[ZedPipeData]:
         if self.zed.grab(self.runtime_parameters) != sl.ERROR_CODE.SUCCESS:
             logger.warning("ZED Camera Grab Failed")
             return
@@ -89,7 +104,7 @@ class ZEDCamera(object):
         diffz = tz - self.last_pos[2]
         time_diff = (current_time - self.last_time) / 1000
 
-        velocity = [diffx / time_diff, diffy / time_diff, diffz / time_diff]
+        velocity = (diffx / time_diff, diffy / time_diff, diffz / time_diff)
         self.last_time = current_time
         self.last_pos[0] = tx
         self.last_pos[1] = ty
@@ -110,11 +125,12 @@ class ZEDCamera(object):
         rotation = o.get()
 
         # assemble return value
-        translation = {"x": tx, "y": ty, "z": tz}
-        return {
-            "rotation": rotation,
-            "translation": translation,
-            "velocity": velocity,
-            "tracker_confidence": 0x3,
-            "mapper_confidence": 0x3,
-        }
+        translation = ZedPipeDataTranslation(x=tx, y=ty, z=tz)
+
+        return ZedPipeData(
+            rotation=rotation,
+            translation=translation,
+            velocity=velocity,
+            tracker_confidence=0x3,
+            mapper_confidence=0x3,
+        )

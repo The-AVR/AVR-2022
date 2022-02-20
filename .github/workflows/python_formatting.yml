@@ -2,11 +2,11 @@ name: Python Formatting
 
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - '**.py'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - '**.py'
 
 jobs:
   build:
@@ -27,11 +27,14 @@ jobs:
         with:
           python-version: '3.9'
 
+      - name: Copy libraries
+        run: python scripts/copy_libraries.py
+
       - name: Install Packages
         run: |
           npm install pyright
           python -m pip install pip wheel --upgrade
-          python -m pip install black isort autoflake
+          python -m pip install -r requirements-dev.txt
           python ./scripts/dev_setup.py
           python ./scripts/copy_libraries.py
 
@@ -43,6 +46,9 @@ jobs:
 
       - name: Check Unused Imports
         run: python -m autoflake --recursive . --check
+
+      - name: Check Type Hints
+        run: python -m pyleft .
 
       - name: Check Typing
         run: npx pyright .
