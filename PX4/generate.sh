@@ -1,7 +1,6 @@
 #!/bin/bash
 
 set -e
-set -x
 shopt -s dotglob
 
 # warning, v1.10.2 does not appear to build anymore
@@ -10,20 +9,25 @@ PX4_VERSION=v1.12.3
 # record starting directory
 startdir=$(pwd)
 
-echo "--- Cleaning old data"
+echo "--- Preparing directories"
 basedir="$(readlink -f "$(dirname "$0")")"
 cd "$basedir"
 
-sudo rm -rf build/
 mkdir -p build
 mkdir -p target
 cd "$basedir/build"
 
 echo "--- Cloning pymavlink"
 pymavlinkdir="$basedir/build/pymavlink"
-git clone https://github.com/ardupilot/pymavlink "$pymavlinkdir"
+if [ -d "$pymavlinkdir" ]; then
+    cd "$pymavlinkdir"
+    git pull
+else
+    git clone https://github.com/ardupilot/pymavlink "$pymavlinkdir"
+fi
 
 echo "--- Creating Python venv"
+cd "$basedir/build"
 deactivate || true
 rm -rf .tmpvenv/
 python3 -m venv .tmpvenv
@@ -34,7 +38,13 @@ python3 -m pip install -r "$pymavlinkdir/requirements.txt"
 echo "--- Cloning PX4 $PX4_VERSION"
 cd "$basedir/build"
 px4dir="$basedir/build/PX4-Autopilot"
-git clone https://github.com/PX4/PX4-Autopilot --depth 5 "$px4dir" --branch $PX4_VERSION --recurse-submodules
+if [ -d "$px4dir" ]; then
+    cd "$px4dir"
+    git checkout $PX4_VERSION
+    git pull --recurse-submodules
+else
+    git clone https://github.com/PX4/PX4-Autopilot --depth 5 "$px4dir" --branch $PX4_VERSION --recurse-submodules
+fi
 
 echo "--- Applying PX4 patch"
 # apply patch
@@ -48,6 +58,9 @@ python3 -m pymavlink.tools.mavgen --lang=C --wire-protocol=2.0 --output="$px4dir
 cd "$px4dir"
 
 # changes need to be committed to build
+# git config does not matter, just need *something* to commit
+git config user.email "github-bot@bellflight.com"
+git config user.name "Github Actions"
 git add .
 git commit -m "Local commit to facilitate build"
 
@@ -80,11 +93,7 @@ cp -a dist/. "$basedir/target/"
 
 if [ "$1" == "--firmware" ]; then
     cd "$px4dir"
-    base_docker_cmd="docker run --rm -w \"$px4dir\" --volume=\"$px4dir\":\"$px4dir\":rw px4io/px4-dev-nuttx-focal:latest /bin/bash -c"
-
-    # echo "--- Building PX4 SITL"
-    # echo "$base_docker_cmd 'make px4_sitl_default'"
-    # eval "$base_docker_cmd 'make px4_sitl_default -j$(nproc)'"
+    base_docker_cmd="docker run --rm -w $px4dir --volume=$px4dir:$px4dir:rw px4io/px4-dev-nuttx-focal:latest /bin/bash -c"
 
     # build Pixhawk firmware
     echo "--- Building Pixhawk firmware"
@@ -104,7 +113,10 @@ cd "$basedir"
 deactivate
 
 echo "--- Copying outputs"
-cp -a target/*.whl ../VMC/FlightSoftware/fcc/
-cp -a target/*.tar.gz ../VMC/FlightSoftware/fcc/
+rm ../VMC/FlightSoftware/fcm/*.whl
+rm ../VMC/FlightSoftware/fcm/*.tar.gz
+
+cp -a target/*.whl ../VMC/FlightSoftware/fcm/
+cp -a target/*.tar.gz ../VMC/FlightSoftware/fcm/
 
 cd "$startdir"

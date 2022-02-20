@@ -49,7 +49,7 @@ COPY c c
 RUN mkdir -p c/build \
  && cd c/build \
  && cmake .. \
- && make -j4
+ && make -j$(nproc)
 
 COPY python/requirements.txt python/requirements.txt
 RUN python3 -m pip install pip wheel --upgrade \
