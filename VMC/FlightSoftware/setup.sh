@@ -153,8 +153,8 @@ echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 cd $VRC_DIR
 if [ "$TESTING" != true ] ; then
-    $s docker-compose pull -f docker-compose-dev.yml
-    $s docker-compose build -f docker-compose-dev.yml
+    $s docker-compose -f docker-compose-dev.yml pull
+    $s docker-compose -f docker-compose-dev.yml build
 else
     $s docker-compose pull
     $s docker-compose build
