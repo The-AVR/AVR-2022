@@ -93,7 +93,7 @@ cp -a dist/. "$basedir/target/"
 
 if [ "$1" == "--firmware" ]; then
     cd "$px4dir"
-    base_docker_cmd="docker run --rm -w $px4dir --volume=$px4dir:$px4dir:rw px4io/px4-dev-nuttx-focal:latest /bin/bash -c"
+    base_docker_cmd="sudo docker run --rm -w $px4dir --volume=$px4dir:$px4dir:rw px4io/px4-dev-nuttx-focal:latest /bin/bash -c"
 
     # build Pixhawk firmware
     echo "--- Building Pixhawk firmware"
@@ -113,8 +113,8 @@ cd "$basedir"
 deactivate
 
 echo "--- Copying outputs"
-rm ../VMC/FlightSoftware/fcm/*.whl
-rm ../VMC/FlightSoftware/fcm/*.tar.gz
+rm ../VMC/FlightSoftware/fcm/*.whl || true
+rm ../VMC/FlightSoftware/fcm/*.tar.gz || true
 
 cp -a target/*.whl ../VMC/FlightSoftware/fcm/
 cp -a target/*.tar.gz ../VMC/FlightSoftware/fcm/
