@@ -1,7 +1,7 @@
 from typing import List, Literal
 
-from pcc_library import PeripheralControlComputer
 from mqtt_library import MQTTModule
+from pcc_library import PeripheralControlComputer
 
 
 class PeripheralControlModule(MQTTModule):

@@ -2,6 +2,7 @@ import functools
 from loguru import logger
 from typing import Callable
 
+
 def try_except(reraise: bool = False):
     """
     Function decorator that acts as a try/except block around the function.

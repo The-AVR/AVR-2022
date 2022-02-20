@@ -1,6 +1,5 @@
 import asyncio
 import datetime
-import functools
 import json
 import math
 import queue
@@ -8,6 +7,7 @@ import time
 from typing import Any, Callable, List
 
 import mavsdk
+from decorator_library import async_try_except, try_except
 from loguru import logger
 from mavsdk.action import ActionError
 from mavsdk.geofence import Point, Polygon
@@ -16,69 +16,10 @@ from mavsdk.offboard import VelocityBodyYawspeed, VelocityNedYaw
 from paho.mqtt.client import Client as MQTTClient
 from pymavlink import mavutil
 
-# decorators
-
-
-def try_except(reraise: bool = False):
-    """
-    Function decorator that acts as a try/except block around the function.
-
-    Effectively equivalent to:
-
-    ```python
-    try:
-        func()
-    except Exception as e:
-        print(e)
-    ```
-
-    Can optionally reraise the exception.
-    """
-
-    def decorator(func: Callable) -> Callable:
-        @functools.wraps(func)
-        def wrapper(*args, **kwargs):
-            try:
-                return func(*args, **kwargs)
-            except Exception as e:
-                logger.exception(f"Unexpected exception in {func.__name__}")
-                if reraise:
-                    raise e
-
-        return wrapper
-
-    return decorator
-
-
-def async_try_except(reraise: bool = False):
-    """
-    Same as `try_except()` function, just for async functions.
-    """
-
-    def decorator(func: Callable) -> Callable:
-        @functools.wraps(func)
-        async def wrapper(*args, **kwargs):
-            try:
-                return await func(*args, **kwargs)
-            except Exception as e:
-                logger.exception(f"Unexpected exception in {func.__name__}")
-                if reraise:
-                    raise e
-
-        return wrapper
-
-    return decorator
-
-
-# classes
-
 
 class MAVMQTTBase:
-    def __init__(self, client: MQTTClient, drone: mavsdk.System = None) -> None:
-        self.drone = drone
+    def __init__(self, client: MQTTClient) -> None:
         self.mqtt_client = client
-
-        self.topic_prefix = "vrc/fcc"
 
     def _timestamp(self) -> str:
         return datetime.datetime.now().isoformat()
@@ -90,15 +31,13 @@ class MAVMQTTBase:
         """
         event = {"name": name, "payload": payload, "timestamp": self._timestamp()}
 
-        self.mqtt_client.publish(
-            f"{self.topic_prefix}/events", json.dumps(event), retain=False, qos=0
-        )
+        self.mqtt_client.publish("vrc/fcm/events", json.dumps(event))
 
     async def async_queue_action(
         self, queue_: queue.Queue, action: Callable, frequency: int = 10
     ) -> None:
         """
-        Creates a while loop that continously tries to pull a protobuf from a queue
+        Creates a while loop that continously tries to pull a dict from a queue
         and do something with it at a set frequency.
 
         The given function needs to accept a single argument of the protobuf object
@@ -123,14 +62,16 @@ class MAVMQTTBase:
                     await action(data)
                     # reset timer
                     last_time = time.time()
+
             except queue.Empty:
                 # if the queue was empty, just wait
                 await asyncio.sleep(0.01)
+
             except Exception as e:
                 logger.exception("Unexpected error in async_queue_action")
 
 
-class FCC(MAVMQTTBase):
+class FlightControlComputer(MAVMQTTBase):
     def __init__(
         self,
         drone: mavsdk.System,
@@ -139,10 +80,8 @@ class FCC(MAVMQTTBase):
         offboard_ned_queue: queue.Queue,
         offboard_body_queue: queue.Queue,
     ) -> None:
-        super().__init__(client, drone)
-
-        # this is solely for type hinting
-        self.drone: mavsdk.System
+        super().__init__(client)
+        self.drone = drone
 
         self.mission_api = MissionAPI(drone, client)
 
@@ -231,9 +170,7 @@ class FCC(MAVMQTTBase):
                 "timestamp": self._timestamp(),
             }
 
-            self.mqtt_client.publish(
-                f"{self.topic_prefix}/battery", json.dumps(update), retain=False, qos=0
-            )
+            self.mqtt_client.publish("vrc/fcm/battery", json.dumps(update))
 
     @async_try_except()
     async def in_air_telemetry(self) -> None:
@@ -268,9 +205,7 @@ class FCC(MAVMQTTBase):
                 "timestamp": self._timestamp(),
             }
 
-            self.mqtt_client.publish(
-                f"{self.topic_prefix}/status", json.dumps(update), retain=False, qos=0
-            )
+            self.mqtt_client.publish("vrc/fcm/status", json.dumps(update))
 
     @async_try_except()
     async def landed_state_telemetry(self) -> None:
@@ -331,15 +266,14 @@ class FCC(MAVMQTTBase):
                 "timestamp": self._timestamp(),
             }
 
-            self.mqtt_client.publish(
-                f"{self.topic_prefix}/status", json.dumps(update), retain=False, qos=0
-            )
+            self.mqtt_client.publish("vrc/fcm/status", json.dumps(update))
 
             if mode != fcc_mode:
                 if mode in fcc_mode_map:
                     self._publish_event(fcc_mode_map[str(mode)])
                 else:
                     self._publish_event("fcc_mode_error_event")
+
             fcc_mode = mode
             self.fcc_mode = mode
 
@@ -357,12 +291,7 @@ class FCC(MAVMQTTBase):
 
             update = {"dX": n, "dY": e, "dZ": d, "timestamp": self._timestamp()}
 
-            self.mqtt_client.publish(
-                f"{self.topic_prefix}/location/local",
-                json.dumps(update),
-                retain=False,
-                qos=0,
-            )
+            self.mqtt_client.publish("vrc/fcm/location/local", json.dumps(update))
 
     @async_try_except()
     async def position_lla_telemetry(self) -> None:
@@ -379,12 +308,7 @@ class FCC(MAVMQTTBase):
                 "timestamp": self._timestamp(),
             }
 
-            self.mqtt_client.publish(
-                f"{self.topic_prefix}/location/global",
-                json.dumps(update),
-                retain=False,
-                qos=0,
-            )
+            self.mqtt_client.publish("vrc/fcm/location/global", json.dumps(update))
 
     @async_try_except()
     async def home_lla_telemetry(self) -> None:
@@ -400,12 +324,7 @@ class FCC(MAVMQTTBase):
                 "timestamp": self._timestamp(),
             }
 
-            self.mqtt_client.publish(
-                f"{self.topic_prefix}/location/home",
-                json.dumps(update),
-                retain=False,
-                qos=0,
-            )
+            self.mqtt_client.publish("vrc/fcm/location/home", json.dumps(update))
 
     @async_try_except()
     async def attitude_euler_telemetry(self) -> None:
@@ -437,12 +356,7 @@ class FCC(MAVMQTTBase):
             self.heading = heading
 
             # publish the attitude
-            self.mqtt_client.publish(
-                f"{self.topic_prefix}/attitude/euler",
-                json.dumps(update),
-                retain=False,
-                qos=0,
-            )
+            self.mqtt_client.publish("vrc/fcm/attitude/euler", json.dumps(update))
 
     @async_try_except()
     async def velocity_ned_telemetry(self) -> None:
@@ -459,9 +373,7 @@ class FCC(MAVMQTTBase):
                 "timestamp": self._timestamp(),
             }
 
-            self.mqtt_client.publish(
-                f"{self.topic_prefix}/velocity", json.dumps(update), retain=False, qos=0
-            )
+            self.mqtt_client.publish("vrc/fcm/velocity", json.dumps(update))
 
     # endregion ###############################################################
 
@@ -510,8 +422,7 @@ class FCC(MAVMQTTBase):
                 """
                 try:
                     await asyncio.wait_for(task(**payload), timeout=self.timeout)
-                    self._publish_event("request_" + name + "_completed_event")
-                    # Logging.normal(prefix, f"Task '{name}' returned")
+                    self._publish_event(f"request_{name}_completed_event")
                     self.currently_running_task = None
 
                 except asyncio.TimeoutError:
@@ -519,8 +430,10 @@ class FCC(MAVMQTTBase):
                         logger.warning(f"Task '{name}' timed out!")
                         self._publish_event("action_timeout_event", name)
                         self.currently_running_task = None
+
                     except Exception as e:
                         logger.exception("ERROR IN TIMEOUT HANDLER")
+
                 except Exception as e:
                     logger.exception("ERROR IN TASK WAITER")
 
@@ -579,16 +492,19 @@ class FCC(MAVMQTTBase):
         """
         try:
             await action_fn()
-            full_success_str = action_text + "_success_event"
+            full_success_str = f"{action_text}_success_event"
             logger.info(f"Sending {full_success_str}")
             self._publish_event(full_success_str)
+
         except ActionError as e:
-            full_fail_str = action_text + "_failed_event"
+            full_fail_str = f"{action_text}_failed_event"
             logger.info(f"Sending {full_fail_str}")
             self._publish_event(full_fail_str)
+
             if e._result.result_str == "CONNECTION_ERROR":
                 asyncio.create_task(self.connect())
-            raise e
+
+            raise e from e
 
     # endregion ###############################################################
 
@@ -733,7 +649,7 @@ class FCC(MAVMQTTBase):
             if not self.offboard_enabled:
                 return
 
-            north = msg["north"]  # TODO - type cast these maybe?
+            north = msg["north"]
             east = msg["east"]
             down = msg["down"]
             yaw = msg["yaw"]
@@ -761,7 +677,7 @@ class FCC(MAVMQTTBase):
             if not self.offboard_enabled:
                 return
 
-            forward = msg["forward"]  # TODO - type casting?
+            forward = msg["forward"]
             right = msg["right"]
             down = msg["down"]
             yaw = msg["yaw"]
@@ -780,10 +696,8 @@ class FCC(MAVMQTTBase):
 
 class MissionAPI(MAVMQTTBase):
     def __init__(self, drone: mavsdk.System, client: MQTTClient) -> None:
-        super().__init__(client, drone)
-
-        # this is solely for type hinting
-        self.drone: mavsdk.System
+        super().__init__(client)
+        self.drone = drone
 
     @async_try_except(reraise=True)
     async def set_geofence(
@@ -987,38 +901,35 @@ class MissionAPI(MAVMQTTBase):
         await self.start()
 
 
-class PyMAVLinkAgent(MAVMQTTBase):
-    def __init__(self, client: MQTTClient, mocap_queue: queue.Queue) -> None:
-        super().__init__(client)
-        self.mocap_queue = mocap_queue
+class PyMAVLinkAgent:
+    def __init__(self, client: MQTTClient, hilgps_queue: queue.Queue) -> None:
+        self.mqtt_client = client
+        self.hilgps_queue = hilgps_queue
 
     @async_try_except()
     async def run(self) -> None:
         """
         Set up a mavlink connection and kick off any tasks
         """
-        loop = asyncio.get_event_loop()
-
         # create a mavlink udp instance
-        self.master = mavutil.mavlink_connection(
+        self.mavcon = mavutil.mavlink_connection(
             "udpin:0.0.0.0:14542", source_system=254, dialect="bell"
         )
 
-        await loop.run_in_executor(None, self.wait_for_heartbeat)
-        asyncio.gather(self.set_hil_gps())
+        await self.wait_for_heartbeat()
+        await self.set_hil_gps()
 
-        while True:
-            await asyncio.sleep(3)
-
+    @try_except(reraise=True)
     def wait_for_heartbeat(self) -> Any:
         """
         Wait for a MAVLINK heartbeat message.
         """
         try:
             logger.debug("Waiting for mavlink heartbeat")
-            m = self.master.recv_match(type="HEARTBEAT", blocking=True)
-            logger.debug("C O N N E C T E D")
+            m = self.mavcon.recv_match(type="HEARTBEAT", blocking=True)
+            logger.success("Mavlink heartbeat received")
             return m
+
         except Exception as e:
             logger.exception("Issue while waiting for connection heartbeat")
 
@@ -1033,45 +944,45 @@ class PyMAVLinkAgent(MAVMQTTBase):
         because the standard message doesn't.
         """
 
-        def print_stats(last_print_time: float) -> float:
+        def publish_stats(last_publish_time: float) -> float:
             """
             Takes the last print time, and determines
             whether or not to print statistics. Returns
             the last time statistics were printed.
             """
-            if time.time() - last_print_time > 1:
-                # logger.debug(f"Number of mocap messages {num_mocaps}")
+            if time.time() - last_publish_time > 1:
                 self.mqtt_client.publish(
-                    f"{self.topic_prefix}/hil_gps/stats",
-                    json.dumps({"num_frames": num_mocaps}),
+                    "vrc/fcm/hil_gps/stats",
+                    json.dumps({"num_frames": num_frames}),
                     retain=False,
                     qos=0,
                 )
                 return time.time()
-            return last_print_time
 
-        def mocap_msg_to_offboard_msg(
-            mocap_msg: dict,
+            return last_publish_time
+
+        def hilgps_msg_to_offboard_msg(
+            hilgps_msg: dict,
         ) -> dict:
             """
             Function to convert the msg coming over the wire to the hil msg
             needed for the hil_gps message
             """
             return {
-                "time_usec": int(mocap_msg["time_usec"]),
-                "fix_type": int(mocap_msg["fix_type"]),
-                "lat": int(mocap_msg["lat"]),
-                "lon": int(mocap_msg["lon"]),
-                "alt": int(mocap_msg["alt"]),
-                "eph": int(mocap_msg["eph"]),
-                "epv": int(mocap_msg["epv"]),
-                "vel": int(mocap_msg["vel"]),
-                "v_north": int(mocap_msg["vn"]),
-                "v_east": int(mocap_msg["ve"]),
-                "v_down": int(mocap_msg["vd"]),
-                "cog": int(mocap_msg["cog"]),
-                "sats_visible": int(mocap_msg["satellites_visible"]),
-                "heading": int(mocap_msg["heading"]),
+                "time_usec": int(hilgps_msg["time_usec"]),
+                "fix_type": int(hilgps_msg["fix_type"]),
+                "lat": int(hilgps_msg["lat"]),
+                "lon": int(hilgps_msg["lon"]),
+                "alt": int(hilgps_msg["alt"]),
+                "eph": int(hilgps_msg["eph"]),
+                "epv": int(hilgps_msg["epv"]),
+                "vel": int(hilgps_msg["vel"]),
+                "v_north": int(hilgps_msg["vn"]),
+                "v_east": int(hilgps_msg["ve"]),
+                "v_down": int(hilgps_msg["vd"]),
+                "cog": int(hilgps_msg["cog"]),
+                "satellites_visible": int(hilgps_msg["satellites_visible"]),
+                "heading": int(hilgps_msg["heading"]),
             }
 
         def send_hil_gps(gps_data: dict) -> None:
@@ -1079,7 +990,7 @@ class PyMAVLinkAgent(MAVMQTTBase):
             Sends the HIL GPS message.
             """
             try:
-                msg = self.master.mav.hil_gps_heading_encode(  # type: ignore
+                msg = self.mavcon.mav.hil_gps_heading_encode(  # type: ignore
                     gps_data["time_usec"],
                     gps_data["fix_type"],
                     gps_data["lat"],
@@ -1092,42 +1003,45 @@ class PyMAVLinkAgent(MAVMQTTBase):
                     gps_data["v_east"],
                     gps_data["v_down"],
                     gps_data["cog"],
-                    gps_data["sats_visible"],
+                    gps_data["satellites_visible"],
                     gps_data["heading"],
                 )
-                self.master.mav.send(msg)  # type: ignore
+                self.mavcon.mav.send(msg)  # type: ignore
             except Exception as e:
                 logger.exception("Issue send HIL GPS")
 
         HIL_FREQ = 15
 
-        last_print_time = time.time()
+        last_publish_time = time.time()
         last_send_time = time.time()
 
-        num_mocaps = 0
+        # keep track of how many messages we've received
+        num_frames = 0
 
         while True:
             try:
-                # print statistics
-                last_print_time = print_stats(last_print_time)
+                # publish statistics
+                last_publish_time = publish_stats(last_publish_time)
+
                 # get the next item
-                data = self.mocap_queue.get_nowait()
+                data = self.hilgps_queue.get_nowait()
 
                 msg = data["hil_gps"]
-
-                num_mocaps += 1
+                num_frames += 1
                 now = time.time()
 
                 # if time to send a new item, do so
                 if now - last_send_time > (1 / HIL_FREQ):
                     # prepare hil data
-                    hil_data = mocap_msg_to_offboard_msg(msg)
+                    hil_data = hilgps_msg_to_offboard_msg(msg)
                     # send it
                     send_hil_gps(hil_data)
                     last_send_time = time.time()
+
             except queue.Empty:
                 await asyncio.sleep(0.01)
                 continue
+
             except Exception as e:
                 logger.exception("Issue sending HIL GPS")
                 continue

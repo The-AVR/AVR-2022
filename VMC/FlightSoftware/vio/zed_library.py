@@ -8,6 +8,7 @@ class ZEDCamera(object):
     """
     ZED Tracking Camera interface. Manages pulling data off of the camera for use by the transforms to get it in the correct reference frame.
     """
+
     def setup(self) -> None:
         try:
             # Create a Camera object

@@ -21,4 +21,4 @@ ENV MAVLINK_DIALECT=bell
 # need to install from source as it's difficult to generate a .whl file for ARM
 RUN python -m pip install /app/pymavlink*.tar.gz
 
-CMD ["python", "fcc.py"]
+CMD ["python", "fcm.py"]

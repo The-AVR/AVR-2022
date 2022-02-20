@@ -1,15 +1,18 @@
 import multiprocessing
 import time
-from typing import Optional, Tuple, List
-import numpy as np
+from typing import List, Optional, Tuple
 
+import numpy as np
 from capture_device import CaptureDevice
-from loguru import logger
-from pupil_apriltags import Detector, Detection
 from decorator_library import try_except
+from loguru import logger
+from pupil_apriltags import Detection, Detector
+
 
 class AprilTagWrapper:
-    def __init__(self, camera_params: Tuple[float, float, float, float], tag_size: float):
+    def __init__(
+        self, camera_params: Tuple[float, float, float, float], tag_size: float
+    ):
         self.camera_params = camera_params
         self.tag_size = tag_size
 
@@ -23,7 +26,7 @@ class AprilTagWrapper:
             debug=0,
         )
 
-    def process_image(self, frame:np.uint8) -> List[Detection]:
+    def process_image(self, frame: np.uint8) -> List[Detection]:
         """
         Takes an image as input and returns the detected apriltags in list format
         """
@@ -43,7 +46,7 @@ class AprilTagVPS:
         res: Tuple[int, int],
         camera_params: Tuple[float, float, float, float],
         tag_size: float,
-        framerate: Optional[int]=None,
+        framerate: Optional[int] = None,
     ):
         # camera parameters
         self.protocol = protocol
@@ -112,7 +115,6 @@ class AprilTagVPS:
             self.avg = 1 / (sum(delta_buckets) / 10)
             last_loop = now
             i += 1
-
 
     def capture_loop(self):
         """

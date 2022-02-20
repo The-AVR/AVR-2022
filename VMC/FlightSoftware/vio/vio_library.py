@@ -79,9 +79,7 @@ class ZEDCameraCoordinateTransformation(object):
 
         # compute the difference between our global reference, and what our sensor is reading for heading
         heading_offset = heading_ref - (math.degrees(heading))
-        logger.debug(
-            f"ZEDCAM: Resync: Heading Offset:{heading_offset}"
-        )
+        logger.debug(f"ZEDCAM: Resync: Heading Offset:{heading_offset}")
 
         # build a rotation matrix about the global Z axis to apply the heading offset we computed
         H_rot_correction = t3d.affines.compose(

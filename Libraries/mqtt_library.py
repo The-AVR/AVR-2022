@@ -86,4 +86,4 @@ class MQTTModule:
         """
         logger.debug(f"Sending message to {topic}: {payload}")
         self.mqtt_client.publish(topic, json.dumps(payload))
-        self.message_cache[topic] = copy.deepcopy(payload) # type: ignore
+        self.message_cache[topic] = copy.deepcopy(payload)

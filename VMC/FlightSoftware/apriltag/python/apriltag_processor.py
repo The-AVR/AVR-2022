@@ -5,7 +5,6 @@ from typing import List, Optional, Tuple, Union
 
 import numpy as np
 import transforms3d as t3d
-
 from mqtt_library import MQTTModule
 
 warnings.simplefilter("ignore", np.RankWarning)
