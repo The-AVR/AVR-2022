@@ -1,6 +1,8 @@
-from typing import List, Optional, Tuple
+import time
+from typing import Optional, Tuple
 
 import cv2
+from loguru import logger
 
 
 class CaptureDevice:
@@ -8,7 +10,7 @@ class CaptureDevice:
         self,
         protocol: str,
         video_device: str,
-        res: List[int],
+        res: Tuple[int, int],
         framerate: Optional[int] = None,
     ):
         self.protocol = protocol
@@ -19,58 +21,41 @@ class CaptureDevice:
         # "gst-launch-1.0 nvarguscamerasrc ! 'video/x-raw(memory:NVMM),width=1920,height=1080,framerate=30/1,format=NV12' ! videoconvert ! nvoverlaysink"
 
         if self.protocol == "v4l2":
-            # if the framerate argument is supplied, we will modify the connection string to provide a rate limiter to the incoming string at virtually no performance penalty
+            # if the framerate argument is supplied, we will modify the connection
+            # string to provide a rate limiter to the incoming string at virtually
+            # no performance penalty
             if framerate is None:
                 frame_string = "video/x-raw,format=BGRx"
             else:
                 frame_string = (
-                    "videorate ! video/x-raw,format=BGRx,framerate="
-                    + str(framerate)
-                    + "/1"
+                    f"videorate ! video/x-raw,format=BGRx,framerate={framerate}/1"
                 )
 
-            # this is the efficient way of capturing, leveraging the hardware JPEG decoder on the jetson
-            connection_string = (
-                "v4l2src device="
-                + video_device
-                + " io-mode=2 ! image/jpeg,width=1280,height=720,framerate=60/1 ! jpegparse ! nvv4l2decoder mjpeg=1 ! nvvidconv ! "
-                + frame_string
-                + " ! videoconvert ! video/x-raw,width="
-                + str(res[0])
-                + ",height="
-                + str(res[1])
-                + ",format=BGR ! appsink"
-            )
-
-            self.cv = cv2.VideoCapture(connection_string)
+            # this is the efficient way of capturing, leveraging the hardware
+            # JPEG decoder on the jetson
+            connection_string = f"v4l2src device={video_device} io-mode=2 ! image/jpeg,width=1280,height=720,framerate=60/1 ! jpegparse ! nvv4l2decoder mjpeg=1 ! nvvidconv ! {frame_string} ! videoconvert ! video/x-raw,width={res[0]},height={res[1]},format=BGRx ! appsink"
 
         elif self.protocol == "argus":
-
             if framerate is None:
                 frame_string = "video/x-raw,format=BGR"
             else:
                 frame_string = (
-                    "videorate ! video/x-raw,format=BGR,framerate="
-                    + str(framerate)
-                    + "/1"
+                    f"videorate ! video/x-raw,format=BGR,framerate={framerate}/1"
                 )
 
-            connection_string = (
-                "nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720,format=NV12, framerate=60/1 ! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! "
-                + frame_string
-                + ",width="
-                + str(res[0])
-                + ",height="
-                + str(res[1])
-                + " ! appsink"
-            )
-            self.cv = cv2.VideoCapture(connection_string)
+            connection_string = f"nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720,format=NV12, framerate=60/1 ! nvvidconv ! video/x-raw,format=BGRx ! videoconvert ! {frame_string},width={res[0]},height={res[1]} ! appsink"
+
+        else:
+            raise ValueError
 
         # this is the inefficient way of capturing, using the software decoder running on CPU
         # self.cv = cv2.VideoCapture("v4l2src device=/dev/video2 io-mode=2 ! image/jpeg,width=1280,height=720,framerate=60/1 ! jpegparse ! jpegdec ! videoconvert ! appsink sync=false")
 
         # this is how we might have to capture from csi cameras..
         # self.cv = cv2.VideoCapture("nvarguscamerasrc ! 'video/x-raw(memory:NVMM), width=1920, height=1080, framerate=30/1, format=NV12' ! videoconvert ! appsink sync=false",)
+
+        # create the gstreamer pipeline
+        self.cv = cv2.VideoCapture(connection_string)
 
     def read(self) -> Tuple[bool, Optional[cv2.Mat]]:
         return self.cv.read()
@@ -81,17 +66,20 @@ class CaptureDevice:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return ret, img
 
+    def run(self):
+        while True:
+            # try to read frame
+            ret, _ = self.read()
+
+            if not ret:
+                logger.warning("cv2.VideoCapture read failed")
+
+            # limit us to 100 Hz
+            time.sleep(0.01)
+
 
 if __name__ == "__main__":
-    import time
-
     cam = CaptureDevice(
-        protocol="argus", video_device="/dev/video0", res=[1280, 720], framerate=30
+        protocol="argus", video_device="/dev/video0", res=(1280, 720), framerate=30
     )
-
-    while True:
-        ret, img = cam.read()
-        if ret:
-            print(ret)
-        else:
-            time.sleep(0.01)
+    cam.run()

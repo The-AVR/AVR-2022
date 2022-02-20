@@ -8,7 +8,7 @@ import serial
 from loguru import logger
 
 
-class VRC_Peripheral:
+class PeripheralControlComputer:
     def __init__(self, port: str, use_serial: bool = True) -> None:
         self.port = port
 
@@ -38,7 +38,7 @@ class VRC_Peripheral:
             self.ser.open()
 
         else:
-            logger.debug("VRC_Peripheral: Serial Transmission is OFF")
+            logger.debug("VRCPeripheral: Serial Transmission is OFF")
 
         self.shutdown: bool = False
 
@@ -65,7 +65,7 @@ class VRC_Peripheral:
         if self.use_serial is True:
             self.ser.write(data)
         else:
-            logger.debug("VRC_Peripheral serial data: ")
+            logger.debug("VRCPeripheral serial data: ")
             logger.debug(data)
 
     def set_temp_color(self, wrgb: List[int], time: float = 0.5) -> None:
@@ -86,7 +86,7 @@ class VRC_Peripheral:
         if self.use_serial is True:
             self.ser.write(data)
         else:
-            logger.debug("VRC_Peripheral serial data: ")
+            logger.debug("VRCPeripheral serial data: ")
             logger.debug(data)
 
     def set_servo_open_close(
@@ -112,7 +112,7 @@ class VRC_Peripheral:
                 length = 3  # command + servo + action
                 self.ser.write(self._construct_payload(command, length, data))
             else:
-                logger.debug("VRC_Peripheral serial data: ")
+                logger.debug("VRCPeripheral serial data: ")
                 logger.debug(data)
 
     def set_servo_min(self, servo: int, minimum: float) -> None:
@@ -130,7 +130,7 @@ class VRC_Peripheral:
                 length = 3  # command + servo + min pwm
                 self.ser.write(self._construct_payload(command, length, data))
             else:
-                logger.debug("VRC_Peripheral serial data: ")
+                logger.debug("VRCPeripheral serial data: ")
                 logger.debug(data)
 
     def set_servo_max(self, servo: int, maximum: float) -> None:
@@ -148,7 +148,7 @@ class VRC_Peripheral:
                 length = 3  # command + servo + min pwm
                 self.ser.write(self._construct_payload(command, length, data))
             else:
-                logger.debug("VRC_Peripheral serial data: ")
+                logger.debug("VRCPeripheral serial data: ")
                 logger.debug(data)
 
     def set_servo_pct(self, servo: int, pct: float) -> None:
@@ -166,7 +166,7 @@ class VRC_Peripheral:
                 length = 3  # command + servo + percent
                 self.ser.write(self._construct_payload(command, length, data))
             else:
-                logger.debug("VRC_Peripheral serial data: ")
+                logger.debug("VRCPeripheral serial data: ")
                 logger.debug(data)
 
     def reset_vrc_peripheral(self) -> None:
@@ -183,7 +183,7 @@ class VRC_Peripheral:
             # try to reconnect
             self.ser.open()
         else:
-            logger.debug("VRC_Peripheral reset triggered (NO SERIAL)")
+            logger.debug("VRCPeripheral reset triggered (NO SERIAL)")
 
     def check_servo_controller(self) -> None:
         if self.use_serial:
@@ -219,7 +219,7 @@ class VRC_Peripheral:
     def list_pack(self, bit_format: Union[str, bytes], value: Any) -> List[int]:
         bytez = pack(bit_format, value)
 
-        return [byte for byte in bytez]
+        return list(bytez)
 
     def crc8_dvb_s2(self, crc: int, a: int) -> int:
         # https://stackoverflow.com/a/52997726

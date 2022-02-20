@@ -5,7 +5,7 @@ import sys
 from typing import List, Literal
 
 import serial
-from pcc_library import VRC_Peripheral
+from pcc_library import PeripheralControlComputer
 from PySide6 import QtCore, QtWidgets
 from qt_icon import set_icon
 
@@ -54,7 +54,7 @@ class MainWidget(QtWidgets.QWidget):
         Creates the connection to the PCC
         """
         try:
-            self.pcc_connection = VRC_Peripheral(
+            self.pcc_connection = PeripheralControlComputer(
                 self.setup_widget.com_port_combo.currentText(), use_serial=True
             )
             self.setup_widget.close()

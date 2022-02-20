@@ -1,15 +1,15 @@
 import multiprocessing
 import time
+from typing import Optional, Tuple, List
+import numpy as np
 
 from capture_device import CaptureDevice
 from loguru import logger
-from pupil_apriltags import Detector
-
-# camera_params=[584.3866,583.3444,661.2944,320.7182],tag_size=0.057
-
+from pupil_apriltags import Detector, Detection
+from decorator_library import try_except
 
 class AprilTagWrapper:
-    def __init__(self, camera_params, tag_size):
+    def __init__(self, camera_params: Tuple[float, float, float, float], tag_size: float):
         self.camera_params = camera_params
         self.tag_size = tag_size
 
@@ -23,7 +23,7 @@ class AprilTagWrapper:
             debug=0,
         )
 
-    def process_image(self, frame):
+    def process_image(self, frame:np.uint8) -> List[Detection]:
         """
         Takes an image as input and returns the detected apriltags in list format
         """
@@ -38,34 +38,41 @@ class AprilTagWrapper:
 class AprilTagVPS:
     def __init__(
         self,
-        protocol,
-        video_device,
-        res,
-        camera_params,
-        tag_size,
-        framerate=None,
+        protocol: str,
+        video_device: str,
+        res: Tuple[int, int],
+        camera_params: Tuple[float, float, float, float],
+        tag_size: float,
+        framerate: Optional[int]=None,
     ):
+        # camera parameters
         self.protocol = protocol
         self.video_device = video_device
-        self.res = res[0:2]
+        self.res = res
         self.framerate = framerate
 
+        # pupil april tags wrapper
         self.atag = AprilTagWrapper(camera_params=camera_params, tag_size=tag_size)
 
+        # setup processing queue
         self.img_queue = multiprocessing.Queue()
         self.tags_queue = multiprocessing.Queue()
 
         self.tags = None
         self.tags_timestamp = time.time()
 
+        # record average framerate
         self.avg = 0.0
+        # record number of images processed
         self.num_images = 0
 
-    def start(self):
+    def run(self):
+        # sourcery skip: use-named-expression
         """
-        Kicks off the AprilTagVPS pipeline, capturing images from a v4l2 camera @ 'video_device' and uses 'camera_params' along with 'tag_size' to calculate pose.
+        Kicks off the AprilTagVPS pipeline, capturing images from
+        a v4l2 camera @ 'video_device' and uses 'camera_params' along with
+        'tag_size' to calculate pose.
         """
-        self.consumer_processes = []
         # we will setup 2 processing consumers for the imagery.
         for i in range(2):
             proc = multiprocessing.Process(
@@ -74,7 +81,7 @@ class AprilTagVPS:
             proc.start()
 
         # start the capturing process
-        proc = multiprocessing.Process(target=self.capture_loop, args=[], daemon=True)  # type: ignore
+        proc = multiprocessing.Process(target=self.capture_loop, args=(), daemon=True)
         proc.start()
 
         last_loop = time.time()
@@ -82,73 +89,80 @@ class AprilTagVPS:
         i = 0
 
         while True:
-            # if the perception loop has completed analysis on a frame, show some stats or even render the frame
-            if not self.tags_queue.empty():
-                self.num_images += 1
-                now = time.time()
-                tags = self.tags_queue.get()
-                if tags:
-                    self.tags = tags
-                    self.tags_timestamp = now
-                else:
-                    self.tags = []
-
-                tdelta = now - last_loop
-                delta_buckets[i % 10] = tdelta  # type: ignore
-                self.avg = 1 / (sum(delta_buckets) / 10)
-                last_loop = now
-                i += 1
-            else:
+            # if the perception loop has completed analysis on a frame,
+            # show some stats or even render the frame
+            if self.tags_queue.empty():
                 time.sleep(0.01)
+                continue
+
+            self.num_images += 1
+            now = time.time()
+
+            # try to get a tag from the queue
+            tags = self.tags_queue.get()
+            if tags:
+                self.tags = tags
+                self.tags_timestamp = now
+            else:
+                self.tags = []
+
+            # calculate the framerate
+            tdelta = now - last_loop
+            delta_buckets[i % 10] = tdelta  # type: ignore
+            self.avg = 1 / (sum(delta_buckets) / 10)
+            last_loop = now
+            i += 1
+
 
     def capture_loop(self):
         """
-        Captures frames from the camera and places them into the image queue to be consumed downstream by "perception loop"
-        Checks to make sure queue is not being overloaded and limits queue size to "max_depth"
+        Captures frames from the camera and places them into the image queue
+        to be consumed downstream by "perception loop". Checks to make sure queue
+        is not being overloaded and limits queue size to "max_depth".
         """
         max_depth = 3
         capture = CaptureDevice(
             self.protocol, self.video_device, self.res, self.framerate
         )
-        logger.success("AT: Capture Loop Started!")
+
+        logger.success("Capture loop started!")
+
         while True:
             ret, img = capture.read_gray()
+
             # if theres room in the queue and we have a valid image
             if (self.img_queue.qsize() < max_depth) and (ret is True):
                 # put the image in the queue
                 self.img_queue.put(img)
+
             time.sleep(0.01)
 
+    @try_except(reraise=True)
     def perception_loop(self):
         """
-        Pulls images off the image queue, hands them to the apriltag detector, and then places the results in the tags queue
+        Pulls images off the image queue, hands them to the apriltag detector,
+        and then places the results in the tags queue.
         """
-        logger.success("AT: Perception Loop Started!")
-        try:
-            while True:
-                if not self.img_queue.empty():
-                    img = self.img_queue.get()
-                    tags = self.atag.process_image(img)
-                    self.tags_queue.put(tags)
-                else:
-                    time.sleep(0.01)
-        except Exception as e:
-            logger.exception("AT: Perception Loop Error: {e}")
-            raise e
+        logger.success("Perception loop started!")
+
+        while True:
+            if not self.img_queue.empty():
+                img = self.img_queue.get()
+                tags = self.atag.process_image(img)
+                self.tags_queue.put(tags)
+            else:
+                time.sleep(0.01)
 
 
 if __name__ == "__main__":
     at = AprilTagVPS(
         protocol="argus",
         video_device="/dev/video0",
-        res=[1280, 720],
-        camera_params=[584.3866, 583.3444, 661.2944, 320.7182],
+        res=(1280, 720),
+        camera_params=(584.3866, 583.3444, 661.2944, 320.7182),
         tag_size=0.174,  # full size tag
+        # old comment had 0.057
         framerate=None,
     )
 
-    at.start()
-
-"""
-gst-launch-1.0 nvarguscamerasrc sensor_id=0 ! videoconvert ! videorate ! 'video/x-raw(memory:NVMM),framerate=10/1' ! nvv4l2h264enc maxperf-enable=1 preset-level=1 bitrate=5000000 ! rtph264pay config-interval=1 pt=96 ! udpsink host=192.168.1.185 port=5000
-"""
+    at.run()
