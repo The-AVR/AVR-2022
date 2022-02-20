@@ -1,0 +1,2 @@
+# need the ZED SDK installed for this to work
+# git+https://github.com/stereolabs/zed-python-api@v3.1

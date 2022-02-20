@@ -1,71 +1,123 @@
-import json
 import threading
 import time
-from typing import Any, Callable, Dict
+import math
+import numpy as np
+from typing import List
 
-import paho.mqtt.client as mqtt
+
+from decorator_library import try_except
+from mqtt_library import MQTTModule
+from vio_library import CameraCoordinateTransformation
+from zed_library import ZEDCamera
 from loguru import logger
 
-try:
-    from vio_library import VIO
-except ImportError:
-    from .vio_library import VIO
 
-
-class VIOModule(object):
+class VIOModule(MQTTModule):
     def __init__(self):
-        self.mqtt_host = "mqtt"
-        self.mqtt_port = 18830
+        super().__init__()
 
-        self.mqtt_client = mqtt.Client()
+        # settings
+        self.init_sync = False
+        self.continuous_sync = True
+        self.CAM_UPDATE_FREQ = 10
 
-        self.mqtt_client.on_connect = self.on_connect
-        self.mqtt_client.on_message = self.on_message
+        # connected libraries
+        self.camera = ZEDCamera()
+        self.coord_trans = CameraCoordinateTransformation()
 
-        self.vio = VIO(self.mqtt_client)
+        # mqtt
+        self.topic_map = {"vrc/vio/resync": self.handle_resync}
 
-        self.topic_prefix = "vrc"
+    def handle_resync(self, payload: dict) -> None:
+        # whenever new data is published to the ZEDCamera resync topic, we need to compute a new correction
+        # to compensate for sensor drift over time.
+        # TODO - make sure this is what the message looks like
+        if self.init_sync == False or self.continuous_sync == True:
+            pos_ref = payload["ned"]
+            heading_ref = payload["heading"]
+            self.coord_trans.sync(heading_ref, pos_ref)
+            self.init_sync = True
 
-        self.mqtt_topics: Dict[str, Callable[[dict], None]] = {
-            f"{self.topic_prefix}/vio/resync": self.vio.handle_resync
+    @try_except(reraise=False)
+    def publish_updates(
+        self,
+        ned_pos: List[float],
+        ned_vel: List[float],
+        rpy: List[float],
+        tracker_confidence: float,
+        mapper_confidence: float,
+    ) -> None:
+        if np.isnan(ned_pos).any():
+            raise ValueError("ZEDCamera has NaNs for position")
+
+        # send position update
+        n = float(ned_pos[0])
+        e = float(ned_pos[1])
+        d = float(ned_pos[2])
+        ned_update = {"n": n, "e": e, "d": d}  # cm  # cm  # cm
+
+        self.send_message("vrc/vio/position/ned", ned_update)
+
+        if np.isnan(rpy).any():
+            raise ValueError("Camera has NaNs for orientation")
+
+        # send orientation update
+        eul_update = {"psi": rpy[0], "theta": rpy[1], "phi": rpy[2]}
+        self.send_message("vrc/vio/orientation/eul", eul_update)
+
+        # send heading update
+        heading = rpy[2]
+        # correct for negative heading
+        if heading < 0:
+            heading += 2 * math.pi
+        heading = np.rad2deg(heading)
+        heading_update = {"degrees": heading}
+        self.send_message("vrc/vio/heading", heading_update)
+        # coord_trans.heading = rpy[2]
+
+        if np.isnan(ned_vel).any():
+            raise ValueError("Camera has NaNs for velocity")
+
+        # send velocity update
+        vel_update = {"n": ned_vel[0], "e": ned_vel[1], "d": ned_vel[2]}
+        self.send_message("vrc/vio/velocity/ned", vel_update)
+
+        mapper_tracker = {
+            "mapper": mapper_confidence,
+            "tracker": tracker_confidence,
         }
-
-        self.mqtt_finished_init = False
+        self.send_message("vrc/vio/confidence", mapper_tracker)
 
     def run(self) -> None:
-        # connect to the MQTT Client
-        self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
+        super().run_non_blocking()
 
-        # kick off the vio thread
-        thread = threading.Thread(target=self.vio.run, daemon=True, name="vio_thread")
-        thread.start()
+        # setup the zedcamera
+        logger.debug("Setting up camera connection")
+        self.camera.setup()
 
-        # service the mqtt connection
-        self.mqtt_client.loop_forever()
-
+        # start the loop
+        logger.debug("Beginning data loop")
         while True:
-            time.sleep(0.1)
+            time.sleep(1 / self.CAM_UPDATE_FREQ)
+            data = self.camera.get_pipe_data()
 
-    def on_message(self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage):
-        try:
-            logger.debug(f"{msg.topic}: {msg.payload}")
-            if msg.topic in self.mqtt_topics.keys():
-                data = json.loads(msg.payload)
-                self.mqtt_topics[msg.topic](data)
-        except Exception as e:
-            logger.exception(f"Error handling message on {msg.topic}")
+            if data is None:
+                continue
 
-    def on_connect(
-        self,
-        client: mqtt.Client,
-        userdata: Any,
-        rc: int,
-        properties: mqtt.Properties = None,
-    ) -> None:
-        logger.debug(f"Connected with result code {rc}")
-        for topic in self.mqtt_topics.keys():
-            logger.debug(f"VIOModule: Subscribed to: {topic}")
-            client.subscribe(topic)
+            # collect data from the sensor and transform it into "global" NED frame
+            (
+                ned_pos,
+                ned_vel,
+                rpy,
+            ) = self.coord_trans.transform_zedcamera_to_global_ned(data)
+
+            self.publish_updates(
+                ned_pos,
+                ned_vel,
+                rpy,
+                data["tracker_confidence"],
+                data["mapper_confidence"],
+            )
 
 
 if __name__ == "__main__":

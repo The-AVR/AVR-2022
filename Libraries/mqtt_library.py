@@ -1,6 +1,6 @@
 import copy
 import json
-from typing import Any, Dict, Protocol, Union
+from typing import Any, Dict, Protocol
 
 import paho.mqtt.client as mqtt
 from loguru import logger
@@ -41,12 +41,23 @@ class MQTTModule:
 
     def run(self) -> None:
         """
-        Class entrypoint. Connects to the MQTT broker and starts the MQTT loop.
+        Class entrypoint. Connects to the MQTT broker and starts the MQTT loop
+        in a blocking manner.
         """
         # connect the MQTT client
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
         # run forever
         self.mqtt_client.loop_forever()
+
+    def run_non_blocking(self) -> None:
+        """
+        Class entrypoint. Connects to the MQTT broker and starts the MQTT loop
+        in a non-blocking manner.
+        """
+        # connect the MQTT client
+        self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
+        # run in background
+        self.mqtt_client.loop_start()
 
     def on_message(
         self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage

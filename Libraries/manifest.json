@@ -17,7 +17,8 @@
       "VMC/FlightSoftware/pcm",
       "VMC/FlightSoftware/fcm",
       "VMC/FlightSoftware/fusion",
-      "VMC/FlightSoftware/apriltag/python"
+      "VMC/FlightSoftware/apriltag/python",
+      "VMC/FlightSoftware/vio"
     ]
   },
   {
@@ -25,7 +26,8 @@
     "dsts": [
       "VMC/FlightSoftware/fcm",
       "VMC/FlightSoftware/fusion",
-      "VMC/FlightSoftware/apriltag/python"
+      "VMC/FlightSoftware/apriltag/python",
+      "VMC/FlightSoftware/vio"
     ]
   }
 ]
