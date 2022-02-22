@@ -15,11 +15,14 @@ if [ "$1" == "--connect" ]; then
     # disconnect any existing connections
     sudo nmcli device disconnect wlan0 || true
     # connect
+    echo "===== Connecting to network $ssid with password $password ====="
     sudo nmcli device wifi connect "$ssid" password "$password"
 
 elif [ "$1" == "--create" ]; then
-    read -r -p "Enter the SSID to create (default 'VRC Drone'): " ssid
-    ssid=${name:-VRC Drone}
+    randst=$(echo $RANDOM | md5sum | head -c 10)
+
+    read -r -p "Enter the SSID to create (default 'VRCDrone-$randst'): " ssid
+    ssid=${name:-VRCDrone-$randst}
     read -r -p "Enter the password (default 'bellvrc22') (must be at least 8 characters): " password
     password=${name:-bellvrc22}
 
@@ -28,6 +31,7 @@ elif [ "$1" == "--create" ]; then
     # delete old hotspot connection profile
     sudo nmcli connection delete Hotspot || true
     # create hotpsot
+    echo "===== Creating network $ssid with password $password ====="
     sudo nmcli device wifi hotspot ifname wlan0 ssid "$ssid" password "$password"
 
 elif [ "$1" == "--disconnect" ]; then
