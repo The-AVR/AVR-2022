@@ -1,7 +1,11 @@
 #!/bin/bash
 
-# flag to turn off some steps during testing and development
-TESTING=true
+# flag to turn off some steps during development
+if [ "$1" == "--dev" ]; then
+    DEVELOPMENT=true
+else
+    DEVELOPMENT=false
+fi
 
 # exit when any command fails
 set -e
@@ -22,7 +26,7 @@ NC='\033[0m' # No Color
 VRC_DIR=~/VRC-2022
 
 # see if sudo is installed
-# mainly for testing with Docker, that doesn't have sudo
+# mainly for DEVELOPMENT with Docker, that doesn't have sudo
 s=""
 if [ -n "$(which sudo)" ]; then
     s="sudo"
@@ -108,7 +112,7 @@ git config --global credential.helper cache
 # update repo
 git pull
 # switch to main branch
-if [ "$TESTING" != true ] ; then
+if [ "$DEVELOPMENT" != true ] ; then
     git checkout main
 fi
 bar
@@ -152,7 +156,7 @@ bar
 echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 cd $VRC_DIR/VMC/FlightSoftware
-if [ "$TESTING" != true ] ; then
+if [ "$DEVELOPMENT" != true ] ; then
     $s docker-compose pull
     $s docker-compose build
 else

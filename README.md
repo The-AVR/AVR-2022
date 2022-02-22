@@ -42,17 +42,32 @@ Activate the virtual environment:
 source .venv/bin/activate # Linux
 ```
 
-Install all the dependencies:
-
-```bash
-python scripts/dev_setup.py
-```
-
 Copy library files around:
 
 ```bash
 python scripts/copy_libraries.py
 ```
+
+Now, build the pymavlink package:
+
+```bash
+./PX4/generate.sh
+```
+
+If you actually are doing development work, you can install all the dependencies
+so you get autocomplete and type hinting:
+
+```bash
+python scripts/dev_setup.py
+```
+
+If on a Jetson, you can now follow the instructions inside
+[VMC/FlightSoftware/README.md](VMC/FlightSoftware/README.md) to run the `setup.sh`
+script (add `--dev` for development).
+
+Note, with `docker-compose` commands, make sure to add `-f docker-compose-dev.yml`
+before the action such as `sudo docker-compose -f docker-compose-dev.yml up -d`.
+This builds the Docker images locally rather than using prebuilt ones from GitHub CR.
 
 Finally, install recommended VS Code extensions.
 
