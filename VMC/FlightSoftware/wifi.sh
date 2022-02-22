@@ -19,7 +19,7 @@ if [ "$1" == "--connect" ]; then
     sudo nmcli device wifi connect "$ssid" password "$password"
 
 elif [ "$1" == "--create" ]; then
-    randst=$(echo $RANDOM | md5sum | head -c 10)
+    randst=$(cat /sys/class/net/wlan0/address | tr -d :)
 
     read -r -p "Enter the SSID to create (default 'VRCDrone-$randst'): " ssid
     ssid=${name:-VRCDrone-$randst}
