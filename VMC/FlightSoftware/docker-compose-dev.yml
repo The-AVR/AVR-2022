@@ -14,6 +14,13 @@ services:
       - "18830:18830"
     restart: on-failure
 
+  status:
+    build: status
+    depends_on:
+      - mqtt
+    privileged: true
+    restart: on-failure    
+
   fcm:
     depends_on:
       - mqtt
@@ -53,6 +60,13 @@ services:
     build: fusion
     restart: on-failure
 
+  thermal:
+    build: thermal
+    depends_on:
+      - mqtt
+    privileged: true
+    restart: on-failure
+    
   # sandbox:
   #   depends_on:
   #     - mqtt

@@ -14,6 +14,13 @@ services:
       - "18830:18830"
     restart: on-failure
 
+  status:
+    depends_on:
+      - mqtt
+    privileged: true
+    image: lance/vrc_status_module:latest
+    restart: on-failure
+
   fcm:
     depends_on:
       - mqtt
@@ -45,6 +52,13 @@ services:
     volumes:
       - /tmp/argus_socket:/tmp/argus_socket
 
+  thermal:
+    depends_on:
+      - mqtt
+    privileged: true
+    image: lance/vrc_thermal_module:latest
+    restart: on-failure
+    
   fusion:
     depends_on:
       - mqtt
