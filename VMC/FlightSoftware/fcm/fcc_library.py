@@ -172,50 +172,13 @@ class FlightControlComputer(FCMMQTTModule):
         Run the Flight Control Computer module
         """
         # start our MQTT client
-        super().run_non_blocking()
+       # super().run_non_blocking()
 
         # connect to the fcc
         await self.connect()
 
         # start the mission api MQTT client
         self.mission_api.run_non_blocking()
-
-        # start tasks
-        return asyncio.gather(
-            self.telemetry_tasks(),
-            # uncomment the following lines to enable outside control
-            # self.offboard_tasks(),
-            # self.action_dispatcher(),
-        )
-    
-    @async_try_except()
-    async def run2(self) -> None:
-        """
-        Set up a mavlink connection and kick off any tasks
-        """
-        loop = asyncio.get_event_loop()
-
-        # create a mavlink udp instance
-        self.mavcon = mavutil.mavlink_connection(
-            "udpin:0.0.0.0:14542", source_system=254, dialect="bell"
-        )
-
-        await loop.run_in_executor(None, self.wait_for_heartbeat)
-        #await self.wait_for_heartbeat()
-        super().run()
-
-    async def runback(self) -> asyncio.Future:
-        """
-        Run the Flight Control Computer module
-        """
-        # start our MQTT client
-        super().run_non_blocking()
-
-        # connect to the fcc
-        await self.connect()
-
-        # start the mission api MQTT client
-        #self.mission_api.run_non_blocking()
 
         # start tasks
         return asyncio.gather(
