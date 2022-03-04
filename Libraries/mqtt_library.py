@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+from re import X
 from typing import (
     Any,
     Dict,
@@ -72,6 +73,10 @@ class VRCFusionGeodetic(TypedDict):
     lon: float
     alt: float
 
+class VRCFcmHilGpsStatsMessage(TypedDict):
+    lat: float
+    lon: float
+    alt: float
 
 class VRCFusionGeoMessage(TypedDict):
     geodetic: VRCFusionGeodetic
