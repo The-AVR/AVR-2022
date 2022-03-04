@@ -253,6 +253,11 @@ class VRCFcmLocationHomeMessage(TypedDict):
     alt: float
     timestamp: str
 
+class VRCFcmHilGpsStatsMessage(TypedDict):
+    lat: float
+    lon: float
+    alt: float
+    timestamp: str
 
 class VRCFcmAttitudeEulerMessage(TypedDict):
     roll: float
@@ -434,8 +439,10 @@ class MQTTModule:
         in a blocking manner.
         """
         # connect the MQTT client
+        logger.debug(f"#############33about to connnect {self.mqtt_host} {self.mqtt_port}")
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
         # run forever
+        logger.debug(f"CONNECTED to MQTT - BLOCKING")
         self.mqtt_client.loop_forever()
 
     def run_non_blocking(self) -> None:
@@ -444,7 +451,10 @@ class MQTTModule:
         in a non-blocking manner.
         """
         # connect the MQTT client
+        logger.debug("$$$$$$$$$$$$$44Connecting to MQTT Client")
+        logger.debug(f"about to connnect {self.mqtt_host} {self.mqtt_port}")
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
+        logger.debug(f"CONNECTED to MQTT - NON BLOCKING")
         # run in background
         self.mqtt_client.loop_start()
 
@@ -455,7 +465,7 @@ class MQTTModule:
         On message callback, Dispatches the message to the appropriate function.
         """
         try:
-            logger.debug(f"Recieved {msg.topic}: {msg.payload}")
+            #logger.debug(f"Recieved {msg.topic}: {msg.payload}")
             if msg.topic in self.topic_map:
                 # we talk JSON, no exceptions
                 payload = json.loads(msg.payload)
@@ -597,6 +607,6 @@ class MQTTModule:
         """
         Sends a message to the MQTT broker.
         """
-        logger.debug(f"Sending message to {topic}: {payload}")
+        #logger.debug(f"Sending message to {topic}: {payload}")
         self.mqtt_client.publish(topic, json.dumps(payload))
         self.message_cache[topic] = copy.deepcopy(payload)
