@@ -167,8 +167,29 @@ class FlightControlComputer(FCMMQTTModule):
             except Exception as e:
                 logger.exception("Unexpected error in async_queue_action")
 
+    async def run(self) -> asyncio.Future:
+        """
+        Run the Flight Control Computer module
+        """
+        # start our MQTT client
+        super().run_non_blocking()
+
+        # connect to the fcc
+        await self.connect()
+
+        # start the mission api MQTT client
+        self.mission_api.run_non_blocking()
+
+        # start tasks
+        return asyncio.gather(
+            self.telemetry_tasks(),
+            # uncomment the following lines to enable outside control
+            # self.offboard_tasks(),
+            # self.action_dispatcher(),
+        )
+    
     @async_try_except()
-    async def run(self) -> None:
+    async def run2(self) -> None:
         """
         Set up a mavlink connection and kick off any tasks
         """
