@@ -26,7 +26,7 @@ services:
       - mqtt
       - mavp2p
     build: fcm
-    network_mode: host
+    network_mode: "host"
     restart: on-failure
 
   pcm:

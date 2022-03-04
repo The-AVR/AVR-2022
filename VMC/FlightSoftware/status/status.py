@@ -105,6 +105,7 @@ class Status(object):
         for topic in self.topic_map.keys():
             logger.debug(f"STATUS: Subscribed to: {topic}")
             client.subscribe(topic)
+        client.subscribe("vrc/#")
 
 
     def set_cpu_status(self):
@@ -118,6 +119,7 @@ class Status(object):
             logger.exception("command '{}' return with error (code {}): {}".format(e.cmd, e.returncode, e.output))
 
     def check_status(self, topic) :
+        #logger.debug(f"check status: {str(topic)}")
         if 'vrc/vio' in topic: 
             self.light_up(VIO_LED,CLR_PURPLE)
         if 'vrc/pcc' in topic:

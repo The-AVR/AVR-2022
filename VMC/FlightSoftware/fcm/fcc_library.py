@@ -167,7 +167,23 @@ class FlightControlComputer(FCMMQTTModule):
             except Exception as e:
                 logger.exception("Unexpected error in async_queue_action")
 
-    async def run(self) -> asyncio.Future:
+    @async_try_except()
+    async def run(self) -> None:
+        """
+        Set up a mavlink connection and kick off any tasks
+        """
+        loop = asyncio.get_event_loop()
+
+        # create a mavlink udp instance
+        self.mavcon = mavutil.mavlink_connection(
+            "udpin:0.0.0.0:14542", source_system=254, dialect="bell"
+        )
+
+        await loop.run_in_executor(None, self.wait_for_heartbeat)
+        #await self.wait_for_heartbeat()
+        super().run()
+
+    async def runback(self) -> asyncio.Future:
         """
         Run the Flight Control Computer module
         """
@@ -178,7 +194,7 @@ class FlightControlComputer(FCMMQTTModule):
         await self.connect()
 
         # start the mission api MQTT client
-        self.mission_api.run_non_blocking()
+        #self.mission_api.run_non_blocking()
 
         # start tasks
         return asyncio.gather(
@@ -946,16 +962,20 @@ class PyMAVLinkAgent(MQTTModule):
         """
         Set up a mavlink connection and kick off any tasks
         """
+        #loop = asyncio.get_event_loop()
+
         # create a mavlink udp instance
         self.mavcon = mavutil.mavlink_connection(
             "udpin:0.0.0.0:14542", source_system=254, dialect="bell"
         )
 
+        #await loop.run_in_executor(None, self.wait_for_heartbeat)
         await self.wait_for_heartbeat()
+        logger.debug("In RUN received heartbeat")
         super().run()
 
     @try_except(reraise=True)
-    def wait_for_heartbeat(self) -> Any:
+    async def wait_for_heartbeat(self) -> Any:
         """
         Wait for a MAVLINK heartbeat message.
         """

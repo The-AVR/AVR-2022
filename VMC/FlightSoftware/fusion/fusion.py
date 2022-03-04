@@ -308,8 +308,11 @@ class FusionModule(MQTTModule):
 
     def run(self) -> None:
         self.run_non_blocking()
-        self.assemble_hil_gps_message()
-
+        #self.run()
+        try:
+            self.assemble_hil_gps_message()
+        except Exception as e:
+            logger.exception("Issue while assembling hil message")
 
 if __name__ == "__main__":
     fusion = FusionModule()
