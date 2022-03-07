@@ -28,7 +28,12 @@ from mqtt_library import (
 )
 from pymavlink import mavutil
 
+HOSTNAME="localhost"
+
 class FCMMQTTModule(MQTTModule):
+    def __init__(self,host="mqtt") -> None:
+        super().__init__(host)
+
     def _timestamp(self) -> str:
         return datetime.datetime.now().isoformat()
 
@@ -51,7 +56,8 @@ class DispatcherBusy(Exception):
 
 
 class DispatcherManager(FCMMQTTModule):
-    def __init__(self) -> None:
+    def __init__(self,host="mqtt") -> None:
+        super.__init__(host)
         self.currently_running_task = None
         self.timeout = 10
 
@@ -101,12 +107,13 @@ class DispatcherManager(FCMMQTTModule):
 
 
 class FlightControlComputer(FCMMQTTModule):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self,host="mqtt") -> None:
+        super().__init__(host)
+
 
         # mavlink stuff
         self.drone = mavsdk.System()
-        self.mission_api = MissionAPI(self.drone)
+        self.mission_api = MissionAPI(self.drone,host)
 
         # queues
         self.action_queue = queue.Queue()
@@ -724,8 +731,8 @@ class FlightControlComputer(FCMMQTTModule):
 
 
 class MissionAPI(FCMMQTTModule):
-    def __init__(self, drone: mavsdk.System) -> None:
-        super().__init__()
+    def __init__(self, drone: mavsdk.System,host="mqtt") -> None:
+        super().__init__(host)
         self.drone = drone
 
     @async_try_except(reraise=True)
@@ -931,8 +938,8 @@ class MissionAPI(FCMMQTTModule):
 
 
 class PyMAVLinkAgent(MQTTModule):
-    def __init__(self) -> None:
-        super().__init__()
+    def __init__(self,host="mqtt") -> None:
+        super().__init__(host)
 
         self.topic_map = {
             "vrc/fusion/hil_gps": self.hilgps_msg_handler,
