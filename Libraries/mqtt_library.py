@@ -32,6 +32,12 @@ class VRCPcmSetTempColorMessage(TypedDict):
     time: float
 
 
+class VRCPcmSetLaserOn(TypedDict):
+    pass
+
+class VRCPcmSetLaserOff(TypedDict):
+    pass
+
 class VRCPcmSetServoOpenCloseMessage(TypedDict):
     servo: int
     action: Literal["open", "close"]
@@ -54,7 +60,6 @@ class VRCPcmSetServoPctMessage(TypedDict):
 
 class VRCPcmResetMessage(TypedDict):
     pass
-
 
 class VRCFusionPositionNedMessage(TypedDict):
     n: float
@@ -258,12 +263,6 @@ class VRCFcmLocationHomeMessage(TypedDict):
     alt: float
     timestamp: str
 
-class VRCFcmHilGpsStatsMessage(TypedDict):
-    lat: float
-    lon: float
-    alt: float
-    timestamp: str
-
 class VRCFcmAttitudeEulerMessage(TypedDict):
     roll: float
     pitch: float
@@ -294,6 +293,12 @@ class MQTTMessageCache:
 
     @overload
     def __getitem__(self, key: Literal["vrc/pcm/set_servo_open_close"]) -> VRCPcmSetServoOpenCloseMessage: ...
+
+    @overload
+    def __getitem__(self, key: Literal["vrc/pcm/set_laser_on"]) -> VRCPcmSetLaserOnMessage: ...
+
+    @overload
+    def __getitem__(self, key: Literal["vrc/pcm/set_laser_off"]) -> VRCPcmSetLaserOffMessage: ...
 
     @overload
     def __getitem__(self, key: Literal["vrc/pcm/set_servo_min"]) -> VRCPcmSetServoMinMessage: ...
@@ -444,10 +449,8 @@ class MQTTModule:
         in a blocking manner.
         """
         # connect the MQTT client
-        logger.debug(f"#############33about to connnect {self.mqtt_host} {self.mqtt_port}")
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
         # run forever
-        logger.debug(f"CONNECTED to MQTT - BLOCKING")
         self.mqtt_client.loop_forever()
 
     def run_non_blocking(self) -> None:
@@ -456,10 +459,7 @@ class MQTTModule:
         in a non-blocking manner.
         """
         # connect the MQTT client
-        logger.debug("$$$$$$$$$$$$$44Connecting to MQTT Client")
-        logger.debug(f"about to connnect {self.mqtt_host} {self.mqtt_port}")
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
-        logger.debug(f"CONNECTED to MQTT - NON BLOCKING")
         # run in background
         self.mqtt_client.loop_start()
 
@@ -470,7 +470,7 @@ class MQTTModule:
         On message callback, Dispatches the message to the appropriate function.
         """
         try:
-            #logger.debug(f"Recieved {msg.topic}: {msg.payload}")
+            logger.debug(f"Recieved {msg.topic}: {msg.payload}")
             if msg.topic in self.topic_map:
                 # we talk JSON, no exceptions
                 payload = json.loads(msg.payload)
@@ -507,6 +507,12 @@ class MQTTModule:
 
     @overload
     def send_message(self, topic: Literal["vrc/pcm/set_servo_open_close"], payload: VRCPcmSetServoOpenCloseMessage) -> None: ...
+
+    @overload
+    def send_message(self, topic: Literal["vrc/pcm/set_laser_on"], payload: VRCPcmSetLaserOnMessage) -> None: ...
+
+    @overload
+    def send_message(self, topic: Literal["vrc/pcm/set_laseer_off"], payload: VRCPcmSetLaserOffMessage) -> None: ...
 
     @overload
     def send_message(self, topic: Literal["vrc/pcm/set_servo_min"], payload: VRCPcmSetServoMinMessage) -> None: ...
@@ -612,6 +618,6 @@ class MQTTModule:
         """
         Sends a message to the MQTT broker.
         """
-        #logger.debug(f"Sending message to {topic}: {payload}")
+        logger.debug(f"Sending message to {topic}: {payload}")
         self.mqtt_client.publish(topic, json.dumps(payload))
         self.message_cache[topic] = copy.deepcopy(payload)
