@@ -12,6 +12,7 @@ class FlightControlModule(MQTTModule):
         self.fcc = FlightControlComputer()
         self.gps_fcc = PyMAVLinkAgent()
 
+
     async def run(self) -> None:
         asyncio.gather(
             self.fcc.run(),

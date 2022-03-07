@@ -28,7 +28,6 @@ from mqtt_library import (
 )
 from pymavlink import mavutil
 
-
 class FCMMQTTModule(MQTTModule):
     def _timestamp(self) -> str:
         return datetime.datetime.now().isoformat()
@@ -172,13 +171,14 @@ class FlightControlComputer(FCMMQTTModule):
         Run the Flight Control Computer module
         """
         # start our MQTT client
-       # super().run_non_blocking()
-
+        super().run_non_blocking()
+        logger.debug("Conneciting to the FCC")
         # connect to the fcc
         await self.connect()
+        logger.debug("Connected!! to FCC")
 
         # start the mission api MQTT client
-        self.mission_api.run_non_blocking()
+        #self.mission_api.run_non_blocking()
 
         # start tasks
         return asyncio.gather(

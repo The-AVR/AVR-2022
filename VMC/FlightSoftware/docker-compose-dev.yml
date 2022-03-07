@@ -3,8 +3,8 @@ version: "3"
 services:
   mavp2p:
     build: mavp2p
-    network_mode: host
     restart: unless-stopped
+    network_mode: "host"
     devices:
       - /dev/ttyTHS1:/dev/ttyTHS1
 
