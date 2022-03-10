@@ -188,7 +188,9 @@ class FusionModule(MQTTModule):
         self.send_message("vrc/fusion/attitude/heading", heading_update)
 
         # if the groundspeed is below the threshold, we lock the course to the heading
-        if (
+        if (self.message_cache["vrc/fusion/groundspeed"] is None):
+            logger.debug("Empty groundspeed in fuse att heading")
+        elif (
             self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
             < self.config["COURSE_THRESHOLD"]
         ):
@@ -218,6 +220,18 @@ class FusionModule(MQTTModule):
             # don't send that data to FCC
             if lat == 0 or lon == 0:
                 continue
+            if (self.message_cache["vrc/fusion/velocity/ned"] is None):
+                continue
+            if (self.message_cache["vrc/fusion/velocity/ned"]["Vn"] is None):
+                continue
+            crs = 0;
+            if (self.message_cache["vrc/fusion/course"] is not None):
+                if (self.message_cache["vrc/fusion/course"]["course"] is not None):
+                    crs = int(self.message_cache["vrc/fusion/course"]["course"])
+            gs = 0;
+            if (self.message_cache["vrc/fusion/groundspeed"] is not None):
+                if (self.message_cache["vrc/fusion/groundspeed"]["groundspeed"] is not None):
+                    gs = int(self.message_cache["vrc/fusion/groundspeed"]["groundspeed"])
 
             hil_gps_update = VRCFusionHilGpsMessage(
                 time_usec=int(time.time() * 1000000),
@@ -231,11 +245,11 @@ class FusionModule(MQTTModule):
                 ),  # convert m to mm
                 eph=int(self.config["hil_gps_constants"]["eph"]),  # cm
                 epv=int(self.config["hil_gps_constants"]["epv"]),  # cm
-                vel=int(self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]),
+                vel=gs,
                 vn=int(self.message_cache["vrc/fusion/velocity/ned"]["Vn"]),
                 ve=int(self.message_cache["vrc/fusion/velocity/ned"]["Ve"]),
                 vd=int(self.message_cache["vrc/fusion/velocity/ned"]["Vd"]),
-                cog=int(self.message_cache["vrc/fusion/course"]["course"] * 100),
+                cog=int(crs * 100),
                 satellites_visible=int(
                     self.config["hil_gps_constants"]["satellites_visible"]
                 ),
