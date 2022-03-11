@@ -999,6 +999,7 @@ class PyMAVLinkAgent(MQTTModule):
             payload["cog"],
             payload["satellites_visible"],
             payload["heading"],
+            1
         )
         self.mavcon.mav.send(msg)  # type: ignore
         self.num_frames += 1
