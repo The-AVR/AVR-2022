@@ -31,55 +31,19 @@ sudo apt upgrade
 git clone --recurse-submodules https://github.com/bellflight/VRC-2022
 ```
 
-```bash
-ssh-keygen -t ed25519 -C your_email@example.com
-cat ~/.ssh/id_ed25519.pub
-git clone --recurse-submodules git@github.com:bellflight/VRC-2022.git
-```
-
-
 update jetson to python 3.8, should create a setup script from this:
 ```bash
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt update
 sudo apt-get update
-sudo apt install python3.8
-
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.6 1
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.8 1
-sudo update-alternatives --config python3 
-# Select 2
-
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python3.8 1
-sudo update-alternatives --install /usr/bin/python python /usr/bin/python2.7 1
-sudo update-alternatives --config python
-# Select 2
-
-
-
-sudo apt install python3-pip
-sudo apt install python-pip
-sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip2 1
-sudo update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
-sudo update-alternatives --config pip
-
-echo "if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi" >> ~/.bashrc
-
-source ~/.bashrc 
-
-#check version
-#pip --version = pip 22.0.4 from /home/nathan/.local/lib/python3.8/site-packages/pip (python 3.8) 
-
-sudo apt-get -y install python3.8-dev python3.8-venv
+sudo apt install python3.8 python3-pip python3.8-venv
+sudo python3.8 -m pip install pip wheel --upgrade
 ```
-
 
 Create a Python 3.8+ virtual environment:
 
 ```bash
-python -m venv .venv
+python3.8 -m venv .venv
 ```
 
 Activate the virtual environment:
