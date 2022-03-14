@@ -71,9 +71,6 @@ This builds the Docker images locally rather than using prebuilt ones from GitHu
 
 Finally, install recommended VS Code extensions.
 
-If you want to build PX4 on Windows, you need WSL with the
-`python3-venv`, `python3-dev` and `build-essential` packages installed.
-
 If you have trouble installing the `pupil-apriltags` package on Windows,
 try installing
 [https://aka.ms/vs/15/release/vs_buildtools.exe](https://aka.ms/vs/15/release/vs_buildtools.exe)
