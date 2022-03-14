@@ -63,7 +63,7 @@ jobs:
 
       - name: Generate custom pymavlink package
         if: matrix.image == fcc
-        run: python3 PX4/generate.py --pymavlink
+        run: python3 PX4/generate.py host --pymavlink
 
       - name: Build and push
         uses: docker/build-push-action@v2
