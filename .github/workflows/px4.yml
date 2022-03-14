@@ -30,9 +30,7 @@ jobs:
 
       - name: Build PX4 firmware
         shell: bash
-        run: |
-          chmod +x PX4/generate.sh
-          PX4/generate.sh --firmware
+        run: python3 PX4/generate.py --px4
 
       - name: Upload firmware to release
         if: github.event_name != 'pull_request'

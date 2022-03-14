@@ -51,7 +51,7 @@ python scripts/copy_libraries.py
 Now, build the pymavlink package:
 
 ```bash
-./PX4/generate.sh
+python ./PX4/generate.py --pymavlink
 ```
 
 If you actually are doing development work, you can install all the dependencies
