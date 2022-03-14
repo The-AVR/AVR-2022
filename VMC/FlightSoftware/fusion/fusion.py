@@ -221,7 +221,7 @@ class FusionModule(MQTTModule):
             if lat == 0 or lon == 0:
                 continue
             if (self.message_cache["vrc/fusion/velocity/ned"] is None):
-                continue
+                 logger.debug("Waiting for vrc/fusion/velocity/ned message cache is empty")
             if (self.message_cache["vrc/fusion/velocity/ned"]["Vn"] is None):
                 continue
             crs = 0;
