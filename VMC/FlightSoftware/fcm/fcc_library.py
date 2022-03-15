@@ -1001,6 +1001,7 @@ class PyMAVLinkAgent(MQTTModule):
             payload["heading"]
             
         )
+        logger.debug(msg)
         self.mavcon.mav.send(msg)  # type: ignore
         self.num_frames += 1
 
