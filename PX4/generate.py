@@ -187,9 +187,9 @@ def container(build_pymavlink: bool, build_px4: bool):
         )
         shutil.copyfile(
             os.path.join(
-                px4_dir, "build", "px4fmu-v5_default", "px4fmu-v5_default.px4"
+                px4_dir, "build", "px4_fmu-v5_default", "px4_fmu-v5_default.px4"
             ),
-            os.path.join(THIS_DIR, "target", f"px4fmu-v5_default.{PX4_VERSION}.px4"),
+            os.path.join(THIS_DIR, "target", f"px4_fmu-v5_default.{PX4_VERSION}.px4"),
         )
 
         # nxp
