@@ -48,7 +48,7 @@ jobs:
 
       - name: Check Formatting
         working-directory: docs
-        run: npx prettier --check .\content\
+        run: npx prettier --check ./content/
 
       - name: Build Site
         working-directory: docs
