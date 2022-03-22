@@ -51,7 +51,7 @@ python scripts/copy_libraries.py
 Now, build the pymavlink package:
 
 ```bash
-./PX4/generate.sh
+python ./PX4/generate.py host --pymavlink
 ```
 
 If you actually are doing development work, you can install all the dependencies
@@ -71,11 +71,11 @@ This builds the Docker images locally rather than using prebuilt ones from GitHu
 
 Finally, install recommended VS Code extensions.
 
-If you want to build PX4 on Windows, you need WSL with the
-`python3-venv`, `python3-dev` and `build-essential` packages installed.
-
 If you have trouble installing the `pupil-apriltags` package on Windows,
 try installing
 [https://aka.ms/vs/15/release/vs_buildtools.exe](https://aka.ms/vs/15/release/vs_buildtools.exe)
 or the `visualstudio2017buildtools` Chocolately package.
 You may need to add the VS 2017 Desktop Development C++ tools.
+
+To build/run ARM Docker images, you may need to run
+`docker run --rm --privileged multiarch/qemu-user-static --reset -p yes` first.
