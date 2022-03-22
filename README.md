@@ -76,3 +76,6 @@ try installing
 [https://aka.ms/vs/15/release/vs_buildtools.exe](https://aka.ms/vs/15/release/vs_buildtools.exe)
 or the `visualstudio2017buildtools` Chocolately package.
 You may need to add the VS 2017 Desktop Development C++ tools.
+
+To build/run ARM Docker images, you may need to run
+`docker run --rm --privileged multiarch/qemu-user-static --reset -p yes` first.

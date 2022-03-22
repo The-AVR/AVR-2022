@@ -38,7 +38,7 @@ class MQTTClient(QtCore.QObject):
         client: mqtt.Client,
         userdata: Any,
         rc: int,
-        properties: mqtt.Properties = None,
+        properties: Optional[mqtt.Properties] = None,
     ) -> None:
         """
         Callback when the MQTT client connects
