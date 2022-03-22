@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import copy
 import json
+from re import X
 from typing import (
     Any,
     Dict,
@@ -31,6 +32,12 @@ class VRCPcmSetTempColorMessage(TypedDict):
     time: float
 
 
+class VRCPcmSetLaserOn(TypedDict):
+    pass
+
+class VRCPcmSetLaserOff(TypedDict):
+    pass
+
 class VRCPcmSetServoOpenCloseMessage(TypedDict):
     servo: int
     action: Literal["open", "close"]
@@ -54,7 +61,6 @@ class VRCPcmSetServoPctMessage(TypedDict):
 class VRCPcmResetMessage(TypedDict):
     pass
 
-
 class VRCFusionPositionNedMessage(TypedDict):
     n: float
     e: float
@@ -72,6 +78,8 @@ class VRCFusionGeodetic(TypedDict):
     lon: float
     alt: float
 
+class VRCFcmHilGpsStatsMessage(TypedDict):
+    num_frames: int
 
 class VRCFusionGeoMessage(TypedDict):
     geodetic: VRCFusionGeodetic
@@ -253,7 +261,6 @@ class VRCFcmLocationHomeMessage(TypedDict):
     alt: float
     timestamp: str
 
-
 class VRCFcmAttitudeEulerMessage(TypedDict):
     roll: float
     pitch: float
@@ -284,6 +291,12 @@ class MQTTMessageCache:
 
     @overload
     def __getitem__(self, key: Literal["vrc/pcm/set_servo_open_close"]) -> VRCPcmSetServoOpenCloseMessage: ...
+
+    @overload
+    def __getitem__(self, key: Literal["vrc/pcm/set_laser_on"]) -> VRCPcmSetLaserOnMessage: ...
+
+    @overload
+    def __getitem__(self, key: Literal["vrc/pcm/set_laser_off"]) -> VRCPcmSetLaserOffMessage: ...
 
     @overload
     def __getitem__(self, key: Literal["vrc/pcm/set_servo_min"]) -> VRCPcmSetServoMinMessage: ...
@@ -386,7 +399,10 @@ class MQTTMessageCache:
     # fmt: on
 
     def __getitem__(self, key: str) -> Any:
-        return self.__storage[key]
+        if (key in self.__storage):
+            return self.__storage[key]
+        else:
+            return None
 
     def __setitem__(self, key: str, value: Any) -> None:
         self.__storage[key] = value
@@ -409,9 +425,9 @@ class MQTTModule:
     payload.
     """
 
-    def __init__(self):
+    def __init__(self, host="mqtt"):
         # these should be not be changed, to match the docker-compose.yml file
-        self.mqtt_host = "mqtt"
+        self.mqtt_host = host
         self.mqtt_port = 18830
 
         # create the MQTT client
@@ -455,7 +471,7 @@ class MQTTModule:
         On message callback, Dispatches the message to the appropriate function.
         """
         try:
-            logger.debug(f"Recieved {msg.topic}: {msg.payload}")
+            #logger.debug(f"Recieved {msg.topic}: {msg.payload}")
             if msg.topic in self.topic_map:
                 # we talk JSON, no exceptions
                 payload = json.loads(msg.payload)
@@ -492,6 +508,12 @@ class MQTTModule:
 
     @overload
     def send_message(self, topic: Literal["vrc/pcm/set_servo_open_close"], payload: VRCPcmSetServoOpenCloseMessage) -> None: ...
+
+    @overload
+    def send_message(self, topic: Literal["vrc/pcm/set_laser_on"], payload: VRCPcmSetLaserOnMessage) -> None: ...
+
+    @overload
+    def send_message(self, topic: Literal["vrc/pcm/set_laseer_off"], payload: VRCPcmSetLaserOffMessage) -> None: ...
 
     @overload
     def send_message(self, topic: Literal["vrc/pcm/set_servo_min"], payload: VRCPcmSetServoMinMessage) -> None: ...
@@ -597,6 +619,6 @@ class MQTTModule:
         """
         Sends a message to the MQTT broker.
         """
-        logger.debug(f"Sending message to {topic}: {payload}")
+        #logger.debug(f"Sending message to {topic}: {payload}")
         self.mqtt_client.publish(topic, json.dumps(payload))
         self.message_cache[topic] = copy.deepcopy(payload)

@@ -15,6 +15,7 @@ VRCSerialParser serial(Serial, q);
 ///////////////// N E O - P I X E L S /////////////////////////
 #define NEO_PIN 5
 #define PWR_PIN 10
+#define LASER_PIN A4
 
 #define NUM_PIXELS 30
 
@@ -32,6 +33,8 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
   pinMode(PWR_PIN, OUTPUT);
   digitalWrite(PWR_PIN, HIGH);
+  pinMode(LASER_PIN,OUTPUT);
+
 
   //////////// N E O - P I X E L  S E T U P ////////////////////
   strip.begin();
@@ -137,7 +140,21 @@ void loop()
       //Serial.printf("Res: %d\n",res);
     }
     break;
+
+    case SET_LASER_ON:
+    {
+      digitalWrite(LASER_PIN,HIGH);
     }
+    break;
+    case SET_LASER_OFF:
+    {
+      digitalWrite(LASER_PIN,LOW);
+    }
+    break;
+
+
+    }
+
   }
 
   if (millis() - light_on > 100)

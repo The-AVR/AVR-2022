@@ -1,11 +1,8 @@
 #!/bin/bash
 
 # flag to turn off some steps during development
-if [ "$1" == "--dev" ]; then
-    DEVELOPMENT=true
-else
-    DEVELOPMENT=false
-fi
+DEVELOPMENT=true
+
 
 # exit when any command fails
 set -e
@@ -123,9 +120,9 @@ bar
 # downgrade docker to specific version
 # this got pulled from apt sources for some reason
 # replacing the installed system Docker with the latest version breaks stuff, so leave as legacy docker.io package
-wget http://launchpadlibrarian.net/561342197/docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
-$s DEBIAN_FRONTEND=noninteractive apt install -y --allow-downgrades ./docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
-rm docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
+#wget http://launchpadlibrarian.net/561342197/docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
+#$s DEBIAN_FRONTEND=noninteractive apt install -y --allow-downgrades ./docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
+#rm docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
 
 # upgrade compose
 $s -H python3 -m pip install docker-compose --upgrade
@@ -157,8 +154,8 @@ echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 cd $VRC_DIR/VMC/FlightSoftware
 if [ "$DEVELOPMENT" != true ] ; then
-    $s docker-compose pull
-    $s docker-compose build
+    $s docker compose pull
+    $s docker compose build
 else
     $s docker-compose -f docker-compose-dev.yml pull
     $s docker-compose -f docker-compose-dev.yml build

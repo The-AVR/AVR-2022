@@ -29,13 +29,13 @@ services:
     network_mode: "host"
     restart: on-failure
 
-  pcm:
-    depends_on:
-      - mqtt
-    build: pcm
-    restart: on-failure
-    devices:
-      - /dev/ttyACM0:/dev/ttyACM0
+#  pcm:
+#    depends_on:
+#      - mqtt
+#    build: pcm
+#    restart: on-failure
+#    devices:
+#      - /dev/ttyACM0:/dev/ttyACM0
 
   vio:
     depends_on:
@@ -60,12 +60,12 @@ services:
     build: fusion
     restart: on-failure
 
-  thermal:
-    build: thermal
-    depends_on:
-      - mqtt
-    privileged: true
-    restart: on-failure
+#  thermal:
+#    build: thermal
+#    depends_on:
+#      - mqtt
+#    privileged: true
+#    restart: on-failure
     
   # sandbox:
   #   depends_on:
