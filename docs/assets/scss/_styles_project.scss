@@ -12,3 +12,9 @@
 nav.foldable-nav *::before {
     transition: none !important;
 }
+
+// fix logo sizing
+.td-navbar .navbar-brand svg {
+    height: 35px;
+    width: 30px;
+}
