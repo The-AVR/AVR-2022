@@ -134,8 +134,7 @@ class FlightControlComputer(FCMMQTTModule):
         """
         Connect the Drone object.
         """
-        await self.drone.connect(system_address="udp://:14541")
-
+        await self.drone.connect(system_address="udp://:14540")
     async def async_queue_action(
         self, queue_: queue.Queue, action: Callable, frequency: int = 10
     ) -> None:
@@ -957,7 +956,7 @@ class PyMAVLinkAgent(MQTTModule):
 
         # create a mavlink udp instance
         self.mavcon = mavutil.mavlink_connection(
-            "udpin:0.0.0.0:14542", source_system=254, dialect="bell"
+            "udpin:0.0.0.0:14030", source_system=254, dialect="bell"
         )
 
         #await loop.run_in_executor(None, self.wait_for_heartbeat)

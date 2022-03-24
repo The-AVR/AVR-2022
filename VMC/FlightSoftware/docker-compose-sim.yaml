@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+
+  mqtt:
+    build: mqtt
+    ports:
+      - "18830:18830"
+    restart: on-failure
+  # sandbox:
+  #   depends_on:
+  #     - mqtt
+  #   build: sandbox
+  #   restart: on-failure

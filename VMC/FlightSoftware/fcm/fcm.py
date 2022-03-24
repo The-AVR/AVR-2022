@@ -17,7 +17,7 @@ class FlightControlModule(MQTTModule):
     async def run(self) -> None:
         asyncio.gather(
             self.fcc.run(),
-            self.gps_fcc.run(),
+            # self.gps_fcc.run(),
         )
 
         while True:
