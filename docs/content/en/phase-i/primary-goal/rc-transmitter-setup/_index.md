@@ -16,7 +16,7 @@ The radio controller box should include a quick start guide. A
 more detailed user manual for the radio controller is available for download below.
 
 {{< card header="**FlySky FS-i6S User Manual**" >}}
-[FS-i6S-User-manual-20170706-compressed.pdf](/files/FS-i6S-User-manual-20170706-compressed.pdf)
+[FS-i6S-User-manual-20170706-compressed.pdf]({{< static "files/FS-i6S-User-manual-20170706-compressed.pdf" >}})
 {{< /card >}}
 
 The following sections will cover numerous aspects of the transmitter configuration
