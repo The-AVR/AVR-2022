@@ -7,7 +7,7 @@ weight: 2
 
 Please read the manual prior to beginning your first charge.
 The manual comes with your charger or you can find a
-[digital version here](https://1327152.app.netsuite.com/core/media/media.nl?id=4499996&c=1327152&h=7f9007746c8815223d4b&_xt=.pdf).
+[digital version here]({{< static "/files/VenomPro2ChargerManual.pdf" >}}).
 
 ![Venom Pro 2 Charger](image12.jpg)
 

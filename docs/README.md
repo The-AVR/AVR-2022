@@ -6,8 +6,8 @@ it is very nice to have installed in order to preview the site.
 
 Make sure to install the extended version of Hugo, as we utilize some of the
 asset processing functionality only in the extended version
-(You may be able to install this with the `hugo-bin-extended` `npm` package.
-Run it with `npx hugo` instead.)
+(this is in the `package.json` file, so if you want to use `npm`,
+run it with `npx hugo` instead.)
 
 `npm` is not required to preview the site, but it is required to build it.
 
@@ -18,10 +18,21 @@ This is a `git` submodule, so make sure you've initialized this repo's submodule
 git submodule update --init --recursive
 ```
 
+If you want to update this submodule to the latest version, run:
+
+```bash
+git submodule update --remote --merge
+cd themes/docsy git
+submodule update --init --recursive
+```
+
+(make sure to commit this change back to the repo).
+
 To preview the site, `cd` into this `docs` directory and run:
 
 ```bash
 hugo serve
+# or `npm run server`
 ```
 
 This will give you a URL like this to preview the site:
@@ -152,13 +163,15 @@ shortcode.
 
 ```markdown
 {{< card header="**FlySky FS-i6S User Manual**" >}}
-[FS-i6S-User-manual-20170706-compressed.pdf](/files/FS-i6S-User-manual-20170706-compressed.pdf)
+[FS-i6S-User-manual-20170706-compressed.pdf]({{< static "/files/FS-i6S-User-manual-20170706-compressed.pdf" >}})
 {{< /card >}}
 ```
 
 The header can be omitted if desired.
 
-Please put static files like PDF manuals in the `static/files` folder.
+Please put static files like PDF manuals in the `static/files` folder and be sure
+to link to it with the `static` shortcode as shown above
+(this helps deal with subdirectory differences).
 
 ### Banners
 
@@ -186,21 +199,19 @@ you must install the required `npm` packages from this directory
 npm install
 ```
 
-To build the website, just run:
-
-```bash
-hugo
-```
-
-This will build the site to the `public` directory. Finally, you need to run the
-script `postprocess.py`.
+Additionally, install the needed Python packages:
 
 ```bash
 python -m pip install -r requirements.txt
-python postprocess.py
 ```
 
-This script finds all of the JS and CSS files hosted on 3rd party CDNs
+This is for a script that finds all of the JS and CSS files hosted on 3rd party CDNs
 and downloads them to a local directory and rewrites the
 the HTML tag. I don't really like how the theme uses like 4 different CDNs,
 and I rather we host all of the required assets.
+
+To build the website, just run:
+
+```bash
+npm run build
+```

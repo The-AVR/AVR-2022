@@ -1,4 +1,13 @@
+# This tells Hugo what the root path of the site is.
+# This should be something like:
+# - "/"
+# - "/VRC-2022"
+# - "/public"
+# etc. You don't need a trailing slash.
+# GitHub private pages puts this on a base domain, while the public page
+# will not unless you have a custom domain setup.
 baseURL = "/"
+
 title = "Bell VRC Documentation"
 enableRobotsTXT = true
 theme = "docsy"
@@ -87,7 +96,7 @@ sidebar_menu_foldable = true
 enable = false
 
 # Adds a reading time to the top of each doc.
-# If you want this feature, but occasionally need to remove the Reading time from a single page, 
+# If you want this feature, but occasionally need to remove the Reading time from a single page,
 # add "hide_readingtime: true" to the page's front matter
 [params.ui.readingtime]
 enable = true
