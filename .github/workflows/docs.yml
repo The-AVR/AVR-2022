@@ -25,14 +25,18 @@ jobs:
           submodules: recursive
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
+          cache-dependency-path: docs
+          cache: npm
 
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
           python-version: "3.9"
+          cache-dependency-path: docs
+          cache: pip
 
       - name: Install Dependencies
         working-directory: docs
@@ -48,10 +52,6 @@ jobs:
       - name: Build Site
         working-directory: docs
         run: npm run build
-
-      - name: Run Postprocessing
-        working-directory: docs
-        run: python ./postprocess.py
 
       - name: Check For Broken Links
         working-directory: docs

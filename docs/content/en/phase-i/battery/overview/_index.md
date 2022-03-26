@@ -11,8 +11,8 @@ included with the Venom battery as well as the manual for the Venom Pro 2 Charge
 
 These documents can be viewed at:
 
-- [Venom 15027 4S 5000mAh 35C Battery](https://1327152.app.netsuite.com/core/media/media.nl?id=9792&c=1327152&h=c1431dbe1ca0c4983762&_xt=.pdf)
-- [Venom Pro 2 Charger](https://1327152.app.netsuite.com/core/media/media.nl?id=4499996&c=1327152&h=7f9007746c8815223d4b&_xt=.pdf)
+- [Venom 15027 4S 5000mAh 35C Battery]({{< static "/files/VenomLiPoManual.pdf" >}})
+- [Venom Pro 2 Charger]({{< static "/files/VenomPro2ChargerManual.pdf" >}})
 
 ### Key Safety Points
 
