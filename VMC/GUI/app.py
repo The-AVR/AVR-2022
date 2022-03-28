@@ -13,10 +13,10 @@ import paho.mqtt.client as mqtt
 from PySide6 import QtCore, QtGui, QtWidgets
 from qt_icon import IMG_DIR, set_icon
 
-try:
-    from thermalview import VRC_ThermalView # type: ignore
-except ImportError:
-    from .thermalview import VRC_ThermalView
+# try:
+#     from thermalview import VRC_ThermalView # type: ignore
+# except ImportError:
+#     from .thermalview import VRC_ThermalView
 
 
 class MQTTClient(QtCore.QObject):
@@ -30,7 +30,8 @@ class MQTTClient(QtCore.QObject):
     # so the data gets passed back to the GUI thread.
 
     # Once the Signal objects are created, they transform into SignalInstance objects
-    connection_status: QtCore.SignalInstance = QtCore.Signal(bool)  # type: ignore
+    connection_status: QtCore.SignalInstance = QtCore.Signal(
+        bool)  # type: ignore
     message: QtCore.SignalInstance = QtCore.Signal(str, str)  # type: ignore
     disconnect: QtCore.SignalInstance = QtCore.Signal()  # type: ignore
 
@@ -61,11 +62,11 @@ class MQTTClient(QtCore.QObject):
         """
         Callback for every MQTT message
         """
-        if msg.topic=="vrc/pcm/thermal_reading":
-            self.message.emit(msg.topic, msg.payload)
-            print("emitting message")
-        else:
-            self.message.emit(msg.topic, msg.payload.decode("utf-8"))
+        # if msg.topic == "vrc/pcm/thermal_reading":
+        #     self.message.emit(msg.topic, msg.payload)
+        #     print("emitting message")
+        # else:
+        #     self.message.emit(msg.topic, msg.payload.decode("utf-8"))
 
     def on_disconnect(
         self,
@@ -103,8 +104,6 @@ class MQTTClient(QtCore.QObject):
         self.client.publish(*args, **kwargs)
 
 
-
-
 class MainWidget(QtWidgets.QWidget):
     def __init__(self) -> None:
         super().__init__()
@@ -121,7 +120,7 @@ class MainWidget(QtWidgets.QWidget):
         self.mqtt_view_widget.build()
         self.mqtt_view_widget.show()
 
-        self.thermal_view_widget = ThermalViewWidget(self, self.control_widget)
+        # self.thermal_view_widget = ThermalViewWidget(self, self.control_widget)
 
         self.connect_mqtt()
 
@@ -130,7 +129,8 @@ class MainWidget(QtWidgets.QWidget):
         Perform the MQTT connection flow with the user.
         """
         settings = {}
-        settings_file = os.path.join(os.path.dirname(__file__), "settings.json")
+        settings_file = os.path.join(
+            os.path.dirname(__file__), "settings.json")
 
         mqtt_host = ""
 
@@ -176,7 +176,8 @@ class MainWidget(QtWidgets.QWidget):
 
         # connect message signals
         self.mqtt_client.message.connect(self.mqtt_view_widget.process_message)
-        self.mqtt_client.message.connect(self.thermal_view_widget.process_message)
+        # self.mqtt_client.message.connect(
+        #     self.thermal_view_widget.process_message)
         self.mqtt_client.message.connect(self.control_widget.process_message)
 
 
@@ -204,15 +205,19 @@ class StatusLabel(QtWidgets.QWidget):
         Set the health state of the status label
         """
         if healthy:
-            self.icon.setPixmap(QtGui.QPixmap(os.path.join(IMG_DIR, "green.png")))
+            self.icon.setPixmap(QtGui.QPixmap(
+                os.path.join(IMG_DIR, "green.png")))
         else:
-            self.icon.setPixmap(QtGui.QPixmap(os.path.join(IMG_DIR, "red.png")))
+            self.icon.setPixmap(QtGui.QPixmap(
+                os.path.join(IMG_DIR, "red.png")))
+
 
 class Direction(Enum):
     Left = 0
     Right = 1
     Up = 2
     Down = 3
+
 
 class Joystick(QtWidgets.QWidget):
     def __init__(self, mqtt_client: MQTTClient, parent=None):
@@ -230,42 +235,45 @@ class Joystick(QtWidgets.QWidget):
         self.servoxmax = 99
         self.servoymax = 99
 
-
-    def map_value(self,x, in_min, in_max, out_min, out_max):
+    def map_value(self, x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
     def move_gimbal(self, x_servo_percent, y_servo_percent):
 
         payload = {"servo": 2, "percent": x_servo_percent}
-        self.mqtt_client.publish("vrc/pcm/set_servo_pct", payload=json.dumps(payload))
+        self.mqtt_client.publish(
+            "vrc/pcm/set_servo_pct", payload=json.dumps(payload))
         payload = {"servo": 3, "percent": y_servo_percent}
-        self.mqtt_client.publish("vrc/pcm/set_servo_pct", payload=json.dumps(payload))
+        self.mqtt_client.publish(
+            "vrc/pcm/set_servo_pct", payload=json.dumps(payload))
 
     def update_servos(self):
         ms = int(round(time.time() * 1000))
         timesince = ms - self.lasttime
-        if (timesince<50):
+        if (timesince < 50):
             return
         self.lasttime = ms
-        y_reversed = 100 - self.current_y 
-        
-        x_servo_percent = round(self.map_value(self.current_x, 0, 100, 10, 99) )
-        y_servo_percent = round(self.map_value(y_reversed, 0, 100, 10, 99) )
+        y_reversed = 100 - self.current_y
 
+        x_servo_percent = round(self.map_value(self.current_x, 0, 100, 10, 99))
+        y_servo_percent = round(self.map_value(y_reversed, 0, 100, 10, 99))
 
-        if (x_servo_percent<self.servoxmin): return
-        if (y_servo_percent<self.servoymin): return
-        if (x_servo_percent>self.servoxmax): return
-        if (y_servo_percent>self.servoymax): return
+        if (x_servo_percent < self.servoxmin):
+            return
+        if (y_servo_percent < self.servoymin):
+            return
+        if (x_servo_percent > self.servoxmax):
+            return
+        if (y_servo_percent > self.servoymax):
+            return
 
         self.move_gimbal(x_servo_percent, y_servo_percent)
-    
-
 
     def paintEvent(self, event):
         painter = QtGui.QPainter(self)
-        bounds = QtCore.QRectF(-self.__maxDistance, -self.__maxDistance, self.__maxDistance * 2, self.__maxDistance * 2).translated(self._center())
-        #painter.drawEllipse(bounds)
+        bounds = QtCore.QRectF(-self.__maxDistance, -self.__maxDistance,
+                               self.__maxDistance * 2, self.__maxDistance * 2).translated(self._center())
+        # painter.drawEllipse(bounds)
         painter.drawRect(bounds)
         painter.setBrush(QtCore.Qt.black)
         painter.drawEllipse(self._centerEllipse())
@@ -278,17 +286,16 @@ class Joystick(QtWidgets.QWidget):
     def _center(self):
         return QtCore.QPointF(self.width()/2, self.height()/2)
 
-
     def _boundJoystick(self, point):
 
-        if (point.x()>(self._center().x() + self.__maxDistance)):
+        if (point.x() > (self._center().x() + self.__maxDistance)):
             point.setX(self._center().x() + self.__maxDistance)
-        elif (point.x()<(self._center().x() - self.__maxDistance)):
+        elif (point.x() < (self._center().x() - self.__maxDistance)):
             point.setX(self._center().x() - self.__maxDistance)
 
-        if (point.y()>(self._center().y() + self.__maxDistance)):
+        if (point.y() > (self._center().y() + self.__maxDistance)):
             point.setY(self._center().y() + self.__maxDistance)
-        elif (point.y()<(self._center().y() - self.__maxDistance)):
+        elif (point.y() < (self._center().y() - self.__maxDistance)):
             point.setY(self._center().y() - self.__maxDistance)
         return point
 
@@ -308,7 +315,6 @@ class Joystick(QtWidgets.QWidget):
             return (Direction.Down, distance)
         return (Direction.Right, distance)
 
-
     def mousePressEvent(self, ev):
         self.grabCenter = self._centerEllipse().contains(ev.pos())
         return super().mousePressEvent(ev)
@@ -322,11 +328,12 @@ class Joystick(QtWidgets.QWidget):
         if self.grabCenter:
             self.movingOffset = self._boundJoystick(event.pos())
             self.update()
-        #print(self.joystickDirection())
+        # print(self.joystickDirection())
         self.current_x = self.movingOffset.x() - self._center().x() + self.__maxDistance
         self.current_y = self.movingOffset.y() - self._center().y() + self.__maxDistance
         self.update_servos()
-        
+
+
 class ControlWidget(QtWidgets.QWidget):
     # This is the primary control widget for the drone. This allows the user
     # to set LED color, open/close servos etc.
@@ -338,24 +345,21 @@ class ControlWidget(QtWidgets.QWidget):
         self.setWindowTitle("Bell VRC Control")
         set_icon(self)
 
-    def  laser_on(self):
+    def laser_on(self):
         payload = {}
         self.publish_message("vrc/pcm/set_laser_on", {})
 
-    def  laser_off(self):
+    def laser_off(self):
         payload = {}
         self.publish_message("vrc/pcm/set_laser_off", {})
 
-
-
-    def  request_thermal_reading(self):
-        self.publish_message(  
-                    "vrc/thermal/request_thermal_reading",
-                    "{}",
-                    retain=False,
-                    qos=0,
-             )
-
+    def request_thermal_reading(self):
+        self.publish_message(
+            "vrc/thermal/request_thermal_reading",
+            "{}",
+            retain=False,
+            qos=0,
+        )
 
     def build(self) -> None:
         """
@@ -372,22 +376,26 @@ class ControlWidget(QtWidgets.QWidget):
 
         red_led_button = QtWidgets.QPushButton("Red")
         red_led_button.setStyleSheet("background-color: red")
-        red_led_button.clicked.connect(lambda: self.set_led((255, 255, 0, 0)))  # type: ignore
+        red_led_button.clicked.connect(
+            lambda: self.set_led((255, 255, 0, 0)))  # type: ignore
         led_layout.addWidget(red_led_button)
 
         green_led_button = QtWidgets.QPushButton("Green")
         green_led_button.setStyleSheet("background-color: green")
-        green_led_button.clicked.connect(lambda: self.set_led((255, 0, 255, 0)))  # type: ignore
+        green_led_button.clicked.connect(
+            lambda: self.set_led((255, 0, 255, 0)))  # type: ignore
         led_layout.addWidget(green_led_button)
 
         blue_led_button = QtWidgets.QPushButton("Blue")
         blue_led_button.setStyleSheet("background-color: blue; color: white")
-        blue_led_button.clicked.connect(lambda: self.set_led((255, 0, 0, 255)))  # type: ignore
+        blue_led_button.clicked.connect(
+            lambda: self.set_led((255, 0, 0, 255)))  # type: ignore
         led_layout.addWidget(blue_led_button)
 
         clear_led_button = QtWidgets.QPushButton("Clear")
         clear_led_button.setStyleSheet("background-color: white")
-        clear_led_button.clicked.connect(lambda: self.set_led((0, 0, 0, 0)))  # type: ignore
+        clear_led_button.clicked.connect(
+            lambda: self.set_led((0, 0, 0, 0)))  # type: ignore
         led_layout.addWidget(clear_led_button)
 
         layout.addWidget(led_groupbox, 0, 0, 3, 1)
@@ -401,11 +409,13 @@ class ControlWidget(QtWidgets.QWidget):
         servo_all_layout = QtWidgets.QHBoxLayout()
 
         servo_all_open_button = QtWidgets.QPushButton("Open all")
-        servo_all_open_button.clicked.connect(lambda: self.set_servo_all("open"))  # type: ignore
+        servo_all_open_button.clicked.connect(
+            lambda: self.set_servo_all("open"))  # type: ignore
         servo_all_layout.addWidget(servo_all_open_button)
 
         servo_all_close_button = QtWidgets.QPushButton("Close all")
-        servo_all_close_button.clicked.connect(lambda: self.set_servo_all("close"))  # type: ignore
+        servo_all_close_button.clicked.connect(
+            lambda: self.set_servo_all("close"))  # type: ignore
         servo_all_layout.addWidget(servo_all_close_button)
 
         servos_layout.addLayout(servo_all_layout)
@@ -415,11 +425,13 @@ class ControlWidget(QtWidgets.QWidget):
         servo_1_groupbox.setLayout(servo_1_layout)
 
         servo_1_open_button = QtWidgets.QPushButton("Open")
-        servo_1_open_button.clicked.connect(lambda: self.set_servo(0, "open"))  # type: ignore
+        servo_1_open_button.clicked.connect(
+            lambda: self.set_servo(0, "open"))  # type: ignore
         servo_1_layout.addWidget(servo_1_open_button)
 
         servo_1_close_button = QtWidgets.QPushButton("Close")
-        servo_1_close_button.clicked.connect(lambda: self.set_servo(0, "close"))  # type: ignore
+        servo_1_close_button.clicked.connect(
+            lambda: self.set_servo(0, "close"))  # type: ignore
         servo_1_layout.addWidget(servo_1_close_button)
 
         servos_layout.addWidget(servo_1_groupbox)
@@ -429,11 +441,13 @@ class ControlWidget(QtWidgets.QWidget):
         servo_2_groupbox.setLayout(servo_2_layout)
 
         servo_2_open_button = QtWidgets.QPushButton("Open")
-        servo_2_open_button.clicked.connect(lambda: self.set_servo(1, "open"))  # type: ignore
+        servo_2_open_button.clicked.connect(
+            lambda: self.set_servo(1, "open"))  # type: ignore
         servo_2_layout.addWidget(servo_2_open_button)
 
         servo_2_close_button = QtWidgets.QPushButton("Close")
-        servo_2_close_button.clicked.connect(lambda: self.set_servo(1, "close"))  # type: ignore
+        servo_2_close_button.clicked.connect(
+            lambda: self.set_servo(1, "close"))  # type: ignore
         servo_2_layout.addWidget(servo_2_close_button)
 
         servos_layout.addWidget(servo_2_groupbox)
@@ -443,11 +457,13 @@ class ControlWidget(QtWidgets.QWidget):
         servo_3_groupbox.setLayout(servo_3_layout)
 
         servo_3_open_button = QtWidgets.QPushButton("Open")
-        servo_3_open_button.clicked.connect(lambda: self.set_servo(2, "open"))  # type: ignore
+        servo_3_open_button.clicked.connect(
+            lambda: self.set_servo(2, "open"))  # type: ignore
         servo_3_layout.addWidget(servo_3_open_button)
 
         servo_3_close_button = QtWidgets.QPushButton("Close")
-        servo_3_close_button.clicked.connect(lambda: self.set_servo(2, "close"))  # type: ignore
+        servo_3_close_button.clicked.connect(
+            lambda: self.set_servo(2, "close"))  # type: ignore
         servo_3_layout.addWidget(servo_3_close_button)
 
         servos_layout.addWidget(servo_3_groupbox)
@@ -457,11 +473,13 @@ class ControlWidget(QtWidgets.QWidget):
         servo_4_groupbox.setLayout(servo_4_layout)
 
         servo_4_open_button = QtWidgets.QPushButton("Open")
-        servo_4_open_button.clicked.connect(lambda: self.set_servo(3, "open"))  # type: ignore
+        servo_4_open_button.clicked.connect(
+            lambda: self.set_servo(3, "open"))  # type: ignore
         servo_4_layout.addWidget(servo_4_open_button)
 
         servo_4_close_button = QtWidgets.QPushButton("Close")
-        servo_4_close_button.clicked.connect(lambda: self.set_servo(3, "close"))  # type: ignore
+        servo_4_close_button.clicked.connect(
+            lambda: self.set_servo(3, "close"))  # type: ignore
         servo_4_layout.addWidget(servo_4_close_button)
 
         servos_layout.addWidget(servo_4_groupbox)
@@ -475,11 +493,13 @@ class ControlWidget(QtWidgets.QWidget):
         autonomous_groupbox.setLayout(autonomous_layout)
 
         autonomous_enable_button = QtWidgets.QPushButton("Enable")
-        autonomous_enable_button.clicked.connect(lambda: self.set_autonomous(True))  # type: ignore
+        autonomous_enable_button.clicked.connect(
+            lambda: self.set_autonomous(True))  # type: ignore
         autonomous_layout.addWidget(autonomous_enable_button)
 
         autonomous_disable_button = QtWidgets.QPushButton("Disable")
-        autonomous_disable_button.clicked.connect(lambda: self.set_autonomous(False))  # type: ignore
+        autonomous_disable_button.clicked.connect(
+            lambda: self.set_autonomous(False))  # type: ignore
         autonomous_layout.addWidget(autonomous_disable_button)
 
         layout.addWidget(autonomous_groupbox, 3, 0, 1, 3)
@@ -492,7 +512,8 @@ class ControlWidget(QtWidgets.QWidget):
 
         reset_button = QtWidgets.QPushButton("Reset Peripheals")
         reset_button.setStyleSheet("background-color: yellow")
-        reset_button.clicked.connect(lambda: self.publish_message("vrc/pcm/reset", {}))  # type: ignore
+        reset_button.clicked.connect(lambda: self.publish_message(
+            "vrc/pcm/reset", {}))  # type: ignore
         reset_layout.addWidget(reset_button)
 
         layout.addWidget(reset_groupbox, 3, 3, 1, 1)
@@ -531,40 +552,40 @@ class ControlWidget(QtWidgets.QWidget):
         layout.addWidget(status_groupbox, 4, 0, 1, 4)
 
 # ==========================
-        #Gimbal 
+        # Gimbal
         gimbal_groupbox = QtWidgets.QGroupBox("Camera/Laser Gimbal")
         gimbal_layout = QtWidgets.QVBoxLayout()
         gimbal_groupbox.setLayout(gimbal_layout)
 
-         # Create joystick 
+        # Create joystick
         joystick = Joystick(self.parent_.mqtt_client)
 
         gimbal_layout.addWidget(joystick)
 
         laser_enable_button = QtWidgets.QPushButton("Laser On")
-        laser_enable_button.clicked.connect(lambda: self.laser_on())  # type: ignore
+        laser_enable_button.clicked.connect(
+            lambda: self.laser_on())  # type: ignore
         gimbal_layout.addWidget(laser_enable_button)
 
         laser_disable_button = QtWidgets.QPushButton("Laser Off")
-        laser_disable_button.clicked.connect(lambda: self.laser_off())  # type: ignore
+        laser_disable_button.clicked.connect(
+            lambda: self.laser_off())  # type: ignore
         gimbal_layout.addWidget(laser_disable_button)
-
 
         layout.addWidget(gimbal_groupbox, 5, 0, 1, 5)
 
-
-         # ==========================
+        # ==========================
         # Thermal Heatmap
-        thermal_groupbox = QtWidgets.QGroupBox("Thermal Map")
-        thermal_layout = QtWidgets.QHBoxLayout()
-        thermal_groupbox.setLayout(thermal_layout)
-
+        # thermal_groupbox = QtWidgets.QGroupBox("Thermal Map")
+        # thermal_layout = QtWidgets.QHBoxLayout()
+        # thermal_groupbox.setLayout(thermal_layout)
 
     def publish_message(self, topic: str, payload: dict) -> None:
         """
         Publish a message to a topic
         """
-        self.parent_.mqtt_client.publish(topic=topic, payload=json.dumps(payload))
+        self.parent_.mqtt_client.publish(
+            topic=topic, payload=json.dumps(payload))
 
     def set_servo(self, number: int, action: str) -> None:
         """
@@ -613,7 +634,8 @@ class ControlWidget(QtWidgets.QWidget):
                 # Can't do .singleShot on an exisiting QTimer as that
                 # creates a new instance
                 timer = QtCore.QTimer()
-                timer.timeout.connect(lambda: status_label.set_health(False))  # type: ignore
+                timer.timeout.connect(
+                    lambda: status_label.set_health(False))  # type: ignore
                 timer.setSingleShot(True)
                 timer.start(2000)
 
@@ -645,11 +667,13 @@ class ExpandCollapseQTreeWidget(QtWidgets.QTreeWidget):
         selected_item = self.itemAt(event.pos())
 
         expand_children_action = QtGui.QAction("Expand Children", self)
-        expand_children_action.triggered.connect(lambda: self.expand_children(selected_item, True))  # type: ignore
+        expand_children_action.triggered.connect(
+            lambda: self.expand_children(selected_item, True))  # type: ignore
         menu.addAction(expand_children_action)
 
         collapse_children_action = QtGui.QAction("Collapse Children", self)
-        collapse_children_action.triggered.connect(lambda: self.expand_children(selected_item, False))  # type: ignore
+        collapse_children_action.triggered.connect(
+            lambda: self.expand_children(selected_item, False))  # type: ignore
         menu.addAction(collapse_children_action)
 
         menu.popup(QtGui.QCursor.pos())
@@ -678,41 +702,38 @@ class ThermalViewWidget():
     def __init__(self, parent: MainWidget, control: ControlWidget) -> None:
         self.thermalview = VRC_ThermalView()
         self.control = control
-        #set up a continuing request for an update to the thermal reading
-    
-        
-        
-    #Request to updated the thermal image -- 
+        # set up a continuing request for an update to the thermal reading
+
+    # Request to updated the thermal image --
     # a vrc/pcc/therml_reading message should be sent back soon
+
     def update_thermal(self):
-        while (True) : 
+        while (True):
             self.control.request_thermal_reading()
             time.sleep(0.25)
-    
-    
-    def map_value(self,x, in_min, in_max, out_min, out_max):
+
+    def map_value(self, x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
     def process_message(self, topic: str, payload: str) -> None:
         """
         Process a new message on a topic.
         """
-        if topic=="vrc/thermal/thermal_reading":
+        if topic == "vrc/thermal/thermal_reading":
             payload_json = json.loads(payload)
             datapayload = payload_json['reading']
 
-            #A lot of decoding -- maybe too many steps??
+            # A lot of decoding -- maybe too many steps??
             base64Decoded = datapayload.encode('utf-8')
             asbytes = base64.b64decode(base64Decoded)
             b = bytearray(asbytes)
             int_values = [x for x in b]
-            #print(int_values)
-            #back on scale
+            # print(int_values)
+            # back on scale
            # pixels = [self.map_value(p, 0, 255, 15.0, 40.0) for p in int_values]
            # pixels = pixels[0:64]
-            #update the image
+            # update the image
             self.thermalview.update(int_values)
-
 
 
 class MQTTViewWidget(QtWidgets.QWidget):
@@ -748,7 +769,8 @@ class MQTTViewWidget(QtWidgets.QWidget):
         self.tree_widget.sortByColumn(0, QtCore.Qt.AscendingOrder)
         self.tree_widget.setAnimated(True)
         self.tree_widget.setIndentation(10)
-        self.tree_widget.clicked.connect(self.connect_topic_to_display)  # type: ignore
+        self.tree_widget.clicked.connect(
+            self.connect_topic_to_display)  # type: ignore
         layout.addWidget(self.tree_widget)
 
         self.data_view = QtWidgets.QTextEdit()
@@ -883,7 +905,8 @@ class MQTTViewWidget(QtWidgets.QWidget):
 
         # start new timer to clear background
         timer = QtCore.QTimer()
-        timer.timeout.connect(lambda: item.setBackground(0, QtGui.QColor(255, 255, 255)))  # type: ignore
+        timer.timeout.connect(lambda: item.setBackground(
+            0, QtGui.QColor(255, 255, 255)))  # type: ignore
         timer.setSingleShot(True)
         timer.start(100)
 

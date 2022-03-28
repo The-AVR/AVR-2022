@@ -954,9 +954,11 @@ class PyMAVLinkAgent(MQTTModule):
         """
         #loop = asyncio.get_event_loop()
 
+        time.sleep(4)
+
         # create a mavlink udp instance
         self.mavcon = mavutil.mavlink_connection(
-            "udpin:0.0.0.0:14030", source_system=254, dialect="bell"
+            "udpin:0.0.0.0:14550"
         )
 
         #await loop.run_in_executor(None, self.wait_for_heartbeat)
