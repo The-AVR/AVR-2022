@@ -1,0 +1,1 @@
+CALL ..\.venv\Scripts\activate & python ..\VMC\GUI\app.py 
