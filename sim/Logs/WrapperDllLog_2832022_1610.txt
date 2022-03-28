@@ -1,4 +1,0 @@
-
-[Information] 	<Mon Mar 28 16:10:16 2022> 	Starting server for : Multirotor
-[Information] 	<Mon Mar 28 16:10:16 2022> 	Test : Multirotor
-[Information] 	<Mon Mar 28 16:12:07 2022> 	Server stopped
