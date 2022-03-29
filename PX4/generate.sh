@@ -96,10 +96,16 @@ if [ "$1" == "--firmware" ]; then
     base_docker_cmd="sudo docker run --rm -w $px4dir --volume=$px4dir:$px4dir:rw px4io/px4-dev-nuttx-focal:latest /bin/bash -c"
 
     # build Pixhawk firmware
-    echo "--- Building Pixhawk firmware"
+    echo "--- Building Pixhawk5 firmware"
     echo "$base_docker_cmd 'make px4_fmu-v5_default'"
     eval "$base_docker_cmd 'make px4_fmu-v5_default -j$(nproc)'"
     cp "$px4dir/build/px4_fmu-v5_default/px4_fmu-v5_default.px4" "$basedir/target/px4_fmu-v5_default.$PX4_VERSION.px4"
+
+    # build Pixhawk firmware
+    echo "--- Building Pixhawk5x firmware"
+    echo "$base_docker_cmd 'make px4_fmu-v5x_default'"
+    eval "$base_docker_cmd 'make px4_fmu-v5x_default -j$(nproc)'"
+    cp "$px4dir/build/px4_fmu-v5x_default/px4_fmu-v5x_default.px4" "$basedir/target/px4_fmu-v5x_default.$PX4_VERSION.px4"
 
     # build NXP firmware
     echo "--- Building NXP firmware"
