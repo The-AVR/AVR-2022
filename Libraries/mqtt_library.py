@@ -485,7 +485,7 @@ class MQTTModule:
         client: mqtt.Client,
         userdata: Any,
         rc: Any,
-        properties: mqtt.Properties = None,
+        properties: Optional[mqtt.Properties] = None,
     ) -> None:
         """
         On connection callback. Subscribes to MQTT topics in the topic map.

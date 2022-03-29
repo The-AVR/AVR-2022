@@ -37,6 +37,8 @@ jobs:
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
         with:
+          # pin Hugo version to prevent compatbility issues
+          hugo-version: '0.94.2'
           extended: true
 
       - name: Install Dependencies
@@ -48,7 +50,7 @@ jobs:
 
       - name: Check Formatting
         working-directory: docs
-        run: npx prettier --check .\content\
+        run: npx prettier --check ./content/
 
       - name: Build Site
         working-directory: docs

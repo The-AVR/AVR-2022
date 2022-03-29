@@ -152,13 +152,15 @@ shortcode.
 
 ```markdown
 {{< card header="**FlySky FS-i6S User Manual**" >}}
-[FS-i6S-User-manual-20170706-compressed.pdf](/files/FS-i6S-User-manual-20170706-compressed.pdf)
+[FS-i6S-User-manual-20170706-compressed.pdf]({{< static "/files/FS-i6S-User-manual-20170706-compressed.pdf" >}})
 {{< /card >}}
 ```
 
 The header can be omitted if desired.
 
-Please put static files like PDF manuals in the `static/files` folder.
+Please put static files like PDF manuals in the `static/files` folder and be sure
+to link to it with the `static` shortcode as shown above
+(this helps deal with subdirectory differences).
 
 ### Banners
 

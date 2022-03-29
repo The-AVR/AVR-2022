@@ -25,7 +25,7 @@ WORKDIR /app
 RUN git clone https://github.com/eclipse/paho.mqtt.c \
  && cd paho.mqtt.c \
  && git checkout v1.3.8 \
- && cmake -Bbuild -H. -DPAHO_ENABLE_TESTING=OFF -DPAHO_BUILD_STATIC=ON -DPAHO_WITH_SSL=ON -DPAHO_HIGH_PERFORMANCE=ON \
+ && cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON -DPAHO_WITH_SSL=ON -DPAHO_HIGH_PERFORMANCE=ON \
  && cmake --build build/ --target install \
  && ldconfig
 
@@ -33,7 +33,7 @@ RUN git clone https://github.com/eclipse/paho.mqtt.c \
 RUN git clone https://github.com/eclipse/paho.mqtt.cpp \
  && cd paho.mqtt.cpp \
  && git checkout v1.2.0 \
- && cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON -DPAHO_BUILD_DOCUMENTATION=FALSE -DPAHO_BUILD_SAMPLES=FALSE \
+ && cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON \
  && cmake --build build/ --target install \
  && ldconfig
 
