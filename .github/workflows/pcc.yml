@@ -2,16 +2,16 @@ name: Build PCC Firmware
 
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'PCC/ControlSoftware/'
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'PCC/ControlSoftware/'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "PCC/ControlSoftware/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "PCC/ControlSoftware/**"
 
 jobs:
   build:
