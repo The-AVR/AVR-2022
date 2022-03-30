@@ -79,3 +79,18 @@ You may need to add the VS 2017 Desktop Development C++ tools.
 
 To build/run ARM Docker images, you may need to run
 `docker run --rm --privileged multiarch/qemu-user-static --reset -p yes` first.
+
+## Simulation Setup
+
+Download latest release [here](https://drive.google.com/drive/folders/1BLPB-tV38wj7tiw1isuGrDlHU8-YfX-v?usp=sharing)
+
+copy the folder `build` into `VRC-2022/sim/build`
+
+Make sure to do the instructions in the [Developer Setup](#developer-setup) section.
+
+Follow the PX4 instructions to install the windows toolchain [here](https://docs.px4.io/v1.12/en/dev_setup/dev_env_windows_cygwin.html)
+
+## Running Simulation
+
+double click `start_sim.bat` in the sim folder. 
+
