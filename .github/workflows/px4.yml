@@ -2,16 +2,16 @@ name: Build PX4
 
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'PX4/'
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'PX4/'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'PX4/'
+  push:
+    branches:
+      - main
+    paths:
+      - 'PX4/'
 
 jobs:
   build:
