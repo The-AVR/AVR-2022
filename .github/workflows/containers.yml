@@ -2,11 +2,11 @@ name: Build Containers
 
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'VMC/FlightSoftware/'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'VMC/FlightSoftware/'
   # push:
   #   branches:
   #     - main
