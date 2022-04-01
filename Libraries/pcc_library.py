@@ -24,8 +24,8 @@ class PeripheralControlComputer:
             "SET_SERVO_PCT": 3,
             "SET_BASE_COLOR": 4,
             "SET_TEMP_COLOR": 5,
-            "SET_LASER_ON" : 6,
-            "SET_LASER_OFF" : 7,
+            "SET_LASER_ON": 6,
+            "SET_LASER_OFF": 7,
             "RESET_VRC_PERIPH": 8,
             "CHECK_SERVO_CONTROLLER": 9,
         }
@@ -176,7 +176,7 @@ class PeripheralControlComputer:
             command = self.commands["SET_LASER_ON"]
             length = 1
             self.ser.write(self._construct_payload(command, length))
-        
+
     def set_laser_off(self) -> None:
         if self.use_serial:
             command = self.commands["SET_LASER_OFF"]

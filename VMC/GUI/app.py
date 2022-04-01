@@ -14,7 +14,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from qt_icon import IMG_DIR, set_icon
 
 try:
-    from thermalview import VRC_ThermalView # type: ignore
+    from thermalview import VRC_ThermalView  # type: ignore
 except ImportError:
     from .thermalview import VRC_ThermalView
 
@@ -61,7 +61,7 @@ class MQTTClient(QtCore.QObject):
         """
         Callback for every MQTT message
         """
-        if msg.topic=="vrc/pcm/thermal_reading":
+        if msg.topic == "vrc/pcm/thermal_reading":
             self.message.emit(msg.topic, msg.payload)
             print("emitting message")
         else:
@@ -101,8 +101,6 @@ class MQTTClient(QtCore.QObject):
         Publish an MQTT message. Proxy function to the underlying client
         """
         self.client.publish(*args, **kwargs)
-
-
 
 
 class MainWidget(QtWidgets.QWidget):
@@ -208,11 +206,13 @@ class StatusLabel(QtWidgets.QWidget):
         else:
             self.icon.setPixmap(QtGui.QPixmap(os.path.join(IMG_DIR, "red.png")))
 
+
 class Direction(Enum):
     Left = 0
     Right = 1
     Up = 2
     Down = 3
+
 
 class Joystick(QtWidgets.QWidget):
     def __init__(self, mqtt_client: MQTTClient, parent=None):
@@ -230,8 +230,7 @@ class Joystick(QtWidgets.QWidget):
         self.servoxmax = 99
         self.servoymax = 99
 
-
-    def map_value(self,x, in_min, in_max, out_min, out_max):
+    def map_value(self, x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
     def move_gimbal(self, x_servo_percent, y_servo_percent):
@@ -244,28 +243,34 @@ class Joystick(QtWidgets.QWidget):
     def update_servos(self):
         ms = int(round(time.time() * 1000))
         timesince = ms - self.lasttime
-        if (timesince<50):
+        if timesince < 50:
             return
         self.lasttime = ms
-        y_reversed = 100 - self.current_y 
-        
-        x_servo_percent = round(self.map_value(self.current_x, 0, 100, 10, 99) )
-        y_servo_percent = round(self.map_value(y_reversed, 0, 100, 10, 99) )
+        y_reversed = 100 - self.current_y
 
+        x_servo_percent = round(self.map_value(self.current_x, 0, 100, 10, 99))
+        y_servo_percent = round(self.map_value(y_reversed, 0, 100, 10, 99))
 
-        if (x_servo_percent<self.servoxmin): return
-        if (y_servo_percent<self.servoymin): return
-        if (x_servo_percent>self.servoxmax): return
-        if (y_servo_percent>self.servoymax): return
+        if x_servo_percent < self.servoxmin:
+            return
+        if y_servo_percent < self.servoymin:
+            return
+        if x_servo_percent > self.servoxmax:
+            return
+        if y_servo_percent > self.servoymax:
+            return
 
         self.move_gimbal(x_servo_percent, y_servo_percent)
-    
-
 
     def paintEvent(self, event):
         painter = QtGui.QPainter(self)
-        bounds = QtCore.QRectF(-self.__maxDistance, -self.__maxDistance, self.__maxDistance * 2, self.__maxDistance * 2).translated(self._center())
-        #painter.drawEllipse(bounds)
+        bounds = QtCore.QRectF(
+            -self.__maxDistance,
+            -self.__maxDistance,
+            self.__maxDistance * 2,
+            self.__maxDistance * 2,
+        ).translated(self._center())
+        # painter.drawEllipse(bounds)
         painter.drawRect(bounds)
         painter.setBrush(QtCore.Qt.black)
         painter.drawEllipse(self._centerEllipse())
@@ -276,19 +281,18 @@ class Joystick(QtWidgets.QWidget):
         return QtCore.QRectF(-20, -20, 40, 40).translated(self._center())
 
     def _center(self):
-        return QtCore.QPointF(self.width()/2, self.height()/2)
-
+        return QtCore.QPointF(self.width() / 2, self.height() / 2)
 
     def _boundJoystick(self, point):
 
-        if (point.x()>(self._center().x() + self.__maxDistance)):
+        if point.x() > (self._center().x() + self.__maxDistance):
             point.setX(self._center().x() + self.__maxDistance)
-        elif (point.x()<(self._center().x() - self.__maxDistance)):
+        elif point.x() < (self._center().x() - self.__maxDistance):
             point.setX(self._center().x() - self.__maxDistance)
 
-        if (point.y()>(self._center().y() + self.__maxDistance)):
+        if point.y() > (self._center().y() + self.__maxDistance):
             point.setY(self._center().y() + self.__maxDistance)
-        elif (point.y()<(self._center().y() - self.__maxDistance)):
+        elif point.y() < (self._center().y() - self.__maxDistance):
             point.setY(self._center().y() - self.__maxDistance)
         return point
 
@@ -308,25 +312,25 @@ class Joystick(QtWidgets.QWidget):
             return (Direction.Down, distance)
         return (Direction.Right, distance)
 
-
     def mousePressEvent(self, ev):
         self.grabCenter = self._centerEllipse().contains(ev.pos())
         return super().mousePressEvent(ev)
 
     def mouseReleaseEvent(self, event):
-       # self.grabCenter = False
-       # self.movingOffset = QtCore.QPointF(0, 0)
+        # self.grabCenter = False
+        # self.movingOffset = QtCore.QPointF(0, 0)
         self.update()
 
     def mouseMoveEvent(self, event):
         if self.grabCenter:
             self.movingOffset = self._boundJoystick(event.pos())
             self.update()
-        #print(self.joystickDirection())
+        # print(self.joystickDirection())
         self.current_x = self.movingOffset.x() - self._center().x() + self.__maxDistance
         self.current_y = self.movingOffset.y() - self._center().y() + self.__maxDistance
         self.update_servos()
-        
+
+
 class ControlWidget(QtWidgets.QWidget):
     # This is the primary control widget for the drone. This allows the user
     # to set LED color, open/close servos etc.
@@ -338,24 +342,21 @@ class ControlWidget(QtWidgets.QWidget):
         self.setWindowTitle("Bell VRC Control")
         set_icon(self)
 
-    def  laser_on(self):
+    def laser_on(self):
         payload = {}
         self.publish_message("vrc/pcm/set_laser_on", {})
 
-    def  laser_off(self):
+    def laser_off(self):
         payload = {}
         self.publish_message("vrc/pcm/set_laser_off", {})
 
-
-
-    def  request_thermal_reading(self):
-        self.publish_message(  
-                    "vrc/thermal/request_thermal_reading",
-                    "{}",
-                    retain=False,
-                    qos=0,
-             )
-
+    def request_thermal_reading(self):
+        self.publish_message(
+            "vrc/thermal/request_thermal_reading",
+            "{}",
+            retain=False,
+            qos=0,
+        )
 
     def build(self) -> None:
         """
@@ -530,13 +531,13 @@ class ControlWidget(QtWidgets.QWidget):
 
         layout.addWidget(status_groupbox, 4, 0, 1, 4)
 
-# ==========================
-        #Gimbal 
+        # ==========================
+        # Gimbal
         gimbal_groupbox = QtWidgets.QGroupBox("Camera/Laser Gimbal")
         gimbal_layout = QtWidgets.QVBoxLayout()
         gimbal_groupbox.setLayout(gimbal_layout)
 
-         # Create joystick 
+        # Create joystick
         joystick = Joystick(self.parent_.mqtt_client)
 
         gimbal_layout.addWidget(joystick)
@@ -549,16 +550,13 @@ class ControlWidget(QtWidgets.QWidget):
         laser_disable_button.clicked.connect(lambda: self.laser_off())  # type: ignore
         gimbal_layout.addWidget(laser_disable_button)
 
-
         layout.addWidget(gimbal_groupbox, 5, 0, 1, 5)
 
-
-         # ==========================
+        # ==========================
         # Thermal Heatmap
         thermal_groupbox = QtWidgets.QGroupBox("Thermal Map")
         thermal_layout = QtWidgets.QHBoxLayout()
         thermal_groupbox.setLayout(thermal_layout)
-
 
     def publish_message(self, topic: str, payload: dict) -> None:
         """
@@ -672,47 +670,43 @@ class ExpandCollapseQTreeWidget(QtWidgets.QTreeWidget):
             self.expand_children(child, expand)
 
 
-class ThermalViewWidget():
+class ThermalViewWidget:
     # This is a window to show the thermal camera view
 
     def __init__(self, parent: MainWidget, control: ControlWidget) -> None:
         self.thermalview = VRC_ThermalView()
         self.control = control
-        #set up a continuing request for an update to the thermal reading
-    
-        
-        
-    #Request to updated the thermal image -- 
+        # set up a continuing request for an update to the thermal reading
+
+    # Request to updated the thermal image --
     # a vrc/pcc/therml_reading message should be sent back soon
     def update_thermal(self):
-        while (True) : 
+        while True:
             self.control.request_thermal_reading()
             time.sleep(0.25)
-    
-    
-    def map_value(self,x, in_min, in_max, out_min, out_max):
+
+    def map_value(self, x, in_min, in_max, out_min, out_max):
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
     def process_message(self, topic: str, payload: str) -> None:
         """
         Process a new message on a topic.
         """
-        if topic=="vrc/thermal/thermal_reading":
+        if topic == "vrc/thermal/thermal_reading":
             payload_json = json.loads(payload)
-            datapayload = payload_json['reading']
+            datapayload = payload_json["reading"]
 
-            #A lot of decoding -- maybe too many steps??
-            base64Decoded = datapayload.encode('utf-8')
+            # A lot of decoding -- maybe too many steps??
+            base64Decoded = datapayload.encode("utf-8")
             asbytes = base64.b64decode(base64Decoded)
             b = bytearray(asbytes)
             int_values = [x for x in b]
-            #print(int_values)
-            #back on scale
-           # pixels = [self.map_value(p, 0, 255, 15.0, 40.0) for p in int_values]
-           # pixels = pixels[0:64]
-            #update the image
+            # print(int_values)
+            # back on scale
+            # pixels = [self.map_value(p, 0, 255, 15.0, 40.0) for p in int_values]
+            # pixels = pixels[0:64]
+            # update the image
             self.thermalview.update(int_values)
-
 
 
 class MQTTViewWidget(QtWidgets.QWidget):

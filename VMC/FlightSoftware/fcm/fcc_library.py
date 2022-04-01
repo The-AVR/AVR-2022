@@ -28,10 +28,11 @@ from mqtt_library import (
 )
 from pymavlink import mavutil
 
-HOSTNAME="localhost"
+HOSTNAME = "localhost"
+
 
 class FCMMQTTModule(MQTTModule):
-    def __init__(self,host="mqtt") -> None:
+    def __init__(self, host="mqtt") -> None:
         super().__init__(host)
 
     def _timestamp(self) -> str:
@@ -56,7 +57,7 @@ class DispatcherBusy(Exception):
 
 
 class DispatcherManager(FCMMQTTModule):
-    def __init__(self,host="mqtt") -> None:
+    def __init__(self, host="mqtt") -> None:
         super.__init__(host)
         self.currently_running_task = None
         self.timeout = 10
@@ -107,13 +108,12 @@ class DispatcherManager(FCMMQTTModule):
 
 
 class FlightControlComputer(FCMMQTTModule):
-    def __init__(self,host="mqtt") -> None:
+    def __init__(self, host="mqtt") -> None:
         super().__init__(host)
-
 
         # mavlink stuff
         self.drone = mavsdk.System()
-        self.mission_api = MissionAPI(self.drone,host)
+        self.mission_api = MissionAPI(self.drone, host)
 
         # queues
         self.action_queue = queue.Queue()
@@ -185,7 +185,7 @@ class FlightControlComputer(FCMMQTTModule):
         logger.debug("Connected!! to FCC")
 
         # start the mission api MQTT client
-        #self.mission_api.run_non_blocking()
+        # self.mission_api.run_non_blocking()
 
         # start tasks
         return asyncio.gather(
@@ -731,7 +731,7 @@ class FlightControlComputer(FCMMQTTModule):
 
 
 class MissionAPI(FCMMQTTModule):
-    def __init__(self, drone: mavsdk.System,host="mqtt") -> None:
+    def __init__(self, drone: mavsdk.System, host="mqtt") -> None:
         super().__init__(host)
         self.drone = drone
 
@@ -938,7 +938,7 @@ class MissionAPI(FCMMQTTModule):
 
 
 class PyMAVLinkAgent(MQTTModule):
-    def __init__(self,host="mqtt") -> None:
+    def __init__(self, host="mqtt") -> None:
         super().__init__(host)
 
         self.topic_map = {
@@ -953,14 +953,14 @@ class PyMAVLinkAgent(MQTTModule):
         """
         Set up a mavlink connection and kick off any tasks
         """
-        #loop = asyncio.get_event_loop()
+        # loop = asyncio.get_event_loop()
 
         # create a mavlink udp instance
         self.mavcon = mavutil.mavlink_connection(
             "udpin:0.0.0.0:14542", source_system=254, dialect="bell"
         )
 
-        #await loop.run_in_executor(None, self.wait_for_heartbeat)
+        # await loop.run_in_executor(None, self.wait_for_heartbeat)
         await self.wait_for_heartbeat()
         logger.debug("In RUN received heartbeat")
         super().run()
@@ -998,8 +998,7 @@ class PyMAVLinkAgent(MQTTModule):
             payload["vd"],
             payload["cog"],
             payload["satellites_visible"],
-            payload["heading"]
-            
+            payload["heading"],
         )
         logger.debug(msg)
         self.mavcon.mav.send(msg)  # type: ignore

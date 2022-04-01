@@ -189,7 +189,7 @@ class FusionModule(MQTTModule):
         self.send_message("vrc/fusion/attitude/heading", heading_update)
 
         # if the groundspeed is below the threshold, we lock the course to the heading
-        if ("vrc/fusion/groundspeed" not in self.message_cache):
+        if "vrc/fusion/groundspeed" not in self.message_cache:
             logger.debug("Empty groundspeed in fuse att heading")
         elif (
             self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
@@ -209,7 +209,7 @@ class FusionModule(MQTTModule):
         while True:
             time.sleep(1 / self.config["HIL_GPS_UPDATE_FREQ"])
 
-            if ("vrc/fusion/geo" not in self.message_cache):
+            if "vrc/fusion/geo" not in self.message_cache:
                 logger.debug("Waiting for vrc/fusion/geo to be populated")
                 continue
 
@@ -221,23 +221,28 @@ class FusionModule(MQTTModule):
             # don't send that data to FCC
             if lat == 0 or lon == 0:
                 continue
-            if ("vrc/fusion/velocity/ned" not in self.message_cache):
+            if "vrc/fusion/velocity/ned" not in self.message_cache:
                 logger.debug("Waiting for vrc/fusion/velocity/ned to be populated")
                 continue
-            elif (self.message_cache["vrc/fusion/velocity/ned"]["Vn"] is None):
+            elif self.message_cache["vrc/fusion/velocity/ned"]["Vn"] is None:
                 logger.debug("vrc/fusion/velocity/ned/vn message cache is empty")
                 continue
-            crs = 0;
-            if ("vrc/fusion/course" in self.message_cache):
-                if (self.message_cache["vrc/fusion/course"]["course"] is not None):
+            crs = 0
+            if "vrc/fusion/course" in self.message_cache:
+                if self.message_cache["vrc/fusion/course"]["course"] is not None:
                     crs = int(self.message_cache["vrc/fusion/course"]["course"])
             else:
                 logger.debug("Waiting for vrc/fusion/course message to be populated")
                 continue
-            gs = 0;
-            if ("vrc/fusion/groundspeed" in self.message_cache):
-                if (self.message_cache["vrc/fusion/groundspeed"]["groundspeed"] is not None):
-                    gs = int(self.message_cache["vrc/fusion/groundspeed"]["groundspeed"])
+            gs = 0
+            if "vrc/fusion/groundspeed" in self.message_cache:
+                if (
+                    self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
+                    is not None
+                ):
+                    gs = int(
+                        self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
+                    )
             else:
                 logger.debug("vrc/fusion/groundspeed message cache is empty")
                 continue
@@ -331,11 +336,12 @@ class FusionModule(MQTTModule):
 
     def run(self) -> None:
         self.run_non_blocking()
-        #self.run()
+        # self.run()
         try:
             self.assemble_hil_gps_message()
         except Exception as e:
             logger.exception("Issue while assembling hil message")
+
 
 if __name__ == "__main__":
     fusion = FusionModule()

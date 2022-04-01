@@ -7,12 +7,10 @@ from mqtt_library import MQTTModule
 class FlightControlModule(MQTTModule):
     def __init__(self):
         super().__init__("localhost")
-        
 
         # create the FCC objects
         self.fcc = FlightControlComputer("localhost")
         self.gps_fcc = PyMAVLinkAgent("localhost")
-
 
     async def run(self) -> None:
         asyncio.gather(

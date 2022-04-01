@@ -35,8 +35,10 @@ class VRCPcmSetTempColorMessage(TypedDict):
 class VRCPcmSetLaserOn(TypedDict):
     pass
 
+
 class VRCPcmSetLaserOff(TypedDict):
     pass
+
 
 class VRCPcmSetServoOpenCloseMessage(TypedDict):
     servo: int
@@ -61,6 +63,7 @@ class VRCPcmSetServoPctMessage(TypedDict):
 class VRCPcmResetMessage(TypedDict):
     pass
 
+
 class VRCFusionPositionNedMessage(TypedDict):
     n: float
     e: float
@@ -78,8 +81,10 @@ class VRCFusionGeodetic(TypedDict):
     lon: float
     alt: float
 
+
 class VRCFcmHilGpsStatsMessage(TypedDict):
     num_frames: int
+
 
 class VRCFusionGeoMessage(TypedDict):
     geodetic: VRCFusionGeodetic
@@ -261,6 +266,7 @@ class VRCFcmLocationHomeMessage(TypedDict):
     alt: float
     timestamp: str
 
+
 class VRCFcmAttitudeEulerMessage(TypedDict):
     roll: float
     pitch: float
@@ -399,7 +405,7 @@ class MQTTMessageCache:
     # fmt: on
 
     def __getitem__(self, key: str) -> Any:
-        if (key in self.__storage):
+        if key in self.__storage:
             return self.__storage[key]
         else:
             return None
@@ -471,7 +477,7 @@ class MQTTModule:
         On message callback, Dispatches the message to the appropriate function.
         """
         try:
-            #logger.debug(f"Recieved {msg.topic}: {msg.payload}")
+            # logger.debug(f"Recieved {msg.topic}: {msg.payload}")
             if msg.topic in self.topic_map:
                 # we talk JSON, no exceptions
                 payload = json.loads(msg.payload)
@@ -619,6 +625,6 @@ class MQTTModule:
         """
         Sends a message to the MQTT broker.
         """
-        #logger.debug(f"Sending message to {topic}: {payload}")
+        # logger.debug(f"Sending message to {topic}: {payload}")
         self.mqtt_client.publish(topic, json.dumps(payload))
         self.message_cache[topic] = copy.deepcopy(payload)
