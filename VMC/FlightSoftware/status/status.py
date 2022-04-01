@@ -1,22 +1,24 @@
 # python standard library
+import base64
+import json
 import os
 import threading
 import time
-import json
-import board
-from colored import fore, back, style
-import base64
-import neopixel_spi as neopixel
 
+import board
+import neopixel_spi as neopixel
+from colored import back, fore, style
 from setproctitle import setproctitle
 
 print("finished basic imports")
 
-# pip installed packages
-from loguru import logger
-import paho.mqtt.client as mqtt
 import subprocess
 from typing import Any
+
+import paho.mqtt.client as mqtt
+
+# pip installed packages
+from loguru import logger
 
 print("finished all imports")
 

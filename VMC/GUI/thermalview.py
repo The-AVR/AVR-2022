@@ -1,13 +1,11 @@
-import os
 import math
+import os
 import time
 
+import colour
 import numpy as np
 import pygame
 from scipy.interpolate import griddata
-
-
-import colour
 
 
 class VRC_ThermalView(object):

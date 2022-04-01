@@ -1,22 +1,23 @@
 # python standard library
+import base64
+import json
 import os
 import threading
 import time
-import json
-import board
-import adafruit_amg88xx
-from colored import fore, back, style
-import base64
 
+import adafruit_amg88xx
+import board
+from colored import back, fore, style
 from setproctitle import setproctitle
 
 print("finished basic imports")
 
-# pip installed packages
-from loguru import logger
+from typing import Any
+
 import paho.mqtt.client as mqtt
 
-from typing import Any
+# pip installed packages
+from loguru import logger
 
 print("finished all imports")
 
