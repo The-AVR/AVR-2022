@@ -39,7 +39,7 @@ class CameraCoordinateTransformation:
                 "rpy": [
                     0,
                     -math.pi / 2,
-                    -math.pi / 2,
+                    math.pi / 2,
                 ],  # cam x = body -y; cam y = body x, cam z = body z
                 "ground_height": 10,  # cm
             }
