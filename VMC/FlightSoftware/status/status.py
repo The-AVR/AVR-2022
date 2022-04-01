@@ -1,5 +1,4 @@
 # python standard library
-import base64
 import json
 import os
 import threading
@@ -173,7 +172,6 @@ class Status(object):
             )
 
     def status_thread(self):
-        msg = {}
         while True:
             self.status_check()
             time.sleep(1)

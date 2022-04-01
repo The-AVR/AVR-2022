@@ -1,6 +1,6 @@
 import math
 import time
-from typing import List, Tuple
+from typing import Tuple
 
 import numpy as np
 from decorator_library import try_except

@@ -4,7 +4,6 @@ import base64
 import json
 import os
 import sys
-import threading
 import time
 from enum import Enum
 from typing import Any, Dict, List, Optional, Tuple
@@ -343,11 +342,9 @@ class ControlWidget(QtWidgets.QWidget):
         set_icon(self)
 
     def laser_on(self):
-        payload = {}
         self.publish_message("vrc/pcm/set_laser_on", {})
 
     def laser_off(self):
-        payload = {}
         self.publish_message("vrc/pcm/set_laser_off", {})
 
     def request_thermal_reading(self):

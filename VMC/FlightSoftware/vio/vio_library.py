@@ -1,6 +1,6 @@
 import copy
 import math
-from typing import List, Tuple, TypedDict
+from typing import Tuple, TypedDict
 
 import numpy as np
 import transforms3d as t3d

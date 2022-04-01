@@ -1,6 +1,4 @@
 import math
-import os
-import time
 
 import colour
 import numpy as np
