@@ -28,8 +28,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Cache PX4
+        id: px4
+        uses: actions/cache@v3
+        with:
+          path: PX4/build
+          key: PX4-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+
       - name: Build PX4 firmware
-        shell: bash
         run: python3 PX4/generate.py host --px4
 
       - name: Upload firmware to release
