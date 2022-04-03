@@ -62,7 +62,7 @@ jobs:
         run: python scripts/copy_libraries.py
 
       - name: Generate custom pymavlink package
-        if: matrix.image == fcm
+        if: matrix.image == 'fcm'
         run: python3 PX4/generate.py host --pymavlink
 
       - name: Build and push
