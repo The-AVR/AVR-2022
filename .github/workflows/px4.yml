@@ -6,12 +6,12 @@ on:
     branches:
       - main
     paths:
-      - 'PX4/'
+      - "PX4/**"
   push:
     branches:
       - main
     paths:
-      - 'PX4/'
+      - "PX4/**"
 
 jobs:
   build:

@@ -6,12 +6,12 @@ on:
     branches:
       - main
     paths:
-      - 'VMC/FlightSoftware/'
+      - "VMC/FlightSoftware/**"
   # push:
   #   branches:
   #     - main
   #   paths:
-  #     - 'VMC/FlightSoftware/'
+  #     - "VMC/FlightSoftware/**"
 
 jobs:
   build:

@@ -6,7 +6,7 @@ on:
     branches:
       - main
     paths:
-      - '**.py'
+      - "**.py"
 
 jobs:
   check:
@@ -20,12 +20,12 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v1
         with:
-          node-version: '14'
+          node-version: "14"
 
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
-          python-version: '3.9'
+          python-version: "3.9"
 
       - name: Copy libraries
         run: python scripts/copy_libraries.py
