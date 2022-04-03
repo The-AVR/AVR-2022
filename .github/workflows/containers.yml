@@ -36,7 +36,7 @@ jobs:
         id: changed-files
         uses: tj-actions/changed-files@v18.6
         with:
-          files: ${{ hashFiles(format('VMC/FlightSoftware/{0}/**', matrix.image)) }}
+          files: ${{ format('VMC/FlightSoftware/{0}/**', matrix.image) }}
 
       - name: Set up Python
         if: steps.changed-files.outputs.any_changed == 'true'
