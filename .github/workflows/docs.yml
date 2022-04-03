@@ -1,4 +1,4 @@
-name: Publish Docs
+name: Build Docs
 
 on:
   workflow_dispatch:
@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
@@ -34,15 +34,9 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v3
         with:
-
-          python-version: '3.9'
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
-        with:
-          # pin Hugo version to prevent compatbility issues
-          hugo-version: '0.94.2'
-          extended: true
+          python-version: "3.9"
+          cache-dependency-path: docs
+          cache: pip
 
       - name: Install Dependencies
         working-directory: docs
@@ -53,8 +47,7 @@ jobs:
 
       - name: Check Formatting
         working-directory: docs
-
-        run: npx prettier --check ./content/
+        run: npm run check-formatting
 
       - name: Build Site
         working-directory: docs
@@ -62,9 +55,7 @@ jobs:
 
       - name: Check For Broken Links
         working-directory: docs
-
-        run: npm run run-check-links
-
+        run: npm run check-links
 
       - name: Deploy Site
         if: github.event_name != 'pull_request'
