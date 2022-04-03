@@ -34,7 +34,7 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.9"
-          cache: pio
+          cache: pip
           cache-dependency-path: "PCC/ControlSoftware/requirements.txt"
 
       - name: Install PlatformIO
