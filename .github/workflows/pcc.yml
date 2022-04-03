@@ -26,23 +26,25 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Apply patches
-        run: git apply ../queue-default.patch
-        working-directory: PCC/ControlSoftware/libraries/Queue
-
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: "3.9"
+          cache: "pip"
+          cache-dependency-path: "PCC/ControlSoftware/requirements.txt"
 
       - name: Install PlatformIO
         run: |
           python -m pip install pip wheel --upgrade
           python -m pip install platformio --upgrade
+
+      - name: Apply patches
+        run: git apply ../queue-default.patch
+        working-directory: PCC/ControlSoftware/libraries/Queue
 
       - name: Build firmware
         run: pio run --verbose
