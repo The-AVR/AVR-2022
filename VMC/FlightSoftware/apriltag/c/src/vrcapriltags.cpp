@@ -98,7 +98,7 @@ int main()
             //send the frame to GPU memory and run the detections
             uint32_t num_detections = process_frame(img_rgba8, impl_);
 
-            std::string payload = "[";
+            std::string payload = "\"apriltags\":{[";
 
             //handle the detections
             for (int i = 0; i < num_detections; i++)
@@ -114,7 +114,7 @@ int main()
                 }
             }
 
-            payload.append("]");
+            payload.append("]}");
 
             auto end = std::chrono::system_clock::now();
 
@@ -128,6 +128,8 @@ int main()
 
             std::string fps_str = std::to_string(fps);
             const char *const_fps_str = fps_str.c_str();
+
+            // TODO: Want dict here
             client.publish(FPS_TOPIC, const_fps_str, strlen(const_fps_str));
         }
     }
