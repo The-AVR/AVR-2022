@@ -1,20 +1,15 @@
-# python standard library
+import itertools
 import json
-import os
 import subprocess
 import threading
 import time
-from typing import Any
+from typing import Any, Optional
 
 import board
 import neopixel_spi as neopixel
 import paho.mqtt.client as mqtt
-from colored import back, fore, style
 from loguru import logger
-from setproctitle import setproctitle
 
-# find the file path to this file
-__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 INTERRUPTED = False
 
@@ -79,17 +74,16 @@ class Status(object):
                 self.topic_map[msg.topic](payload)
 
         except Exception as e:
-            logger.debug(f"{fore.RED}Error handling message on {msg.topic}{style.RESET}")  # type: ignore
-            print(e)
+            logger.exception(f"Error handling message on {msg.topic}")
 
     def on_connect(
         self,
         client: mqtt.Client,
         userdata: Any,
         rc: int,
-        properties: mqtt.Properties = None,
+        properties: Optional[mqtt.Properties] = None,
     ) -> None:
-        logger.debug(f"SYSTEM STATUS MODULE : Connected with result code {str(rc)}")
+        logger.debug(f"SYSTEM STATUS MODULE : Connected with result code {rc}")
         for topic in self.topic_map.keys():
             logger.debug(f"STATUS: Subscribed to: {topic}")
             client.subscribe(topic)
@@ -101,14 +95,10 @@ class Status(object):
 
         batcmd = "/app/nvpmodel --verbose -f /app/nvpmodel.conf -m 0"
         try:
-            result = subprocess.check_output(
-                batcmd, shell=True, stderr=subprocess.STDOUT
-            )
+            subprocess.check_output(batcmd, shell=True, stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             logger.exception(
-                "command '{}' return with error (code {}): {}".format(
-                    e.cmd, e.returncode, e.output
-                )
+                f"command '{e.cmd}' return with error (code {e.returncode}): {e.output}"
             )
 
     def check_status(self, topic):
@@ -134,12 +124,11 @@ class Status(object):
         self.pixels.show()
 
     def light_status(self, msg: dict):
-        for color in COLORS:
-            for i in range(NUM_PIXELS):
-                self.pixels[i] = color
-                self.pixels.show()
-                time.sleep(DELAY)
-                self.pixels.fill(0)
+        for color, i in itertools.product(COLORS, range(NUM_PIXELS)):
+            self.pixels[i] = color
+            self.pixels.show()
+            time.sleep(DELAY)
+            self.pixels.fill(0)
 
     def status_check(self):
         if not self.initialized:
@@ -151,16 +140,11 @@ class Status(object):
             result = subprocess.check_output(
                 batcmd, shell=True, stderr=subprocess.STDOUT
             )
-            if b"MAXN" in result:
-                self.pixels[0] = COLORS[1]
-            else:
-                self.pixels[0] = COLORS[0]
+            self.pixels[0] = COLORS[1] if b"MAXN" in result else COLORS[0]
             self.pixels.show()
         except subprocess.CalledProcessError as e:
             logger.exception(
-                "command '{}' return with error (code {}): {}".format(
-                    e.cmd, e.returncode, e.output
-                )
+                f"command '{e.cmd}' return with error (code {e.returncode}): {e.output}"
             )
 
     def status_thread(self):
@@ -169,10 +153,7 @@ class Status(object):
             time.sleep(1)
 
     def run(self):
-        # tells the os what to name this process, for debugging
-        setproctitle("status_process")
         # allows for graceful shutdown of any child threads
-
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
 
         status_thread = threading.Thread(

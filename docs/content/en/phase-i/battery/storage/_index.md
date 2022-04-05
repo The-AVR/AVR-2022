@@ -50,7 +50,7 @@ to a safe storage voltage. All other indicators are the same as when charging.
 
 {{% alert title="Note" color="note" %}}
 Typically the charger will charge up to and past storage voltage.
-It will then discharge in order to accurately hit the target storage voltage.  
+It will then discharge in order to accurately hit the target storage voltage.
 This is normal.
 {{% /alert %}}
 
