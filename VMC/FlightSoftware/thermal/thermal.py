@@ -2,7 +2,6 @@ import base64
 import json
 import threading
 import time
-import uuid
 from typing import Any, Optional
 
 import adafruit_amg88xx
