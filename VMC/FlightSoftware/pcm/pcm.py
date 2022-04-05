@@ -2,13 +2,13 @@ from mqtt_library import (
     MQTTModule,
     VRCPcmResetMessage,
     VRCPcmSetBaseColorMessage,
+    VRCPcmSetLaserOffMessage,
+    VRCPcmSetLaserOnMessage,
     VRCPcmSetServoMaxMessage,
     VRCPcmSetServoMinMessage,
     VRCPcmSetServoOpenCloseMessage,
     VRCPcmSetServoPctMessage,
     VRCPcmSetTempColorMessage,
-    VRCPcmSetLaserOnMessage,
-    VRCPcmSetLaserOffMessage,
 )
 from pcc_library import PeripheralControlComputer
 

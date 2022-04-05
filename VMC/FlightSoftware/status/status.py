@@ -1,17 +1,17 @@
 # python standard library
 import json
 import os
+import subprocess
 import threading
 import time
+from typing import Any
+
 import board
 import neopixel_spi as neopixel
-from colored import back, fore, style
-from setproctitle import setproctitle
-import subprocess
-from typing import Any
 import paho.mqtt.client as mqtt
+from colored import back, fore, style
 from loguru import logger
-
+from setproctitle import setproctitle
 
 # find the file path to this file
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
