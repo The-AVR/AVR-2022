@@ -122,7 +122,7 @@ class Status(object):
         self.pixels[which_one] = color
         self.pixels.show()
 
-    def light_status(self, msg: dict):
+    def light_status(self, msg: dict) -> None:
         for color, i in itertools.product(COLORS, range(NUM_PIXELS)):
             self.pixels[i] = color
             self.pixels.show()
