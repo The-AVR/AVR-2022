@@ -11,11 +11,11 @@ PX4_VERSION = "v1.12.3"
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
-def print2(msg):
+def print2(msg: str) -> None:
     print(f"--- {msg}", flush=True)
 
 
-def container(build_pymavlink: bool, build_px4: bool):
+def container(build_pymavlink: bool, build_px4: bool) -> None:
     # code that runs inside the container
     px4_dir = os.path.join(THIS_DIR, "build", "PX4-Autopilot")
     pymavlink_dir = os.path.join(THIS_DIR, "build", "pymavlink")
@@ -207,7 +207,7 @@ def container(build_pymavlink: bool, build_px4: bool):
         )
 
 
-def host(build_pymavlink: bool, build_px4: bool):
+def host(build_pymavlink: bool, build_px4: bool) -> None:
     # code that runs on the host operating system
 
     # make the target directory

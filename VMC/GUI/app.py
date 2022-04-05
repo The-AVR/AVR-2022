@@ -214,7 +214,7 @@ class Direction(Enum):
 
 
 class Joystick(QtWidgets.QWidget):
-    def __init__(self, mqtt_client: MQTTClient, parent=None):
+    def __init__(self, mqtt_client: MQTTClient, parent: MQTTClient=None) -> None:
         super(Joystick, self).__init__(parent)
         self.mqtt_client = mqtt_client
         self.setMinimumSize(100, 100)
@@ -229,17 +229,16 @@ class Joystick(QtWidgets.QWidget):
         self.servoxmax = 99
         self.servoymax = 99
 
-    def map_value(self, x, in_min, in_max, out_min, out_max):
+    def map_value(self, x: float, in_min: int, in_max: int, out_min: int, out_max: int) -> float:
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
-    def move_gimbal(self, x_servo_percent, y_servo_percent):
-
+    def move_gimbal(self, x_servo_percent: int, y_servo_percent: int) -> None:
         payload = {"servo": 2, "percent": x_servo_percent}
         self.mqtt_client.publish("vrc/pcm/set_servo_pct", payload=json.dumps(payload))
         payload = {"servo": 3, "percent": y_servo_percent}
         self.mqtt_client.publish("vrc/pcm/set_servo_pct", payload=json.dumps(payload))
 
-    def update_servos(self):
+    def update_servos(self) -> None:
         ms = int(round(time.time() * 1000))
         timesince = ms - self.lasttime
         if timesince < 50:
@@ -261,7 +260,7 @@ class Joystick(QtWidgets.QWidget):
 
         self.move_gimbal(x_servo_percent, y_servo_percent)
 
-    def paintEvent(self, event):
+    def paintEvent(self) -> None:
         painter = QtGui.QPainter(self)
         bounds = QtCore.QRectF(
             -self.__maxDistance,
@@ -274,15 +273,15 @@ class Joystick(QtWidgets.QWidget):
         painter.setBrush(QtCore.Qt.black)
         painter.drawEllipse(self._centerEllipse())
 
-    def _centerEllipse(self):
+    def _centerEllipse(self)->Any:
         if self.grabCenter:
             return QtCore.QRectF(-20, -20, 40, 40).translated(self.movingOffset)
         return QtCore.QRectF(-20, -20, 40, 40).translated(self._center())
 
-    def _center(self):
+    def _center(self) -> QtCore.QPoint:
         return QtCore.QPointF(self.width() / 2, self.height() / 2)
 
-    def _boundJoystick(self, point):
+    def _boundJoystick(self, point: QtCore.QPoint) -> QtCore.QPoint:
 
         if point.x() > (self._center().x() + self.__maxDistance):
             point.setX(self._center().x() + self.__maxDistance)
@@ -295,7 +294,7 @@ class Joystick(QtWidgets.QWidget):
             point.setY(self._center().y() - self.__maxDistance)
         return point
 
-    def joystickDirection(self):
+    def joystickDirection(self) -> Tuple(Direction, float):
         if not self.grabCenter:
             return 0
         normVector = QtCore.QLineF(self._center(), self.movingOffset)
@@ -311,16 +310,16 @@ class Joystick(QtWidgets.QWidget):
             return (Direction.Down, distance)
         return (Direction.Right, distance)
 
-    def mousePressEvent(self, ev):
-        self.grabCenter = self._centerEllipse().contains(ev.pos())
-        return super().mousePressEvent(ev)
+    def mousePressEvent(self, event: QtCore.QEvent) -> super().mousePressEvent:
+        self.grabCenter = self._centerEllipse().contains(event.pos())
+        return super().mousePressEvent(event)
 
-    def mouseReleaseEvent(self, event):
+    def mouseReleaseEvent(self, event: QtCore.QEvent) -> None:
         # self.grabCenter = False
         # self.movingOffset = QtCore.QPointF(0, 0)
         self.update()
 
-    def mouseMoveEvent(self, event):
+    def mouseMoveEvent(self, event: QtCore.QEvent) -> None:
         if self.grabCenter:
             self.movingOffset = self._boundJoystick(event.pos())
             self.update()
@@ -341,13 +340,13 @@ class ControlWidget(QtWidgets.QWidget):
         self.setWindowTitle("Bell VRC Control")
         set_icon(self)
 
-    def laser_on(self):
+    def laser_on(self) -> None:
         self.publish_message("vrc/pcm/set_laser_on", {})
 
-    def laser_off(self):
+    def laser_off(self) -> None:
         self.publish_message("vrc/pcm/set_laser_off", {})
 
-    def request_thermal_reading(self):
+    def request_thermal_reading(self) -> None:
         self.publish_message(
             "vrc/thermal/request_thermal_reading",
             "{}",
@@ -677,13 +676,13 @@ class ThermalViewWidget:
 
     # Request to updated the thermal image --
     # a vrc/pcc/therml_reading message should be sent back soon
-    def update_thermal(self):
+    def update_thermal(self) -> None:
         while True:
             self.control.request_thermal_reading()
             time.sleep(0.25)
 
-    def map_value(self, x, in_min, in_max, out_min, out_max):
-        return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
+    # def map_value(self, x, in_min, in_max, out_min, out_max):
+    #     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
     def process_message(self, topic: str, payload: str) -> None:
         """

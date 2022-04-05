@@ -4,25 +4,13 @@ import json
 import os
 import threading
 import time
-
 import adafruit_amg88xx
 import board
 from colored import back, fore, style
 from setproctitle import setproctitle
-
-print("finished basic imports")
-
 from typing import Any
-
 import paho.mqtt.client as mqtt
-
-# pip installed packages
 from loguru import logger
-
-print("finished all imports")
-
-# find the file path to this file
-__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 INTERRUPTED = False
 
@@ -73,7 +61,7 @@ class Thermal(object):
             logger.debug(f"THERMAL: Subscribed to: {topic}")
             client.subscribe(topic)
 
-    def request_thermal_reading(self, msg: dict):
+    def request_thermal_reading(self, msg: dict) -> None:
         reading = bytearray(64)
         i = 0
         for row in self.amg.pixels:
@@ -94,13 +82,13 @@ class Thermal(object):
             qos=0,
         )
 
-    def request_thread(self):
+    def request_thread(self) -> None:
         msg = {}
         while True:
             self.request_thermal_reading(msg)
             time.sleep(0.2)
 
-    def run(self):
+    def run(self) -> None:
         # tells the os what to name this process, for debugging
         setproctitle("thermal_process")
         # allows for graceful shutdown of any child threads

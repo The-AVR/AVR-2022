@@ -38,7 +38,7 @@ DELAY = 0.1
 
 
 class Status(object):
-    def __init__(self):
+    def __init__(self) -> None:
         self.initialized = False
         self.mqtt_host = "mqtt"
         self.mqtt_port = 18830
@@ -95,7 +95,7 @@ class Status(object):
             client.subscribe(topic)
         client.subscribe("vrc/#")
 
-    def set_cpu_status(self):
+    def set_cpu_status(self) -> None:
 
         ## Initialize power mode status
 
@@ -111,7 +111,7 @@ class Status(object):
                 )
             )
 
-    def check_status(self, topic):
+    def check_status(self, topic: str) -> None:
         # logger.debug(f"check status: {str(topic)}")
         if "vrc/vio" in topic:
             self.light_up(VIO_LED, CLR_PURPLE)
@@ -124,16 +124,16 @@ class Status(object):
         if "vrc/april" in topic:
             self.light_up(APRIL_LED, CLR_YELLOW)
 
-    def red_status_all(self):
+    def red_status_all(self) -> None:
         for i in range(NUM_PIXELS):
             self.pixels[i] = COLORS[0]
         self.pixels.show()
 
-    def light_up(self, which_one, color):
+    def light_up(self, which_one: int, color: int) -> None:
         self.pixels[which_one] = color
         self.pixels.show()
 
-    def light_status(self, msg: dict):
+    def light_status(self, msg: dict) -> None:
         for color in COLORS:
             for i in range(NUM_PIXELS):
                 self.pixels[i] = color
@@ -141,7 +141,7 @@ class Status(object):
                 time.sleep(DELAY)
                 self.pixels.fill(0)
 
-    def status_check(self):
+    def status_check(self) -> None:
         if not self.initialized:
             self.initialized = True
             self.set_cpu_status()
@@ -163,12 +163,12 @@ class Status(object):
                 )
             )
 
-    def status_thread(self):
+    def status_thread(self) -> None:
         while True:
             self.status_check()
             time.sleep(1)
 
-    def run(self):
+    def run(self) -> None:
         # tells the os what to name this process, for debugging
         setproctitle("status_process")
         # allows for graceful shutdown of any child threads
