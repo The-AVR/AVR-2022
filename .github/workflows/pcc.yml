@@ -19,13 +19,13 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
-      - name: Get latest release
+      - name: Get Latest Release
         id: latest_release
         uses: gregziegan/fetch-latest-release@v2.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
         with:
           submodules: recursive
@@ -42,19 +42,19 @@ jobs:
           python -m pip install pip wheel --upgrade
           python -m pip install platformio --upgrade
 
-      - name: Apply patches
+      - name: Apply Patches
         run: git apply ../queue-default.patch
         working-directory: PCC/ControlSoftware/libraries/Queue
 
-      - name: Build firmware
+      - name: Build Firmware
         run: pio run --verbose
         working-directory: PCC/ControlSoftware
 
-      - name: Rename firmware
+      - name: Rename Firmware
         run: cp firmware.bin pcc_firmware.bin
         working-directory: PCC/ControlSoftware/.pio/build/adafruit_feather_m4
 
-      - name: Upload firmware to release
+      - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'
         uses: svenstaro/upload-release-action@v2
         with:

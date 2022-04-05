@@ -3,6 +3,7 @@ import json
 import threading
 import time
 from typing import Any, Optional
+import uuid
 
 import adafruit_amg88xx
 import board

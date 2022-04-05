@@ -19,26 +19,30 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
-      - name: Get latest release
+      - name: Get Latest Release
         id: latest_release
         uses: gregziegan/fetch-latest-release@v2.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Cache PX4
-        id: px4
         uses: actions/cache@v3
         with:
           path: PX4/build
-          key: PX4-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+          key: px4-firmware-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+          restore-keys: |
+            px4-firmware-${{ hashFiles('PX4/patches/**') }}
+            px4-firmware
+            px4-package-${{ hashFiles('PX4/patches/**') }}
+            px4-package
 
-      - name: Build PX4 firmware
+      - name: Build PX4 Firmware
         run: python3 PX4/generate.py host --px4
 
-      - name: Upload firmware to release
+      - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'
         uses: svenstaro/upload-release-action@v2
         with:
