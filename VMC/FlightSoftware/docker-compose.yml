@@ -2,14 +2,14 @@ version: "3"
 
 services:
   mavp2p:
-    image: ghcr.io/bellflight/vrc_mavp2p:latest
+    image: ghcr.io/bellflight/vrc/2022/mavp2p:latest
     network_mode: host
     restart: unless-stopped
     devices:
       - /dev/ttyTHS1:/dev/ttyTHS1
 
   mqtt:
-    image: ghcr.io/bellflight/vrc_mqtt:latest
+    image: ghcr.io/bellflight/vrc/2022/mqtt:latest
     ports:
       - "18830:18830"
     restart: on-failure
@@ -18,21 +18,21 @@ services:
     depends_on:
       - mqtt
     privileged: true
-    image: ghcr.io/bellflight/vrc_status_module:latest
+    image: ghcr.io/bellflight/vrc/2022/status:latest
     restart: on-failure
 
   fcm:
     depends_on:
       - mqtt
       - mavp2p
-    image: ghcr.io/bellflight/vrc_fcm:latest
+    image: ghcr.io/bellflight/vrc/2022/fcm:latest
     network_mode: host
     restart: on-failure
 
   pcm:
     depends_on:
       - mqtt
-    image: ghcr.io/bellflight/vrc_pcm:latest
+    image: ghcr.io/bellflight/vrc/2022/pcm:latest
     restart: on-failure
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
@@ -40,7 +40,7 @@ services:
   vio:
     depends_on:
       - mqtt
-    image: ghcr.io/bellflight/vrc_vio:latest
+    image: ghcr.io/bellflight/vrc/2022/vio:latest
     privileged: true
     restart: on-failure
 
@@ -56,15 +56,15 @@ services:
     depends_on:
       - mqtt
     privileged: true
-    image: ghcr.io/bellflight/vrc_thermal_module:latest
+    image: ghcr.io/bellflight/vrc/2022/thermal:latest
     restart: on-failure
-    
+
   fusion:
     depends_on:
       - mqtt
       - vio
       - apriltag
-    image: ghcr.io/bellflight/vrc_fusion:latest
+    image: ghcr.io/bellflight/vrc/2022/fusion:latest
     restart: on-failure
 
   # sandbox:

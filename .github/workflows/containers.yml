@@ -7,11 +7,11 @@ on:
       - main
     paths:
       - "VMC/FlightSoftware/**"
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - "VMC/FlightSoftware/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "VMC/FlightSoftware/**"
 
 jobs:
   build:
@@ -88,7 +88,7 @@ jobs:
         with:
           context: VMC/FlightSoftware/${{ matrix.image }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/bellflight/vrc_${{ matrix.image }}:latest
+          tags: ghcr.io/bellflight/vrc/2022/${{ matrix.image }}:latest
           platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max

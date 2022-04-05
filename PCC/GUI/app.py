@@ -55,7 +55,7 @@ class MainWidget(QtWidgets.QWidget):
         """
         try:
             self.pcc = PeripheralControlComputer(
-                self.setup_widget.com_port_combo.currentText(), use_serial=True
+                self.setup_widget.com_port_combo.currentText(),
             )
             self.setup_widget.close()
         except:
