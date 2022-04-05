@@ -6,9 +6,9 @@ weight: 4
 ## Mounting
 
 We will now mount the VMC using the
-[3D printed components]({{< relref "../../pre-requisites/3d-printing" >}})  
+[3D printed components]({{< relref "../../pre-requisites/3d-printing" >}})
 overed in the pre-requisites section of this GitBook.
-This includes the VMC mounting blocks and case.  
+This includes the VMC mounting blocks and case.
 The VMC is the "brains" behind your VRC drone build and will be responsible
 for running the Bell software stack during testing and on competition day.
 

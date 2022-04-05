@@ -404,10 +404,7 @@ class MQTTMessageCache:
     # fmt: on
 
     def __getitem__(self, key: str) -> Any:
-        if key in self.__storage:
-            return self.__storage[key]
-        else:
-            return None
+        return self.__storage.get(key, None)
 
     def __setitem__(self, key: str, value: Any) -> None:
         self.__storage[key] = value
@@ -518,7 +515,7 @@ class MQTTModule:
     def send_message(self, topic: Literal["vrc/pcm/set_laser_on"], payload: VRCPcmSetLaserOnMessage) -> None: ...
 
     @overload
-    def send_message(self, topic: Literal["vrc/pcm/set_laseer_off"], payload: VRCPcmSetLaserOffMessage) -> None: ...
+    def send_message(self, topic: Literal["vrc/pcm/set_laser_off"], payload: VRCPcmSetLaserOffMessage) -> None: ...
 
     @overload
     def send_message(self, topic: Literal["vrc/pcm/set_servo_min"], payload: VRCPcmSetServoMinMessage) -> None: ...

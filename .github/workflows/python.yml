@@ -1,4 +1,4 @@
-name: Python Formatting
+name: Python Checks
 
 on:
   workflow_dispatch:

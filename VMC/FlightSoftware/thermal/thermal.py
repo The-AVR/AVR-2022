@@ -1,14 +1,10 @@
-# python standard library
 import base64
 import json
-import os
 import threading
 import time
+from typing import Any, Optional
 import adafruit_amg88xx
 import board
-from colored import back, fore, style
-from setproctitle import setproctitle
-from typing import Any
 import paho.mqtt.client as mqtt
 from loguru import logger
 
@@ -17,7 +13,6 @@ INTERRUPTED = False
 
 class Thermal(object):
     def __init__(self):
-
         self.mqtt_host = "mqtt"
         self.mqtt_port = 18830
 
@@ -46,7 +41,7 @@ class Thermal(object):
                 payload = json.loads(msg.payload)
                 self.topic_map[msg.topic](payload)
         except Exception as e:
-            logger.debug(f"{fore.RED}Error handling message on {msg.topic}{style.RESET}")  # type: ignore
+            logger.exception(f"Error handling message on {msg.topic}")
             print(e)
 
     def on_connect(
@@ -54,9 +49,9 @@ class Thermal(object):
         client: mqtt.Client,
         userdata: Any,
         rc: int,
-        properties: mqtt.Properties = None,
+        properties: Optional[mqtt.Properties] = None,
     ) -> None:
-        logger.debug(f" THERAM: Connected with result code {str(rc)}")
+        logger.debug(f" THERAM: Connected with result code {rc}")
         for topic in self.topic_map.keys():
             logger.debug(f"THERMAL: Subscribed to: {topic}")
             client.subscribe(topic)
@@ -88,11 +83,14 @@ class Thermal(object):
             self.request_thermal_reading(msg)
             time.sleep(0.2)
 
+<<<<<<< HEAD
     def run(self) -> None:
         # tells the os what to name this process, for debugging
         setproctitle("thermal_process")
+=======
+    def run(self):
+>>>>>>> 757cdd41d37420208617d8c5e85ab0bb230ea641
         # allows for graceful shutdown of any child threads
-
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
 
         request_thread = threading.Thread(

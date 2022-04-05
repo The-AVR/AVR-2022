@@ -1,5 +1,7 @@
 {
     "recommendations": [
+        // general
+        "shardulm94.trailing-spaces",
         // for docs
         "kisstkondoros.vscode-gutter-preview",
         "davidanson.vscode-markdownlint",
@@ -14,9 +16,13 @@
         // for Python
         "ms-python.python",
         "njqdev.vscode-python-typehint",
+        "sourcery.sourcery",
         // for Docker/bash
         "ms-azuretools.vscode-docker",
         "foxundermoon.shell-format",
         "timonwong.shellcheck",
+        // for GitHub
+        "GitHub.vscode-pull-request-github",
+        "cschleiden.vscode-github-actions",
     ]
 }

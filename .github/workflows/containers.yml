@@ -44,15 +44,6 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Cache Docker Layers
-        if: steps.changed-files.outputs.any_changed == 'true'
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: buildx-${{ hashFiles(format('VMC/FlightSoftware/{0}/**', matrix.image)) }}
-          restore-keys: |
-            buildx
-
       - name: Set up QEMU
         if: steps.changed-files.outputs.any_changed == 'true'
         uses: docker/setup-qemu-action@v1
@@ -62,9 +53,6 @@ jobs:
       - name: Set up Docker Buildx
         if: steps.changed-files.outputs.any_changed == 'true'
         uses: docker/setup-buildx-action@v1
-        with:
-          version: latest
-          install: false
 
       - name: Github CR Login
         if: steps.changed-files.outputs.any_changed == 'true'
@@ -97,5 +85,5 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/bellflight/vrc_${{ matrix.image }}:latest
           platforms: linux/arm64
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
