@@ -181,28 +181,30 @@ def container(build_pymavlink: bool, build_px4: bool):
         print2("Building PX4 firmware")
 
         # pixhawk
+        v5x_target = "px4_fmu-v5x_default"
         subprocess.check_call(
-            ["make", "px4_fmu-v5x_default", f"-j{multiprocessing.cpu_count()}"],
+            ["make", v5x_target, f"-j{multiprocessing.cpu_count()}"],
             cwd=px4_dir,
         )
         shutil.copyfile(
             os.path.join(
-                px4_dir, "build", "px4_fmu-v5x_default", "px4_fmu-v5x_default.px4"
+                px4_dir, "build", v5x_target, f"{v5x_target}.px4"
             ),
-            os.path.join(THIS_DIR, "target", f"px4_fmu-v5x_default.{PX4_VERSION}.px4"),
+            os.path.join(THIS_DIR, "target", f"{v5x_target}.{PX4_VERSION}.px4"),
         )
 
         # nxp
+        nxp_target = "nxp_fmuk66-v3_default"
         subprocess.check_call(
-            ["make", "nxp_fmuk66-v3_default", f"-j{multiprocessing.cpu_count()}"],
+            ["make", nxp_target, f"-j{multiprocessing.cpu_count()}"],
             cwd=px4_dir,
         )
         shutil.copyfile(
             os.path.join(
-                px4_dir, "build", "nxp_fmuk66-v3_default", "nxp_fmuk66-v3_default.px4"
+                px4_dir, "build", nxp_target, f"{nxp_target}.px4"
             ),
             os.path.join(
-                THIS_DIR, "target", f"nxp_fmuk66-v3_default.{PX4_VERSION}.px4"
+                THIS_DIR, "target", f"{nxp_target}.{PX4_VERSION}.px4"
             ),
         )
 

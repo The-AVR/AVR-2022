@@ -10,7 +10,6 @@ import neopixel_spi as neopixel
 import paho.mqtt.client as mqtt
 from loguru import logger
 
-
 INTERRUPTED = False
 
 NUM_PIXELS = 12

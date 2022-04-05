@@ -2,15 +2,12 @@ import base64
 import json
 import threading
 import time
+from typing import Any, Optional
 
 import adafruit_amg88xx
 import board
-
-from typing import Any, Optional
-
 import paho.mqtt.client as mqtt
 from loguru import logger
-
 
 INTERRUPTED = False
 
