@@ -115,6 +115,10 @@ git config --global credential.helper cache
 #if [ "$DEVELOPMENT" != true ] ; then
     #git checkout main
 #fi
+
+$s  cp ./spio-mount.service /etc/systemd/system/spio-mount.service
+$s  systemctl enable spio-mount.service
+$s  systemctl start spio-mount.service
 bar
 
 echo -e "${CYAN}Installing and configuring Docker${NC}"
@@ -123,9 +127,9 @@ bar
 # downgrade docker to specific version
 # this got pulled from apt sources for some reason
 # replacing the installed system Docker with the latest version breaks stuff, so leave as legacy docker.io package
-wget http://launchpadlibrarian.net/561342197/docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
-$s DEBIAN_FRONTEND=noninteractive apt install -y --allow-downgrades ./docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
-rm docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
+# wget http://launchpadlibrarian.net/561342197/docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
+# $s DEBIAN_FRONTEND=noninteractive apt install -y --allow-downgrades ./docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
+# rm docker.io_20.10.7-0ubuntu1~18.04.2_arm64.deb
 
 # upgrade compose
 $s -H python3 -m pip install docker-compose --upgrade

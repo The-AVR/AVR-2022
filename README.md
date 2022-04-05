@@ -29,10 +29,19 @@ Clone the repository with submodules:
 git clone --recurse-submodules https://github.com/bellflight/VRC-2022
 ```
 
+update jetson to python 3.8, should create a setup script from this:
+```bash
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt-get update
+sudo apt install python3.8 python3-pip python3.8-venv
+sudo python3.8 -m pip install pip wheel --upgrade
+```
+
 Create a Python 3.8+ virtual environment:
 
 ```bash
-python -m venv .venv
+python3.8 -m venv .venv
 ```
 
 Activate the virtual environment:

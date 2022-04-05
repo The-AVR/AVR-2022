@@ -24,6 +24,6 @@
             <extensions/>
             <field type="uint16_t" name="heading" units="cdeg">Heading of MAV, 0.0..359.99 degrees. If unknown, set to: 65535</field>
             <field type="uint8_t" name="id">GPS ID (zero indexed). Used for multiple GPS inputs</field>
-        </message>  
+        </message>
     </messages>
 </mavlink>

@@ -30,19 +30,15 @@ class VRCPcmSetTempColorMessage(TypedDict):
     wrgb: Tuple[int, int, int, int]
     time: float
 
-
-class VRCPcmSetLaserOn(TypedDict):
-    pass
-
-
-class VRCPcmSetLaserOff(TypedDict):
-    pass
-
-
 class VRCPcmSetServoOpenCloseMessage(TypedDict):
     servo: int
     action: Literal["open", "close"]
 
+class VRCPcmSetLaserOnMessage(TypedDict):
+    pass
+
+class VRCPcmSetLaserOffMessage(TypedDict):
+    pass
 
 class VRCPcmSetServoMinMessage(TypedDict):
     servo: int
@@ -278,6 +274,8 @@ class VRCFcmVelocityMessage(TypedDict):
     vY: float
     vZ: float
     timestamp: str
+
+
 
 
 class MQTTMessageCache:

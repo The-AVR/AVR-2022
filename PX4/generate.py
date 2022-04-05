@@ -182,14 +182,14 @@ def container(build_pymavlink: bool, build_px4: bool):
 
         # pixhawk
         subprocess.check_call(
-            ["make", "px4_fmu-v5_default", f"-j{multiprocessing.cpu_count()}"],
+            ["make", "px4_fmu-v5x_default", f"-j{multiprocessing.cpu_count()}"],
             cwd=px4_dir,
         )
         shutil.copyfile(
             os.path.join(
-                px4_dir, "build", "px4_fmu-v5_default", "px4_fmu-v5_default.px4"
+                px4_dir, "build", "px4_fmu-v5x_default", "px4_fmu-v5x_default.px4"
             ),
-            os.path.join(THIS_DIR, "target", f"px4_fmu-v5_default.{PX4_VERSION}.px4"),
+            os.path.join(THIS_DIR, "target", f"px4_fmu-v5x_default.{PX4_VERSION}.px4"),
         )
 
         # nxp

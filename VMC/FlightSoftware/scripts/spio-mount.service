@@ -1,5 +1,5 @@
 [Unit]
-Description=My script that requires network
+Description= SPIO Mounting
 After=network.target
 
 [Service]

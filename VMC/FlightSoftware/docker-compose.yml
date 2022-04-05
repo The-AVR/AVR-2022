@@ -18,7 +18,7 @@ services:
     depends_on:
       - mqtt
     privileged: true
-    image: lance/vrc_status_module:latest
+    image: ghcr.io/bellflight/vrc_status_module:latest
     restart: on-failure
 
   fcm:
@@ -56,7 +56,7 @@ services:
     depends_on:
       - mqtt
     privileged: true
-    image: lance/vrc_thermal_module:latest
+    image: ghcr.io/bellflight/vrc_thermal_module:latest
     restart: on-failure
     
   fusion:

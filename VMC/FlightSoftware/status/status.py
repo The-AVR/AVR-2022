@@ -3,23 +3,15 @@ import json
 import os
 import threading
 import time
-
 import board
 import neopixel_spi as neopixel
 from colored import back, fore, style
 from setproctitle import setproctitle
-
-print("finished basic imports")
-
 import subprocess
 from typing import Any
-
 import paho.mqtt.client as mqtt
-
-# pip installed packages
 from loguru import logger
 
-print("finished all imports")
 
 # find the file path to this file
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))

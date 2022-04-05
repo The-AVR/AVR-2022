@@ -7,6 +7,8 @@ from mqtt_library import (
     VRCPcmSetServoOpenCloseMessage,
     VRCPcmSetServoPctMessage,
     VRCPcmSetTempColorMessage,
+    VRCPcmSetLaserOnMessage,
+    VRCPcmSetLaserOffMessage,
 )
 from pcc_library import PeripheralControlComputer
 
@@ -60,10 +62,10 @@ class PeripheralControlModule(MQTTModule):
         percent = payload["percent"]
         self.pcc.set_servo_pct(servo, percent)
 
-    def set_laser_on(self, payload) -> None:
+    def set_laser_on(self, payload: VRCPcmSetLaserOnMessage) -> None:
         self.pcc.set_laser_on()
 
-    def set_laser_off(self, payload) -> None:
+    def set_laser_off(self, payload: VRCPcmSetLaserOffMessage) -> None:
         self.pcc.set_laser_off()
 
     def reset(self, payload: VRCPcmResetMessage) -> None:

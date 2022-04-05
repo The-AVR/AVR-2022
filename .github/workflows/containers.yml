@@ -21,7 +21,7 @@ jobs:
     strategy:
       matrix:
         # april tag module needs to be built on-device
-        image: [fcm, fusion, mavp2p, mqtt, pcm, vio]
+        image: [fcm, fusion, mavp2p, mqtt, pcm, vio, status, apriltag, thermal]
 
     steps:
       - name: Checkout Code
