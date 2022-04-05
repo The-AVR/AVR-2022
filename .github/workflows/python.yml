@@ -29,7 +29,7 @@ jobs:
           cache: pip
           cache-dependency-path: "**/requirements**.txt"
 
-      - name: Copy libraries
+      - name: Copy Libraries
         run: python scripts/copy_libraries.py
 
       - name: Install Packages
@@ -44,7 +44,7 @@ jobs:
         run: python -m black . --check
 
       - name: Check Import Order
-        run: python -m isort --profile black . --check
+        run: python -m isort . --check
 
       - name: Check for Unused Imports
         run: python -m autoflake --recursive . --check

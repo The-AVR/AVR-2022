@@ -1,10 +1,11 @@
 [Unit]
-Description= SPIO Mounting
+Description=SPIO Mounting
 After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash '/usr/local/bin/spio-mount.sh'
+User=root
+ExecStart=/sbin/modprobe spidev
 
 [Install]
 WantedBy=multi-user.target
