@@ -32,7 +32,7 @@ HOSTNAME = "localhost"
 
 
 class FCMMQTTModule(MQTTModule):
-    def __init__(self, host: str="mqtt") -> None:
+    def __init__(self, host: str = "mqtt") -> None:
         super().__init__(host)
 
     def _timestamp(self) -> str:
@@ -57,7 +57,7 @@ class DispatcherBusy(Exception):
 
 
 class DispatcherManager(FCMMQTTModule):
-    def __init__(self, host: str="mqtt") -> None:
+    def __init__(self, host: str = "mqtt") -> None:
         super.__init__(host)
         self.currently_running_task = None
         self.timeout = 10
@@ -108,7 +108,7 @@ class DispatcherManager(FCMMQTTModule):
 
 
 class FlightControlComputer(FCMMQTTModule):
-    def __init__(self, host: str="mqtt") -> None:
+    def __init__(self, host: str = "mqtt") -> None:
         super().__init__(host)
 
         # mavlink stuff
@@ -731,7 +731,7 @@ class FlightControlComputer(FCMMQTTModule):
 
 
 class MissionAPI(FCMMQTTModule):
-    def __init__(self, drone: mavsdk.System, host: str="mqtt") -> None:
+    def __init__(self, drone: mavsdk.System, host: str = "mqtt") -> None:
         super().__init__(host)
         self.drone = drone
 
@@ -938,7 +938,7 @@ class MissionAPI(FCMMQTTModule):
 
 
 class PyMAVLinkAgent(MQTTModule):
-    def __init__(self, host: str="mqtt") -> None:
+    def __init__(self, host: str = "mqtt") -> None:
         super().__init__(host)
 
         self.topic_map = {

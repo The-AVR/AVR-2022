@@ -427,7 +427,7 @@ class MQTTModule:
     payload.
     """
 
-    def __init__(self, host: str="mqtt") -> None:
+    def __init__(self, host: str = "mqtt") -> None:
         # these should be not be changed, to match the docker-compose.yml file
         self.mqtt_host = host
         self.mqtt_port = 18830

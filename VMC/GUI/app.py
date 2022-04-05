@@ -214,7 +214,7 @@ class Direction(Enum):
 
 
 class Joystick(QtWidgets.QWidget):
-    def __init__(self, mqtt_client: MQTTClient, parent: MQTTClient=None) -> None:
+    def __init__(self, mqtt_client: MQTTClient, parent: MQTTClient = None) -> None:
         super(Joystick, self).__init__(parent)
         self.mqtt_client = mqtt_client
         self.setMinimumSize(100, 100)
@@ -229,7 +229,9 @@ class Joystick(QtWidgets.QWidget):
         self.servoxmax = 99
         self.servoymax = 99
 
-    def map_value(self, x: float, in_min: int, in_max: int, out_min: int, out_max: int) -> float:
+    def map_value(
+        self, x: float, in_min: int, in_max: int, out_min: int, out_max: int
+    ) -> float:
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
     def move_gimbal(self, x_servo_percent: int, y_servo_percent: int) -> None:
@@ -273,7 +275,7 @@ class Joystick(QtWidgets.QWidget):
         painter.setBrush(QtCore.Qt.black)
         painter.drawEllipse(self._centerEllipse())
 
-    def _centerEllipse(self)->Any:
+    def _centerEllipse(self) -> Any:
         if self.grabCenter:
             return QtCore.QRectF(-20, -20, 40, 40).translated(self.movingOffset)
         return QtCore.QRectF(-20, -20, 40, 40).translated(self._center())

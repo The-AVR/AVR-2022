@@ -84,13 +84,7 @@ class Thermal(object):
             self.request_thermal_reading(msg)
             time.sleep(0.2)
 
-<<<<<<< HEAD
     def run(self) -> None:
-        # tells the os what to name this process, for debugging
-        setproctitle("thermal_process")
-=======
-    def run(self):
->>>>>>> 757cdd41d37420208617d8c5e85ab0bb230ea641
         # allows for graceful shutdown of any child threads
         self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
 

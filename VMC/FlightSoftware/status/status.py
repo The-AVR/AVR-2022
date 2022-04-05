@@ -122,22 +122,12 @@ class Status(object):
         self.pixels[which_one] = color
         self.pixels.show()
 
-<<<<<<< HEAD
-    def light_status(self, msg: dict) -> None:
-        for color in COLORS:
-            for i in range(NUM_PIXELS):
-                self.pixels[i] = color
-                self.pixels.show()
-                time.sleep(DELAY)
-                self.pixels.fill(0)
-=======
     def light_status(self, msg: dict):
         for color, i in itertools.product(COLORS, range(NUM_PIXELS)):
             self.pixels[i] = color
             self.pixels.show()
             time.sleep(DELAY)
             self.pixels.fill(0)
->>>>>>> 757cdd41d37420208617d8c5e85ab0bb230ea641
 
     def status_check(self) -> None:
         if not self.initialized:

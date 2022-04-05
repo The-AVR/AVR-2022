@@ -187,9 +187,7 @@ def container(build_pymavlink: bool, build_px4: bool) -> None:
             cwd=px4_dir,
         )
         shutil.copyfile(
-            os.path.join(
-                px4_dir, "build", v5x_target, f"{v5x_target}.px4"
-            ),
+            os.path.join(px4_dir, "build", v5x_target, f"{v5x_target}.px4"),
             os.path.join(THIS_DIR, "target", f"{v5x_target}.{PX4_VERSION}.px4"),
         )
 
@@ -200,12 +198,8 @@ def container(build_pymavlink: bool, build_px4: bool) -> None:
             cwd=px4_dir,
         )
         shutil.copyfile(
-            os.path.join(
-                px4_dir, "build", nxp_target, f"{nxp_target}.px4"
-            ),
-            os.path.join(
-                THIS_DIR, "target", f"{nxp_target}.{PX4_VERSION}.px4"
-            ),
+            os.path.join(px4_dir, "build", nxp_target, f"{nxp_target}.px4"),
+            os.path.join(THIS_DIR, "target", f"{nxp_target}.{PX4_VERSION}.px4"),
         )
 
 

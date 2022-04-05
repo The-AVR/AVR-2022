@@ -56,11 +56,13 @@ class VRC_ThermalView(object):
     def constrain(self, val: int, min_val: int, max_val: int) -> int:
         return min(max_val, max(min_val, val))
 
-    def map_value(self, x: int , in_min: int, in_max: int, out_min: int, out_max: int) -> float:
+    def map_value(
+        self, x: int, in_min: int, in_max: int, out_min: int, out_max: int
+    ) -> float:
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
     def update(self, pixels: list[int]) -> None:
-        #(p, 0, 255, 15.0, 40.0)
+        # (p, 0, 255, 15.0, 40.0)
         # read the pixels
         # pixels = []
         # for row in self.sensor.pixels:
