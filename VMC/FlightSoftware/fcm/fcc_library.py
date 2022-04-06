@@ -1,4 +1,5 @@
 import asyncio
+import contextlib
 import datetime
 import json
 import math
@@ -28,8 +29,6 @@ from mqtt_library import (
 )
 from pymavlink import mavutil
 
-HOSTNAME = "localhost"
-
 
 class FCMMQTTModule(MQTTModule):
     def __init__(self, host: str = "mqtt") -> None:
@@ -58,7 +57,7 @@ class DispatcherBusy(Exception):
 
 class DispatcherManager(FCMMQTTModule):
     def __init__(self, host: str = "mqtt") -> None:
-        super.__init__(host)
+        super().__init__(host)
         self.currently_running_task = None
         self.timeout = 10
 
@@ -553,10 +552,8 @@ class FlightControlComputer(FCMMQTTModule):
         """
         Sets a 20 second timeout.
         """
-        try:
+        with contextlib.suppress(asyncio.CancelledError):
             await asyncio.sleep(20)
-        except asyncio.CancelledError:
-            pass
 
     @async_try_except(reraise=True)
     async def set_arm(self, **kwargs) -> None:

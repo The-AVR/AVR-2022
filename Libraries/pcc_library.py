@@ -164,6 +164,24 @@ class PeripheralControlComputer:
         logger.debug(f"Setting servo percent: {data}")
         self.ser.write(data)
 
+    def set_laser_on(self) -> None:
+        command = self.commands["SET_LASER_ON"]
+
+        length = 1
+        data = self._construct_payload(command, length)
+
+        logger.debug(f"Setting the laser on: {data}")
+        self.ser.write(data)
+
+    def set_laser_off(self) -> None:
+        command = self.commands["SET_LASER_OFF"]
+
+        length = 1
+        data = self._construct_payload(command, length)
+
+        logger.debug(f"Setting the laser off: {data}")
+        self.ser.write(data)
+
     def reset_vrc_peripheral(self) -> None:
         command = self.commands["RESET_VRC_PERIPH"]
 
