@@ -1,0 +1,788 @@
+[
+    // autonomous
+    {
+        "path": "vrc/autonmous",
+        "docs": "This enables enable or disable autonomous mode. This is not used by any Bell code, but available to students to listen to who may wish to not always be running their autonomous mode,",
+        "payload": [
+            {
+                "key": "enable",
+                "type": "bool",
+                "docs": ""
+            }
+        ]
+    },
+    // pcm
+    {
+        "path": "vrc/pcm/set_base_color",
+        "docs": "This sets the color of the LED strip on the PCC",
+        "payload": [
+            {
+                "key": "wrgb",
+                "type": "Tuple[int, int, int, int]",
+                "docs": "A list of 4 `int`s between 0 and 255 to set the base color of the LEDs. Example: [255, 0, 128, 255]."
+            }
+        ]
+    },
+    {
+        "path": "vrc/pcm/set_temp_color",
+        "docs": "This sets the color of the LED strip on the PCC temporarily",
+        "payload": [
+            {
+                "key": "wrgb",
+                "type": "Tuple[int, int, int, int]",
+                "docs": "A list of 4 `int`s between 0 and 255 to set the base color of the LEDs. Example: [255, 0, 128, 255]."
+            },
+            {
+                "key": "time",
+                "type": "float",
+                "docs": "Optional `float` for the number of seconds the color should be set for. Default is 0.5."
+            }
+        ]
+    },
+    {
+        "path": "vrc/pcm/set_laser_on",
+        "docs": "",
+        "payload": []
+    },
+    {
+        "path": "vrc/pcm/set_laser_off",
+        "docs": "",
+        "payload": []
+    },
+    {
+        "path": "vrc/pcm/set_servo_open_close",
+        "docs": "",
+        "payload": [
+            {
+                "key": "servo",
+                "type": "int",
+                "docs": "ID of the servo to open or close as an `int`. This is 0-indexed."
+            },
+            {
+                "key": "action",
+                "type": "Literal[\"open\", \"close\"]",
+                "docs": "Either the literal string \"open\" or \"close\"."
+            }
+        ]
+    },
+    {
+        "path": "vrc/pcm/set_servo_min",
+        "docs": "",
+        "payload": [
+            {
+                "key": "servo",
+                "type": "int",
+                "docs": "ID of the servo to set the minimum pulse width as an `int`. This is 0-indexed."
+            },
+            {
+                "key": "min_pulse",
+                "type": "int",
+                "docs": "A `int` between 0 and 1000."
+            }
+        ]
+    },
+    {
+        "path": "vrc/pcm/set_servo_max",
+        "docs": "",
+        "payload": [
+            {
+                "key": "servo",
+                "type": "int",
+                "docs": "ID of the servo to set the maximum pulse width as an `int`. This is 0-indexed."
+            },
+            {
+                "key": "max_pulse",
+                "type": "int",
+                "docs": "A `int` between 0 and 1000."
+            }
+        ]
+    },
+    {
+        "path": "vrc/pcm/set_servo_pct",
+        "docs": "",
+        "payload": [
+            {
+                "key": "servo",
+                "type": "int",
+                "docs": "ID of the servo to set the percent as an `int`. This is 0-indexed."
+            },
+            {
+                "key": "percent",
+                "type": "int",
+                "docs": "A `int` between 0 and 100."
+            }
+        ]
+    },
+    {
+        "path": "vrc/pcm/reset",
+        "docs": "This resets the PCC",
+        "payload": []
+    },
+    // fcm
+    {
+        "path": "vrc/fcm/hil_gps_stats",
+        "docs": "",
+        "payload": [
+            {
+                "key": "num_frames",
+                "type": "int",
+                "docs": ""
+            }
+        ]
+    },
+    {
+        "path": "vrc/fcm/events",
+        "docs": "",
+        "payload": [
+            {
+                "key": "name",
+                "type": "str",
+                "docs": ""
+            },
+            {
+                "key": "payload",
+                "type": "str",
+                "docs": ""
+            },
+            {
+                "key": "timestamp",
+                "type": "str",
+                "docs": ""
+            }
+        ]
+    },
+    {
+        "path": "vrc/fcm/battery",
+        "docs": "",
+        "payload": [
+            {
+                "key": "voltage",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "soc",
+                "type": "float",
+                "docs": "State of charge (0-1)"
+            },
+            {
+                "key": "timestamp",
+                "type": "str",
+                "docs": ""
+            }
+        ]
+    },
+    {
+        "path": "vrc/fcm/status",
+        "docs": "",
+        "payload": [
+            {
+                "key": "armed",
+                "type": "bool",
+                "docs": ""
+            },
+            {
+                "key": "mode",
+                "type": "str",
+                "docs": ""
+            },
+            {
+                "key": "timestamp",
+                "type": "str",
+                "docs": ""
+            }
+        ]
+    },
+    {
+        "path": "vrc/fcm/location/local",
+        "docs": "",
+        "payload": [
+            {
+                "key": "dX",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "dY",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "dZ",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "timestamp",
+                "type": "str",
+                "docs": ""
+            }
+        ]
+    },
+    {
+        "path": "vrc/fcm/location/global",
+        "docs": "",
+        "payload": [
+            {
+                "key": "lat",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "lon",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "alt",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "hdg",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "timestamp",
+                "type": "str",
+                "docs": ""
+            }
+        ]
+    },
+    {
+        "path": "vrc/fcm/location/home",
+        "docs": "",
+        "payload": [
+            {
+                "key": "lat",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "lon",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "alt",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "timestamp",
+                "type": "str",
+                "docs": ""
+            }
+        ]
+    },
+    {
+        "path": "vrc/fcm/location/euler",
+        "docs": "",
+        "payload": [
+            {
+                "key": "roll",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "pitch",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "yaw",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "timestamp",
+                "type": "str",
+                "docs": ""
+            }
+        ]
+    },
+    {
+        "path": "vrc/fcm/velocity",
+        "docs": "",
+        "payload": [
+            {
+                "key": "vX",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "vY",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "vZ",
+                "type": "float",
+                "docs": ""
+            },
+            {
+                "key": "timestamp",
+                "type": "str",
+                "docs": ""
+            }
+        ]
+    },
+    // fusion
+    {
+        "path": "vrc/fusion/position/ned",
+        "docs": "",
+        "payload": [
+            {
+                "key": "n",
+                "type": "float"
+            },
+            {
+                "key": "e",
+                "type": "float"
+            },
+            {
+                "key": "d",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/fusion/velocity/ned",
+        "docs": "",
+        "payload": [
+            {
+                "key": "Vn",
+                "type": "float"
+            },
+            {
+                "key": "Ve",
+                "type": "float"
+            },
+            {
+                "key": "Vd",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/fusion/geo",
+        "docs": "",
+        "payload": [
+            {
+                "key": "lat",
+                "type": "float"
+            },
+            {
+                "key": "lon",
+                "type": "float"
+            },
+            {
+                "key": "alt",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/fusion/groundspeed",
+        "docs": "",
+        "payload": [
+            {
+                "key": "groundspeed",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/fusion/course",
+        "docs": "",
+        "payload": [
+            {
+                "key": "course",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/fusion/climbrate",
+        "docs": "",
+        "payload": [
+            {
+                "key": "climb_rate_fps",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/fusion/attitude/quat",
+        "docs": "",
+        "payload": [
+            {
+                "key": "w",
+                "type": "float"
+            },
+            {
+                "key": "x",
+                "type": "float"
+            },
+            {
+                "key": "y",
+                "type": "float"
+            },
+            {
+                "key": "z",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/fusion/attitude/euler",
+        "docs": "",
+        "payload": [
+            {
+                "key": "psi",
+                "type": "float"
+            },
+            {
+                "key": "theta",
+                "type": "float"
+            },
+            {
+                "key": "phi",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/fusion/attitude/heading",
+        "docs": "",
+        "payload": [
+            {
+                "key": "heading",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/fusion/hil_gps",
+        "docs": "",
+        "payload": [
+            {
+                "key": "time_usec",
+                "type": "int"
+            },
+            {
+                "key": "fix_type",
+                "type": "int"
+            },
+            {
+                "key": "lat",
+                "type": "int"
+            },
+            {
+                "key": "lon",
+                "type": "int"
+            },
+            {
+                "key": "alt",
+                "type": "int"
+            },
+            {
+                "key": "eph",
+                "type": "int"
+            },
+            {
+                "key": "epv",
+                "type": "int"
+            },
+            {
+                "key": "vel",
+                "type": "int"
+            },
+            {
+                "key": "vn",
+                "type": "int"
+            },
+            {
+                "key": "ve",
+                "type": "int"
+            },
+            {
+                "key": "vd",
+                "type": "int"
+            },
+            {
+                "key": "cog",
+                "type": "int"
+            },
+            {
+                "key": "satellites_visible",
+                "type": "int"
+            },
+            {
+                "key": "heading",
+                "type": "int"
+            }
+        ]
+    },
+    // vio
+    {
+        "path": "vrc/vio/resync",
+        "docs": "",
+        "payload": [
+            {
+                "key": "n",
+                "type": "float"
+            },
+            {
+                "key": "e",
+                "type": "float"
+            },
+            {
+                "key": "d",
+                "type": "float"
+            },
+            {
+                "key": "heading",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/vio/position/ned",
+        "docs": "",
+        "payload": [
+            {
+                "key": "n",
+                "type": "float"
+            },
+            {
+                "key": "e",
+                "type": "float"
+            },
+            {
+                "key": "d",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/vio/velocity/ned",
+        "docs": "",
+        "payload": [
+            {
+                "key": "n",
+                "type": "float"
+            },
+            {
+                "key": "e",
+                "type": "float"
+            },
+            {
+                "key": "d",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/vio/orientation/eul",
+        "docs": "",
+        "payload": [
+            {
+                "key": "psi",
+                "type": "float"
+            },
+            {
+                "key": "theta",
+                "type": "float"
+            },
+            {
+                "key": "phi",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/vio/orientation/quat",
+        "docs": "",
+        "payload": [
+            {
+                "key": "w",
+                "type": "float"
+            },
+            {
+                "key": "x",
+                "type": "float"
+            },
+            {
+                "key": "y",
+                "type": "float"
+            },
+            {
+                "key": "z",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/vio/heading",
+        "docs": "",
+        "payload": [
+            {
+                "key": "heading",
+                "type": "float"
+            }
+        ]
+    },
+    {
+        "path": "vrc/vio/confidence",
+        "docs": "",
+        "payload": [
+            {
+                "key": "mapper",
+                "type": "float"
+            },
+            {
+                "key": "tracker",
+                "type": "float"
+            }
+        ]
+    },
+    // apriltag
+    {
+        "path": "vrc/apriltags/selected",
+        "docs": "",
+        "payload": [
+            {
+                "key": "pos",
+                "type": [
+                    {
+                        "key": "n",
+                        "type": "float"
+                    },
+                    {
+                        "key": "e",
+                        "type": "float"
+                    },
+                    {
+                        "key": "d",
+                        "type": "float"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "path": "vrc/apriltags/raw",
+        "docs": "",
+        "payload": [
+            {
+                "key": "tags",
+                "list": true,
+                "type": [
+                    {
+                        "key": "id",
+                        "type": "int"
+                    },
+                    {
+                        "key": "pos",
+                        "type": [
+                            {
+                                "key": "x",
+                                "type": "float"
+                            },
+                            {
+                                "key": "y",
+                                "type": "float"
+                            },
+                            {
+                                "key": "z",
+                                "type": "float"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "rotation",
+                        "type": "Tuple[Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "path": "vrc/apriltags/visible",
+        "docs": "",
+        "payload": [
+            {
+                "key": "tags",
+                "list": true,
+                "type": [
+                    {
+                        "key": "id",
+                        "type": "int"
+                    },
+                    {
+                        "key": "horizontal_dist",
+                        "type": "float"
+                    },
+                    {
+                        "key": "vertical_dist",
+                        "type": "float"
+                    },
+                    {
+                        "key": "angle_to_tag",
+                        "type": "float"
+                    },
+                    {
+                        "key": "heading",
+                        "type": "float"
+                    },
+                    {
+                        "key": "pos_rel",
+                        "type": [
+                            {
+                                "key": "x",
+                                "type": "float"
+                            },
+                            {
+                                "key": "y",
+                                "type": "float"
+                            },
+                            {
+                                "key": "z",
+                                "type": "float"
+                            }
+                        ]
+                    },
+                    {
+                        "key": "pos_world",
+                        "type": [
+                            {
+                                "key": "x",
+                                "type": "Optional[float]"
+                            },
+                            {
+                                "key": "y",
+                                "type": "Optional[float]"
+                            },
+                            {
+                                "key": "z",
+                                "type": "Optional[float]"
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "path": "vrc/apriltags/fps",
+        "docs": "",
+        "payload": [
+            {
+                "key": "fps",
+                "type": "int"
+            }
+        ]
+    }
+]
