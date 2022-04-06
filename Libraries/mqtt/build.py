@@ -51,7 +51,7 @@ def main() -> None:
     # load data
     print("Loading data")
     with open(os.path.join(THIS_DIR, "data.jsonc"), "r") as fp:
-        topics = commentjson.load(fp)
+        topics = commentjson.load(fp)["topics"]
 
     # generate addtional class configuration
     # we need to do some pre-processing to make templating easier

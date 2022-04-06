@@ -65,10 +65,7 @@ class MQTTMessageCache:
     # fmt: on
 
     def __getitem__(self, key: str) -> Any:
-        if (key in self.__storage):
-            return self.__storage[key]
-        else:
-            return None
+        return self.__storage.get(key, None)
 
     def __setitem__(self, key: str, value: Any) -> None:
         # not bothering with overloads here as no one should be setting
