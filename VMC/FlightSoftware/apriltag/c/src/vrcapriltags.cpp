@@ -126,10 +126,9 @@ int main()
 
             int fps = int(1000 / (std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() + 1));
 
-            std::string fps_str = std::to_string(fps);
+            std::string fps_str = "{\"fps\": " + std::to_string(fps) + "}";
             const char *const_fps_str = fps_str.c_str();
 
-            // TODO: Want dict here
             client.publish(FPS_TOPIC, const_fps_str, strlen(const_fps_str));
         }
     }
