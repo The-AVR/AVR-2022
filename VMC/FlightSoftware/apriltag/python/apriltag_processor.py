@@ -7,10 +7,12 @@ import numpy as np
 import transforms3d as t3d
 from mqtt_library import (
     MQTTModule,
-    VRCApriltagsRawMessage,
-    VRCApriltagsSelectedMessage,
-    VRCApriltagsVisibleTagsMessage,
-    VRCApriltagsVisibleTagsPosWorld,
+    VrcApriltagsRawMessage,
+    VrcApriltagsRawTags,
+    VrcApriltagsSelectedMessage,
+    VrcApriltagsVisibleMessage,
+    VrcApriltagsVisibleTags,
+    VrcApriltagsVisibleTagsPosWorld,
 )
 
 warnings.simplefilter("ignore", np.RankWarning)
@@ -68,13 +70,13 @@ class AprilTagModule(MQTTModule):
             H_to_from = f"H_{name}_cam"
             self.tm[H_to_from] = np.eye(4)
 
-    def on_apriltag_message(self, payload: List[VRCApriltagsRawMessage]) -> None:
-        tag_list: List[VRCApriltagsVisibleTagsMessage] = []
+    def on_apriltag_message(self, payload: VrcApriltagsRawMessage) -> None:
+        tag_list: List[VrcApriltagsVisibleTags] = []
 
         min_dist = 1000000
         closest_tag = None
 
-        for index, tag in enumerate(payload):
+        for index, tag in enumerate(payload["tags"]):
             (
                 id_,
                 horizontal_distance,
@@ -89,7 +91,7 @@ class AprilTagModule(MQTTModule):
             if id_ is None:
                 continue
 
-            tag = VRCApriltagsVisibleTagsMessage(
+            tag = VrcApriltagsVisibleTags(
                 id=id_,
                 horizontal_dist=horizontal_distance,
                 vertical_dist=vertical_distance,
@@ -109,7 +111,7 @@ class AprilTagModule(MQTTModule):
 
             # add some more info if we had the truth data for the tag
             if pos_world is not None and pos_world.any():
-                tag["pos_world"] = VRCApriltagsVisibleTagsPosWorld(
+                tag["pos_world"] = VrcApriltagsVisibleTagsPosWorld(
                     x=pos_world[0],
                     y=pos_world[1],
                     z=pos_world[2],
@@ -120,7 +122,9 @@ class AprilTagModule(MQTTModule):
 
             tag_list.append(tag)
 
-        self.send_message("vrc/apriltags/visible_tags", tag_list)
+        self.send_message(
+            "vrc/apriltags/visible", VrcApriltagsVisibleMessage(tags=tag_list)
+        )
 
         if closest_tag is not None:
             pos_world = tag_list[closest_tag]["pos_world"]
@@ -130,7 +134,7 @@ class AprilTagModule(MQTTModule):
             assert pos_world["y"] is not None
             assert pos_world["z"] is not None
 
-            apriltag_position = VRCApriltagsSelectedMessage(
+            apriltag_position = VrcApriltagsSelectedMessage(
                 tag_id=tag_list[closest_tag]["id"],
                 pos={
                     "n": pos_world["x"],
@@ -193,7 +197,7 @@ class AprilTagModule(MQTTModule):
         return H_rot.dot(H_tran)
 
     def handle_tag(
-        self, tag: VRCApriltagsRawMessage
+        self, tag: VrcApriltagsRawTags
     ) -> Tuple[int, float, float, float, Optional[np.ndarray], List[float], float]:
         """
         Calculates the distance, position, and heading of the drone in NED frame

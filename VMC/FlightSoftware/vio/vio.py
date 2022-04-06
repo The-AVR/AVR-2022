@@ -7,12 +7,12 @@ from decorator_library import try_except
 from loguru import logger
 from mqtt_library import (
     MQTTModule,
-    VRCVioConfidenceMessage,
-    VRCVioHeadingMessage,
-    VRCVioOrientationEulMessage,
-    VRCVioPositionNedMessage,
-    VRCVioResyncMessage,
-    VRCVioVelocityNedMessage,
+    VrcVioConfidenceMessage,
+    VrcVioHeadingMessage,
+    VrcVioOrientationEulMessage,
+    VrcVioPositionNedMessage,
+    VrcVioResyncMessage,
+    VrcVioVelocityNedMessage,
 )
 from vio_library import CameraCoordinateTransformation
 from zed_library import ZEDCamera
@@ -34,7 +34,7 @@ class VIOModule(MQTTModule):
         # mqtt
         self.topic_map = {"vrc/vio/resync": self.handle_resync}
 
-    def handle_resync(self, payload: VRCVioResyncMessage) -> None:
+    def handle_resync(self, payload: VrcVioResyncMessage) -> None:
         # whenever new data is published to the ZEDCamera resync topic, we need to compute a new correction
         # to compensate for sensor drift over time.
         if self.init_sync == False or self.continuous_sync == True:
@@ -60,7 +60,7 @@ class VIOModule(MQTTModule):
         n = float(ned_pos[0])
         e = float(ned_pos[1])
         d = float(ned_pos[2])
-        ned_update = VRCVioPositionNedMessage(n=n, e=e, d=d)  # cm
+        ned_update = VrcVioPositionNedMessage(n=n, e=e, d=d)  # cm
 
         self.send_message("vrc/vio/position/ned", ned_update)
 
@@ -68,7 +68,7 @@ class VIOModule(MQTTModule):
             raise ValueError("Camera has NaNs for orientation")
 
         # send orientation update
-        eul_update = VRCVioOrientationEulMessage(psi=rpy[0], theta=rpy[1], phi=rpy[2])
+        eul_update = VrcVioOrientationEulMessage(psi=rpy[0], theta=rpy[1], phi=rpy[2])
         self.send_message("vrc/vio/orientation/eul", eul_update)
 
         # send heading update
@@ -77,7 +77,7 @@ class VIOModule(MQTTModule):
         if heading < 0:
             heading += 2 * math.pi
         heading = np.rad2deg(heading)
-        heading_update = VRCVioHeadingMessage(degrees=heading)
+        heading_update = VrcVioHeadingMessage(degrees=heading)
         self.send_message("vrc/vio/heading", heading_update)
         # coord_trans.heading = rpy[2]
 
@@ -85,10 +85,10 @@ class VIOModule(MQTTModule):
             raise ValueError("Camera has NaNs for velocity")
 
         # send velocity update
-        vel_update = VRCVioVelocityNedMessage(n=ned_vel[0], e=ned_vel[1], d=ned_vel[2])
+        vel_update = VrcVioVelocityNedMessage(n=ned_vel[0], e=ned_vel[1], d=ned_vel[2])
         self.send_message("vrc/vio/velocity/ned", vel_update)
 
-        confidence_update = VRCVioConfidenceMessage(
+        confidence_update = VrcVioConfidenceMessage(
             mapper=mapper_confidence,
             tracker=tracker_confidence,
         )

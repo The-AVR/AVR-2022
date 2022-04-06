@@ -9,8 +9,6 @@ import board
 import paho.mqtt.client as mqtt
 from loguru import logger
 
-INTERRUPTED = False
-
 
 class Thermal(object):
     def __init__(self):
