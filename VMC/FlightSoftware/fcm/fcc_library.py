@@ -16,16 +16,16 @@ from mavsdk.mission_raw import MissionItem, MissionRawError
 from mavsdk.offboard import VelocityBodyYawspeed, VelocityNedYaw
 from mqtt_library import (
     MQTTModule,
-    VRCFcmAttitudeEulerMessage,
-    VRCFcmBatteryMessage,
-    VRCFcmEventsMessage,
-    VRCFcmHilGpsStatsMessage,
-    VRCFcmLocationGlobalMessage,
-    VRCFcmLocationHomeMessage,
-    VRCFcmLocationLocalMessage,
-    VRCFcmStatusMessage,
-    VRCFcmVelocityMessage,
-    VRCFusionHilGpsMessage,
+    VrcFcmAttitudeEulerMessage,
+    VrcFcmBatteryMessage,
+    VrcFcmEventsMessage,
+    VrcFcmHilGpsStatsMessage,
+    VrcFcmLocationGlobalMessage,
+    VrcFcmLocationHomeMessage,
+    VrcFcmLocationLocalMessage,
+    VrcFcmStatusMessage,
+    VrcFcmVelocityMessage,
+    VrcFusionHilGpsMessage,
 )
 from pymavlink import mavutil
 
@@ -42,7 +42,7 @@ class FCMMQTTModule(MQTTModule):
         """
         Create and publish state machine event.
         """
-        event = VRCFcmEventsMessage(
+        event = VrcFcmEventsMessage(
             name=name, payload=payload, timestamp=self._timestamp()
         )
         self.send_message("vrc/fcm/events", event)
@@ -253,7 +253,7 @@ class FlightControlComputer(FCMMQTTModule):
         logger.debug("battery_telemetry loop started")
         async for battery in self.drone.telemetry.battery():
 
-            update = VRCFcmBatteryMessage(
+            update = VrcFcmBatteryMessage(
                 voltage=battery.voltage_v * 4,
                 soc=battery.remaining_percent * 100.0,
                 timestamp=self._timestamp(),
@@ -288,7 +288,7 @@ class FlightControlComputer(FCMMQTTModule):
             was_armed = armed
             self.is_armed = armed
 
-            update = VRCFcmStatusMessage(
+            update = VrcFcmStatusMessage(
                 armed=armed,
                 mode=str(self.fcc_mode),
                 timestamp=self._timestamp(),
@@ -349,7 +349,7 @@ class FlightControlComputer(FCMMQTTModule):
 
         async for mode in self.drone.telemetry.flight_mode():
 
-            update = VRCFcmStatusMessage(
+            update = VrcFcmStatusMessage(
                 mode=str(mode),
                 armed=self.is_armed,
                 timestamp=self._timestamp(),
@@ -378,7 +378,7 @@ class FlightControlComputer(FCMMQTTModule):
             e = position.position.east_m
             d = position.position.down_m
 
-            update = VRCFcmLocationLocalMessage(
+            update = VrcFcmLocationLocalMessage(
                 dX=n, dY=e, dZ=d, timestamp=self._timestamp()
             )
 
@@ -391,7 +391,7 @@ class FlightControlComputer(FCMMQTTModule):
         """
         logger.debug("position_lla telemetry loop started")
         async for position in self.drone.telemetry.position():
-            update = VRCFcmLocationGlobalMessage(
+            update = VrcFcmLocationGlobalMessage(
                 lat=position.latitude_deg,
                 lon=position.longitude_deg,
                 alt=position.relative_altitude_m,
@@ -408,7 +408,7 @@ class FlightControlComputer(FCMMQTTModule):
         """
         logger.debug("home_lla telemetry loop started")
         async for home_position in self.drone.telemetry.home():
-            update = VRCFcmLocationHomeMessage(
+            update = VrcFcmLocationHomeMessage(
                 lat=home_position.latitude_deg,
                 lon=home_position.longitude_deg,
                 alt=home_position.relative_altitude_m,
@@ -432,7 +432,7 @@ class FlightControlComputer(FCMMQTTModule):
             # TODO data validation?
 
             # do any necessary wrapping here
-            update = VRCFcmAttitudeEulerMessage(
+            update = VrcFcmAttitudeEulerMessage(
                 roll=psi,
                 pitch=theta,
                 yaw=phi,
@@ -454,7 +454,7 @@ class FlightControlComputer(FCMMQTTModule):
 
         logger.debug("velocity_ned telemetry loop started")
         async for velocity in self.drone.telemetry.velocity_ned():
-            update = VRCFcmVelocityMessage(
+            update = VrcFcmVelocityMessage(
                 vX=velocity.north_m_s,
                 vY=velocity.east_m_s,
                 vZ=velocity.down_m_s,
@@ -977,7 +977,7 @@ class PyMAVLinkAgent(MQTTModule):
             logger.exception("Issue while waiting for connection heartbeat")
 
     @try_except(reraise=True)
-    def hilgps_msg_handler(self, payload: VRCFusionHilGpsMessage) -> None:
+    def hilgps_msg_handler(self, payload: VrcFusionHilGpsMessage) -> None:
         """
         Handle a HIL_GPS message.
         """
@@ -1005,6 +1005,6 @@ class PyMAVLinkAgent(MQTTModule):
         if time.time() - self.last_publish_time > 1:
             self.send_message(
                 "vrc/fcm/hil_gps_stats",
-                VRCFcmHilGpsStatsMessage(num_frames=self.num_frames),
+                VrcFcmHilGpsStatsMessage(num_frames=self.num_frames),
             )
             self.last_publish_time = time.time()

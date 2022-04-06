@@ -98,7 +98,7 @@ int main()
             //send the frame to GPU memory and run the detections
             uint32_t num_detections = process_frame(img_rgba8, impl_);
 
-            std::string payload = "\"apriltags\":{[";
+            std::string payload = "\"tags\":{[";
 
             //handle the detections
             for (int i = 0; i < num_detections; i++)

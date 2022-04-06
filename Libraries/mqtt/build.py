@@ -1,12 +1,15 @@
-import commentjson
-import jinja2
 import os
 from typing import List
 
+import commentjson
+import jinja2
+
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
+
 
 def titleify(text: str) -> str:
     return "".join(i.title() for i in text.replace("_", "/").split("/"))
+
 
 def process_klass(klass: dict) -> List[dict]:
     """
@@ -32,14 +35,15 @@ def process_klass(klass: dict) -> List[dict]:
     # return the new klasses and their children
     return new_klasses + new_new_klasses
 
-def main():
+
+def main() -> None:
     # setup jinja
-    template_loader = jinja2.FileSystemLoader(searchpath=".")
+    template_loader = jinja2.FileSystemLoader(searchpath=THIS_DIR)
     template_env = jinja2.Environment(loader=template_loader)
 
     # load data
     print("Loading data")
-    with open("data.jsonc", "r") as fp:
+    with open(os.path.join(THIS_DIR, "data.jsonc"), "r") as fp:
         topics = commentjson.load(fp)
 
     # generate addtional class configuration

@@ -277,7 +277,7 @@
         ]
     },
     {
-        "path": "vrc/fcm/location/euler",
+        "path": "vrc/fcm/attitude/euler",
         "docs": "",
         "payload": [
             {
@@ -629,7 +629,7 @@
         "docs": "",
         "payload": [
             {
-                "key": "heading",
+                "key": "degrees",
                 "type": "float"
             }
         ]
@@ -654,6 +654,10 @@
         "docs": "",
         "payload": [
             {
+                "key": "tag_id",
+                "type": "int"
+            },
+            {
                 "key": "pos",
                 "type": [
                     {
@@ -669,6 +673,10 @@
                         "type": "float"
                     }
                 ]
+            },
+            {
+                "key": "heading",
+                "type": "float"
             }
         ]
     },
