@@ -110,11 +110,11 @@ cd $VRC_DIR
 # cache the git credentials (mainly during development)
 git config --global credential.helper cache
 # update repo
-#git pull
+git pull
 # switch to main branch
-#if [ "$DEVELOPMENT" != true ] ; then
-    #git checkout main
-#fi
+if [ "$DEVELOPMENT" != true ] ; then
+    git checkout main
+fi
 
 $s  cp ./spio-mount.service /etc/systemd/system/spio-mount.service
 $s  systemctl enable spio-mount.service
