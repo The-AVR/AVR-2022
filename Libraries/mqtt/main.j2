@@ -11,7 +11,9 @@ class {{ item.name }}{{ suffix }}(TypedDict):
 {%- for p in item.payload %}
     {{ p.key }}: {% if 'list' in p and p['list'] %}List[{{ p.type }}]{% else %}{{ p.type }}{% endif %}
 {%- if 'docs' in p and p['docs']|length > 0 %}
-    """{{ p.docs }}"""
+    """
+    {{ p.docs }}
+    """
 {%- endif %}
 {%- endfor %}
 {%- endif %}

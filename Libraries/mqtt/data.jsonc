@@ -158,7 +158,7 @@
             {
                 "key": "voltage",
                 "type": "float",
-                "docs": ""
+                "docs": "Battery voltage"
             },
             {
                 "key": "soc",
@@ -168,7 +168,7 @@
             {
                 "key": "timestamp",
                 "type": "str",
-                "docs": ""
+                "docs": "Time the message was sent in [ISO 8601 format](https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat)"
             }
         ]
     },
@@ -179,17 +179,17 @@
             {
                 "key": "armed",
                 "type": "bool",
-                "docs": ""
+                "docs": "True/False if the drone is currently armed"
             },
             {
                 "key": "mode",
                 "type": "str",
-                "docs": ""
+                "docs": "Current flight mode, which is one of the following:\n    - 'UNKNOWN'\n    - 'READY'\n    - 'TAKEOFF'\n    - 'HOLD'\n    - 'MISSION'\n    - 'RETURN_TO_LAUNCH'\n    - 'LAND'\n    - 'OFFBOARD'\n    - 'FOLLOW_ME'\n    - 'MANUAL'\n    - 'ALTCTL'\n    - 'POSCTL'\n    - 'ACRO'\n    - 'STABILIZED'\n    - 'RATTITUDE'"
             },
             {
                 "key": "timestamp",
                 "type": "str",
-                "docs": ""
+                "docs": "Time the message was sent in [ISO 8601 format](https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat)"
             }
         ]
     },
@@ -200,22 +200,22 @@
             {
                 "key": "dX",
                 "type": "float",
-                "docs": ""
+                "docs": "X position in a local North/East/Down coordinate system"
             },
             {
                 "key": "dY",
                 "type": "float",
-                "docs": ""
+                "docs": "Y position in a local North/East/Down coordinate system"
             },
             {
                 "key": "dZ",
                 "type": "float",
-                "docs": ""
+                "docs": "Z position in a local North/East/Down coordinate system"
             },
             {
                 "key": "timestamp",
                 "type": "str",
-                "docs": ""
+                "docs": "Time the message was sent in [ISO 8601 format](https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat)"
             }
         ]
     },
@@ -226,27 +226,27 @@
             {
                 "key": "lat",
                 "type": "float",
-                "docs": ""
+                "docs": "Latitude in global coordinates"
             },
             {
                 "key": "lon",
                 "type": "float",
-                "docs": ""
+                "docs": "Longitude in global coordinates"
             },
             {
                 "key": "alt",
                 "type": "float",
-                "docs": ""
+                "docs": "Relative altitude in global coordinates"
             },
             {
                 "key": "hdg",
                 "type": "float",
-                "docs": ""
+                "docs": "Heading"
             },
             {
                 "key": "timestamp",
                 "type": "str",
-                "docs": ""
+                "docs": "Time the message was sent in [ISO 8601 format](https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat)"
             }
         ]
     },
@@ -257,22 +257,22 @@
             {
                 "key": "lat",
                 "type": "float",
-                "docs": ""
+                "docs": "Latitude relative to the home position"
             },
             {
                 "key": "lon",
                 "type": "float",
-                "docs": ""
+                "docs": "Longitude relative to the home position"
             },
             {
                 "key": "alt",
                 "type": "float",
-                "docs": ""
+                "docs": "Relative altitude to the home position"
             },
             {
                 "key": "timestamp",
                 "type": "str",
-                "docs": ""
+                "docs": "Time the message was sent in [ISO 8601 format](https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat)"
             }
         ]
     },
@@ -283,22 +283,22 @@
             {
                 "key": "roll",
                 "type": "float",
-                "docs": ""
+                "docs": "Roll in degrees"
             },
             {
                 "key": "pitch",
                 "type": "float",
-                "docs": ""
+                "docs": "Pitch in degrees"
             },
             {
                 "key": "yaw",
                 "type": "float",
-                "docs": ""
+                "docs": "Yaw in degrees"
             },
             {
                 "key": "timestamp",
                 "type": "str",
-                "docs": ""
+                "docs": "Time the message was sent in [ISO 8601 format](https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat)"
             }
         ]
     },
@@ -309,22 +309,22 @@
             {
                 "key": "vX",
                 "type": "float",
-                "docs": ""
+                "docs": "X velocity in a local North/East/Down coordinate system"
             },
             {
                 "key": "vY",
                 "type": "float",
-                "docs": ""
+                "docs": "Y velocity in a local North/East/Down coordinate system"
             },
             {
                 "key": "vZ",
                 "type": "float",
-                "docs": ""
+                "docs": "Z velocity in a local North/East/Down coordinate system"
             },
             {
                 "key": "timestamp",
                 "type": "str",
-                "docs": ""
+                "docs": "Time the message was sent in [ISO 8601 format](https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat)"
             }
         ]
     },
@@ -655,22 +655,27 @@
         "payload": [
             {
                 "key": "tag_id",
-                "type": "int"
+                "type": "int",
+                "docs": "The id of the tag"
             },
             {
                 "key": "pos",
+                "docs": "The position of the vehicle in world frame **in cm**",
                 "type": [
                     {
                         "key": "n",
-                        "type": "float"
+                        "type": "float",
+                        "docs": "The +north position of the vehicle relative to the world origin in world frame"
                     },
                     {
                         "key": "e",
-                        "type": "float"
+                        "type": "float",
+                        "docs": "The +east position of the vehicle relative to the world origin in world frame"
                     },
                     {
                         "key": "d",
-                        "type": "float"
+                        "type": "float",
+                        "docs": "The +down position of the vehicle relative to the world origin in world frame"
                     }
                 ]
             },
@@ -690,28 +695,33 @@
                 "type": [
                     {
                         "key": "id",
-                        "type": "int"
+                        "type": "int",
+                        "docs": "The ID of the tag"
                     },
                     {
                         "key": "pos",
                         "type": [
                             {
                                 "key": "x",
-                                "type": "float"
+                                "type": "float",
+                                "docs": "The position **in meters** of the camera relative to the **tag's x** frame"
                             },
                             {
                                 "key": "y",
-                                "type": "float"
+                                "type": "float",
+                                "docs": "The position **in meters** of the camera relative to the **tag's y** frame"
                             },
                             {
                                 "key": "z",
-                                "type": "float"
+                                "type": "float",
+                                "docs": "The position **in meters** of the camera relative to the **tag's z** frame"
                             }
                         ]
                     },
                     {
                         "key": "rotation",
-                        "type": "Tuple[Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]"
+                        "type": "Tuple[Tuple[float, float, float], Tuple[float, float, float], Tuple[float, float, float]]",
+                        "docs": "The 3x3 rotation matrix"
                     }
                 ]
             }
@@ -727,55 +737,68 @@
                 "type": [
                     {
                         "key": "id",
-                        "type": "int"
+                        "type": "int",
+                        "docs": "The ID of the tag"
                     },
                     {
                         "key": "horizontal_dist",
-                        "type": "float"
+                        "type": "float",
+                        "docs": "The horizontal scalar distance from vehicle to tag, **in cm**"
                     },
                     {
                         "key": "vertical_dist",
-                        "type": "float"
+                        "type": "float",
+                        "docs": "The vertical scalar distance from vehicle to tag, **in cm**"
                     },
                     {
                         "key": "angle_to_tag",
-                        "type": "float"
+                        "type": "float",
+                        "docs": "The angle formed by the vector pointing from the vehicles body to the tag in world frame relative to world-north"
                     },
                     {
                         "key": "heading",
-                        "type": "float"
+                        "type": "float",
+                        "docs": "The heading of the vehicle in world frame"
                     },
                     {
                         "key": "pos_rel",
+                        "docs": "The relative position of the vehicle to the tag in world frame **in cm**",
                         "type": [
                             {
                                 "key": "x",
-                                "type": "float"
+                                "type": "float",
+                                "docs": "The x (+north/-south) position of the vehicle relative to the tag in world frame (for reference the mountain is **north** of the beach)"
                             },
                             {
                                 "key": "y",
-                                "type": "float"
+                                "type": "float",
+                                "docs": "The y (+east/-west) position of the vehicle relative to the tag in world frame"
                             },
                             {
                                 "key": "z",
-                                "type": "float"
+                                "type": "float",
+                                "docs": "The z (+down/-up) position of the vehicle relative to the tag in world frame (no, this is not a typo, up is really - )"
                             }
                         ]
                     },
                     {
                         "key": "pos_world",
+                        "docs": "The position of the vehicle in world frame **in cm** (if the tag has no truth data, this will not be present in the output)",
                         "type": [
                             {
                                 "key": "x",
-                                "type": "Optional[float]"
+                                "type": "Optional[float]",
+                                "docs": "The x position of the vehicle relative to the world origin (this is the ship) in world frame (for reference the mountain is **north** of the beach)"
                             },
                             {
                                 "key": "y",
-                                "type": "Optional[float]"
+                                "type": "Optional[float]",
+                                "docs": "The y position of the vehicle relative to the world origin in world frame"
                             },
                             {
                                 "key": "z",
-                                "type": "Optional[float]"
+                                "type": "Optional[float]",
+                                "docs": "The z position of the vehicle relative to the world origin in world frame"
                             }
                         ]
                     }

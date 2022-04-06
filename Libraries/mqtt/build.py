@@ -24,7 +24,14 @@ def process_klass(klass: dict) -> List[dict]:
             # if the type of a key is not a string, create a new helper class for it
             # and replace it with a reference to that class
             new_class_name = klass["name"] + titleify(item["key"])
-            new_klasses.append({"name": new_class_name, "payload": item["type"]})
+            # copy over the documentation as well if present
+            new_klasses.append(
+                {
+                    "name": new_class_name,
+                    "payload": item["type"],
+                    "docs": item.get("docs", ""),
+                }
+            )
             item["type"] = new_class_name
 
     # list to hold the newly proccessed new classes
