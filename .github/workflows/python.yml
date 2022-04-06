@@ -1,4 +1,4 @@
-name: Python Formatting
+name: Python Checks
 
 on:
   workflow_dispatch:
@@ -6,28 +6,30 @@ on:
     branches:
       - main
     paths:
-      - '**.py'
+      - "**.py"
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: "16"
 
       - name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v3
         with:
-          python-version: '3.9'
+          python-version: "3.9"
+          cache: pip
+          cache-dependency-path: "**/requirements**.txt"
 
-      - name: Copy libraries
+      - name: Copy Libraries
         run: python scripts/copy_libraries.py
 
       - name: Install Packages
@@ -42,9 +44,9 @@ jobs:
         run: python -m black . --check
 
       - name: Check Import Order
-        run: python -m isort --profile black . --check
+        run: python -m isort . --check
 
-      - name: Check Unused Imports
+      - name: Check for Unused Imports
         run: python -m autoflake --recursive . --check
 
       - name: Check Type Hints

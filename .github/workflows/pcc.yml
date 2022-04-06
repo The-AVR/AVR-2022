@@ -2,16 +2,16 @@ name: Build PCC Firmware
 
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'PCC/ControlSoftware/'
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'PCC/ControlSoftware/'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "PCC/ControlSoftware/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "PCC/ControlSoftware/**"
 
 jobs:
   build:
@@ -19,40 +19,42 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
-      - name: Get latest release
+      - name: Get Latest Release
         id: latest_release
         uses: gregziegan/fetch-latest-release@v2.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
-      - name: Apply patches
-        run: git apply ../queue-default.patch
-        working-directory: PCC/ControlSoftware/libraries/Queue
-
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: "3.9"
+          cache: pip
+          cache-dependency-path: "PCC/ControlSoftware/requirements.txt"
 
       - name: Install PlatformIO
         run: |
           python -m pip install pip wheel --upgrade
           python -m pip install platformio --upgrade
 
-      - name: Build firmware
+      - name: Apply Patches
+        run: git apply ../queue-default.patch
+        working-directory: PCC/ControlSoftware/libraries/Queue
+
+      - name: Build Firmware
         run: pio run --verbose
         working-directory: PCC/ControlSoftware
 
-      - name: Rename firmware
+      - name: Rename Firmware
         run: cp firmware.bin pcc_firmware.bin
         working-directory: PCC/ControlSoftware/.pio/build/adafruit_feather_m4
 
-      - name: Upload firmware to release
+      - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'
         uses: svenstaro/upload-release-action@v2
         with:

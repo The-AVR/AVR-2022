@@ -1,6 +1,6 @@
 import copy
 import math
-from typing import List, Tuple, TypedDict
+from typing import Tuple, TypedDict
 
 import numpy as np
 import transforms3d as t3d
@@ -39,7 +39,7 @@ class CameraCoordinateTransformation:
                 "rpy": [
                     0,
                     -math.pi / 2,
-                    -math.pi / 2,
+                    math.pi / 2,
                 ],  # cam x = body -y; cam y = body x, cam z = body z
                 "ground_height": 10,  # cm
             }

@@ -2,6 +2,8 @@ from mqtt_library import (
     MQTTModule,
     VRCPcmResetMessage,
     VRCPcmSetBaseColorMessage,
+    VRCPcmSetLaserOffMessage,
+    VRCPcmSetLaserOnMessage,
     VRCPcmSetServoMaxMessage,
     VRCPcmSetServoMinMessage,
     VRCPcmSetServoOpenCloseMessage,
@@ -26,7 +28,7 @@ class PeripheralControlModule(MQTTModule):
             "vrc/pcm/set_servo_min": self.set_servo_min,
             "vrc/pcm/set_servo_max": self.set_servo_max,
             "vrc/pcm/set_laser_on": self.set_laser_on,
-            "vrc/pcm/set_laser_off": self.set_laser_off,            
+            "vrc/pcm/set_laser_off": self.set_laser_off,
             "vrc/pcm/set_servo_pct": self.set_servo_pct,
             "vrc/pcm/reset": self.reset,
         }
@@ -59,12 +61,12 @@ class PeripheralControlModule(MQTTModule):
         servo = payload["servo"]
         percent = payload["percent"]
         self.pcc.set_servo_pct(servo, percent)
-    
-    def set_laser_on(self, payload) -> None:
-        self.pcc.set_laser_on( )
 
-    def set_laser_off(self, payload) -> None:
-        self.pcc.set_laser_off( )
+    def set_laser_on(self, payload: VRCPcmSetLaserOnMessage) -> None:
+        self.pcc.set_laser_on()
+
+    def set_laser_off(self, payload: VRCPcmSetLaserOffMessage) -> None:
+        self.pcc.set_laser_off()
 
     def reset(self, payload: VRCPcmResetMessage) -> None:
         self.pcc.reset_vrc_peripheral()

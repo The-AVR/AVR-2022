@@ -140,7 +140,6 @@ void loop()
       //Serial.printf("Res: %d\n",res);
     }
     break;
-
     case SET_LASER_ON:
     {
       digitalWrite(LASER_PIN,HIGH);
@@ -151,10 +150,7 @@ void loop()
       digitalWrite(LASER_PIN,LOW);
     }
     break;
-
-
     }
-
   }
 
   if (millis() - light_on > 100)

@@ -1,17 +1,17 @@
-name: Publish Docs
+name: Build Docs
 
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'docs/'
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'docs/'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "docs/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/**"
 
 jobs:
   build:
@@ -20,26 +20,23 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           submodules: recursive
 
       - name: Setup Node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version: "16"
+          cache-dependency-path: docs
+          cache: npm
 
       - name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v3
         with:
-          python-version: '3.9'
-
-      - name: Setup Hugo
-        uses: peaceiris/actions-hugo@v2
-        with:
-          # pin Hugo version to prevent compatbility issues
-          hugo-version: '0.94.2'
-          extended: true
+          python-version: "3.9"
+          cache-dependency-path: docs
+          cache: pip
 
       - name: Install Dependencies
         working-directory: docs
@@ -50,19 +47,15 @@ jobs:
 
       - name: Check Formatting
         working-directory: docs
-        run: npx prettier --check ./content/
+        run: npm run check-formatting
 
       - name: Build Site
         working-directory: docs
-        run: hugo --gc --cleanDestinationDir
-
-      - name: Run Postprocessing
-        working-directory: docs
-        run: python ./postprocess.py
+        run: npm run build
 
       - name: Check For Broken Links
         working-directory: docs
-        run: npm run run-check-links
+        run: npm run check-links
 
       - name: Deploy Site
         if: github.event_name != 'pull_request'

@@ -11,11 +11,11 @@ PX4_VERSION = "v1.12.3"
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
-def print2(msg):
+def print2(msg: str) -> None:
     print(f"--- {msg}", flush=True)
 
 
-def container(build_pymavlink: bool, build_px4: bool):
+def container(build_pymavlink: bool, build_px4: bool) -> None:
     # code that runs inside the container
     px4_dir = os.path.join(THIS_DIR, "build", "PX4-Autopilot")
     pymavlink_dir = os.path.join(THIS_DIR, "build", "pymavlink")
@@ -181,33 +181,29 @@ def container(build_pymavlink: bool, build_px4: bool):
         print2("Building PX4 firmware")
 
         # pixhawk
+        v5x_target = "px4_fmu-v5x_default"
         subprocess.check_call(
-            ["make", "px4_fmu-v5_default", f"-j{multiprocessing.cpu_count()}"],
+            ["make", v5x_target, f"-j{multiprocessing.cpu_count()}"],
             cwd=px4_dir,
         )
         shutil.copyfile(
-            os.path.join(
-                px4_dir, "build", "px4_fmu-v5_default", "px4_fmu-v5_default.px4"
-            ),
-            os.path.join(THIS_DIR, "target", f"px4_fmu-v5_default.{PX4_VERSION}.px4"),
+            os.path.join(px4_dir, "build", v5x_target, f"{v5x_target}.px4"),
+            os.path.join(THIS_DIR, "target", f"{v5x_target}.{PX4_VERSION}.px4"),
         )
 
         # nxp
+        nxp_target = "nxp_fmuk66-v3_default"
         subprocess.check_call(
-            ["make", "nxp_fmuk66-v3_default", f"-j{multiprocessing.cpu_count()}"],
+            ["make", nxp_target, f"-j{multiprocessing.cpu_count()}"],
             cwd=px4_dir,
         )
         shutil.copyfile(
-            os.path.join(
-                px4_dir, "build", "nxp_fmuk66-v3_default", "nxp_fmuk66-v3_default.px4"
-            ),
-            os.path.join(
-                THIS_DIR, "target", f"nxp_fmuk66-v3_default.{PX4_VERSION}.px4"
-            ),
+            os.path.join(px4_dir, "build", nxp_target, f"{nxp_target}.px4"),
+            os.path.join(THIS_DIR, "target", f"{nxp_target}.{PX4_VERSION}.px4"),
         )
 
 
-def host(build_pymavlink: bool, build_px4: bool):
+def host(build_pymavlink: bool, build_px4: bool) -> None:
     # code that runs on the host operating system
 
     # make the target directory

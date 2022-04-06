@@ -102,6 +102,6 @@ The MQTT Explorer window is a debug console that shows all of
 the MQTT messages being sent by the software running on the drone.
 The relevant topics and data structures needed to write your own
 autonomous software is covered in the README of the Phase II repository:
-[https://github.com/bellflight/VRC-2022](https://github.com/bellflight/VRC-2022)
+[https://github.com/bellflight/VRC-2022/](https://github.com/bellflight/VRC-2022/)
 
 You can safely close this window.

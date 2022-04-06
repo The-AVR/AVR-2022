@@ -1,14 +1,10 @@
-import os
 import math
-import time
 
+import colour
 import numpy as np
 import pygame
 from scipy.interpolate import griddata
 
-
-
-import colour
 
 class VRC_ThermalView(object):
     def __init__(self) -> None:
@@ -39,7 +35,10 @@ class VRC_ThermalView(object):
         self.colors = list(self.blue.range_to(colour.Color("red"), self.COLORDEPTH))
 
         # create the array of colors
-        self.colors = [(int(c.red * 255), int(c.green * 255), int(c.blue * 255)) for c in self.colors]
+        self.colors = [
+            (int(c.red * 255), int(c.green * 255), int(c.blue * 255))
+            for c in self.colors
+        ]
 
         self.displayPixelWidth = self.width / 30
         self.displayPixelHeight = self.height / 30
@@ -55,22 +54,29 @@ class VRC_ThermalView(object):
         pygame.display.update()
 
     # some utility functions
-    def constrain(self, val, min_val, max_val):
+    def constrain(self, val: int, min_val: int, max_val: int) -> int:
         return min(max_val, max(min_val, val))
 
-
-    def map_value(self, x, in_min, in_max, out_min, out_max):
+    def map_value(
+        self, x: int, in_min: int, in_max: int, out_min: int, out_max: int
+    ) -> float:
         return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-    
-    def update(self, pixels):
+
+    def update(self, pixels: list[int]) -> None:
+        # (p, 0, 255, 15.0, 40.0)
         # read the pixels
-        #pixels = []
-        #for row in self.sensor.pixels:
+        # pixels = []
+        # for row in self.sensor.pixels:
         #    pixels = pixels + row
 
-        pixels = [self.map_value(p, self.MINTEMP, self.MAXTEMP, 0, self.COLORDEPTH - 1) for p in pixels]
+        pixels = [
+            self.map_value(p, self.MINTEMP, self.MAXTEMP, 0, self.COLORDEPTH - 1)
+            for p in pixels
+        ]
 
-        bicubic = griddata(self.points, pixels, (self.grid_x, self.grid_y), method="cubic")
+        bicubic = griddata(
+            self.points, pixels, (self.grid_x, self.grid_y), method="cubic"
+        )
 
         # draw everything
         for ix, row in enumerate(bicubic):
@@ -87,6 +93,3 @@ class VRC_ThermalView(object):
                 )
 
         pygame.display.update()
-
-
-
