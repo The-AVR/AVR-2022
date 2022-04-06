@@ -63,6 +63,10 @@ class VRCPcmResetMessage(TypedDict):
     pass
 
 
+class VRCFcmHilGpsStatsMessage(TypedDict):
+    num_frames: int
+
+
 class VRCFusionPositionNedMessage(TypedDict):
     n: float
     e: float
@@ -79,10 +83,6 @@ class VRCFusionGeodetic(TypedDict):
     lat: float
     lon: float
     alt: float
-
-
-class VRCFcmHilGpsStatsMessage(TypedDict):
-    num_frames: int
 
 
 class VRCFusionGeoMessage(TypedDict):
@@ -228,7 +228,7 @@ class VRCApriltagsRawMessage(TypedDict):
 
 class VRCFcmEventsMessage(TypedDict):
     name: str
-    payload: dict
+    payload: str
     timestamp: str
 
 
@@ -314,6 +314,9 @@ class MQTTMessageCache:
 
     @overload
     def __getitem__(self, key: Literal["vrc/pcm/reset"]) -> VRCPcmResetMessage: ...
+
+    @overload
+    def __getitem__(self, key: Literal["vrc/fcm/hil_gps_stats"]) -> VRCFcmHilGpsStatsMessage: ...
 
     @overload
     def __getitem__(self, key: Literal["vrc/fusion/position/ned"]) -> VRCFusionPositionNedMessage: ...
@@ -528,6 +531,9 @@ class MQTTModule:
 
     @overload
     def send_message(self, topic: Literal["vrc/pcm/reset"], payload: VRCPcmResetMessage) -> None: ...
+
+    @overload
+    def send_message(self, topic: Literal["vrc/fcm/hil_gps_stats"], payload: VRCFcmHilGpsStatsMessage) -> None: ...
 
     @overload
     def send_message(self, topic: Literal["vrc/fusion/position/ned"], payload: VRCFusionPositionNedMessage) -> None: ...
