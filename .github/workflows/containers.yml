@@ -25,7 +25,6 @@ jobs:
 
     steps:
       - name: Checkout Code
-        if: ${{ github.event_name == 'pull_request' }}
         uses: actions/checkout@v3
         with:
           # https://github.com/tj-actions/changed-files/blob/576594102a649fceaf32e0509c125662c112cb2a/README.md?plain=1#L67
