@@ -6,12 +6,12 @@ on:
     branches:
       - main
     paths:
-      - 'PX4/'
+      - "PX4/**"
   push:
     branches:
       - main
     paths:
-      - 'PX4/'
+      - "PX4/**"
 
 jobs:
   build:
@@ -19,28 +19,30 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
-      - name: Get latest release
+      - name: Get Latest Release
         id: latest_release
         uses: gregziegan/fetch-latest-release@v2.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-      # this really isn't necessary, but we need to to make one local commit
-      - name: Configure git
-        run: |
-          git config --global user.email "github-bot@bellflight.com"
-          git config --global user.name "Github Actions"
+      - name: Cache PX4
+        uses: actions/cache@v3
+        with:
+          path: PX4/build
+          key: px4-firmware-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+          restore-keys: |
+            px4-firmware-${{ hashFiles('PX4/patches/**') }}
+            px4-firmware
+            px4-package-${{ hashFiles('PX4/patches/**') }}
+            px4-package
 
-      - name: Build PX4 firmware
-        shell: bash
-        run: |
-          chmod +x PX4/generate.sh
-          PX4/generate.sh --firmware
+      - name: Build PX4 Firmware
+        run: python3 PX4/generate.py host --px4
 
-      - name: Upload firmware to release
+      - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'
         uses: svenstaro/upload-release-action@v2
         with:

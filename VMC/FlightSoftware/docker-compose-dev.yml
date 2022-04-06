@@ -3,8 +3,8 @@ version: "3"
 services:
   mavp2p:
     build: mavp2p
-    network_mode: host
     restart: unless-stopped
+    network_mode: "host"
     devices:
       - /dev/ttyTHS1:/dev/ttyTHS1
 
@@ -14,18 +14,25 @@ services:
       - "18830:18830"
     restart: on-failure
 
-  fcc:
+  status:
+    build: status
+    depends_on:
+      - mqtt
+    privileged: true
+    restart: on-failure
+
+  fcm:
     depends_on:
       - mqtt
       - mavp2p
-    build: fcc
-    network_mode: host
+    build: fcm
+    network_mode: "host"
     restart: on-failure
 
-  pcc:
+  pcm:
     depends_on:
       - mqtt
-    build: pcc
+    build: pcm
     restart: on-failure
     devices:
       - /dev/ttyACM0:/dev/ttyACM0
@@ -51,6 +58,13 @@ services:
       - vio
       - apriltag
     build: fusion
+    restart: on-failure
+
+  thermal:
+    build: thermal
+    depends_on:
+      - mqtt
+    privileged: true
     restart: on-failure
 
   # sandbox:

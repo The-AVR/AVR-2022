@@ -13,3 +13,11 @@ __pycache__/
 *.spec
 build/
 dist/
+
+# pyright
+node_modules/
+package.json
+package-lock.json
+
+# macOS
+**/.DS_Store

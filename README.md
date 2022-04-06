@@ -29,10 +29,19 @@ Clone the repository with submodules:
 git clone --recurse-submodules https://github.com/bellflight/VRC-2022
 ```
 
+update jetson to python 3.8, should create a setup script from this:
+```bash
+sudo add-apt-repository ppa:deadsnakes/ppa
+sudo apt update
+sudo apt-get update
+sudo apt install python3.8 python3-pip python3.8-venv
+sudo python3.8 -m pip install pip wheel --upgrade
+```
+
 Create a Python 3.8+ virtual environment:
 
 ```bash
-python -m venv .venv
+python3.8 -m venv .venv
 ```
 
 Activate the virtual environment:
@@ -42,25 +51,40 @@ Activate the virtual environment:
 source .venv/bin/activate # Linux
 ```
 
-Install all the dependencies:
-
-```bash
-python scripts/dev_setup.py
-```
-
 Copy library files around:
 
 ```bash
 python scripts/copy_libraries.py
 ```
 
-Finally, install recommended VS Code extensions.
+Now, build the pymavlink package:
 
-If you want to build PX4 on Windows, you need WSL with the
-`python3-venv`, `python3-dev` and `build-essential` packages installed.
+```bash
+python ./PX4/generate.py host --pymavlink
+```
+
+If you actually are doing development work, you can install all the dependencies
+so you get autocomplete and type hinting:
+
+```bash
+python scripts/dev_setup.py
+```
+
+If on a Jetson, you can now follow the instructions inside
+[VMC/FlightSoftware/README.md](VMC/FlightSoftware/README.md) to run the `setup.sh`
+script (add `--dev` for development).
+
+Note, with `docker-compose` commands, make sure to add `-f docker-compose-dev.yml`
+before the action such as `sudo docker-compose -f docker-compose-dev.yml up -d`.
+This builds the Docker images locally rather than using prebuilt ones from GitHub CR.
+
+Finally, install recommended VS Code extensions.
 
 If you have trouble installing the `pupil-apriltags` package on Windows,
 try installing
 [https://aka.ms/vs/15/release/vs_buildtools.exe](https://aka.ms/vs/15/release/vs_buildtools.exe)
 or the `visualstudio2017buildtools` Chocolately package.
 You may need to add the VS 2017 Desktop Development C++ tools.
+
+To build/run ARM Docker images, you may need to run
+`docker run --rm --privileged multiarch/qemu-user-static --reset -p yes` first.

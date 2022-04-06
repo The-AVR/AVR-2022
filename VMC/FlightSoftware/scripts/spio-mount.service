@@ -1,0 +1,11 @@
+[Unit]
+Description=SPIO Mounting
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+ExecStart=/sbin/modprobe spidev
+
+[Install]
+WantedBy=multi-user.target

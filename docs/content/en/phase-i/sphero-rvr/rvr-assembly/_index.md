@@ -209,7 +209,7 @@ rotate this out of the way before installing the _RVR topper_.
 
 To install the _RVR topper_, insert the rear mounting tabs into the slots
 on the RVR, then lower the front of the _RVR topper_ into place. The front
-mounting tabs will lock into the front slots. Plug the USB-A connector into the _RVR_.  
+mounting tabs will lock into the front slots. Plug the USB-A connector into the _RVR_.
 To remove the _RVR topper_, push the blue button on the RVR and then rotate and
 lift the _RVR topper_ off.
 

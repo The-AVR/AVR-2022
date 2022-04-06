@@ -4,7 +4,7 @@ import json
 
 # This is outside the scope of beginner Python and VRC, but this is for
 # something called "type-hinting" that makes Python code easier to debug
-from typing import Any, Callable, Dict
+from typing import Any, Callable, Dict, Optional
 
 # This imports the Paho MQTT library that we will use to communicate to
 # other running processes
@@ -82,7 +82,7 @@ class Sandbox:
         client: mqtt.Client,
         userdata: Any,
         rc: int,
-        properties: mqtt.Properties = None,
+        properties: Optional[mqtt.Properties] = None,
     ) -> None:
         # Print the result code to the console for debugging purposes.
         print(f"Connected with result code {rc}")

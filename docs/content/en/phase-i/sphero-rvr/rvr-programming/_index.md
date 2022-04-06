@@ -76,7 +76,7 @@ values yourself!
 
 In order to create the program shown above, you will need to navigate to the
 Microsoft MakeCode website:
-[https://makecode.microbit.org/](https://makecode.microbit.org/).  
+[https://makecode.microbit.org/](https://makecode.microbit.org/).
 and click "New Project". Now that you have a new project open, you
 need to add an extension specific to the
 Sphero RVR. To do so, click "Advanced" in the tray, then click "Extensions".

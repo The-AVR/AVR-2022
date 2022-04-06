@@ -6,12 +6,12 @@ on:
     branches:
       - main
     paths:
-      - 'VMC/FlightSoftware/'
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'VMC/FlightSoftware/'
+      - "VMC/FlightSoftware/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "VMC/FlightSoftware/**"
 
 jobs:
   build:
@@ -21,56 +21,74 @@ jobs:
     strategy:
       matrix:
         # april tag module needs to be built on-device
-        image: [fcc, fusion, mavp2p, mqtt, pcc, vio]
+        image: [fcm, fusion, mavp2p, mqtt, pcm, vio, status, thermal]
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: actions/checkout@v3
+        with:
+          # https://github.com/tj-actions/changed-files/blob/576594102a649fceaf32e0509c125662c112cb2a/README.md?plain=1#L67
+          # on pull requests, only fetch latest commit, on pushes, fetch previous commit as well
+          fetch-depth: ${{ github.event_name == 'pull_request' && 0 || 2 }}
+
+      - name: Get Changed Files
+        id: changed-files
+        uses: tj-actions/changed-files@v18.6
+        with:
+          files: ${{ format('VMC/FlightSoftware/{0}/**', matrix.image) }}
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        if: steps.changed-files.outputs.any_changed == 'true'
+        uses: actions/setup-python@v3
         with:
           python-version: "3.9"
 
-      - name: Cache Docker Layers
-        uses: actions/cache@v2
-        with:
-          path: /tmp/.buildx-cache
-          key: buildx-${{ hashFiles(format('{0}{1}/**', 'VMC/FlightSoftware/', matrix.image)) }}
-          restore-keys: |
-            buildx
-
       - name: Set up QEMU
+        if: steps.changed-files.outputs.any_changed == 'true'
         uses: docker/setup-qemu-action@v1
         with:
           platforms: arm64
 
       - name: Set up Docker Buildx
+        if: steps.changed-files.outputs.any_changed == 'true'
         uses: docker/setup-buildx-action@v1
+
+      - name: Copy Libraries
+        if: steps.changed-files.outputs.any_changed == 'true'
+        run: python scripts/copy_libraries.py
+
+      - name: Cache PX4
+        if: steps.changed-files.outputs.any_changed == 'true' && matrix.image == 'fcm'
+        uses: actions/cache@v3
         with:
-          version: latest
-          install: false
+          path: PX4/build
+          key: px4-package-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+          restore-keys: |
+            px4-package-${{ hashFiles('PX4/patches/**') }}
+            px4-package
+            px4-firmware-${{ hashFiles('PX4/patches/**') }}
+            px4-firmware
+
+      - name: Generate Custom Pymavlink Package
+        if: steps.changed-files.outputs.any_changed == 'true' && matrix.image == 'fcm'
+        run: python3 PX4/generate.py host --pymavlink
 
       - name: Github CR Login
+        if: steps.changed-files.outputs.any_changed == 'true' && github.event_name != 'pull_request'
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Copy libraries
-        run: python scripts/copy_libraries.py
-
-      - name: Generate custom pymavlink package
-        if: matrix.image == fcc
-        run: PX4/generate.sh
-
-      - name: Build and push
+      - name: Build Container
+        if: steps.changed-files.outputs.any_changed == 'true'
         uses: docker/build-push-action@v2
         with:
           context: VMC/FlightSoftware/${{ matrix.image }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/bellflight/vrc_${{ matrix.image }}:latest
+          tags: ghcr.io/bellflight/vrc/2022/${{ matrix.image }}:latest
           platforms: linux/arm64
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max

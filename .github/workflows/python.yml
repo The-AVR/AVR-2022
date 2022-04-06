@@ -1,0 +1,56 @@
+name: Python Checks
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "**.py"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+          cache: pip
+          cache-dependency-path: "**/requirements**.txt"
+
+      - name: Copy Libraries
+        run: python scripts/copy_libraries.py
+
+      - name: Install Packages
+        run: |
+          npm install pyright
+          python -m pip install pip wheel --upgrade
+          python -m pip install -r requirements-dev.txt
+          python ./scripts/dev_setup.py
+          python ./scripts/copy_libraries.py
+
+      - name: Check Formatting
+        run: python -m black . --check
+
+      - name: Check Import Order
+        run: python -m isort . --check
+
+      - name: Check for Unused Imports
+        run: python -m autoflake --recursive . --check
+
+      - name: Check Type Hints
+        run: python -m pyleft .
+
+      - name: Check Typing
+        run: npx pyright .

@@ -8,4 +8,4 @@ RUN python -m pip install pip wheel --upgrade && \
 
 COPY . .
 
-CMD ["python", "pcc.py"]
+CMD ["python", "pcm.py"]

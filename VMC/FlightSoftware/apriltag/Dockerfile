@@ -4,11 +4,20 @@ ENV OPENBLAS_CORETYPE=CORTEXA57
 
 # Needed as some repo certs are expired in the base image
 RUN apt-get update -y || true \
- && apt-get install -y ca-certificates && update-ca-certificates
-RUN apt-get update -y
+ && apt-get install -y ca-certificates software-properties-common && update-ca-certificates
+
+# Install Python newer than 3.6
+RUN add-apt-repository ppa:deadsnakes/ppa \
+ && apt-get update -y
+# https://askubuntu.com/a/1297198
+# libssl is needed for MQTT libraries
 RUN apt-get install -y \
+    python3.9 \
+    python3.9-dev \
+    python3.9-distutils \
     python3-pip \
     libssl-dev
+RUN python3.9 -m pip install pip wheel setuptools --upgrade
 
 WORKDIR /app
 
@@ -16,7 +25,7 @@ WORKDIR /app
 RUN git clone https://github.com/eclipse/paho.mqtt.c \
  && cd paho.mqtt.c \
  && git checkout v1.3.8 \
- && cmake -Bbuild -H. -DPAHO_ENABLE_TESTING=OFF -DPAHO_BUILD_STATIC=ON -DPAHO_WITH_SSL=ON -DPAHO_HIGH_PERFORMANCE=ON \
+ && cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON -DPAHO_WITH_SSL=ON -DPAHO_HIGH_PERFORMANCE=ON \
  && cmake --build build/ --target install \
  && ldconfig
 
@@ -24,7 +33,7 @@ RUN git clone https://github.com/eclipse/paho.mqtt.c \
 RUN git clone https://github.com/eclipse/paho.mqtt.cpp \
  && cd paho.mqtt.cpp \
  && git checkout v1.2.0 \
- && cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON -DPAHO_BUILD_DOCUMENTATION=FALSE -DPAHO_BUILD_SAMPLES=FALSE \
+ && cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON \
  && cmake --build build/ --target install \
  && ldconfig
 
@@ -49,11 +58,10 @@ COPY c c
 RUN mkdir -p c/build \
  && cd c/build \
  && cmake .. \
- && make -j4
+ && make -j$(nproc)
 
 COPY python/requirements.txt python/requirements.txt
-RUN python3 -m pip install pip wheel --upgrade \
- && python3 -m pip install -r python/requirements.txt
+RUN python3.9 -m pip install -r python/requirements.txt
 
 COPY . .
 
