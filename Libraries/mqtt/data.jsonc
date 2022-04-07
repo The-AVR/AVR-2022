@@ -817,6 +817,17 @@
                     "type": "int"
                 }
             ]
+        },
+        // thermal
+        {
+            "path": "vrc/thermal/reading",
+            "docs": "",
+            "payload": [
+                {
+                    "key": "data",
+                    "type": "str"
+                }
+            ]
         }
     ]
 }

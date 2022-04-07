@@ -18,7 +18,9 @@
       "VMC/FlightSoftware/fcm",
       "VMC/FlightSoftware/fusion",
       "VMC/FlightSoftware/apriltag/python",
-      "VMC/FlightSoftware/vio"
+      "VMC/FlightSoftware/vio",
+      "VMC/FlightSoftware/thermal",
+      "VMC/FlightSoftware/status"
     ]
   },
   {
