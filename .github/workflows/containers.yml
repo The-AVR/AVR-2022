@@ -21,7 +21,8 @@ jobs:
     strategy:
       matrix:
         # april tag module needs to be built on-device
-        image: [fcm, fusion, mavp2p, mqtt, pcm, vio, status, thermal]
+        # sandbox should be built by students
+        image: [fcm, fusion, mavp2p, mqtt, pcm, status, thermal, vio]
 
     steps:
       - name: Checkout Code

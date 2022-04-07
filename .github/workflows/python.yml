@@ -13,6 +13,25 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
+    strategy:
+      matrix:
+        project:
+          [
+            docs/,
+            GUI/,
+            Libraries/,
+            PX4/,
+            scripts/,
+            VMC/apriltag/python/,
+            VMC/fcm/,
+            VMC/fusion/,
+            VMC/pcm/,
+            VMC/sandbox/,
+            VMC/status/,
+            VMC/thermal/,
+            VMC/vio/,
+          ]
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -29,28 +48,25 @@ jobs:
           cache: pip
           cache-dependency-path: "**/requirements**.txt"
 
-      - name: Copy Libraries
-        run: python scripts/copy_libraries.py
-
       - name: Install Packages
         run: |
-          npm install pyright
+          npm install
           python -m pip install pip wheel --upgrade
           python -m pip install -r requirements-dev.txt
-          python ./scripts/dev_setup.py
+          python ./scripts/install_requirements.py --directory ${{ matrix.project }} --strict
           python ./scripts/copy_libraries.py
 
       - name: Check Formatting
-        run: python -m black . --check
+        run: python -m black ${{ matrix.project }} --verbose --check
 
       - name: Check Import Order
-        run: python -m isort . --check
+        run: python -m isort ${{ matrix.project }} --verbose --check
 
       - name: Check for Unused Imports
-        run: python -m autoflake --recursive . --check
+        run: python -m autoflake --recursive ${{ matrix.project }} --check
 
       - name: Check Type Hints
-        run: python -m pyleft .
+        run: python -m pyleft ${{ matrix.project }} --verbose
 
       - name: Check Typing
-        run: npx pyright
+        run: npx pyright ${{ matrix.project }} --verbose
