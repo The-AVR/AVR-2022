@@ -1,3 +1,6 @@
+import time
+
+import serial
 from mqtt_library import (
     MQTTModule,
     VrcPcmResetMessage,
@@ -14,11 +17,16 @@ from pcc_library import PeripheralControlComputer
 
 
 class PeripheralControlModule(MQTTModule):
-    def __init__(self, serial_port: str):
+    def __init__(self, port: str, baud_rate: int):
         super().__init__()
 
         # PCC connection
-        self.pcc = PeripheralControlComputer(serial_port)
+        self.ser = serial.Serial()
+        self.ser.port = port
+        self.ser.baudrate = baud_rate
+        self.ser.open()
+
+        self.pcc = PeripheralControlComputer(self.ser)
 
         # MQTT topics
         self.topic_map = {
@@ -32,6 +40,13 @@ class PeripheralControlModule(MQTTModule):
             "vrc/pcm/set_servo_pct": self.set_servo_pct,
             "vrc/pcm/reset": self.reset,
         }
+
+    def run(self) -> None:
+        super().run_non_blocking()
+
+        while self.ser.in_waiting > 0:
+            self.ser.read(1)
+            time.sleep(0.01)
 
     def set_base_color(self, payload: VrcPcmSetBaseColorMessage) -> None:
         wrgb = payload["wrgb"]
@@ -73,5 +88,5 @@ class PeripheralControlModule(MQTTModule):
 
 
 if __name__ == "__main__":
-    pcm = PeripheralControlModule("/dev/ttyACM0")
+    pcm = PeripheralControlModule("/dev/ttyACM0", 115200)
     pcm.run()

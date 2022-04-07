@@ -6,12 +6,12 @@ on:
     branches:
       - main
     paths:
-      - "PCC/ControlSoftware/**"
+      - "PCC/**"
   push:
     branches:
       - main
     paths:
-      - "PCC/ControlSoftware/**"
+      - "PCC/**"
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: "3.9"
           cache: pip
-          cache-dependency-path: "PCC/ControlSoftware/requirements.txt"
+          cache-dependency-path: PCC
 
       - name: Install PlatformIO
         run: |
@@ -44,21 +44,21 @@ jobs:
 
       - name: Apply Patches
         run: git apply ../queue-default.patch
-        working-directory: PCC/ControlSoftware/libraries/Queue
+        working-directory: PCC/libraries/Queue
 
       - name: Build Firmware
         run: pio run --verbose
-        working-directory: PCC/ControlSoftware
+        working-directory: PCC
 
       - name: Rename Firmware
         run: cp firmware.bin pcc_firmware.bin
-        working-directory: PCC/ControlSoftware/.pio/build/adafruit_feather_m4
+        working-directory: PCC/.pio/build/adafruit_feather_m4
 
       - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: PCC/ControlSoftware/.pio/build/adafruit_feather_m4/pcc_firmware.bin
+          file: PCC/.pio/build/adafruit_feather_m4/pcc_firmware.bin
           tag: ${{ steps.latest_release.outputs.tag_name }}
           overwrite: true

@@ -6,12 +6,12 @@ on:
     branches:
       - main
     paths:
-      - "VMC/FlightSoftware/**"
+      - "VMC/**"
   push:
     branches:
       - main
     paths:
-      - "VMC/FlightSoftware/**"
+      - "VMC/**"
 
 jobs:
   build:
@@ -70,7 +70,7 @@ jobs:
       - name: Build Container
         uses: docker/build-push-action@v2
         with:
-          context: VMC/FlightSoftware/${{ matrix.image }}
+          context: VMC/${{ matrix.image }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/bellflight/vrc/2022/${{ matrix.image }}:latest
           platforms: linux/arm64

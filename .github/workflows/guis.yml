@@ -1,19 +1,17 @@
-name: Build GUIs
+name: Build GUI
 
 on:
   workflow_dispatch:
-  # pull_request:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'PCC/GUI/'
-  #     - 'VMC/GUI/'
-  # push:
-  #   branches:
-  #     - main
-  #   paths:
-  #     - 'PCC/GUI/'
-  #     - 'VMC/GUI/'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "GUI/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "GUI/**"
 
 jobs:
   build:
@@ -31,9 +29,11 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Setup Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: "3.9"
+          cache: pip
+          cache-dependency-path: GUI
 
       - name: Copy Libraries
         run: python scripts/copy_libraries.py
@@ -41,19 +41,12 @@ jobs:
       - name: Prepare Python
         run: |
           python -m pip install pip wheel --upgrade
-          python -m pip install pyinstaller
+          python -m pip install -r GUI/requirements.txt
 
-      - name: Build PCC GUI
-        run: |
-          python -m pip install -r PCC/GUI/requirements.txt
-          pyinstaller PCC/GUI/app.py --onefile --name VRCPCCTest --icon PCC/GUI/img/logo.ico --add-data "PCC/GUI/img;img" --noconfirm
+      - name: Build GUI
+        run: pyinstaller GUI/app.py --onefile --name VRCGUI --icon GUI/lib/img/logo.ico --add-data "GUI/lib/img;lib/img" --noconfirm
 
-      - name: Build VMC GUI
-        run: |
-          python -m pip install -r VMC/GUI/requirements.txt
-          pyinstaller VMC/GUI/app.py --onefile --name VRCControlGUI --icon VMC/GUI/img/logo.ico --add-data "VMC/GUI/img;img" --noconfirm
-
-      - name: Upload GUIs to Release
+      - name: Upload GUI to Release
         if: github.event_name != 'pull_request'
         uses: svenstaro/upload-release-action@v2
         with:

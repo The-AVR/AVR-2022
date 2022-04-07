@@ -37,7 +37,6 @@ jobs:
           npm install pyright
           python -m pip install pip wheel --upgrade
           python -m pip install -r requirements-dev.txt
-          python -m pip install PySide6
           python ./scripts/dev_setup.py
           python ./scripts/copy_libraries.py
 

@@ -1,0 +1,5 @@
+lib/pcc_library.py
+lib/mqtt_library.py
+lib/qt_icon.py
+lib/img/
+settings.json

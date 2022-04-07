@@ -1,82 +1,27 @@
 from __future__ import annotations
 
-import glob
-import sys
 from typing import List, Literal
 
-import serial
-from pcc_library import PeripheralControlComputer
+from lib.pcc_library import PeripheralControlComputer
 from PySide6 import QtCore, QtWidgets
-from qt_icon import set_icon
+
+from .base import BaseTabWidget
+from .connection.serial import SerialClient
 
 
-def list_serial_ports() -> List[str]:
-    """
-    Returns a list of serial ports on the system
-    """
-    if sys.platform.startswith("win"):
-        ports = ["COM%s" % (i + 1) for i in range(256)]
-    elif sys.platform.startswith("linux") or sys.platform.startswith("cygwin"):
-        # this excludes your current terminal "/dev/tty"
-        ports = glob.glob("/dev/tty[A-Za-z]*")
-    elif sys.platform.startswith("darwin"):
-        ports = glob.glob("/dev/tty.*")
-    else:
-        raise EnvironmentError("Unsupported platform")
+class PCCTesterWidget(BaseTabWidget):
+    def __init__(self, parent: QtWidgets.QWidget, client: SerialClient) -> None:
+        super().__init__(parent)
 
-    result = []
-    for port in ports:
-        try:
-            s = serial.Serial(port)
-            s.close()
-            result.append(port)
-        except (OSError, serial.SerialException):
-            pass
+        self.setWindowTitle("PCC Tester")
 
-    return result
-
-
-class MainWidget(QtWidgets.QWidget):
-    def __init__(self) -> None:
-        super().__init__()
-
-        self.setup_widget = ConnectWidget(self)
-        self.setup_widget.build()
-        self.setup_widget.connect_button.clicked.connect(self.connect)  # type: ignore
-        self.setup_widget.exec()
-
-        self.control_widget = ControlWidget(self)
-        self.control_widget.build()
-        self.control_widget.show()
-
-    def connect(self) -> None:
-        """
-        Creates the connection to the PCC
-        """
-        try:
-            self.pcc = PeripheralControlComputer(
-                self.setup_widget.com_port_combo.currentText(),
-            )
-            self.setup_widget.close()
-        except:
-            QtWidgets.QMessageBox.critical(
-                self, "Serial Error", "Could not connect to serial device."
-            )
-            sys.exit(1)
-
-
-class ControlWidget(QtWidgets.QWidget):
-    def __init__(self, parent: MainWidget) -> None:
-        self.parent_ = parent
-        super().__init__()
-
-        self.setWindowTitle("Bell VRC PCC Tester")
-        set_icon(self)
-
-        self.servo_states: List[Literal["open", "close"]] = ["open"] * 4
+        self.client = PeripheralControlComputer(client.client)
 
     def build(self) -> None:
-        layout = QtWidgets.QGridLayout()
+        """
+        Build the GUI layout
+        """
+        layout = QtWidgets.QGridLayout(self)
         self.setLayout(layout)
 
         # ==========================
@@ -87,6 +32,7 @@ class ControlWidget(QtWidgets.QWidget):
 
         self.servo_1_dial = QtWidgets.QDial()
         self.servo_1_dial.setNotchesVisible(True)
+        self.servo_1_dial.setRange(0, 100)
         servo_1_layout.addWidget(self.servo_1_dial, 0, 0, 1, 1)
 
         servo_1_number = QtWidgets.QLCDNumber()
@@ -108,6 +54,7 @@ class ControlWidget(QtWidgets.QWidget):
 
         self.servo_2_dial = QtWidgets.QDial()
         self.servo_2_dial.setNotchesVisible(True)
+        self.servo_2_dial.setRange(0, 100)
         servo_2_layout.addWidget(self.servo_2_dial, 0, 0, 1, 1)
 
         servo_2_number = QtWidgets.QLCDNumber()
@@ -129,6 +76,7 @@ class ControlWidget(QtWidgets.QWidget):
 
         self.servo_3_dial = QtWidgets.QDial()
         self.servo_3_dial.setNotchesVisible(True)
+        self.servo_3_dial.setRange(0, 100)
         servo_3_layout.addWidget(self.servo_3_dial, 0, 0, 1, 1)
 
         servo_3_number = QtWidgets.QLCDNumber()
@@ -150,6 +98,7 @@ class ControlWidget(QtWidgets.QWidget):
 
         self.servo_4_dial = QtWidgets.QDial()
         self.servo_4_dial.setNotchesVisible(True)
+        self.servo_4_dial.setRange(0, 100)
         servo_4_layout.addWidget(self.servo_4_dial, 0, 0, 1, 1)
 
         servo_4_number = QtWidgets.QLCDNumber()
@@ -213,6 +162,19 @@ class ControlWidget(QtWidgets.QWidget):
 
         layout.addWidget(led_groupbox, 4, 0, 1, 4)
 
+        self.reset_button = QtWidgets.QPushButton("Reset All")
+        self.reset_button.clicked.connect(self.reset_all)  # type: ignore
+
+        layout.addWidget(self.reset_button, 5, 0, 1, 4)
+
+        self.servo_states: List[Literal["open", "close"]] = ["close"] * 4
+        self.servo_dials = {
+            0: self.servo_1_dial,
+            1: self.servo_2_dial,
+            2: self.servo_3_dial,
+            3: self.servo_4_dial,
+        }
+
     def update_leds(self) -> None:
         """
         Update the value of the LEDs based on the current position of the sliders
@@ -221,16 +183,16 @@ class ControlWidget(QtWidgets.QWidget):
         green = self.green_led_slider.value()
         blue = self.blue_led_slider.value()
 
-        self.parent_.pcc.set_base_color([0, red, green, blue])
+        self.client.set_base_color([0, red, green, blue])
 
     def update_servos(self) -> None:
         """
         Update the position of the servos based on the current position of the dials
         """
-        self.parent_.pcc.set_servo_pct(0, self.servo_1_dial.value())
-        self.parent_.pcc.set_servo_pct(1, self.servo_2_dial.value())
-        self.parent_.pcc.set_servo_pct(2, self.servo_3_dial.value())
-        self.parent_.pcc.set_servo_pct(3, self.servo_4_dial.value())
+        self.client.set_servo_pct(0, self.servo_1_dial.value())
+        self.client.set_servo_pct(1, self.servo_2_dial.value())
+        self.client.set_servo_pct(2, self.servo_3_dial.value())
+        self.client.set_servo_pct(3, self.servo_4_dial.value())
 
     def toggle_servo(self, servo: int) -> None:
         """
@@ -238,48 +200,22 @@ class ControlWidget(QtWidgets.QWidget):
         """
         if self.servo_states[servo] == "open":
             self.servo_states[servo] = "close"
+            pct = 0
         else:
             self.servo_states[servo] = "open"
+            pct = 100
 
-        self.parent_.pcc.set_servo_open_close(servo, self.servo_states[servo])
+        self.servo_dials[servo].setValue(pct)
 
+    def reset_all(self) -> None:
+        """
+        Reset all values back to 0.
+        """
+        self.servo_1_dial.setValue(0)
+        self.servo_2_dial.setValue(0)
+        self.servo_3_dial.setValue(0)
+        self.servo_4_dial.setValue(0)
 
-class ConnectWidget(QtWidgets.QDialog):
-    def __init__(self, parent: MainWidget) -> None:
-        self.parent_ = parent
-        super().__init__()
-
-        self.setWindowTitle("Bell VRC PCC Connection")
-        set_icon(self)
-
-    def build(self) -> None:
-        layout = QtWidgets.QFormLayout()
-        self.setLayout(layout)
-
-        com_port_label = QtWidgets.QLabel("COM Port")
-        self.com_port_combo = QtWidgets.QComboBox()
-        layout.addRow(com_port_label, self.com_port_combo)
-
-        # baud_rate_label = QtWidgets.QLabel("Baud Rate")
-        # self.baud_rate_combo = QtWidgets.QComboBox()
-        # layout.addRow(baud_rate_label, self.baud_rate_combo)
-
-        self.connect_button = QtWidgets.QPushButton("Connect")
-        layout.addWidget(self.connect_button)
-
-        self.com_port_combo.addItems(list_serial_ports())
-
-
-def main() -> None:
-    # create Qt Application instance
-    app = QtWidgets.QApplication()
-
-    # create the main widget
-    MainWidget()
-
-    # run
-    sys.exit(app.exec())
-
-
-if __name__ == "__main__":
-    main()
+        self.red_led_slider.setValue(0)
+        self.green_led_slider.setValue(0)
+        self.blue_led_slider.setValue(0)
