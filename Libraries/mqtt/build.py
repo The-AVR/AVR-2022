@@ -79,5 +79,6 @@ def main() -> None:
     # with open(os.path.join(THIS_DIR, "..", "MQTT.md"), "w") as fp:
     #     fp.write(template.render(klasses=klasses, topics=topics))
 
+
 if __name__ == "__main__":
     main()
