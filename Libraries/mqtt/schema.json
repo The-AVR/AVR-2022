@@ -1,0 +1,69 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "title": "VRC MQTT Data",
+    "type": "object",
+    "properties": {
+        "topics": {
+            "description": "List of MQTT topics and payloads",
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "path": {
+                        "description": "Full MQTT topic path",
+                        "type": "string",
+                        "pattern": "^vrc\/[a-z\/_]+$"
+                    },
+                    "docs": {
+                        "description": "Markdown description of the topic",
+                        "type": "string"
+                    },
+                    "payload": {
+                        "description": "Payload of the topic. Must be a list of fields. An empty list is acceptable.",
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "description": "Payload field",
+                            "properties": {
+                                "key": {
+                                    "description": "Payload field name",
+                                    "type": "string"
+                                },
+                                "list": {
+                                    "description": "If the payload field is a list of the given type",
+                                    "type": "boolean"
+                                },
+                                "type": {
+                                    "description": "Payload field type. Can either be a string or a list of nested payload fields.",
+                                    "oneOf": [
+                                        {
+                                            "type": "string"
+                                        },
+                                        {
+                                            "$ref": "#/properties/topics/items/properties/payload"
+                                        }
+                                    ]
+                                },
+                                "docs": {
+                                    "description": "Markdown description of the payload item",
+                                    "type": "string"
+                                }
+                            },
+                            "required": [
+                                "key",
+                                "type"
+                            ]
+                        }
+                    }
+                },
+                "required": [
+                    "path",
+                    "payload"
+                ]
+            }
+        }
+    },
+    "required": [
+        "topics"
+    ]
+}

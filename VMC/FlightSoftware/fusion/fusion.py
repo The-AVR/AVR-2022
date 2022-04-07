@@ -8,23 +8,23 @@ from decorator_library import try_except
 from loguru import logger
 from mqtt_library import (
     MQTTModule,
-    VRCApriltagsSelectedMessage,
-    VRCFusionAttitudeEulerMessage,
-    VRCFusionAttitudeHeadingMessage,
-    VRCFusionAttitudeQuatMessage,
-    VRCFusionClimbrateMessage,
-    VRCFusionCourseMessage,
-    VRCFusionGeoMessage,
-    VRCFusionGroundspeedMessage,
-    VRCFusionHilGpsMessage,
-    VRCFusionPositionNedMessage,
-    VRCFusionVelocityNedMessage,
-    VRCVioHeadingMessage,
-    VRCVioOrientationEulMessage,
-    VRCVioOrientationQuatMessage,
-    VRCVioPositionNedMessage,
-    VRCVioResyncMessage,
-    VRCVioVelocityNedMessage,
+    VrcApriltagsSelectedMessage,
+    VrcFusionAttitudeEulerMessage,
+    VrcFusionAttitudeHeadingMessage,
+    VrcFusionAttitudeQuatMessage,
+    VrcFusionClimbrateMessage,
+    VrcFusionCourseMessage,
+    VrcFusionGeoMessage,
+    VrcFusionGroundspeedMessage,
+    VrcFusionHilGpsMessage,
+    VrcFusionPositionNedMessage,
+    VrcFusionVelocityNedMessage,
+    VrcVioHeadingMessage,
+    VrcVioOrientationEulMessage,
+    VrcVioOrientationQuatMessage,
+    VrcVioPositionNedMessage,
+    VrcVioResyncMessage,
+    VrcVioVelocityNedMessage,
 )
 
 
@@ -68,7 +68,7 @@ class FusionModule(MQTTModule):
         self.last_apriltag = time.time()
 
     @try_except(reraise=True)
-    def local_to_geo(self, payload: VRCFusionPositionNedMessage) -> None:
+    def local_to_geo(self, payload: VrcFusionPositionNedMessage) -> None:
         """
         Callback for the fusion/pos topic. This method calculates the
         geodetic location from an NED position and origin and publishes it.
@@ -83,40 +83,40 @@ class FusionModule(MQTTModule):
             deg=True,
         )
 
-        geo_update = VRCFusionGeoMessage(
-            geodetic={"lat": float(lla[0]), "lon": float(lla[1]), "alt": float(lla[2])}
+        geo_update = VrcFusionGeoMessage(
+            lat=float(lla[0]), lon=float(lla[1]), alt=float(lla[2])
         )
         self.send_message("vrc/fusion/geo", geo_update)
 
     @try_except(reraise=True)
-    def fuse_pos(self, payload: VRCVioPositionNedMessage) -> None:
+    def fuse_pos(self, payload: VrcVioPositionNedMessage) -> None:
         """
         Callback for receiving pos data in NED reference frame from VIO and
         publishes into a fusion/pos topic.
 
-        VRC doesnt have sophisticated fusion yet, so this just re-routes the
+        Vrc doesnt have sophisticated fusion yet, so this just re-routes the
         message onto the fusion topic.
         """
 
-        pos_update = VRCFusionPositionNedMessage(
+        pos_update = VrcFusionPositionNedMessage(
             n=payload["n"], e=payload["e"], d=payload["d"]
         )
         self.send_message("vrc/fusion/position/ned", pos_update)
 
     @try_except(reraise=True)
-    def fuse_vel(self, payload: VRCVioVelocityNedMessage) -> None:
+    def fuse_vel(self, payload: VrcVioVelocityNedMessage) -> None:
         """
         Callback for receiving vel data in NED reference frame from VIO and
         publishes into a fusion/vel topic.
 
-        VRC doesnt have sophisticated fusion yet, so this just re-routes the
+        Vrc doesnt have sophisticated fusion yet, so this just re-routes the
         message onto the fusion topic.
         """
         # record that VIO has initialized
         self.vio_init = True
 
         # forward ned velocity message
-        vmc_vel_update = VRCFusionVelocityNedMessage(
+        vmc_vel_update = VrcFusionVelocityNedMessage(
             Vn=payload["n"], Ve=payload["e"], Vd=payload["d"]
         )
         self.send_message("vrc/fusion/velocity/ned", vmc_vel_update)
@@ -124,7 +124,7 @@ class FusionModule(MQTTModule):
 
         # compute groundspeed
         gs = np.linalg.norm([payload["n"], payload["e"]])
-        groundspeed_update = VRCFusionGroundspeedMessage(groundspeed=float(gs))
+        groundspeed_update = VrcFusionGroundspeedMessage(groundspeed=float(gs))
         self.send_message("vrc/fusion/groundspeed", groundspeed_update)
 
         # arctan gets real noisy when the values get small, so we just lock course
@@ -137,55 +137,55 @@ class FusionModule(MQTTModule):
 
             # rad to deg
             course = math.degrees(course)
-            course_update = VRCFusionCourseMessage(course=course)
+            course_update = VrcFusionCourseMessage(course=course)
 
             self.send_message("vrc/fusion/course", course_update)
 
         m_per_s_2_ft_per_min = 196.85
-        climb_rate_update = VRCFusionClimbrateMessage(
+        climb_rate_update = VrcFusionClimbrateMessage(
             climb_rate_fps=-1 * payload["d"] * m_per_s_2_ft_per_min
         )
 
         self.send_message("vrc/fusion/climbrate", climb_rate_update)
 
     @try_except(reraise=True)
-    def fuse_att_quat(self, payload: VRCVioOrientationQuatMessage) -> None:
+    def fuse_att_quat(self, payload: VrcVioOrientationQuatMessage) -> None:
         """
         Callback for receiving quaternion att data in NED reference frame
         from vio and publishes into a fusion/att/quat topic.
 
-        VRC doesnt have sophisticated fusion yet, so this just re-routes
+        Vrc doesnt have sophisticated fusion yet, so this just re-routes
         the message onto the fusion topic.
         """
-        quat_update = VRCFusionAttitudeQuatMessage(
+        quat_update = VrcFusionAttitudeQuatMessage(
             w=payload["w"], x=payload["x"], y=payload["y"], z=payload["z"]
         )
         self.send_message("vrc/fusion/attitude/quat", quat_update)
 
     @try_except(reraise=True)
-    def fuse_att_euler(self, payload: VRCVioOrientationEulMessage) -> None:
+    def fuse_att_euler(self, payload: VrcVioOrientationEulMessage) -> None:
         """
         Callback for receiving euler att data in NED reference frame from VIO and
         publishes into a fusion/att/euler topic.
 
-        VRC doesnt have sophisticated fusion yet, so this just re-routes
+        Vrc doesnt have sophisticated fusion yet, so this just re-routes
         the message onto the fusion topic.
         """
-        euler_update = VRCFusionAttitudeEulerMessage(
+        euler_update = VrcFusionAttitudeEulerMessage(
             psi=payload["psi"], theta=payload["theta"], phi=payload["phi"]
         )
         self.send_message("vrc/fusion/attitude/euler", euler_update)
 
     @try_except(reraise=True)
-    def fuse_att_heading(self, payload: VRCVioHeadingMessage) -> None:
+    def fuse_att_heading(self, payload: VrcVioHeadingMessage) -> None:
         """
         Callback for receiving heading att data in NED reference frame from VIO and
         publishes into a fusion/att/heading topic.
 
-        VRC doesnt have sophisticated fusion yet, so this just re-routes
+        Vrc doesnt have sophisticated fusion yet, so this just re-routes
         the message onto the fusion topic.
         """
-        heading_update = VRCFusionAttitudeHeadingMessage(heading=payload["degrees"])
+        heading_update = VrcFusionAttitudeHeadingMessage(heading=payload["degrees"])
         self.send_message("vrc/fusion/attitude/heading", heading_update)
 
         # if the groundspeed is below the threshold, we lock the course to the heading
@@ -213,7 +213,7 @@ class FusionModule(MQTTModule):
                 logger.debug("Waiting for vrc/fusion/geo to be populated")
                 continue
 
-            goedetic = self.message_cache["vrc/fusion/geo"]["geodetic"]
+            goedetic = self.message_cache["vrc/fusion/geo"]
             lat = int(goedetic["lat"] * 10000000)  # convert to int32 format
             lon = int(goedetic["lon"] * 10000000)  # convert to int32 format
 
@@ -247,7 +247,7 @@ class FusionModule(MQTTModule):
                 logger.debug("vrc/fusion/groundspeed message cache is empty")
                 continue
 
-            hil_gps_update = VRCFusionHilGpsMessage(
+            hil_gps_update = VrcFusionHilGpsMessage(
                 time_usec=int(time.time() * 1000000),
                 fix_type=int(
                     self.config["hil_gps_constants"]["fix_type"]
@@ -255,7 +255,7 @@ class FusionModule(MQTTModule):
                 lat=lat,
                 lon=lon,
                 alt=int(
-                    self.message_cache["vrc/fusion/geo"]["geodetic"]["alt"] * 1000
+                    self.message_cache["vrc/fusion/geo"]["alt"] * 1000
                 ),  # convert m to mm
                 eph=int(self.config["hil_gps_constants"]["eph"]),  # cm
                 epv=int(self.config["hil_gps_constants"]["epv"]),  # cm
@@ -274,7 +274,7 @@ class FusionModule(MQTTModule):
             self.send_message("vrc/fusion/hil_gps", hil_gps_update)
 
     @try_except(reraise=True)
-    def on_apriltag_message(self, msg: VRCApriltagsSelectedMessage) -> None:
+    def on_apriltag_message(self, msg: VrcApriltagsSelectedMessage) -> None:
         if (
             "vrc/fusion/position/ned" not in self.message_cache
             or "vrc/fusion/attitude/heading" not in self.message_cache
@@ -324,7 +324,7 @@ class FusionModule(MQTTModule):
                 # reject AT readings that are extraineous
                 at_ned["d"] = cam_ned["d"]
 
-            resync = VRCVioResyncMessage(
+            resync = VrcVioResyncMessage(
                 n=at_ned["n"],
                 e=at_ned["e"],
                 d=at_ned["d"],
@@ -336,10 +336,9 @@ class FusionModule(MQTTModule):
 
     def run(self) -> None:
         self.run_non_blocking()
-        # self.run()
         try:
             self.assemble_hil_gps_message()
-        except Exception as e:
+        except Exception:
             logger.exception("Issue while assembling hil message")
 
 

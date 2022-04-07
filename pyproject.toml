@@ -2,4 +2,5 @@
     profile = "black"
 
 [tool.pyright]
-    include = ["VMC/**", "PCC/**", "scripts/**", "docs/**"]
+    # for now, ignoring GUIs
+    include = ["Libraries/**", "PX4/**", "VMC/FlightSoftware/**", "scripts/**", "docs/**"]

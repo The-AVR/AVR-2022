@@ -1,101 +1,47 @@
 import base64
-import json
-import threading
 import time
-from typing import Any, Optional
 
 import adafruit_amg88xx
 import board
-import paho.mqtt.client as mqtt
 from loguru import logger
+from mqtt_library import MQTTModule, VrcThermalReadingMessage
 
-INTERRUPTED = False
 
-
-class Thermal(object):
+class ThermalModule(MQTTModule):
     def __init__(self):
-        self.mqtt_host = "mqtt"
-        self.mqtt_port = 18830
+        super().__init__()
 
-        self.mqtt_client = mqtt.Client()
-
-        self.mqtt_client.on_connect = self.on_connect
-        self.mqtt_client.on_message = self.on_message
-
-        self.topic_prefix = "vrc/thermal"
-
-        self.topic_map = {
-            "vrc/thermal/request_thermal_reading": self.request_thermal_reading,
-        }
-
-        print("connecting to thermal camera...")
+        logger.debug("Connecting to thermal camera...")
         i2c = board.I2C()
         self.amg = adafruit_amg88xx.AMG88XX(i2c)
-        print("Connected to Thermal Camera!")
+        logger.success("Connected to thermal camera!")
 
-    def on_message(
-        self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage
-    ) -> None:
-        try:
-            # logger.debug(f"{msg.topic}: {str(msg.payload)}")
-            if msg.topic in self.topic_map:
-                payload = json.loads(msg.payload)
-                self.topic_map[msg.topic](payload)
-        except Exception as e:
-            logger.exception(f"Error handling message on {msg.topic}")
-            print(e)
-
-    def on_connect(
-        self,
-        client: mqtt.Client,
-        userdata: Any,
-        rc: int,
-        properties: Optional[mqtt.Properties] = None,
-    ) -> None:
-        logger.debug(f" THERAM: Connected with result code {rc}")
-        for topic in self.topic_map.keys():
-            logger.debug(f"THERMAL: Subscribed to: {topic}")
-            client.subscribe(topic)
-
-    def request_thermal_reading(self, msg: dict) -> None:
+    def request_thermal_reading(self) -> None:
         reading = bytearray(64)
         i = 0
+
         for row in self.amg.pixels:
             for pix in row:
                 pixasint = round(pix)
                 bpix = pixasint.to_bytes(1, "big")
                 reading[i] = bpix[0]
                 i += 1
-        base64Encoded = base64.b64encode(reading)
-        # logger.debug(str(base64Encoded))
-        base64_string = base64Encoded.decode("utf-8")
 
-        thermalreading = {"reading": base64_string}
-        self.mqtt_client.publish(
-            f"{self.topic_prefix}/thermal_reading",
-            json.dumps(thermalreading),
-            retain=False,
-            qos=0,
+        base64_encoded = base64.b64encode(reading)
+        base64_string = base64_encoded.decode("utf-8")
+
+        self.send_message(
+            "vrc/thermal/reading", VrcThermalReadingMessage(data=base64_string)
         )
-
-    def request_thread(self) -> None:
-        msg = {}
-        while True:
-            self.request_thermal_reading(msg)
-            time.sleep(0.2)
 
     def run(self) -> None:
-        # allows for graceful shutdown of any child threads
-        self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
+        self.run_non_blocking()
 
-        request_thread = threading.Thread(
-            target=self.request_thread, args=(), daemon=True, name="request_thread"
-        )
-        request_thread.start()
-
-        self.mqtt_client.loop_forever()
+        while True:
+            self.request_thermal_reading()
+            time.sleep(0.2)
 
 
 if __name__ == "__main__":
-    thermal = Thermal()
+    thermal = ThermalModule()
     thermal.run()

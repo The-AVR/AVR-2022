@@ -1,0 +1,28 @@
+{% macro class(item, suffix, topic_path) %}
+### {{ item.name }}{{ suffix }}
+{% if topic_path|length > 0 %}
+Topic: `{{ topic_path}}`
+{% endif -%}
+{% if 'docs' in item and item['docs']|length > 0 %}
+{{ item.docs }}
+{% endif -%}
+{%- if item.payload|length > 0 %}
+{%- for p in item.payload %}
+- `"{{ p.key }}"` (`{% if 'list' in p and p['list'] %}List[{{ p.type }}]{% else %}{{ p.type }}{% endif %}`){%- if 'docs' in p and p['docs']|length > 0 %}: {{ p.docs }}{%- endif %}
+{%- endfor %}
+{%- else %}
+There is no content for this class
+{%- endif %}
+{%- endmacro -%}
+
+# MQTT Documentation
+
+## Data Types
+
+{%- for klass in klasses %}
+{{ class(klass, "", "") }}
+{%- endfor %}
+
+{%- for topic in topics %}
+{{ class(topic, "Message", topic.path) }}
+{%- endfor %}

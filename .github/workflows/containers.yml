@@ -44,6 +44,7 @@ jobs:
         run: python scripts/copy_libraries.py
 
       - name: Cache PX4
+        if: matrix.image == 'fcm'
         uses: actions/cache@v3
         with:
           path: PX4/build

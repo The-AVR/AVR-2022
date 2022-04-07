@@ -18,6 +18,8 @@ This module subscribes to the **"vrc/apriltags/raw"** topic
 
 ##### Publishes:
 
+TODO UPDATE
+
 - This module publishes the raw tag data to the **"vrc/apriltags/raw"** topic in the following format:
 
   - `id` - the id of the tag

@@ -1,5 +1,7 @@
 import json
 import os
+import subprocess
+import sys
 
 
 def link_item(src: str, dst: str) -> None:
@@ -44,6 +46,21 @@ def main() -> None:
     # libraries directory
     libraries_dir = os.path.join(base_dir, "Libraries")
     libraries_manifest = os.path.join(libraries_dir, "manifest.json")
+
+    # build mqtt library
+    subprocess.check_call(
+        [
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            "-r",
+            os.path.join(libraries_dir, "mqtt", "requirements.txt"),
+        ]
+    )
+    subprocess.check_call(
+        [sys.executable, os.path.join(libraries_dir, "mqtt", "build.py")]
+    )
 
     # read manifest data
     with open(libraries_manifest, "r") as fp:
