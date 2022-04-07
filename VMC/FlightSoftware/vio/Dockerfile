@@ -1,6 +1,6 @@
 # adapted from https://github.com/stereolabs/zed-docker/blob/master/3.X/jetpack_4.X/py-runtime/Dockerfile
 
-FROM nvcr.io/nvidia/l4t-base:r32.6.1-py3
+FROM nvcr.io/nvidia/l4t-base:r32.6.1
 
 ENV L4T_MINOR_VERSION=6.1
 ENV ZED_SDK_MAJOR=3
