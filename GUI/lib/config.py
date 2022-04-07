@@ -62,5 +62,21 @@ class _Config:
     def serial_baud_rate(self, value: int) -> None:
         return self.__set("serial_baud_rate", value)
 
+    @property
+    def mavlink_host(self) -> str:
+        return self.__get("mavlink_host", "")
+
+    @mavlink_host.setter
+    def mavlink_host(self, value: str) -> None:
+        return self.__set("mavlink_host", value)
+
+    @property
+    def mavlink_port(self) -> int:
+        return self.__get("mavlink_port", 5670)
+
+    @mavlink_port.setter
+    def mavlink_port(self, value: int) -> None:
+        return self.__set("mavlink_port", value)
+
 
 config = _Config()

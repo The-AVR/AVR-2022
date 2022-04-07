@@ -1,3 +1,4 @@
+
 from PySide6 import QtWidgets
 
 from ..base import BaseTabWidget

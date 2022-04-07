@@ -8,6 +8,7 @@ from tabs.connection.main import MainConnectionWidget
 from tabs.mqtt_debug import MQTTDebugWidget
 from tabs.pcc_tester import PCCTesterWidget
 from tabs.vmc_control import VMCControlWidget
+from tabs.vmc_telemetry import VMCTelemetryWidget
 
 
 class TabBar(QtWidgets.QTabBar):
@@ -129,6 +130,13 @@ class MainWindow(QtWidgets.QWidget):
         self.vmc_control_widget.pop_in.connect(self.tabs.pop_in)
         self.tabs.addTab(self.vmc_control_widget, self.vmc_control_widget.windowTitle())
 
+        self.vmc_telemetry_widget = VMCTelemetryWidget(self)
+        self.vmc_telemetry_widget.build()
+        self.vmc_telemetry_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(
+            self.vmc_telemetry_widget, self.vmc_telemetry_widget.windowTitle()
+        )
+
         self.pcc_tester_widget = PCCTesterWidget(
             self, self.main_connection_widget.serial_connection_widget.serial_client
         )
@@ -156,6 +164,10 @@ class MainWindow(QtWidgets.QWidget):
             self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
         )
 
+        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+            self.vmc_telemetry_widget.process_message
+        )
+
         # set initial state
 
         self.set_mqtt_connected_state(ConnectionState.disconnected)
@@ -173,6 +185,11 @@ class MainWindow(QtWidgets.QWidget):
 
         # deal with vmc control
         idx = self.tabs.indexOf(self.vmc_control_widget)
+        self.tabs.setTabEnabled(idx, self.mqtt_connected)
+        if not self.mqtt_connected:
+            self.tabs.setTabToolTip(idx, "MQTT not connected")
+
+        idx = self.tabs.indexOf(self.vmc_telemetry_widget)
         self.tabs.setTabEnabled(idx, self.mqtt_connected)
         if not self.mqtt_connected:
             self.tabs.setTabToolTip(idx, "MQTT not connected")

@@ -330,6 +330,27 @@
                 }
             ]
         },
+        {
+            "path": "vrc/fcm/gps_info",
+            "docs": "",
+            "payload": [
+                {
+                    "key": "num_satellites ",
+                    "type": "int",
+                    "docs": "Number of visible satellites in use"
+                },
+                {
+                    "key": "fix_type",
+                    "type": "str",
+                    "docs": "GPS fix type"
+                },
+                {
+                    "key": "timestamp",
+                    "type": "str",
+                    "docs": "Time the message was sent in [ISO 8601 format](https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat)"
+                }
+            ]
+        },
         // fusion
         {
             "path": "vrc/fusion/position/ned",

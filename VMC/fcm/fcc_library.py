@@ -26,6 +26,7 @@ from mqtt_library import (
     VrcFcmStatusMessage,
     VrcFcmVelocityMessage,
     VrcFusionHilGpsMessage,
+    VrcFcmGpsInfoMessage
 )
 from pymavlink import mavutil
 
@@ -200,19 +201,19 @@ class FlightControlComputer(FCMMQTTModule):
         """
         Gathers the telemetry tasks
         """
-        # i do not know why some of these are commented out
         return asyncio.gather(
-            # self.connected_status_telemetry(),
+            self.connected_status_telemetry(),
             self.battery_telemetry(),
-            # self.in_air_telemetry(),
+            self.in_air_telemetry(),
             self.is_armed_telemetry(),
             self.flight_mode_telemetry(),
             self.landed_state_telemetry(),
-            # self.position_ned_telemetry(),
+            self.position_ned_telemetry(),
             self.position_lla_telemetry(),
-            # self.home_lla_telemetry(),
+            self.home_lla_telemetry(),
             self.attitude_euler_telemetry(),
             self.velocity_ned_telemetry(),
+            self.gps_info_telemetry()
         )
 
     @async_try_except()
@@ -462,6 +463,21 @@ class FlightControlComputer(FCMMQTTModule):
             )
 
             self.send_message("vrc/fcm/velocity", update)
+
+    @async_try_except()
+    async def gps_info_telemetry(self) -> None:
+        """
+        Runs the gps_info telemetry loop
+        """
+        logger.debug("gps_info telemetry loop started")
+        async for gps_info in self.drone.telemetry.gps_info():
+            update = VrcFcmGpsInfoMessage(
+                num_satellites =gps_info.num_satellites,
+                fix_type =str(gps_info.fix_type),
+                timestamp=self._timestamp(),
+            )
+
+            self.send_message("vrc/fcm/gps_info", update)
 
     # endregion ###############################################################
 

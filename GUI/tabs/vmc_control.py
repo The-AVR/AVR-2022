@@ -1,42 +1,18 @@
 from __future__ import annotations
 
 import json
-import os
-from typing import Dict, Tuple
+from typing import Any, Dict, Literal, Tuple
 
-from lib.qt_icon import IMG_DIR
-from PySide6 import QtCore, QtGui, QtWidgets
+from lib.mqtt_library import (
+    VrcAutonmousMessage,
+    VrcPcmResetMessage,
+    VrcPcmSetBaseColorMessage,
+    VrcPcmSetServoOpenCloseMessage,
+)
+from lib.widgets import StatusLabel
+from PySide6 import QtCore, QtWidgets
 
 from .base import BaseTabWidget
-
-
-class StatusLabel(QtWidgets.QWidget):
-    # Combination of 2 QLabels to add a status icon
-    def __init__(self, text: str):
-        super().__init__()
-
-        # create a horizontal layout
-        layout = QtWidgets.QHBoxLayout()
-        layout.setContentsMargins(0, 0, 0, 0)
-        self.setLayout(layout)
-
-        # create a label for the icon
-        self.icon = QtWidgets.QLabel()
-        self.icon.setFixedWidth(20)
-        layout.addWidget(self.icon)
-        self.set_health(False)
-
-        # add text label
-        layout.addWidget(QtWidgets.QLabel(text))
-
-    def set_health(self, healthy: bool) -> None:
-        """
-        Set the health state of the status label
-        """
-        if healthy:
-            self.icon.setPixmap(QtGui.QPixmap(os.path.join(IMG_DIR, "green.png")))
-        else:
-            self.icon.setPixmap(QtGui.QPixmap(os.path.join(IMG_DIR, "red.png")))
 
 
 class VMCControlWidget(BaseTabWidget):
@@ -185,7 +161,7 @@ class VMCControlWidget(BaseTabWidget):
 
         reset_button = QtWidgets.QPushButton("Reset Peripheals")
         reset_button.setStyleSheet("background-color: yellow")
-        reset_button.clicked.connect(lambda: self.publish_message("vrc/pcc/reset", {}))  # type: ignore
+        reset_button.clicked.connect(lambda: self.publish_message("vrc/pcm/reset", VrcPcmResetMessage()))  # type: ignore
         reset_layout.addWidget(reset_button)
 
         layout.addWidget(reset_groupbox, 3, 3, 1, 1)
@@ -201,12 +177,12 @@ class VMCControlWidget(BaseTabWidget):
         # data structure to hold timers to reset services to unhealthy
         self.topic_timer: Dict[str, QtCore.QTimer] = {}
 
-        fcc_status = StatusLabel("FCC")
-        self.topic_status_map["vrc/fcc"] = fcc_status
+        fcc_status = StatusLabel("FCM")
+        self.topic_status_map["vrc/fcm"] = fcc_status
         status_layout.addWidget(fcc_status)
 
-        # pcc_status = StatusLabel("PCC")
-        # self.topic_status_map["vrc/pcc"] = pcc_status
+        # pcc_status = StatusLabel("PCM")
+        # self.topic_status_map["vrc/pcm"] = pcc_status
         # status_layout.addWidget(pcc_status)
 
         vio_status = StatusLabel("VIO")
@@ -223,21 +199,22 @@ class VMCControlWidget(BaseTabWidget):
 
         layout.addWidget(status_groupbox, 4, 0, 1, 4)
 
-    def publish_message(self, topic: str, payload: dict) -> None:
+    def publish_message(self, topic: str, payload: Any) -> None:
         """
         Publish a message to a topic
         """
         self.send_message.emit(topic, json.dumps(payload))
 
-    def set_servo(self, number: int, action: str) -> None:
+    def set_servo(self, number: int, action: Literal["open", "close"]) -> None:
         """
         Set a servo state
         """
         self.publish_message(
-            "vrc/pcc/set_servo_open_close", {"servo": number, "action": action}
+            "vrc/pcc/set_servo_open_close",
+            VrcPcmSetServoOpenCloseMessage(servo=number, action=action),
         )
 
-    def set_servo_all(self, action: str) -> None:
+    def set_servo_all(self, action: Literal["open", "close"]) -> None:
         """
         Set all servos to the same state
         """
@@ -248,13 +225,15 @@ class VMCControlWidget(BaseTabWidget):
         """
         Set LED color
         """
-        self.publish_message("vrc/pcc/set_base_color", {"wrgb": color})
+        self.publish_message(
+            "vrc/pcm/set_base_color", VrcPcmSetBaseColorMessage(wrgb=color)
+        )
 
     def set_autonomous(self, state: bool) -> None:
         """
         Set autonomous mode
         """
-        self.publish_message("vrc/autonomous", {"enable": state})
+        self.publish_message("vrc/autonomous", VrcAutonmousMessage(enable=state))
 
     def process_message(self, topic: str, payload: str) -> None:
         """
