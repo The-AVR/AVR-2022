@@ -156,7 +156,7 @@ class PeripheralControlComputer:
         logger.debug(f"Setting servo max: {data}")
         self.ser.write(data)
 
-    def set_servo_pct(self, servo: int, pct: float) -> None:
+    def set_servo_pct(self, servo: int, pct: int) -> None:
         valid_command = False
 
         command = self.commands["SET_SERVO_PCT"]

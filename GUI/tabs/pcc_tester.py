@@ -35,10 +35,10 @@ class PCCTesterWidget(BaseTabWidget):
         self.servo_1_dial.setRange(0, 100)
         servo_1_layout.addWidget(self.servo_1_dial, 0, 0, 1, 1)
 
-        servo_1_number = QtWidgets.QLCDNumber()
-        self.servo_1_dial.valueChanged.connect(servo_1_number.display)  # type: ignore
+        self.servo_1_number = QtWidgets.QLCDNumber()
+        self.servo_1_dial.valueChanged.connect(self.servo_1_number.display)  # type: ignore
         self.servo_1_dial.valueChanged.connect(self.update_servos)  # type: ignore
-        servo_1_layout.addWidget(servo_1_number, 0, 1, 1, 1)
+        servo_1_layout.addWidget(self.servo_1_number, 0, 1, 1, 1)
 
         servo_1_button = QtWidgets.QPushButton("Toggle Open/Close")
         servo_1_button.clicked.connect(lambda: self.toggle_servo(0))  # type: ignore
@@ -57,10 +57,10 @@ class PCCTesterWidget(BaseTabWidget):
         self.servo_2_dial.setRange(0, 100)
         servo_2_layout.addWidget(self.servo_2_dial, 0, 0, 1, 1)
 
-        servo_2_number = QtWidgets.QLCDNumber()
-        self.servo_2_dial.valueChanged.connect(servo_2_number.display)  # type: ignore
+        self.servo_2_number = QtWidgets.QLCDNumber()
+        self.servo_2_dial.valueChanged.connect(self.servo_2_number.display)  # type: ignore
         self.servo_2_dial.valueChanged.connect(self.update_servos)  # type: ignore
-        servo_2_layout.addWidget(servo_2_number, 0, 1, 1, 1)
+        servo_2_layout.addWidget(self.servo_2_number, 0, 1, 1, 1)
 
         servo_2_button = QtWidgets.QPushButton("Toggle Open/Close")
         servo_2_button.clicked.connect(lambda: self.toggle_servo(1))  # type: ignore
@@ -79,10 +79,10 @@ class PCCTesterWidget(BaseTabWidget):
         self.servo_3_dial.setRange(0, 100)
         servo_3_layout.addWidget(self.servo_3_dial, 0, 0, 1, 1)
 
-        servo_3_number = QtWidgets.QLCDNumber()
-        self.servo_3_dial.valueChanged.connect(servo_3_number.display)  # type: ignore
+        self.servo_3_number = QtWidgets.QLCDNumber()
+        self.servo_3_dial.valueChanged.connect(self.servo_3_number.display)  # type: ignore
         self.servo_3_dial.valueChanged.connect(self.update_servos)  # type: ignore
-        servo_3_layout.addWidget(servo_3_number, 0, 1, 1, 1)
+        servo_3_layout.addWidget(self.servo_3_number, 0, 1, 1, 1)
 
         servo_3_button = QtWidgets.QPushButton("Toggle Open/Close")
         servo_3_button.clicked.connect(lambda: self.toggle_servo(2))  # type: ignore
@@ -101,10 +101,10 @@ class PCCTesterWidget(BaseTabWidget):
         self.servo_4_dial.setRange(0, 100)
         servo_4_layout.addWidget(self.servo_4_dial, 0, 0, 1, 1)
 
-        servo_4_number = QtWidgets.QLCDNumber()
-        self.servo_4_dial.valueChanged.connect(servo_4_number.display)  # type: ignore
+        self.servo_4_number = QtWidgets.QLCDNumber()
+        self.servo_4_dial.valueChanged.connect(self.servo_4_number.display)  # type: ignore
         self.servo_4_dial.valueChanged.connect(self.update_servos)  # type: ignore
-        servo_4_layout.addWidget(servo_4_number, 0, 1, 1, 1)
+        servo_4_layout.addWidget(self.servo_4_number, 0, 1, 1, 1)
 
         servo_4_button = QtWidgets.QPushButton("Toggle Open/Close")
         servo_4_button.clicked.connect(lambda: self.toggle_servo(3))  # type: ignore
@@ -169,10 +169,10 @@ class PCCTesterWidget(BaseTabWidget):
 
         self.servo_states: List[Literal["open", "close"]] = ["close"] * 4
         self.servo_dials = {
-            0: self.servo_1_dial,
-            1: self.servo_2_dial,
-            2: self.servo_3_dial,
-            3: self.servo_4_dial,
+            0: (self.servo_1_dial, self.servo_1_number),
+            1: (self.servo_2_dial, self.servo_2_number),
+            2: (self.servo_3_dial, self.servo_3_number),
+            3: (self.servo_4_dial, self.servo_4_number),
         }
 
     def update_leds(self) -> None:
@@ -205,7 +205,14 @@ class PCCTesterWidget(BaseTabWidget):
             self.servo_states[servo] = "open"
             pct = 100
 
-        self.servo_dials[servo].setValue(pct)
+        # send update to pcc
+        self.client.set_servo_open_close(servo, self.servo_states[servo])
+
+        # manually update dial and lcd without triggering valueChanged
+        self.servo_dials[servo][0].blockSignals(True)
+        self.servo_dials[servo][0].setValue(pct)
+        self.servo_dials[servo][1].display(pct)
+        self.servo_dials[servo][0].blockSignals(False)
 
     def reset_all(self) -> None:
         """
