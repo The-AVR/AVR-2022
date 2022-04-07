@@ -66,12 +66,18 @@ def main() -> None:
         klasses.extend(process_klass(topic))
 
     # generate python code
-    template = template_env.get_template("main.j2")
+    template = template_env.get_template("code.j2")
 
-    print("Rendering template")
+    print("Rendering code template")
     with open(os.path.join(THIS_DIR, "..", "mqtt_library.py"), "w") as fp:
         fp.write(template.render(klasses=klasses, topics=topics))
 
+    # generate documentation
+    # template = template_env.get_template("docs.j2")
+
+    # print("Rendering documentation template")
+    # with open(os.path.join(THIS_DIR, "..", "MQTT.md"), "w") as fp:
+    #     fp.write(template.render(klasses=klasses, topics=topics))
 
 if __name__ == "__main__":
     main()
