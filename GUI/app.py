@@ -56,20 +56,20 @@ class TabWidget(QtWidgets.QTabWidget):
         Pop a tab out into a new window.
         """
         tab = self.widget(index)
-        logger.debug(f"Popping out tab {index}, {tab}")
+        logger.debug(f"Pop out requested on tab {index}, {tab}")
 
         # don't allow user to pop out last tab
         visible = [i for i in range(self.count()) if self.isTabVisible(i)]
         logger.debug(f"Visible tabs: {visible}")
         if len(visible) <= 1:
-            logger.debug("Not popping out last visible tab")
+            logger.warning("Not popping out last visible tab")
             return
 
         # don't allow user to pop out the last enabled, visible tab
         enabled_visible = [i for i in visible if self.isTabEnabled(i)]
         logger.debug(f"Enabled visible tabs: {enabled_visible}")
         if len(enabled_visible) <= 1 and index in enabled_visible:
-            logger.debug("Not popping out last visible enabled tab")
+            logger.warning("Not popping out last visible enabled tab")
             return
 
         self.setTabVisible(index, False)

@@ -1,8 +1,15 @@
 {% macro class(item, suffix) %}
 class {{ item.name }}{{ suffix }}(TypedDict):
-{%- if 'docs' in item and item['docs']|length > 0 %}
+{%- if ('docs' in item and item['docs']|length > 0) or 'path' in item %}
     """
+{%- if 'path' in item %}
+    Topic: `{{ item.path }}`
+{%- endif -%}
+{%- if ('docs' in item and item['docs']|length > 0) %}
+{%- if 'path' in item %}
+{% endif %}
     {{ item.docs }}
+{%- endif %}
     """
 {% endif -%}
 {%- if item.payload|length == 0 and ('docs' not in item or item['docs']|length == 0) %}

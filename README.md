@@ -29,19 +29,19 @@ Clone the repository with submodules:
 git clone --recurse-submodules https://github.com/bellflight/VRC-2022
 ```
 
-update jetson to python 3.8, should create a setup script from this:
+If you need to install Python 3.9 on Linux, do the following:
+
 ```bash
 sudo add-apt-repository ppa:deadsnakes/ppa
 sudo apt update
-sudo apt-get update
-sudo apt install python3.8 python3-pip python3.8-venv
-sudo python3.8 -m pip install pip wheel --upgrade
+sudo apt install python3-pip python3.9 python3.9-venv
+sudo python3.9 -m pip install pip wheel --upgrade
 ```
 
-Create a Python 3.8+ virtual environment:
+Create a Python 3.9 virtual environment:
 
 ```bash
-python3.8 -m venv .venv
+python3.9 -m venv .venv
 ```
 
 Activate the virtual environment:
@@ -67,7 +67,7 @@ If you actually are doing development work, you can install all the dependencies
 so you get autocomplete and type hinting:
 
 ```bash
-python scripts/dev_setup.py
+python scripts/install_requirements.py
 ```
 
 If on a Jetson, you can now follow the instructions inside

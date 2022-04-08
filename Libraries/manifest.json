@@ -1,17 +1,5 @@
 [
     {
-        "src": "qt_icon.py",
-        "dsts": [
-            "GUI/lib"
-        ]
-    },
-    {
-        "src": "img",
-        "dsts": [
-            "GUI/lib/img"
-        ]
-    },
-    {
         "src": "pcc_library.py",
         "dsts": [
             "GUI/lib",
