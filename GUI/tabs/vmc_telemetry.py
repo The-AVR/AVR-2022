@@ -34,24 +34,15 @@ class VMCTelemetryWidget(BaseTabWidget):
 
         # top groupbox
         top_groupbox = QtWidgets.QGroupBox("Status")
-        top_layout = QtWidgets.QHBoxLayout()
+        top_groupbox.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
+        top_layout = QtWidgets.QFormLayout()
         top_groupbox.setLayout(top_layout)
 
-        # top-left quadrant
-        top_left_frame = QtWidgets.QFrame()
-        top_left_layout = QtWidgets.QFormLayout()
-        top_left_frame.setLayout(top_left_layout)
-
         # satellites row
-        satellites_layout = QtWidgets.QHBoxLayout()
-
-        self.num_satellites_label = QtWidgets.QLabel("")
-        satellites_layout.addWidget(self.num_satellites_label)
-
-        self.fix_type_label = QtWidgets.QLabel("")
-        satellites_layout.addWidget(self.fix_type_label)
-
-        top_left_layout.addRow(QtWidgets.QLabel("Satellites:"), satellites_layout)
+        self.satellites_label = QtWidgets.QLabel("")
+        top_layout.addRow(QtWidgets.QLabel("Satellites:"), self.satellites_label)
 
         # battery row
         battery_layout = QtWidgets.QHBoxLayout()
@@ -64,31 +55,23 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.battery_voltage_label = QtWidgets.QLabel("")
         battery_layout.addWidget(self.battery_voltage_label)
 
-        top_left_layout.addRow(QtWidgets.QLabel("Battery:"), battery_layout)
-
-        top_layout.addWidget(top_left_frame)
-
-        # top-right quadrant
-        top_right_frame = QtWidgets.QFrame()
-        top_right_layout = QtWidgets.QFormLayout()
-        top_right_frame.setLayout(top_right_layout)
+        top_layout.addRow(QtWidgets.QLabel("Battery:"), battery_layout)
 
         # armed row
         self.armed_label = QtWidgets.QLabel("")
-        top_right_layout.addRow(QtWidgets.QLabel("Armed:"), self.armed_label)
+        top_layout.addRow(QtWidgets.QLabel("Armed:"), self.armed_label)
 
         # flight mode row
         self.flight_mode_label = QtWidgets.QLabel("")
-        top_right_layout.addRow(
-            QtWidgets.QLabel("Flight Mode:"), self.flight_mode_label
-        )
-
-        top_layout.addWidget(top_right_frame)
+        top_layout.addRow(QtWidgets.QLabel("Flight Mode:"), self.flight_mode_label)
 
         layout.addWidget(top_groupbox)
 
         # bottom groupbox
         bottom_groupbox = QtWidgets.QGroupBox("Position")
+        bottom_groupbox.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
         bottom_layout = QtWidgets.QHBoxLayout()
         bottom_groupbox.setLayout(bottom_layout)
 
@@ -190,8 +173,9 @@ class VMCTelemetryWidget(BaseTabWidget):
         """
         Update satellites information
         """
-        self.num_satellites_label.setText(f"{payload['num_satellites']} visible")
-        self.fix_type_label.setText(payload["fix_type"])
+        self.satellites_label.setText(
+            f"{payload['num_satellites']} visible, {payload['fix_type']}"
+        )
 
     def update_battery(self, payload: VrcFcmBatteryMessage) -> None:
         """
@@ -199,6 +183,28 @@ class VMCTelemetryWidget(BaseTabWidget):
         """
         self.battery_percent_bar.setValue(int(payload["soc"] * 100))
         self.battery_voltage_label.setText(f"{payload['voltage']} Volts")
+
+        # this is required to change the progress bar color as the value changes
+        empty_rgb = (135, 0, 16)
+        full_rgb = (11, 135, 0)
+
+        diff = [f - e for f, e in zip(full_rgb, empty_rgb)]
+        smear = [int(d * payload["soc"]) for d in diff]
+        color = tuple([e + s for e, s in zip(empty_rgb, smear)])
+
+        stylesheet = f"""
+            QProgressBar {{
+                border: 1px solid grey;
+                border-radius: 0px;
+                text-align: center;
+            }}
+
+            QProgressBar::chunk {{
+                background-color: rgb{color};
+            }}
+            """
+
+        self.battery_percent_bar.setStyleSheet(stylesheet)
 
     def update_status(self, payload: VrcFcmStatusMessage) -> None:
         """
@@ -259,6 +265,7 @@ class VMCTelemetryWidget(BaseTabWidget):
             "vrc/fcm/attitude/euler": self.update_euler_attitude,
         }
 
+        # discard topics we don't recognize
         if topic not in topic_map:
             return
 

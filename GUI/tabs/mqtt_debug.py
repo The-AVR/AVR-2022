@@ -31,6 +31,11 @@ def _get_parents(item: QtWidgets.QTreeWidgetItem) -> List[QtWidgets.QTreeWidgetI
     Gets a list of parent QTreeWidgetItems of a QTreeWidgetItem.
     The list will be in order from top down, and include the original item.
     """
+    # skip if selected item is None
+    if item is None:
+        return []
+
+    # build a list of the parents
     parents = [item]
 
     parent = item.parent()
@@ -142,6 +147,9 @@ class MQTTDebugWidget(BaseTabWidget):
         # maintain the topic currently displayed in the data view.
         self.connected_topic: Optional[str] = None
 
+        # stop/start state
+        self.running = False
+
     def build(self) -> None:
         """
         Build the layout
@@ -153,7 +161,10 @@ class MQTTDebugWidget(BaseTabWidget):
         layout.addWidget(main_layout)
 
         # viewing widget
-        viewer_layout = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
+        viewer_widget = QtWidgets.QGroupBox("Viewer")
+        viewer_layout = QtWidgets.QVBoxLayout()
+        viewer_splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
+        viewer_widget.setLayout(viewer_layout)
 
         self.tree_widget = ExpandCollapseQTreeWidget(self)
         self.tree_widget.setHeaderLabels(["Topic", "# Messages"])
@@ -162,35 +173,41 @@ class MQTTDebugWidget(BaseTabWidget):
         self.tree_widget.setAnimated(True)
         self.tree_widget.setIndentation(10)
         self.tree_widget.itemSelectionChanged.connect(self.connect_topic_to_display)  # type: ignore
-        viewer_layout.addWidget(self.tree_widget)
+        viewer_splitter.addWidget(self.tree_widget)
 
         self.data_view = QtWidgets.QTextEdit()
         self.data_view.setReadOnly(True)
         self.data_view.setStyleSheet("background-color: rgb(220, 220, 220)")
-        viewer_layout.addWidget(self.data_view)
+        viewer_splitter.addWidget(self.data_view)
 
-        main_layout.addWidget(viewer_layout)
+        viewer_layout.addWidget(viewer_splitter)
+
+        self.running_button = QtWidgets.QPushButton("")
+        viewer_layout.addWidget(self.running_button)
+        self.running_button.clicked.connect(self.toggle_running) # type: ignore
+
+        main_layout.addWidget(viewer_widget)
 
         # sending widget
-        message_sender_widget = QtWidgets.QWidget()
-        message_sender_layout = QtWidgets.QFormLayout()
-        message_sender_widget.setLayout(message_sender_layout)
+        sender_widget = QtWidgets.QGroupBox("Sender")
+        sender_layout = QtWidgets.QFormLayout()
+        sender_widget.setLayout(sender_layout)
 
         self.topic_line_edit = QtWidgets.QLineEdit()
-        message_sender_layout.addRow(QtWidgets.QLabel("Topic:"), self.topic_line_edit)
+        sender_layout.addRow(QtWidgets.QLabel("Topic:"), self.topic_line_edit)
         self.payload_text_edit = QtWidgets.QPlainTextEdit()
-        message_sender_layout.addRow(
+        sender_layout.addRow(
             QtWidgets.QLabel("Payload:"), self.payload_text_edit
         )
         self.send_button = QtWidgets.QPushButton("Send")
-        message_sender_layout.addRow(self.send_button)
+        sender_layout.addRow(self.send_button)
 
-        main_layout.addWidget(message_sender_widget)
+        main_layout.addWidget(sender_widget)
 
         # connections
-        self.tree_widget.copy_topic.connect(self.copy_topic)  # type: ignore
-        self.tree_widget.copy_payload.connect(self.copy_payload)  # type: ignore
-        self.tree_widget.preload_data.connect(self.preload_data)  # type: ignore
+        self.tree_widget.copy_topic.connect(self.copy_topic)
+        self.tree_widget.copy_payload.connect(self.copy_payload)
+        self.tree_widget.preload_data.connect(self.preload_data)
 
         self.send_button.clicked.connect(  # type: ignore
             lambda: self.send_message.emit(
@@ -205,11 +222,29 @@ class MQTTDebugWidget(BaseTabWidget):
         self.topic_payloads = {}
         self.tree_widget.clear()
 
+        self.running = True
+        self.running_button.setText("Running")
+
+    def toggle_running(self) -> None:
+        """
+        Toggle the running state.
+        """
+        self.running = not self.running
+
+        if self.running:
+            self.running_button.setText("Running")
+        else:
+            self.running_button.setText("Paused")
+
     def process_message(self, topic: str, payload: str) -> None:
         # sourcery skip: assign-if-exp
         """
         Process a new message on a topic.
         """
+        # do nothing if paused
+        if not self.running:
+            return
+
         # split the topic by parts
         topic_parts = topic.split("/")
 
