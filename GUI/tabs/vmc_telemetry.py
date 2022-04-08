@@ -68,7 +68,7 @@ class VMCTelemetryWidget(BaseTabWidget):
 
         # armed row
         self.armed_label = QtWidgets.QLabel("")
-        top_layout.addRow(QtWidgets.QLabel("Armed:"), self.armed_label)
+        top_layout.addRow(QtWidgets.QLabel("Armed Status:"), self.armed_label)
 
         # flight mode row
         self.flight_mode_label = QtWidgets.QLabel("")
@@ -227,13 +227,14 @@ class VMCTelemetryWidget(BaseTabWidget):
         """
         Update status information
         """
-        armed = payload["armed"]
-        if armed:
+        if payload["armed"]:
             color = "Red"
+            text = "Armed (and dangerous)"
         else:
-            color = "Green"
+            color = "DarkGoldenRod"
+            text = "Disarmed"
 
-        self.armed_label.setText(f"<span style='color:{color};'>{armed}</span>")
+        self.armed_label.setText(f"<span style='color:{color};'>{text}</span>")
         self.flight_mode_label.setText(payload["mode"])
 
     def update_local_location(self, payload: VrcFcmLocationLocalMessage) -> None:

@@ -199,6 +199,8 @@ class MainWindow(QtWidgets.QWidget):
             self.tabs.setTabEnabled(idx, self.mqtt_connected)
             if not self.mqtt_connected:
                 self.tabs.setTabToolTip(idx, "MQTT not connected")
+            else:
+                self.tabs.setTabToolTip(idx, "")
 
         # telemetry stuff is special case
         if not self.mqtt_connected:
@@ -214,6 +216,8 @@ class MainWindow(QtWidgets.QWidget):
         if not self.serial_connected:
             self.pcc_tester_widget.reset_all()
             self.tabs.setTabToolTip(idx, "Serial not connected")
+        else:
+            self.tabs.setTabToolTip(idx, "")
 
     def closeEvent(self, event: QtGui.QCloseEvent) -> None:
         """
