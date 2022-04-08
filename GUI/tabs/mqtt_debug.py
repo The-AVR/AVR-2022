@@ -184,7 +184,7 @@ class MQTTDebugWidget(BaseTabWidget):
 
         self.running_button = QtWidgets.QPushButton("")
         viewer_layout.addWidget(self.running_button)
-        self.running_button.clicked.connect(self.toggle_running) # type: ignore
+        self.running_button.clicked.connect(self.toggle_running)  # type: ignore
 
         main_layout.addWidget(viewer_widget)
 
@@ -196,9 +196,7 @@ class MQTTDebugWidget(BaseTabWidget):
         self.topic_line_edit = QtWidgets.QLineEdit()
         sender_layout.addRow(QtWidgets.QLabel("Topic:"), self.topic_line_edit)
         self.payload_text_edit = QtWidgets.QPlainTextEdit()
-        sender_layout.addRow(
-            QtWidgets.QLabel("Payload:"), self.payload_text_edit
-        )
+        sender_layout.addRow(QtWidgets.QLabel("Payload:"), self.payload_text_edit)
         self.send_button = QtWidgets.QPushButton("Send")
         sender_layout.addRow(self.send_button)
 

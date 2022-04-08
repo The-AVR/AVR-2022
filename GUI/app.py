@@ -7,6 +7,7 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from tabs.connection.main import MainConnectionWidget
 from tabs.mqtt_debug import MQTTDebugWidget
 from tabs.pcc_tester import PCCTesterWidget
+from tabs.thermal_view_control import ThermalViewControlWidget
 from tabs.vmc_control import VMCControlWidget
 from tabs.vmc_telemetry import VMCTelemetryWidget
 
@@ -137,6 +138,14 @@ class MainWindow(QtWidgets.QWidget):
             self.vmc_telemetry_widget, self.vmc_telemetry_widget.windowTitle()
         )
 
+        self.thermal_view_control_widget = ThermalViewControlWidget(self)
+        self.thermal_view_control_widget.build()
+        self.thermal_view_control_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(
+            self.thermal_view_control_widget,
+            self.thermal_view_control_widget.windowTitle(),
+        )
+
         self.pcc_tester_widget = PCCTesterWidget(
             self, self.main_connection_widget.serial_connection_widget.serial_client
         )
@@ -176,23 +185,25 @@ class MainWindow(QtWidgets.QWidget):
     def set_mqtt_connected_state(self, connection_state: ConnectionState) -> None:
         self.mqtt_connected = connection_state == ConnectionState.connected
 
-        # deal with mqtt debugger
-        idx = self.tabs.indexOf(self.mqtt_debug_widget)
-        self.tabs.setTabEnabled(idx, self.mqtt_connected)
+        # list of widgets that are mqtt connected
+        widgets = [
+            self.mqtt_debug_widget,
+            self.vmc_control_widget,
+            self.vmc_telemetry_widget,
+            self.thermal_view_control_widget,
+        ]
+
+        # disable/enable widgets
+        for widget in widgets:
+            idx = self.tabs.indexOf(widget)
+            self.tabs.setTabEnabled(idx, self.mqtt_connected)
+            if not self.mqtt_connected:
+                self.tabs.setTabToolTip(idx, "MQTT not connected")
+
+        # telemetry stuff is special case
         if not self.mqtt_connected:
             self.mqtt_debug_widget.clear()
-            self.tabs.setTabToolTip(idx, "MQTT not connected")
-
-        # deal with vmc control
-        idx = self.tabs.indexOf(self.vmc_control_widget)
-        self.tabs.setTabEnabled(idx, self.mqtt_connected)
-        if not self.mqtt_connected:
-            self.tabs.setTabToolTip(idx, "MQTT not connected")
-
-        idx = self.tabs.indexOf(self.vmc_telemetry_widget)
-        self.tabs.setTabEnabled(idx, self.mqtt_connected)
-        if not self.mqtt_connected:
-            self.tabs.setTabToolTip(idx, "MQTT not connected")
+            self.vmc_telemetry_widget.clear()
 
     def set_serial_connected_state(self, connection_state: ConnectionState) -> None:
         self.serial_connected = connection_state == ConnectionState.connected

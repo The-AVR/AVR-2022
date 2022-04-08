@@ -3,16 +3,25 @@ from __future__ import annotations
 import json
 
 from lib.mqtt_library import (
+    VrcFcmAttitudeEulerMessage,
     VrcFcmBatteryMessage,
     VrcFcmGpsInfoMessage,
     VrcFcmLocationGlobalMessage,
     VrcFcmLocationLocalMessage,
     VrcFcmStatusMessage,
-    VrcFcmAttitudeEulerMessage,
 )
 from PySide6 import QtWidgets
 
 from .base import BaseTabWidget
+
+
+class DisplayLineEdit(QtWidgets.QLineEdit):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        self.setReadOnly(True)
+        self.setStyleSheet("background-color: rgb(220, 220, 220)")
+        self.setMaximumWidth(80)
 
 
 class VMCTelemetryWidget(BaseTabWidget):
@@ -83,16 +92,13 @@ class VMCTelemetryWidget(BaseTabWidget):
         # xyz row
         loc_xyz_layout = QtWidgets.QHBoxLayout()
 
-        self.loc_x_line_edit = QtWidgets.QLineEdit("")
-        self.loc_x_line_edit.setDisabled(True)
+        self.loc_x_line_edit = DisplayLineEdit("")
         loc_xyz_layout.addWidget(self.loc_x_line_edit)
 
-        self.loc_y_line_edit = QtWidgets.QLineEdit("")
-        self.loc_y_line_edit.setDisabled(True)
+        self.loc_y_line_edit = DisplayLineEdit("")
         loc_xyz_layout.addWidget(self.loc_y_line_edit)
 
-        self.loc_z_line_edit = QtWidgets.QLineEdit("")
-        self.loc_z_line_edit.setDisabled(True)
+        self.loc_z_line_edit = DisplayLineEdit("")
         loc_xyz_layout.addWidget(self.loc_z_line_edit)
 
         bottom_left_layout.addRow(
@@ -102,16 +108,13 @@ class VMCTelemetryWidget(BaseTabWidget):
         # lat, lon, alt row
         loc_lla_layout = QtWidgets.QHBoxLayout()
 
-        self.loc_lat_line_edit = QtWidgets.QLineEdit("")
-        self.loc_lat_line_edit.setDisabled(True)
+        self.loc_lat_line_edit = DisplayLineEdit("")
         loc_lla_layout.addWidget(self.loc_lat_line_edit)
 
-        self.loc_lon_line_edit = QtWidgets.QLineEdit("")
-        self.loc_lon_line_edit.setDisabled(True)
+        self.loc_lon_line_edit = DisplayLineEdit("")
         loc_lla_layout.addWidget(self.loc_lon_line_edit)
 
-        self.loc_alt_line_edit = QtWidgets.QLineEdit("")
-        self.loc_alt_line_edit.setDisabled(True)
+        self.loc_alt_line_edit = DisplayLineEdit("")
         loc_lla_layout.addWidget(self.loc_alt_line_edit)
 
         bottom_left_layout.addRow(
@@ -128,16 +131,13 @@ class VMCTelemetryWidget(BaseTabWidget):
         # euler row
         att_rpy_layout = QtWidgets.QHBoxLayout()
 
-        self.att_r_line_edit = QtWidgets.QLineEdit("")
-        self.att_r_line_edit.setDisabled(True)
+        self.att_r_line_edit = DisplayLineEdit("")
         att_rpy_layout.addWidget(self.att_r_line_edit)
 
-        self.att_p_line_edit = QtWidgets.QLineEdit("")
-        self.att_p_line_edit.setDisabled(True)
+        self.att_p_line_edit = DisplayLineEdit("")
         att_rpy_layout.addWidget(self.att_p_line_edit)
 
-        self.att_y_line_edit = QtWidgets.QLineEdit("")
-        self.att_y_line_edit.setDisabled(True)
+        self.att_y_line_edit = DisplayLineEdit("")
         att_rpy_layout.addWidget(self.att_y_line_edit)
 
         bottom_right_layout.addRow(QtWidgets.QLabel("Euler (r, p , y)"), att_rpy_layout)
@@ -145,20 +145,16 @@ class VMCTelemetryWidget(BaseTabWidget):
         # auaternion row
         # quaternion_layout = QtWidgets.QHBoxLayout()
 
-        # self.att_w_line_edit = QtWidgets.QLineEdit("")
-        # self.att_w_line_edit.setDisabled(True)
+        # self.att_w_line_edit = DisplayLineEdit("")
         # quaternion_layout.addWidget(self.att_w_line_edit)
 
-        # self.att_x_line_edit = QtWidgets.QLineEdit("")
-        # self.att_x_line_edit.setDisabled(True)
+        # self.att_x_line_edit = DisplayLineEdit("")
         # quaternion_layout.addWidget(self.att_x_line_edit)
 
-        # self.att_y_line_edit = QtWidgets.QLineEdit("")
-        # self.att_y_line_edit.setDisabled(True)
+        # self.att_y_line_edit = DisplayLineEdit("")
         # quaternion_layout.addWidget(self.att_y_line_edit)
 
-        # self.att_z_line_edit = QtWidgets.QLineEdit("")
-        # self.att_z_line_edit.setDisabled(True)
+        # self.att_z_line_edit = DisplayLineEdit("")
         # quaternion_layout.addWidget(self.att_z_line_edit)
 
         # bottom_right_layout.addRow(
@@ -168,6 +164,27 @@ class VMCTelemetryWidget(BaseTabWidget):
         bottom_layout.addWidget(bottom_right_groupbox)
 
         layout.addWidget(bottom_groupbox)
+
+    def clear(self):
+        # status
+        self.battery_percent_bar.setValue(0)
+        self.battery_voltage_label.setText("")
+
+        self.armed_label.setText("")
+        self.flight_mode_label.setText("")
+
+        # position
+        self.loc_x_line_edit.setText("")
+        self.loc_y_line_edit.setText("")
+        self.loc_z_line_edit.setText("")
+
+        self.loc_lat_line_edit.setText("")
+        self.loc_lon_line_edit.setText("")
+        self.loc_alt_line_edit.setText("")
+
+        self.att_r_line_edit.setText("")
+        self.att_p_line_edit.setText("")
+        self.att_y_line_edit.setText("")
 
     def update_satellites(self, payload: VrcFcmGpsInfoMessage) -> None:
         """
