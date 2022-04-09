@@ -1,4 +1,4 @@
-FROM nvcr.io/nvidia/l4t-base:r32.6.1
+FROM nvcr.io/nvidia/l4t-ml:r32.6.1-py3
 
 ENV OPENBLAS_CORETYPE=ARMV8
 
