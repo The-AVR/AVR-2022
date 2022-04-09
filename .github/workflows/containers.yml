@@ -19,6 +19,7 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     strategy:
+      fail-fast: true
       matrix:
         # april tag module needs to be built on-device
         # sandbox should be built by students
