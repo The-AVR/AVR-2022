@@ -231,7 +231,7 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
     subprocess.check_call(cmd, stdout=sys.stdout, stderr=sys.stderr)
 
     if build_pymavlink:
-        fcm_dir = os.path.join(THIS_DIR, "..", "VMC", "FlightSoftware", "fcm")
+        fcm_dir = os.path.join(THIS_DIR, "..", "VMC", "fcm")
 
         # remove old files
         for filename in os.listdir(fcm_dir):

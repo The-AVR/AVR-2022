@@ -10,16 +10,13 @@ For Bell employees and partners, work items are tracked on [Trello](https://trel
 - `.vscode`: VS Code settings
 - `3DPrints`: 3D printing files and source CAD files
 - `docs`: Documentation site
+- `GUI`: All-in-one GUI
 - `Libraries`: Shared libraries that get copied around
-- `PCC`: PCC files
-  - `ControlSoftware`: PCC firmware
-  - `GUI`: PCC test GUI
+- `PCC`: PCC firmware
 - `PX4`: PX4 and MAVLink files
 - `RVR`: RVR files
 - `scripts`: Development scripts
-- `VMC`: VMC files
-  - `FlightSoftware`: VMC flight software
-  - `GUI`: VMC control GUI
+- `VMC`: VMC flight software
 
 ## Developer Setup
 
@@ -71,7 +68,7 @@ python scripts/install_requirements.py
 ```
 
 If on a Jetson, you can now follow the instructions inside
-[VMC/FlightSoftware/README.md](VMC/FlightSoftware/README.md) to run the `setup.sh`
+[VMC/README.md](VMC/README.md) to run the `setup.sh`
 script (add `--dev` for development).
 
 Note, with `docker-compose` commands, make sure to add `-f docker-compose-dev.yml`

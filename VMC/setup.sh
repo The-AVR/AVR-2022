@@ -142,7 +142,7 @@ $s mv tmp.json /etc/docker/daemon.json
 popd
 
 # needed so that the shared libs are included in the docker container creation from the host
-$s cp VMC/FlightSoftware/apriltag/linux/vrc.csv /etc/nvidia-container-runtime/host-files-for-container.d/
+$s cp VMC/apriltag/linux/vrc.csv /etc/nvidia-container-runtime/host-files-for-container.d/
 
 # restart docker so new runtime takes into effect
 $s service docker stop
@@ -166,7 +166,7 @@ bar
 
 echo -e "${CYAN}Preparing VRC software${NC}"
 bar
-cd $VRC_DIR/VMC/FlightSoftware
+cd $VRC_DIR/VMC
 if [ "$DEVELOPMENT" != true ] ; then
     $s docker-compose pull
     $s docker-compose build
