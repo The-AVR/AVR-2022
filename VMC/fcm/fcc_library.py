@@ -19,6 +19,7 @@ from mqtt_library import (
     VrcFcmAttitudeEulerMessage,
     VrcFcmBatteryMessage,
     VrcFcmEventsMessage,
+    VrcFcmGpsInfoMessage,
     VrcFcmHilGpsStatsMessage,
     VrcFcmLocationGlobalMessage,
     VrcFcmLocationHomeMessage,
@@ -26,7 +27,6 @@ from mqtt_library import (
     VrcFcmStatusMessage,
     VrcFcmVelocityMessage,
     VrcFusionHilGpsMessage,
-    VrcFcmGpsInfoMessage,
 )
 from pymavlink import mavutil
 

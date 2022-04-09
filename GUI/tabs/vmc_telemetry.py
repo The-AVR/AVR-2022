@@ -194,7 +194,7 @@ class VMCTelemetryWidget(BaseTabWidget):
 
         layout.addWidget(module_status_groupbox)
 
-    def clear(self):
+    def clear(self) -> None:
         # status
         self.battery_percent_bar.setValue(0)
         self.battery_voltage_label.setText("")
