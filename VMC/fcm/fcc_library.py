@@ -26,7 +26,7 @@ from mqtt_library import (
     VrcFcmStatusMessage,
     VrcFcmVelocityMessage,
     VrcFusionHilGpsMessage,
-    VrcFcmGpsInfoMessage
+    VrcFcmGpsInfoMessage,
 )
 from pymavlink import mavutil
 
@@ -213,7 +213,7 @@ class FlightControlComputer(FCMMQTTModule):
             self.home_lla_telemetry(),
             self.attitude_euler_telemetry(),
             self.velocity_ned_telemetry(),
-            self.gps_info_telemetry()
+            self.gps_info_telemetry(),
         )
 
     @async_try_except()
@@ -472,8 +472,8 @@ class FlightControlComputer(FCMMQTTModule):
         logger.debug("gps_info telemetry loop started")
         async for gps_info in self.drone.telemetry.gps_info():
             update = VrcFcmGpsInfoMessage(
-                num_satellites =gps_info.num_satellites,
-                fix_type =str(gps_info.fix_type),
+                num_satellites=gps_info.num_satellites,
+                fix_type=str(gps_info.fix_type),
                 timestamp=self._timestamp(),
             )
 

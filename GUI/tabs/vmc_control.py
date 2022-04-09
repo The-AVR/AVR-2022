@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import json
-from typing import Any, Dict, Literal, Tuple
+from typing import Any, Literal, Tuple
 
 from lib.mqtt_library import (
     VrcAutonmousMessage,
