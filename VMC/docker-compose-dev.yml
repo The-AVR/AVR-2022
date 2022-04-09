@@ -56,7 +56,6 @@ services:
     depends_on:
       - mqtt
       - vio
-      - apriltag
     build: fusion
     restart: on-failure
 

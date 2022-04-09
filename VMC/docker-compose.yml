@@ -17,8 +17,8 @@ services:
   status:
     depends_on:
       - mqtt
-    privileged: true
     image: ghcr.io/bellflight/vrc/2022/status:latest
+    privileged: true
     restart: on-failure
 
   fcm:
@@ -43,6 +43,8 @@ services:
     image: ghcr.io/bellflight/vrc/2022/vio:latest
     privileged: true
     restart: on-failure
+    volumes:
+      - vio/settings:/usr/local/zed/settings/
 
   apriltag:
     depends_on:
@@ -63,7 +65,6 @@ services:
     depends_on:
       - mqtt
       - vio
-      - apriltag
     image: ghcr.io/bellflight/vrc/2022/fusion:latest
     restart: on-failure
 

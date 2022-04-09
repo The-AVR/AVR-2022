@@ -176,6 +176,21 @@ else
 fi
 bar
 
+echo -e "${CYAN}Obtaining ZED camera configuration${NC}"
+bar
+zedserial=$($s docker run --rm --privileged docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6 python3 -c "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();")
+if [ "$zedserial" == "0" ] ; then
+    echo -e "${LIGHTRED}WARNING:${NC} Zed camera not detected, skipping settings download"
+else
+    settings_file="vio/settings/SN$zedserial.conf"
+    if [ -f "$settings_file" ]; then
+        echo "ZED camera settings already downloaded."
+    else
+        wget -O "$settings_file" "http://calib.stereolabs.com/?SN=$zedserial"
+    fi
+fi
+bar
+
 echo -e "${CYAN}Cleaning up${NC}"
 bar
 $s apt autoremove -y

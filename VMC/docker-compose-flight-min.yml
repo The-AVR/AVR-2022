@@ -14,13 +14,6 @@ services:
       - "18830:18830"
     restart: on-failure
 
-  status:
-    build: status
-    depends_on:
-      - mqtt
-    privileged: true
-    restart: on-failure
-
   fcm:
     depends_on:
       - mqtt
@@ -29,14 +22,6 @@ services:
     network_mode: "host"
     restart: on-failure
 
-#  pcm:
-#    depends_on:
-#      - mqtt
-#    build: pcm
-#    restart: on-failure
-#    devices:
-#      - /dev/ttyACM0:/dev/ttyACM0
-
   vio:
     depends_on:
       - mqtt
@@ -44,31 +29,9 @@ services:
     privileged: true
     restart: on-failure
 
-  apriltag:
-    depends_on:
-      - mqtt
-    build: apriltag
-    restart: on-failure
-    volumes:
-      - /tmp/argus_socket:/tmp/argus_socket
-
   fusion:
     depends_on:
       - mqtt
       - vio
-      - apriltag
     build: fusion
     restart: on-failure
-
-#  thermal:
-#    build: thermal
-#    depends_on:
-#      - mqtt
-#    privileged: true
-#    restart: on-failure
-
-  # sandbox:
-  #   depends_on:
-  #     - mqtt
-  #   build: sandbox
-  #   restart: on-failure
