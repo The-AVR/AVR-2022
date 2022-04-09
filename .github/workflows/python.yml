@@ -19,7 +19,6 @@ jobs:
           [
             docs/,
             GUI/,
-            Libraries/,
             PX4/,
             scripts/,
             VMC/apriltag/python/,
