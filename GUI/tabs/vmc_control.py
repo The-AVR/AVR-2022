@@ -9,7 +9,6 @@ from lib.mqtt_library import (
     VrcPcmSetBaseColorMessage,
     VrcPcmSetServoOpenCloseMessage,
 )
-from lib.widgets import StatusLabel
 from PySide6 import QtCore, QtWidgets
 
 from .base import BaseTabWidget
@@ -166,39 +165,6 @@ class VMCControlWidget(BaseTabWidget):
 
         layout.addWidget(reset_groupbox, 3, 3, 1, 1)
 
-        # ==========================
-        # Status
-        status_groupbox = QtWidgets.QGroupBox("Status")
-        status_layout = QtWidgets.QHBoxLayout()
-        status_groupbox.setLayout(status_layout)
-
-        # data structure to hold the topic prefixes and the corresponding widget
-        self.topic_status_map: Dict[str, StatusLabel] = {}
-        # data structure to hold timers to reset services to unhealthy
-        self.topic_timer: Dict[str, QtCore.QTimer] = {}
-
-        fcc_status = StatusLabel("FCM")
-        self.topic_status_map["vrc/fcm"] = fcc_status
-        status_layout.addWidget(fcc_status)
-
-        # pcc_status = StatusLabel("PCM")
-        # self.topic_status_map["vrc/pcm"] = pcc_status
-        # status_layout.addWidget(pcc_status)
-
-        vio_status = StatusLabel("VIO")
-        self.topic_status_map["vrc/vio"] = vio_status
-        status_layout.addWidget(vio_status)
-
-        at_status = StatusLabel("AT")
-        self.topic_status_map["vrc/apriltag"] = at_status
-        status_layout.addWidget(at_status)
-
-        fus_status = StatusLabel("FUS")
-        self.topic_status_map["vrc/fusion"] = fus_status
-        status_layout.addWidget(fus_status)
-
-        layout.addWidget(status_groupbox, 4, 0, 1, 4)
-
     def publish_message(self, topic: str, payload: Any) -> None:
         """
         Publish a message to a topic
@@ -234,29 +200,3 @@ class VMCControlWidget(BaseTabWidget):
         Set autonomous mode
         """
         self.publish_message("vrc/autonomous", VrcAutonmousMessage(enable=state))
-
-    def process_message(self, topic: str, payload: str) -> None:
-        """
-        Process a new message on a topic
-        """
-        for status_prefix in self.topic_status_map.keys():
-            if topic.startswith(status_prefix):
-                # set icon to healthy
-                status_label = self.topic_status_map[status_prefix]
-                status_label.set_health(True)
-
-                # reset existing timer
-                if status_prefix in self.topic_timer:
-                    timer = self.topic_timer[status_prefix]
-                    timer.stop()
-                    timer.deleteLater()
-
-                # create a new timer
-                # Can't do .singleShot on an exisiting QTimer as that
-                # creates a new instance
-                timer = QtCore.QTimer()
-                timer.timeout.connect(lambda: status_label.set_health(False))  # type: ignore
-                timer.setSingleShot(True)
-                timer.start(2000)
-
-                self.topic_timer[status_prefix] = timer

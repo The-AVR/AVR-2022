@@ -114,6 +114,8 @@ class MainWindow(QtWidgets.QWidget):
 
         # add tabs
 
+        # connection widget
+
         self.main_connection_widget = MainConnectionWidget(self)
         self.main_connection_widget.build()
         self.main_connection_widget.pop_in.connect(self.tabs.pop_in)
@@ -121,15 +123,14 @@ class MainWindow(QtWidgets.QWidget):
             self.main_connection_widget, self.main_connection_widget.windowTitle()
         )
 
-        self.mqtt_debug_widget = MQTTDebugWidget(self)
-        self.mqtt_debug_widget.build()
-        self.mqtt_debug_widget.pop_in.connect(self.tabs.pop_in)
-        self.tabs.addTab(self.mqtt_debug_widget, self.mqtt_debug_widget.windowTitle())
+        self.main_connection_widget.mqtt_connection_widget.connection_state.connect(
+            self.set_mqtt_connected_state
+        )
+        self.main_connection_widget.serial_connection_widget.connection_state.connect(
+            self.set_serial_connected_state
+        )
 
-        self.vmc_control_widget = VMCControlWidget(self)
-        self.vmc_control_widget.build()
-        self.vmc_control_widget.pop_in.connect(self.tabs.pop_in)
-        self.tabs.addTab(self.vmc_control_widget, self.vmc_control_widget.windowTitle())
+        # vmc telemetry widget
 
         self.vmc_telemetry_widget = VMCTelemetryWidget(self)
         self.vmc_telemetry_widget.build()
@@ -137,6 +138,23 @@ class MainWindow(QtWidgets.QWidget):
         self.tabs.addTab(
             self.vmc_telemetry_widget, self.vmc_telemetry_widget.windowTitle()
         )
+
+        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+            self.vmc_telemetry_widget.process_message
+        )
+
+        # vmc control widget
+
+        self.vmc_control_widget = VMCControlWidget(self)
+        self.vmc_control_widget.build()
+        self.vmc_control_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.vmc_control_widget, self.vmc_control_widget.windowTitle())
+
+        self.vmc_control_widget.send_message.connect(
+            self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
+        )
+
+        # thermal view widget
 
         self.thermal_view_control_widget = ThermalViewControlWidget(self)
         self.thermal_view_control_widget.build()
@@ -146,36 +164,36 @@ class MainWindow(QtWidgets.QWidget):
             self.thermal_view_control_widget.windowTitle(),
         )
 
+        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+            self.thermal_view_control_widget.process_message
+        )
+
+        self.thermal_view_control_widget.send_message.connect(
+            self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
+        )
+
+        # mqtt debug widget
+
+        self.mqtt_debug_widget = MQTTDebugWidget(self)
+        self.mqtt_debug_widget.build()
+        self.mqtt_debug_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.mqtt_debug_widget, self.mqtt_debug_widget.windowTitle())
+
+        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+            self.mqtt_debug_widget.process_message
+        )
+        self.mqtt_debug_widget.send_message.connect(
+            self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
+        )
+
+        # pcc tester widget
+
         self.pcc_tester_widget = PCCTesterWidget(
             self, self.main_connection_widget.serial_connection_widget.serial_client
         )
         self.pcc_tester_widget.build()
         self.pcc_tester_widget.pop_in.connect(self.tabs.pop_in)
         self.tabs.addTab(self.pcc_tester_widget, self.pcc_tester_widget.windowTitle())
-
-        # configure connections
-
-        self.main_connection_widget.mqtt_connection_widget.connection_state.connect(
-            self.set_mqtt_connected_state
-        )
-        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
-            self.mqtt_debug_widget.process_message
-        )
-        self.main_connection_widget.serial_connection_widget.connection_state.connect(
-            self.set_serial_connected_state
-        )
-
-        self.mqtt_debug_widget.send_message.connect(
-            self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
-        )
-
-        self.vmc_control_widget.send_message.connect(
-            self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
-        )
-
-        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
-            self.vmc_telemetry_widget.process_message
-        )
 
         # set initial state
 

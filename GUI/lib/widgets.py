@@ -11,6 +11,15 @@ class IntLineEdit(QtWidgets.QLineEdit):
         self.setValidator(QtGui.QIntValidator(0, 1000000, self))
 
 
+class DisplayLineEdit(QtWidgets.QLineEdit):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        self.setReadOnly(True)
+        self.setStyleSheet("background-color: rgb(220, 220, 220)")
+        self.setMaximumWidth(80)
+
+
 class StatusLabel(QtWidgets.QWidget):
     # Combination of 2 QLabels to add a status icon
     def __init__(self, text: str):

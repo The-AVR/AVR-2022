@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+from typing import Dict
 
 from lib.mqtt_library import (
     VrcFcmAttitudeEulerMessage,
@@ -10,18 +11,10 @@ from lib.mqtt_library import (
     VrcFcmLocationLocalMessage,
     VrcFcmStatusMessage,
 )
-from PySide6 import QtWidgets
+from lib.widgets import DisplayLineEdit, StatusLabel
+from PySide6 import QtCore, QtWidgets
 
 from .base import BaseTabWidget
-
-
-class DisplayLineEdit(QtWidgets.QLineEdit):
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
-
-        self.setReadOnly(True)
-        self.setStyleSheet("background-color: rgb(220, 220, 220)")
-        self.setMaximumWidth(80)
 
 
 class VMCTelemetryWidget(BaseTabWidget):
@@ -42,7 +35,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.setLayout(layout)
 
         # top groupbox
-        top_groupbox = QtWidgets.QGroupBox("Status")
+        top_groupbox = QtWidgets.QGroupBox("FCC Status")
         top_groupbox.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
         )
@@ -77,12 +70,12 @@ class VMCTelemetryWidget(BaseTabWidget):
         layout.addWidget(top_groupbox)
 
         # bottom groupbox
-        bottom_groupbox = QtWidgets.QGroupBox("Position")
-        bottom_groupbox.setSizePolicy(
+        bottom_group = QtWidgets.QFrame()
+        bottom_group.setSizePolicy(
             QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
         )
         bottom_layout = QtWidgets.QHBoxLayout()
-        bottom_groupbox.setLayout(bottom_layout)
+        bottom_group.setLayout(bottom_layout)
 
         # bottom-left quadrant
         bottom_left_groupbox = QtWidgets.QGroupBox("Location")
@@ -163,7 +156,43 @@ class VMCTelemetryWidget(BaseTabWidget):
 
         bottom_layout.addWidget(bottom_right_groupbox)
 
-        layout.addWidget(bottom_groupbox)
+        layout.addWidget(bottom_group)
+
+        # ==========================
+        # Status
+        module_status_groupbox = QtWidgets.QGroupBox("Module Status")
+        module_status_groupbox.setSizePolicy(
+            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+        )
+        module_status_layout = QtWidgets.QHBoxLayout()
+        module_status_groupbox.setLayout(module_status_layout)
+
+        # data structure to hold the topic prefixes and the corresponding widget
+        self.topic_status_map: Dict[str, StatusLabel] = {}
+        # data structure to hold timers to reset services to unhealthy
+        self.topic_timer: Dict[str, QtCore.QTimer] = {}
+
+        fcc_status = StatusLabel("FCM")
+        self.topic_status_map["vrc/fcm"] = fcc_status
+        module_status_layout.addWidget(fcc_status)
+
+        # pcc_status = StatusLabel("PCM")
+        # self.topic_status_map["vrc/pcm"] = pcc_status
+        # status_layout.addWidget(pcc_status)
+
+        vio_status = StatusLabel("VIO")
+        self.topic_status_map["vrc/vio"] = vio_status
+        module_status_layout.addWidget(vio_status)
+
+        at_status = StatusLabel("AT")
+        self.topic_status_map["vrc/apriltag"] = at_status
+        module_status_layout.addWidget(at_status)
+
+        fus_status = StatusLabel("FUS")
+        self.topic_status_map["vrc/fusion"] = fus_status
+        module_status_layout.addWidget(fus_status)
+
+        layout.addWidget(module_status_groupbox)
 
     def clear(self):
         # status
@@ -207,7 +236,7 @@ class VMCTelemetryWidget(BaseTabWidget):
 
         diff = [f - e for f, e in zip(full_rgb, empty_rgb)]
         smear = [int(d * payload["soc"]) for d in diff]
-        color = tuple([e + s for e, s in zip(empty_rgb, smear)])
+        color = tuple(e + s for e, s in zip(empty_rgb, smear))
 
         stylesheet = f"""
             QProgressBar {{
@@ -284,8 +313,31 @@ class VMCTelemetryWidget(BaseTabWidget):
         }
 
         # discard topics we don't recognize
-        if topic not in topic_map:
-            return
+        if topic in topic_map:
+            data = json.loads(payload)
+            topic_map[topic](data)
 
-        data = json.loads(payload)
-        topic_map[topic](data)
+        for status_prefix in self.topic_status_map.keys():
+            if not topic.startswith(status_prefix):
+                continue
+
+            # set icon to healthy
+            status_label = self.topic_status_map[status_prefix]
+            status_label.set_health(True)
+
+            # reset existing timer
+            if status_prefix in self.topic_timer:
+                timer = self.topic_timer[status_prefix]
+                timer.stop()
+                timer.deleteLater()
+
+            # create a new timer
+            # Can't do .singleShot on an exisiting QTimer as that
+            # creates a new instance
+            timer = QtCore.QTimer()
+            timer.timeout.connect(lambda: status_label.set_health(False))  # type: ignore
+            timer.setSingleShot(True)
+            timer.start(2000)
+
+            self.topic_timer[status_prefix] = timer
+            break
