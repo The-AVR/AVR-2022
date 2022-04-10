@@ -13,17 +13,20 @@ class IntLineEdit(QtWidgets.QLineEdit):
 
 
 class DisplayLineEdit(QtWidgets.QLineEdit):
-    def __init__(self, *args, **kwargs) -> None:
+    def __init__(self, *args, round_:bool = True, **kwargs) -> None:
         super().__init__(*args, **kwargs)
+
+        self.round_ = round_
 
         self.setReadOnly(True)
         self.setStyleSheet("background-color: rgb(220, 220, 220)")
-        self.setMaximumWidth(80)
+        self.setMaximumWidth(100)
 
     def setText(self, arg__1: str) -> None:
         # round incoming float values
-        with contextlib.suppress(ValueError):
-            arg__1 = str(round(float(arg__1), 4))
+        if self.round_:
+            with contextlib.suppress(ValueError):
+                arg__1 = str(round(float(arg__1), 4))
 
         return super().setText(arg__1)
 
