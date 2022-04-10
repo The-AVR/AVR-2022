@@ -117,9 +117,6 @@ if [ "$DEVELOPMENT" != true ] ; then
     git checkout main
 fi
 
-$s cp ./spio-mount.service /etc/systemd/system/spio-mount.service
-$s systemctl enable spio-mount.service
-$s systemctl start spio-mount.service
 bar
 
 echo -e "${CYAN}Installing and configuring Docker${NC}"
@@ -160,7 +157,7 @@ bar
 
 echo -e "${CYAN}Installing spio service${NC}"
 bar
-$s cp scripts/spio-mount.service /etc/systemd/system/spio-mount.service
+$s cp VMC/scripts/spio-mount.service /etc/systemd/system/spio-mount.service
 $s systemctl enable spio-mount.service
 $s systemctl start spio-mount.service
 bar

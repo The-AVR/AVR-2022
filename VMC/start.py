@@ -35,7 +35,7 @@ def check_sudo() -> None:
 def apriltag_service(compose_services: dict) -> None:
     apriltag_data = {
         "depends_on": ["mqtt"],
-        "build": "apriltag",
+        "build": os.path.join(THIS_DIR, "apriltag"),
         "restart": "unless-stopped",
         "volumes": ["/tmp/argus_socket:/tmp/argus_socket"],
     }
@@ -51,7 +51,7 @@ def fcm_service(compose_services: dict, local: bool = False) -> None:
     }
 
     if local:
-        fcm_data["build"] = "fcm"
+        fcm_data["build"] = os.path.join(THIS_DIR, "fcm")
     else:
         fcm_data["image"] = f"{IMAGE_BASE}fcm:latest"
 
@@ -65,7 +65,7 @@ def fusion_service(compose_services: dict, local: bool = False) -> None:
     }
 
     if local:
-        fusion_data["build"] = "fusion"
+        fusion_data["build"] = os.path.join(THIS_DIR, "fusion")
     else:
         fusion_data["image"] = f"{IMAGE_BASE}fusion:latest"
 
@@ -80,7 +80,7 @@ def mavp2p_service(compose_services: dict, local: bool = False) -> None:
     }
 
     if local:
-        mavp2p_data["build"] = "mavp2p"
+        mavp2p_data["build"] = os.path.join(THIS_DIR, "mavp2p")
     else:
         mavp2p_data["image"] = f"{IMAGE_BASE}mavp2p:latest"
 
@@ -94,7 +94,7 @@ def mqtt_service(compose_services: dict, local: bool = False) -> None:
     }
 
     if local:
-        mqtt_data["build"] = "mqtt"
+        mqtt_data["build"] = os.path.join(THIS_DIR, "mqtt")
     else:
         mqtt_data["image"] = f"{IMAGE_BASE}mqtt:latest"
 
@@ -109,7 +109,7 @@ def pcm_service(compose_services: dict, local: bool = False) -> None:
     }
 
     if local:
-        pcm_data["build"] = "pcm"
+        pcm_data["build"] = os.path.join(THIS_DIR, "pcm")
     else:
         pcm_data["image"] = f"{IMAGE_BASE}pcm:latest"
 
@@ -119,7 +119,7 @@ def pcm_service(compose_services: dict, local: bool = False) -> None:
 def sandbox_service(compose_services: dict) -> None:
     sandbox_data = {
         "depends_on": ["mqtt"],
-        "build": "sandbox",
+        "build": os.path.join(THIS_DIR, "sandbox"),
         "restart": "unless-stopped",
     }
 
@@ -134,7 +134,7 @@ def status_service(compose_services: dict, local: bool = False) -> None:
     }
 
     if local:
-        status_data["build"] = "status"
+        status_data["build"] = os.path.join(THIS_DIR, "status")
     else:
         status_data["image"] = f"{IMAGE_BASE}status:latest"
 
@@ -149,7 +149,7 @@ def thermal_service(compose_services: dict, local: bool = False) -> None:
     }
 
     if local:
-        thermal_data["build"] = "thermal"
+        thermal_data["build"] = os.path.join(THIS_DIR, "thermal")
     else:
         thermal_data["image"] = f"{IMAGE_BASE}thermal:latest"
 
@@ -167,7 +167,7 @@ def vio_service(compose_services: dict, local: bool = False) -> None:
     }
 
     if local:
-        vio_data["build"] = "vio"
+        vio_data["build"] = os.path.join(THIS_DIR, "vio")
     else:
         vio_data["image"] = f"{IMAGE_BASE}vio:latest"
 
@@ -231,10 +231,10 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
     proc.wait()
 
     # cleanup
-    try:
-        os.remove(compose_file)
-    except PermissionError:
-        pass
+    # try:
+    #     os.remove(compose_file)
+    # except PermissionError:
+    #     pass
 
 # sourcery skip: merge-duplicate-blocks, remove-redundant-if
 if __name__ == "__main__":
