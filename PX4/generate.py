@@ -1,6 +1,7 @@
 import argparse
 import multiprocessing
 import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -216,6 +217,11 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
     if build_px4:
         script_cmd.append("--px4")
 
+    docker_image = "docker.io/px4io/px4-dev-nuttx-focal:latest"
+    if build_pymavlink and not build_px4:
+        # if only building pymavlink, use a simpler ARM compatible image
+        docker_image = "docker.io/library/python:3.9-buster"
+
     cmd = [
         "docker",
         "run",
@@ -224,7 +230,7 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
         "/work",
         "-v",
         f"{THIS_DIR}:/work:rw",
-        "docker.io/px4io/px4-dev-nuttx-focal:latest",
+        docker_image,
     ] + script_cmd
 
     print2(f"Running: {' '.join(cmd)}")
@@ -255,6 +261,9 @@ if __name__ == "__main__":
     parser.add_argument("--px4", action="store_true", help="Build PX4 firmware")
 
     args = parser.parse_args()
+
+    if args.px4 and platform.machine() == "aarch64":
+        parser.error("Sorry, cannot build PX4 on ARM")
 
     if args.mode == "host":
         host(args.pymavlink, args.px4)
