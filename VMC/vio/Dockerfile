@@ -49,6 +49,5 @@ COPY requirements.txt requirements.txt
 RUN python3.9 -m pip install -r requirements.txt
 
 COPY . .
-COPY ./*.conf /usr/local/zed/settings/
 
 CMD ["python3.9", "vio.py"]

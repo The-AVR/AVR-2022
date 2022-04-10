@@ -28,8 +28,7 @@ def check_sudo() -> None:
 
     # re run ourselves with sudo
     print("Needing sudo privledges to run docker, re-lauching")
-    subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:])
-    sys.exit(0)
+    sys.exit(subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode)
 
 
 def apriltag_service(compose_services: dict) -> None:
@@ -231,10 +230,12 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
     proc.wait()
 
     # cleanup
-    # try:
-    #     os.remove(compose_file)
-    # except PermissionError:
-    #     pass
+    try:
+        os.remove(compose_file)
+    except PermissionError:
+        pass
+
+    sys.exit(proc.returncode)
 
 # sourcery skip: merge-duplicate-blocks, remove-redundant-if
 if __name__ == "__main__":
