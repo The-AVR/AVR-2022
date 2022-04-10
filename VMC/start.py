@@ -210,6 +210,8 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
 
     if action == "build":
         cmd += ["build"] + modules
+    elif action == "pull":
+        cmd += ["pull"] + modules
     elif action == "run":
         cmd += ["up", "--remove-orphans", "--force-recreate"] + modules
     else:
@@ -250,9 +252,9 @@ if __name__ == "__main__":
         help="Build containers locally rather than using pre-built ones from GitHub",
     )
 
-    parser.add_argument("action", choices=["run", "build"], help="Action to perform")
+    parser.add_argument("action", choices=["run", "build", "pull"], help="Action to perform")
     parser.add_argument(
-        "modules", nargs="*", help="Explicitly list which module(s) to run/build"
+        "modules", nargs="*", help="Explicitly list which module(s) to perform the action one"
     )
 
     exgroup = parser.add_mutually_exclusive_group()
@@ -260,19 +262,19 @@ if __name__ == "__main__":
         "-m",
         "--min",
         action="store_true",
-        help=f"Run/build minimal modules ({', '.join(sorted(min_modules))}). Will overwrite any modules explicitly specified.",
+        help=f"Perform action on minimal modules ({', '.join(sorted(min_modules))}). Will overwrite any modules explicitly specified.",
     )
     exgroup.add_argument(
         "-n",
         "--norm",
         action="store_true",
-        help=f"Run/build normal modules ({', '.join(sorted(norm_modules))}). Will overwrite any modules explicitly specified. If nothing else is specified, this is the default.",
+        help=f"Perform action on normal modules ({', '.join(sorted(norm_modules))}). Will overwrite any modules explicitly specified. If nothing else is specified, this is the default.",
     )
     exgroup.add_argument(
         "-a",
         "--all",
         action="store_true",
-        help=f"Run/build all modules ({', '.join(sorted(all_modules))}). Will overwrite any modules explicitly specified.",
+        help=f"Perform action on all modules ({', '.join(sorted(all_modules))}). Will overwrite any modules explicitly specified.",
     )
 
     args = parser.parse_args()

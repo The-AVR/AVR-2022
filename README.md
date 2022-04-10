@@ -71,8 +71,7 @@ If on a Jetson, you can now follow the instructions inside
 [VMC/README.md](VMC/README.md) to run the `setup.sh`
 script (add `--dev` for development).
 
-Note, with `docker-compose` commands, make sure to add `-f docker-compose-dev.yml`
-before the action such as `sudo docker-compose -f docker-compose-dev.yml up -d`.
+Note, with `start.py` commands, make sure to add `--local` to the command.
 This builds the Docker images locally rather than using prebuilt ones from GitHub CR.
 
 Finally, install recommended VS Code extensions.

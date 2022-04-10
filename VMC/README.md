@@ -43,16 +43,10 @@ and you may need to re-enter your `sudo` password a few times.
 To start the VRC software, just run:
 
 ```bash
-# Start the Docker Compose stack
-sudo docker-compose up -d
+sudo python3 start.py up
 ```
 
-To stop the VRC software, run:
-
-```bash
-# Stop the Docker Compose stack
-sudo docker-compose down
-```
+To stop the VRC software hit <kbd>Ctrl</kbd>+<kbd>C</kbd>.
 
 If you ever need to update the VRC software, run:
 

@@ -169,11 +169,11 @@ echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 cd $VRC_DIR/VMC
 if [ "$DEVELOPMENT" != true ] ; then
-    $s docker-compose pull
-    $s docker-compose build
+    $s python3 start.py pull --norm
+    $s python3 start.py build --norm
 else
-    $s docker-compose -f docker-compose-dev.yml pull
-    $s docker-compose -f docker-compose-dev.yml build
+    $s python3 start.py pull --norm --local
+    $s python3 start.py build --norm --local
 fi
 bar
 
