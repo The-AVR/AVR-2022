@@ -103,6 +103,7 @@ bar
 # install some useful prereqs
 $s apt install -y git apt-transport-https ca-certificates apt-utils software-properties-common wget htop nano python3 python3-wheel python3-pip jq
 $s -H python3 -m pip install pip wheel --upgrade
+$s -H python3 -m pip install -r $VRC_DIR/VMC/scripts/requirements.txt
 # set to high-power 10W mode. 1 is 5W mode
 $s nvpmodel -m 0
 
@@ -116,9 +117,9 @@ if [ "$DEVELOPMENT" != true ] ; then
     git checkout main
 fi
 
-$s  cp ./spio-mount.service /etc/systemd/system/spio-mount.service
-$s  systemctl enable spio-mount.service
-$s  systemctl start spio-mount.service
+$s cp ./spio-mount.service /etc/systemd/system/spio-mount.service
+$s systemctl enable spio-mount.service
+$s systemctl start spio-mount.service
 bar
 
 echo -e "${CYAN}Installing and configuring Docker${NC}"
@@ -178,16 +179,11 @@ bar
 
 echo -e "${CYAN}Obtaining ZED camera configuration${NC}"
 bar
-zedserial=$($s docker run --rm --privileged docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6 python3 -c "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();")
+zedserial=$($s docker run --rm --mount type=bind,source=$VRC_DIR/VMC/vio/settings,target=/usr/local/zed/settings/ --privileged docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6 python3 -c "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();")
 if [ "$zedserial" == "0" ] ; then
-    echo -e "${LIGHTRED}WARNING:${NC} Zed camera not detected, skipping settings download"
+    echo -e "${LIGHTRED}WARNING:${NC} ZED camera not detected, skipping settings download"
 else
-    settings_file="vio/settings/SN$zedserial.conf"
-    if [ -f "$settings_file" ]; then
-        echo "ZED camera settings already downloaded."
-    else
-        wget -O "$settings_file" "http://calib.stereolabs.com/?SN=$zedserial"
-    fi
+    echo "ZED camera settings have been downloaded"
 fi
 bar
 
@@ -198,12 +194,10 @@ bar
 
 echo -e "${CYAN}Performing self-test${NC}"
 bar
-
 # ensure the container runtime works
 # KEEP THIS, saved our bacon once
 echo -n "Testing Nvidia container runtime... "
 ($s docker run --rm --gpus all --env NVIDIA_DISABLE_REQUIRE=1 nvcr.io/nvidia/cuda:11.4.1-base-ubuntu18.04 echo -e "${LIGHTGREEN}Passed!${NC}") || (echo -e "${LIGHTRED}Failed!${NC}" && exit 1)
-
 bar
 
 echo -e "${GREEN}VRC 2022 finished setting up!${NC}"
