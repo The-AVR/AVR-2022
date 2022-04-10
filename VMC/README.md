@@ -26,8 +26,6 @@ https://ghcr.io
 Run the following commands:
 
 ```bash
-sudo apt update
-sudo apt install git -y
 git clone https://github.com/bellflight/VRC-2022 ~/VRC-2022
 cd ~/VRC-2022/VMC/
 chmod +x setup.sh
