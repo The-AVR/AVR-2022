@@ -1,3 +1,4 @@
+import contextlib
 import os
 
 from PySide6 import QtGui, QtWidgets
@@ -18,6 +19,13 @@ class DisplayLineEdit(QtWidgets.QLineEdit):
         self.setReadOnly(True)
         self.setStyleSheet("background-color: rgb(220, 220, 220)")
         self.setMaximumWidth(80)
+
+    def setText(self, arg__1: str) -> None:
+        # round incoming float values
+        with contextlib.suppress(ValueError):
+            arg__1 = str(round(float(arg__1), 4))
+
+        return super().setText(arg__1)
 
 
 class StatusLabel(QtWidgets.QWidget):
