@@ -213,6 +213,8 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
         cmd += ["pull"] + modules
     elif action == "run":
         cmd += ["up", "--remove-orphans", "--force-recreate"] + modules
+    elif action == "stop":
+        cmd += ["down", "--remove-orphans", "--volumes"]
     else:
         # shouldn't happen
         raise ValueError(f"Unknown action: {action}")
@@ -224,7 +226,7 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
         if sys.platform == "win32":
             proc.send_signal(signal.CTRL_BREAK_EVENT)
         else:
-            proc.send_signal(signal.SIGHUP)
+            proc.send_signal(signal.SIGINT)
 
     signal.signal(signal.SIGINT, signal_handler)
     proc.wait()
@@ -253,7 +255,7 @@ if __name__ == "__main__":
         help="Build containers locally rather than using pre-built ones from GitHub",
     )
 
-    parser.add_argument("action", choices=["run", "build", "pull"], help="Action to perform")
+    parser.add_argument("action", choices=["run", "build", "pull", "stop"], help="Action to perform")
     parser.add_argument(
         "modules", nargs="*", help="Explicitly list which module(s) to perform the action one"
     )

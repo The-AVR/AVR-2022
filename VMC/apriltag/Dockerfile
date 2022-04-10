@@ -64,5 +64,6 @@ COPY python/requirements.txt python/requirements.txt
 RUN python3.9 -m pip install -r python/requirements.txt
 
 COPY . .
+RUN chmod +x ./docker-entrypoint.sh
 
 CMD ["./docker-entrypoint.sh"]

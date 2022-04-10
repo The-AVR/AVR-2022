@@ -10,5 +10,6 @@ RUN wget https://github.com/aler9/mavp2p/releases/download/v${MAVP2P_VERSION}/ma
  && rm mavp2p*.tar.gz
 
 COPY . .
+RUN chmod +x ./docker-entrypoint.sh
 
 CMD ["./docker-entrypoint.sh"]
