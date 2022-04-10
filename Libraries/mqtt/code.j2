@@ -91,7 +91,7 @@ class MQTTModule:
     payload.
     """
 
-    def __init__(self, host="mqtt"):
+    def __init__(self, host: str="mqtt"):
         # these should be not be changed, to match the docker-compose.yml file
         self.mqtt_host = host
         self.mqtt_port = 18830
@@ -156,7 +156,7 @@ class MQTTModule:
         """
         On connection callback. Subscribes to MQTT topics in the topic map.
         """
-        logger.debug(f"Connected with result code {rc}")
+        logger.debug(f"Connected with result {rc}")
 
         for topic in self.topic_map.keys():
             client.subscribe(topic)

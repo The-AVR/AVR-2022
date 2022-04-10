@@ -112,7 +112,7 @@ class FlightControlComputer(FCMMQTTModule):
         super().__init__(host)
 
         # mavlink stuff
-        self.drone = mavsdk.System()
+        self.drone = mavsdk.System(sysid=241)
         self.mission_api = MissionAPI(self.drone, host)
 
         # queues
@@ -127,14 +127,21 @@ class FlightControlComputer(FCMMQTTModule):
         self.in_air: bool = False
         self.is_armed: bool = False
         self.fcc_mode = "UNKNOWN"
-        self.connected = False
         self.heading = 0.0
 
     async def connect(self) -> None:
         """
         Connect the Drone object.
         """
+        logger.debug("Connecting to the FCC")
+
+        # un-comment to show mavsdk server logging
+        # import logging
+        # logging.basicConfig(level=logging.DEBUG)
+
         await self.drone.connect(system_address="udp://:14541")
+
+        logger.success("Connected to the FCC")
 
     async def async_queue_action(
         self, queue_: queue.Queue, action: Callable, frequency: int = 10
@@ -179,10 +186,9 @@ class FlightControlComputer(FCMMQTTModule):
         """
         # start our MQTT client
         super().run_non_blocking()
-        logger.debug("Conneciting to the FCC")
+
         # connect to the fcc
         await self.connect()
-        logger.debug("Connected!! to FCC")
 
         # start the mission api MQTT client
         # self.mission_api.run_non_blocking()
@@ -966,31 +972,17 @@ class PyMAVLinkAgent(MQTTModule):
         """
         Set up a mavlink connection and kick off any tasks
         """
-        # loop = asyncio.get_event_loop()
 
         # create a mavlink udp instance
         self.mavcon = mavutil.mavlink_connection(
-            "udpin:0.0.0.0:14542", source_system=254, dialect="bell"
+            "udp:0.0.0.0:14542", source_system=242, dialect="bell"
         )
 
-        # await loop.run_in_executor(None, self.wait_for_heartbeat)
-        await self.wait_for_heartbeat()
-        logger.debug("In RUN received heartbeat")
-        super().run()
+        logger.debug("Waiting for mavlink heartbeat")
+        self.mavcon.wait_heartbeat()
+        logger.success("Mavlink heartbeat received")
 
-    @try_except(reraise=True)
-    async def wait_for_heartbeat(self) -> Any:
-        """
-        Wait for a MAVLINK heartbeat message.
-        """
-        try:
-            logger.debug("Waiting for mavlink heartbeat")
-            m = self.mavcon.recv_match(type="HEARTBEAT", blocking=True)
-            logger.success("Mavlink heartbeat received")
-            return m
-
-        except Exception as e:
-            logger.exception("Issue while waiting for connection heartbeat")
+        super().run_non_blocking()
 
     @try_except(reraise=True)
     def hilgps_msg_handler(self, payload: VrcFusionHilGpsMessage) -> None:

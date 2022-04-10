@@ -1,4 +1,4 @@
-FROM docker.io/library/alpine:3
+FROM docker.io/arm64v8/alpine:3
 
 ENV MAVP2P_VERSION=0.6.5
 WORKDIR /app
@@ -9,7 +9,4 @@ RUN wget https://github.com/aler9/mavp2p/releases/download/v${MAVP2P_VERSION}/ma
  && tar -xvzf mavp2p*.tar.gz \
  && rm mavp2p*.tar.gz
 
-COPY . .
-RUN chmod +x ./docker-entrypoint.sh
-
-CMD ["./docker-entrypoint.sh"]
+ENTRYPOINT ["/app/mavp2p"]

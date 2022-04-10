@@ -28,7 +28,9 @@ def check_sudo() -> None:
 
     # re run ourselves with sudo
     print("Needing sudo privledges to run docker, re-lauching")
-    sys.exit(subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode)
+    sys.exit(
+        subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode
+    )
 
 
 def apriltag_service(compose_services: dict) -> None:
@@ -45,6 +47,8 @@ def apriltag_service(compose_services: dict) -> None:
 def fcm_service(compose_services: dict, local: bool = False) -> None:
     fcm_data = {
         "depends_on": ["mqtt", "mavp2p"],
+        # this HAS to run in host-networking mode, as mavsdk lacks DNS resolution
+        # hours wasted: 3
         "network_mode": "host",
         "restart": "unless-stopped",
     }
@@ -73,9 +77,11 @@ def fusion_service(compose_services: dict, local: bool = False) -> None:
 
 def mavp2p_service(compose_services: dict, local: bool = False) -> None:
     mavp2p_data = {
+        # see comment on fcm on why this needs host networking
         "network_mode": "host",
         "restart": "unless-stopped",
         "devices": ["/dev/ttyTHS1:/dev/ttyTHS1"],
+        "command": "serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 udpc:127.0.0.1:14541 udpc:127.0.0.1:14542",
     }
 
     if local:
@@ -239,6 +245,7 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
 
     sys.exit(proc.returncode)
 
+
 # sourcery skip: merge-duplicate-blocks, remove-redundant-if
 if __name__ == "__main__":
     check_sudo()
@@ -255,9 +262,13 @@ if __name__ == "__main__":
         help="Build containers locally rather than using pre-built ones from GitHub",
     )
 
-    parser.add_argument("action", choices=["run", "build", "pull", "stop"], help="Action to perform")
     parser.add_argument(
-        "modules", nargs="*", help="Explicitly list which module(s) to perform the action one"
+        "action", choices=["run", "build", "pull", "stop"], help="Action to perform"
+    )
+    parser.add_argument(
+        "modules",
+        nargs="*",
+        help="Explicitly list which module(s) to perform the action one",
     )
 
     exgroup = parser.add_mutually_exclusive_group()

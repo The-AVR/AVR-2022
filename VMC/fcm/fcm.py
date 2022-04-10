@@ -1,12 +1,11 @@
 import asyncio
 
 from fcc_library import FlightControlComputer, PyMAVLinkAgent
-from mqtt_library import MQTTModule
 
 
-class FlightControlModule(MQTTModule):
+class FlightControlModule:
     def __init__(self) -> None:
-        super().__init__("localhost")
+        super().__init__()
 
         # create the FCC objects
         self.fcc = FlightControlComputer("localhost")
