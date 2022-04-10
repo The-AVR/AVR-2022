@@ -20,19 +20,38 @@ For Bell employees and partners, work items are tracked on [Trello](https://trel
 
 ## Developer Setup
 
+### Building Containers Locally
+
 Clone the repository with submodules:
 
 ```bash
 git clone --recurse-submodules https://github.com/bellflight/VRC-2022
+cd VRC-2022
 ```
+
+Copy library files around:
+
+```bash
+python3 scripts/copy_libraries.py
+```
+
+Now, build the pymavlink package:
+
+```bash
+python3 ./PX4/generate.py host --pymavlink
+```
+
+### Development Work
+
+If you actually are doing development work, you want to set up a 
+Python 3.9 virtual environment with all the dependencies installed.
 
 If you need to install Python 3.9 on Linux, do the following:
 
 ```bash
 sudo add-apt-repository ppa:deadsnakes/ppa
-sudo apt update
 sudo apt install python3-pip python3.9 python3.9-venv
-sudo python3.9 -m pip install pip wheel --upgrade
+sudo -H python3.9 -m pip install pip wheel --upgrade
 ```
 
 Create a Python 3.9 virtual environment:
@@ -48,24 +67,13 @@ Activate the virtual environment:
 source .venv/bin/activate # Linux
 ```
 
-Copy library files around:
-
-```bash
-python scripts/copy_libraries.py
-```
-
-Now, build the pymavlink package:
-
-```bash
-python ./PX4/generate.py host --pymavlink
-```
-
-If you actually are doing development work, you can install all the dependencies
-so you get autocomplete and type hinting:
+You can install all the dependencies so you get autocomplete and type hinting:
 
 ```bash
 python scripts/install_requirements.py
 ```
+
+Finally, install recommended VS Code extensions.
 
 If on a Jetson, you can now follow the instructions inside
 [VMC/README.md](VMC/README.md) to run the `setup.sh`
@@ -73,8 +81,6 @@ script (add `--dev` for development).
 
 Note, with `start.py` commands, make sure to add `--local` to the command.
 This builds the Docker images locally rather than using prebuilt ones from GitHub CR.
-
-Finally, install recommended VS Code extensions.
 
 If you have trouble installing the `pupil-apriltags` package on Windows,
 try installing
