@@ -1,7 +1,7 @@
 setuptools
 loguru==0.5.3
 paho-mqtt==1.5.1
-Jetson.GPIO==2.0.17
+# Jetson.GPIO==2.0.17
 adafruit-circuitpython-register
 adafruit-circuitpython-busdevice
 adafruit-circuitpython-neopixel-spi
