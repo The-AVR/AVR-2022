@@ -4,6 +4,7 @@ import datetime
 import json
 import math
 import queue
+import socket
 import time
 from typing import Any, Callable, List
 
@@ -32,8 +33,8 @@ from pymavlink import mavutil
 
 
 class FCMMQTTModule(MQTTModule):
-    def __init__(self, host: str = "mqtt") -> None:
-        super().__init__(host)
+    def __init__(self) -> None:
+        super().__init__()
 
     def _timestamp(self) -> str:
         return datetime.datetime.now().isoformat()
@@ -57,8 +58,8 @@ class DispatcherBusy(Exception):
 
 
 class DispatcherManager(FCMMQTTModule):
-    def __init__(self, host: str = "mqtt") -> None:
-        super().__init__(host)
+    def __init__(self) -> None:
+        super().__init__()
         self.currently_running_task = None
         self.timeout = 10
 
@@ -108,12 +109,12 @@ class DispatcherManager(FCMMQTTModule):
 
 
 class FlightControlComputer(FCMMQTTModule):
-    def __init__(self, host: str = "mqtt") -> None:
-        super().__init__(host)
+    def __init__(self) -> None:
+        super().__init__()
 
         # mavlink stuff
-        self.drone = mavsdk.System(sysid=241)
-        self.mission_api = MissionAPI(self.drone, host)
+        self.drone = mavsdk.System(sysid=161)
+        self.mission_api = MissionAPI(self.drone)
 
         # queues
         self.action_queue = queue.Queue()
@@ -139,7 +140,10 @@ class FlightControlComputer(FCMMQTTModule):
         # import logging
         # logging.basicConfig(level=logging.DEBUG)
 
-        await self.drone.connect(system_address="udp://:14541")
+        # mavsdk does not support dns, so do it ourselves
+        await self.drone.connect(
+            system_address=f"tcp://{socket.gethostbyname('mavp2p')}:5761"
+        )
 
         logger.success("Connected to the FCC")
 
@@ -261,7 +265,7 @@ class FlightControlComputer(FCMMQTTModule):
         async for battery in self.drone.telemetry.battery():
 
             update = VrcFcmBatteryMessage(
-                voltage=battery.voltage_v * 4,
+                voltage=battery.voltage_v,
                 soc=battery.remaining_percent * 100.0,
                 timestamp=self._timestamp(),
             )
@@ -750,8 +754,8 @@ class FlightControlComputer(FCMMQTTModule):
 
 
 class MissionAPI(FCMMQTTModule):
-    def __init__(self, drone: mavsdk.System, host: str = "mqtt") -> None:
-        super().__init__(host)
+    def __init__(self, drone: mavsdk.System) -> None:
+        super().__init__()
         self.drone = drone
 
     @async_try_except(reraise=True)
@@ -975,7 +979,7 @@ class PyMAVLinkAgent(MQTTModule):
 
         # create a mavlink udp instance
         self.mavcon = mavutil.mavlink_connection(
-            "udp:0.0.0.0:14542", source_system=242, dialect="bell"
+            "tcp:mavp2p:5762", source_system=162, dialect="bell"
         )
 
         logger.debug("Waiting for mavlink heartbeat")
@@ -1005,7 +1009,7 @@ class PyMAVLinkAgent(MQTTModule):
             payload["satellites_visible"],
             payload["heading"],
         )
-        logger.debug(msg)
+        # logger.debug(msg)
         self.mavcon.mav.send(msg)  # type: ignore
         self.num_frames += 1
 

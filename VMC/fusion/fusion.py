@@ -120,7 +120,7 @@ class FusionModule(MQTTModule):
             Vn=payload["n"], Ve=payload["e"], Vd=payload["d"]
         )
         self.send_message("vrc/fusion/velocity/ned", vmc_vel_update)
-        logger.debug("vrc/fusion/velocity/ned message sent")
+        # logger.debug("vrc/fusion/velocity/ned message sent")
 
         # compute groundspeed
         gs = np.linalg.norm([payload["n"], payload["e"]])

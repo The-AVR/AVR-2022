@@ -165,7 +165,7 @@
                 {
                     "key": "soc",
                     "type": "float",
-                    "docs": "State of charge (0-1)"
+                    "docs": "State of charge (0 - 100)"
                 },
                 {
                     "key": "timestamp",

@@ -230,11 +230,11 @@ class VMCTelemetryWidget(BaseTabWidget):
         soc = payload["soc"]
         # prevent it from dropping below 0
         soc = max(soc, 0)
-        # prevent it from going above 1
-        soc = min(soc, 1)
+        # prevent it from going above 100
+        soc = min(soc, 100)
 
-        self.battery_percent_bar.setValue(int(soc * 100))
-        self.battery_voltage_label.setText(f"{payload['voltage']} Volts")
+        self.battery_percent_bar.setValue(int(soc))
+        self.battery_voltage_label.setText(f"{round(payload['voltage'], 4)} Volts")
 
         # this is required to change the progress bar color as the value changes
         empty_rgb = (135, 0, 16)

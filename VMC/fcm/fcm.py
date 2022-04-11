@@ -8,8 +8,8 @@ class FlightControlModule:
         super().__init__()
 
         # create the FCC objects
-        self.fcc = FlightControlComputer("localhost")
-        self.gps_fcc = PyMAVLinkAgent("localhost")
+        self.fcc = FlightControlComputer()
+        self.gps_fcc = PyMAVLinkAgent()
 
     async def run(self) -> None:
         asyncio.gather(
