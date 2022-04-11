@@ -38,7 +38,7 @@ python3 scripts/copy_libraries.py
 Now, build the pymavlink package:
 
 ```bash
-sudo python3 ./PX4/generate.py host --pymavlink
+sudo python3 ./PX4/generate.py --pymavlink
 ```
 
 ### Development Work

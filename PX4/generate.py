@@ -211,7 +211,7 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
     target_dir = os.path.join(THIS_DIR, "target")
     os.makedirs(target_dir, exist_ok=True)
 
-    script_cmd = ["python3", "generate.py", "container"]
+    script_cmd = ["python3", "generate.py", "--container"]
     if build_pymavlink:
         script_cmd.append("--pymavlink")
     if build_px4:

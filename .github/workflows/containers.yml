@@ -59,7 +59,7 @@ jobs:
 
       - name: Generate Custom Pymavlink Package
         if: matrix.image == 'fcm'
-        run: python3 PX4/generate.py host --pymavlink
+        run: python3 PX4/generate.py --pymavlink
 
       - name: Github CR Login
         if: github.event_name != 'pull_request'

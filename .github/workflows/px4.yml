@@ -40,7 +40,7 @@ jobs:
             px4-package
 
       - name: Build PX4 Firmware
-        run: python3 PX4/generate.py host --px4
+        run: python3 PX4/generate.py --px4
 
       - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'
