@@ -43,7 +43,7 @@ sudo python3 ./PX4/generate.py host --pymavlink
 
 ### Development Work
 
-If you actually are doing development work, you want to set up a 
+If you actually are doing development work, you want to set up a
 Python 3.9 virtual environment with all the dependencies installed.
 
 If you need to install Python 3.9 on Linux, do the following:

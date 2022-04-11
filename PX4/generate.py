@@ -254,7 +254,7 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a PX4/Pymavlink build")
-    parser.add_argument("mode", choices=["host", "container"], help="Launch mode")
+    parser.add_argument("--container", action="store_true", help="Internal use only")
     parser.add_argument(
         "--pymavlink", action="store_true", help="Build Pymavlink package"
     )
@@ -265,7 +265,7 @@ if __name__ == "__main__":
     if args.px4 and platform.machine() == "aarch64":
         parser.error("Sorry, cannot build PX4 on ARM")
 
-    if args.mode == "host":
-        host(args.pymavlink, args.px4)
-    elif args.mode == "container":
+    if args.container:
         container(args.pymavlink, args.px4)
+    else:
+        host(args.pymavlink, args.px4)

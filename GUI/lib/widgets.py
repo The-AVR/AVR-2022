@@ -13,7 +13,7 @@ class IntLineEdit(QtWidgets.QLineEdit):
 
 
 class DisplayLineEdit(QtWidgets.QLineEdit):
-    def __init__(self, *args, round_:bool = True, **kwargs) -> None:
+    def __init__(self, *args, round_: bool = True, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
         self.round_ = round_

@@ -961,8 +961,8 @@ class MissionAPI(FCMMQTTModule):
 
 
 class PyMAVLinkAgent(MQTTModule):
-    def __init__(self, host: str = "mqtt") -> None:
-        super().__init__(host)
+    def __init__(self) -> None:
+        super().__init__()
 
         self.topic_map = {
             "vrc/fusion/hil_gps": self.hilgps_msg_handler,
