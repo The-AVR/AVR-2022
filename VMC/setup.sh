@@ -116,7 +116,6 @@ git pull
 if [ "$DEVELOPMENT" != true ] ; then
     git checkout main
 fi
-
 bar
 
 echo -e "${CYAN}Installing and configuring Docker${NC}"
@@ -140,7 +139,7 @@ $s mv tmp.json /etc/docker/daemon.json
 popd
 
 # needed so that the shared libs are included in the docker container creation from the host
-$s cp VMC/apriltag/linux/vrc.csv /etc/nvidia-container-runtime/host-files-for-container.d/
+$s cp $VRC_DIR/VMC/apriltag/linux/vrc.csv /etc/nvidia-container-runtime/host-files-for-container.d/
 
 # restart docker so new runtime takes into effect
 $s service docker stop
@@ -157,7 +156,7 @@ bar
 
 echo -e "${CYAN}Installing spio service${NC}"
 bar
-$s cp VMC/scripts/spio-mount.service /etc/systemd/system/spio-mount.service
+$s cp $VRC_DIR/VMC/scripts/spio-mount.service /etc/systemd/system/spio-mount.service
 $s systemctl enable spio-mount.service
 $s systemctl start spio-mount.service
 bar
@@ -182,6 +181,14 @@ if [ "$zedserial" == "0" ] ; then
 else
     echo "ZED camera settings have been downloaded"
 fi
+bar
+
+echo -e "${CYAN}Installing spio service${NC}"
+bar
+cd $VRC_DIR/VMC/FlightSoftware
+$s cp scripts/spio-mount.service /etc/systemd/system/spio-mount.service
+$s systemctl enable spio-mount.service
+$s systemctl start spio-mount.service
 bar
 
 echo -e "${CYAN}Cleaning up${NC}"
