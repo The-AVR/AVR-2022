@@ -43,6 +43,8 @@ services:
     build: vio
     privileged: true
     restart: on-failure
+    volumes:
+      - "vio:/user/local/zed/settings:rw"
 
   apriltag:
     depends_on:
@@ -72,3 +74,6 @@ services:
   #     - mqtt
   #   build: sandbox
   #   restart: on-failure
+
+volumes:
+  vio:

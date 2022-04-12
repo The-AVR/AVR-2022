@@ -115,10 +115,6 @@ git pull
 if [ "$DEVELOPMENT" != true ] ; then
     git checkout main
 fi
-
-$s  cp ./spio-mount.service /etc/systemd/system/spio-mount.service
-$s  systemctl enable spio-mount.service
-$s  systemctl start spio-mount.service
 bar
 
 echo -e "${CYAN}Installing and configuring Docker${NC}"
@@ -157,13 +153,6 @@ $s service docker start
 # set -e
 bar
 
-echo -e "${CYAN}Installing spio service${NC}"
-bar
-$s cp scripts/spio-mount.service /etc/systemd/system/spio-mount.service
-$s systemctl enable spio-mount.service
-$s systemctl start spio-mount.service
-bar
-
 echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 cd $VRC_DIR/VMC/FlightSoftware
@@ -174,6 +163,14 @@ else
     $s docker-compose -f docker-compose-dev.yml pull
     $s docker-compose -f docker-compose-dev.yml build
 fi
+bar
+
+echo -e "${CYAN}Installing spio service${NC}"
+bar
+cd $VRC_DIR/VMC/FlightSoftware
+$s cp scripts/spio-mount.service /etc/systemd/system/spio-mount.service
+$s systemctl enable spio-mount.service
+$s systemctl start spio-mount.service
 bar
 
 echo -e "${CYAN}Cleaning up${NC}"
