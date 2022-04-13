@@ -1,12 +1,21 @@
 import json
 import os
+import sys
 from typing import Any
+
+if getattr(sys, "frozen", False):
+    DATA_DIR = sys._MEIPASS  # type: ignore
+    ROOT_DIR = os.path.dirname(sys.executable)
+else:
+    DATA_DIR = os.path.join(os.path.dirname(__file__), "..")
+    ROOT_DIR = DATA_DIR
+
+ROOT_DIR = os.path.abspath(ROOT_DIR)
+DATA_DIR = os.path.abspath(DATA_DIR)
 
 
 class _Config:
-    config_file = os.path.abspath(
-        os.path.join(os.path.dirname(__file__), "..", "settings.json")
-    )
+    config_file = os.path.join(ROOT_DIR, "settings.json")
 
     def __read(self) -> dict:
         if not os.path.isfile(self.config_file):
