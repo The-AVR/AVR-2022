@@ -1,35 +1,31 @@
 [
-  {
-    "src": "qt_icon.py",
-    "dsts": ["PCC/GUI", "VMC/GUI"]
-  },
-  {
-    "src": "img",
-    "dsts": ["PCC/GUI/img", "VMC/GUI/img"]
-  },
-  {
-    "src": "pcc_library.py",
-    "dsts": ["PCC/GUI", "VMC/FlightSoftware/pcm"]
-  },
-  {
-    "src": "mqtt_library.py",
-    "dsts": [
-      "VMC/FlightSoftware/pcm",
-      "VMC/FlightSoftware/fcm",
-      "VMC/FlightSoftware/fusion",
-      "VMC/FlightSoftware/apriltag/python",
-      "VMC/FlightSoftware/vio",
-      "VMC/FlightSoftware/thermal",
-      "VMC/FlightSoftware/status"
-    ]
-  },
-  {
-    "src": "decorator_library.py",
-    "dsts": [
-      "VMC/FlightSoftware/fcm",
-      "VMC/FlightSoftware/fusion",
-      "VMC/FlightSoftware/apriltag/python",
-      "VMC/FlightSoftware/vio"
-    ]
-  }
+    {
+        "src": "pcc_library.py",
+        "dsts": [
+            "GUI/lib",
+            "VMC/pcm"
+        ]
+    },
+    {
+        "src": "mqtt_library.py",
+        "dsts": [
+            "GUI/lib",
+            "VMC/pcm",
+            "VMC/fcm",
+            "VMC/fusion",
+            "VMC/apriltag/python",
+            "VMC/vio",
+            "VMC/thermal",
+            "VMC/status"
+        ]
+    },
+    {
+        "src": "decorator_library.py",
+        "dsts": [
+            "VMC/fcm",
+            "VMC/fusion",
+            "VMC/apriltag/python",
+            "VMC/vio"
+        ]
+    }
 ]

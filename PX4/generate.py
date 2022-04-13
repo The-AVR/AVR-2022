@@ -1,6 +1,7 @@
 import argparse
 import multiprocessing
 import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -210,11 +211,16 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
     target_dir = os.path.join(THIS_DIR, "target")
     os.makedirs(target_dir, exist_ok=True)
 
-    script_cmd = ["python3", "generate.py", "container"]
+    script_cmd = ["python3", "generate.py", "--container"]
     if build_pymavlink:
         script_cmd.append("--pymavlink")
     if build_px4:
         script_cmd.append("--px4")
+
+    docker_image = "docker.io/px4io/px4-dev-nuttx-focal:latest"
+    if build_pymavlink and not build_px4:
+        # if only building pymavlink, use a simpler ARM compatible image
+        docker_image = "docker.io/library/python:3.9-buster"
 
     cmd = [
         "docker",
@@ -224,14 +230,14 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
         "/work",
         "-v",
         f"{THIS_DIR}:/work:rw",
-        "docker.io/px4io/px4-dev-nuttx-focal:latest",
+        docker_image,
     ] + script_cmd
 
     print2(f"Running: {' '.join(cmd)}")
     subprocess.check_call(cmd, stdout=sys.stdout, stderr=sys.stderr)
 
     if build_pymavlink:
-        fcm_dir = os.path.join(THIS_DIR, "..", "VMC", "FlightSoftware", "fcm")
+        fcm_dir = os.path.join(THIS_DIR, "..", "VMC", "fcm")
 
         # remove old files
         for filename in os.listdir(fcm_dir):
@@ -248,7 +254,7 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a PX4/Pymavlink build")
-    parser.add_argument("mode", choices=["host", "container"], help="Launch mode")
+    parser.add_argument("--container", action="store_true", help="Internal use only")
     parser.add_argument(
         "--pymavlink", action="store_true", help="Build Pymavlink package"
     )
@@ -256,7 +262,10 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.mode == "host":
-        host(args.pymavlink, args.px4)
-    elif args.mode == "container":
+    if args.px4 and platform.machine() == "aarch64":
+        parser.error("Sorry, cannot build PX4 on ARM")
+
+    if args.container:
         container(args.pymavlink, args.px4)
+    else:
+        host(args.pymavlink, args.px4)

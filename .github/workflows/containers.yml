@@ -6,12 +6,12 @@ on:
     branches:
       - main
     paths:
-      - "VMC/FlightSoftware/**"
+      - "VMC/**"
   push:
     branches:
       - main
     paths:
-      - "VMC/FlightSoftware/**"
+      - "VMC/**"
 
 jobs:
   build:
@@ -19,9 +19,11 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     strategy:
+      fail-fast: true
       matrix:
         # april tag module needs to be built on-device
-        image: [fcm, fusion, mavp2p, mqtt, pcm, vio, status, thermal]
+        # sandbox should be built by students
+        image: [fcm, fusion, mavp2p, mqtt, pcm, status, thermal, vio]
 
     steps:
       - name: Checkout Code
@@ -57,7 +59,7 @@ jobs:
 
       - name: Generate Custom Pymavlink Package
         if: matrix.image == 'fcm'
-        run: python3 PX4/generate.py host --pymavlink
+        run: python3 PX4/generate.py --pymavlink
 
       - name: Github CR Login
         if: github.event_name != 'pull_request'
@@ -70,7 +72,7 @@ jobs:
       - name: Build Container
         uses: docker/build-push-action@v2
         with:
-          context: VMC/FlightSoftware/${{ matrix.image }}
+          context: VMC/${{ matrix.image }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/bellflight/vrc/2022/${{ matrix.image }}:latest
           platforms: linux/arm64

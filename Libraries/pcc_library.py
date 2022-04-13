@@ -1,5 +1,6 @@
-# VRC Peripheral Python Library
-# Written by Casey Hanner
+import contextlib
+import glob
+import sys
 import time
 from struct import pack
 from typing import Any, List, Literal, Optional, Union
@@ -8,9 +9,32 @@ import serial
 from loguru import logger
 
 
+def list_serial_ports() -> List[str]:
+    """
+    Returns a list of serial ports on the system
+    """
+    if sys.platform.startswith("win"):
+        ports = [f"COM{i + 1}" for i in range(256)]
+    elif sys.platform.startswith("linux") or sys.platform.startswith("cygwin"):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob("/dev/tty[A-Za-z]*")
+    elif sys.platform.startswith("darwin"):
+        ports = glob.glob("/dev/tty.*")
+    else:
+        raise EnvironmentError("Unsupported platform")
+
+    result = []
+    for port in ports:
+        with contextlib.suppress(OSError, serial.SerialException):
+            s = serial.Serial(port)
+            s.close()
+            result.append(port)
+    return result
+
+
 class PeripheralControlComputer:
-    def __init__(self, port: str) -> None:
-        self.port = port
+    def __init__(self, ser: serial.Serial) -> None:
+        self.ser = ser
 
         self.PREAMBLE = (0x24, 0x50)
 
@@ -30,20 +54,7 @@ class PeripheralControlComputer:
             "CHECK_SERVO_CONTROLLER": 9,
         }
 
-        logger.debug("Opening serial port")
-        self.ser = serial.Serial()
-        self.ser.baudrate = 115200
-        self.ser.port = self.port
-        self.ser.open()
-
         self.shutdown: bool = False
-
-    def run(self) -> None:
-        while not self.shutdown:
-            while self.ser.in_waiting > 0:
-                print(self.ser.read(1), end="")
-
-            time.sleep(0.01)
 
     def set_base_color(self, wrgb: List[int]) -> None:
         command = self.commands["SET_BASE_COLOR"]
@@ -145,7 +156,7 @@ class PeripheralControlComputer:
         logger.debug(f"Setting servo max: {data}")
         self.ser.write(data)
 
-    def set_servo_pct(self, servo: int, pct: float) -> None:
+    def set_servo_pct(self, servo: int, pct: int) -> None:
         valid_command = False
 
         command = self.commands["SET_SERVO_PCT"]
