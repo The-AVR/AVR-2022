@@ -6,7 +6,7 @@ THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 cmd = [
     "pyinstaller",
     os.path.join(THIS_DIR, "app.py"),
-    "--onedir",
+    "--onefile",
     "--noconfirm",
     "--name",
     "VRCGUI",
