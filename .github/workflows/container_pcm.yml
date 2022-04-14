@@ -17,6 +17,6 @@ on:
 
 jobs:
   check:
-    uses: ./.github/workflows/templates/container.yml
+    uses: ./.github/workflows/container.yml
     with:
       image: "pcm"

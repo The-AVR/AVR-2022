@@ -13,6 +13,6 @@ on:
 
 jobs:
   check:
-    uses: ./.github/workflows/templates/python.yml
+    uses: ./.github/workflows/python.yml
     with:
       project: "VMC/thermal"
