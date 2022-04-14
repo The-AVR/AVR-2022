@@ -44,7 +44,7 @@ jobs:
           python -m pip install -r GUI/requirements.txt
 
       - name: Build GUI
-        run: pyinstaller GUI/app.py --onefile --name VRCGUI --icon GUI/lib/img/logo.ico --add-data "GUI/lib/img;lib/img" --noconfirm
+        run: python GUI/build.py
 
       - name: Upload GUI to Release
         if: github.event_name != 'pull_request'
