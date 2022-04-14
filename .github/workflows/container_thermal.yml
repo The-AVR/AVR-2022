@@ -1,0 +1,22 @@
+name: Build Container Thermal
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "VMC/thermal/**"
+      - "Libraries/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "VMC/thermal/**"
+      - "Libraries/**"
+
+jobs:
+  check:
+    uses: ./.github/workflows/templates/container.yml
+    with:
+      image: "thermal"

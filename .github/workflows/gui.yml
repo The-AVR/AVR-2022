@@ -19,12 +19,6 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
-      - name: Get Latest Release
-        id: latest_release
-        uses: gregziegan/fetch-latest-release@v2.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout Code
         uses: actions/checkout@v2
 
@@ -45,6 +39,13 @@ jobs:
 
       - name: Build GUI
         run: pyinstaller GUI/app.py --onefile --name VRCGUI --icon GUI/lib/img/logo.ico --add-data "GUI/lib/img;lib/img" --noconfirm
+
+      - name: Get Latest Release
+        if: github.event_name != 'pull_request'
+        id: latest_release
+        uses: gregziegan/fetch-latest-release@v2.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload GUI to Release
         if: github.event_name != 'pull_request'
