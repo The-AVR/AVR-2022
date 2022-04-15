@@ -183,14 +183,6 @@ else
 fi
 bar
 
-echo -e "${CYAN}Installing spio service${NC}"
-bar
-cd $VRC_DIR/VMC/FlightSoftware
-$s cp scripts/spio-mount.service /etc/systemd/system/spio-mount.service
-$s systemctl enable spio-mount.service
-$s systemctl start spio-mount.service
-bar
-
 echo -e "${CYAN}Cleaning up${NC}"
 bar
 $s apt autoremove -y
