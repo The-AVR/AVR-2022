@@ -12,6 +12,6 @@ on:
 
 jobs:
   check:
-    uses: ./.github/workflows/python.yml
+    uses: ./.github/workflows/python_checks.yml
     with:
       project: "scripts"
