@@ -4,7 +4,6 @@ import datetime
 import json
 import math
 import queue
-import socket
 import time
 from typing import Any, Callable, List
 
@@ -113,7 +112,7 @@ class FlightControlComputer(FCMMQTTModule):
         super().__init__()
 
         # mavlink stuff
-        self.drone = mavsdk.System(sysid=161)
+        self.drone = mavsdk.System(sysid=141)
         self.mission_api = MissionAPI(self.drone)
 
         # queues
@@ -140,10 +139,8 @@ class FlightControlComputer(FCMMQTTModule):
         # import logging
         # logging.basicConfig(level=logging.DEBUG)
 
-        # mavsdk does not support dns, so do it ourselves
-        await self.drone.connect(
-            system_address=f"tcp://{socket.gethostbyname('mavp2p')}:5761"
-        )
+        # mavsdk does not support dns
+        await self.drone.connect(system_address="udp://0.0.0.0:14541")
 
         logger.success("Connected to the FCC")
 
@@ -184,7 +181,7 @@ class FlightControlComputer(FCMMQTTModule):
             except Exception as e:
                 logger.exception("Unexpected error in async_queue_action")
 
-    async def run(self) -> asyncio.Future:
+    async def run_non_blocking(self) -> asyncio.Future:
         """
         Run the Flight Control Computer module
         """
@@ -971,18 +968,18 @@ class PyMAVLinkAgent(MQTTModule):
         self.num_frames = 0
         self.last_publish_time = time.time()
 
-    @async_try_except()
-    async def run(self) -> None:
+    @try_except()
+    def run_non_blocking(self) -> None:
         """
         Set up a mavlink connection and kick off any tasks
         """
 
-        # create a mavlink udp instance
+        # this NEEDS to be using UDP, TCP proved extremely unreliable
         self.mavcon = mavutil.mavlink_connection(
-            "tcp:mavp2p:5762", source_system=162, dialect="bell"
+            "udpin:0.0.0.0:14542", source_system=142, dialect="bell"
         )
 
-        logger.debug("Waiting for mavlink heartbeat")
+        logger.debug("Waiting for Mavlink heartbeat")
         self.mavcon.wait_heartbeat()
         logger.success("Mavlink heartbeat received")
 

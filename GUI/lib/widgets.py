@@ -1,5 +1,6 @@
 import contextlib
 import os
+from typing import Optional
 
 from PySide6 import QtGui, QtWidgets
 
@@ -13,10 +14,10 @@ class IntLineEdit(QtWidgets.QLineEdit):
 
 
 class DisplayLineEdit(QtWidgets.QLineEdit):
-    def __init__(self, *args, round_: bool = True, **kwargs) -> None:
+    def __init__(self, *args, round_digits: Optional[int] = 4, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        self.round_ = round_
+        self.round_digits = round_digits
 
         self.setReadOnly(True)
         self.setStyleSheet("background-color: rgb(220, 220, 220)")
@@ -24,9 +25,9 @@ class DisplayLineEdit(QtWidgets.QLineEdit):
 
     def setText(self, arg__1: str) -> None:
         # round incoming float values
-        if self.round_:
+        if self.round_digits is not None:
             with contextlib.suppress(ValueError):
-                arg__1 = str(round(float(arg__1), 4))
+                arg__1 = str(round(float(arg__1), self.round_digits))
 
         return super().setText(arg__1)
 

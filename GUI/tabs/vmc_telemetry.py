@@ -101,13 +101,13 @@ class VMCTelemetryWidget(BaseTabWidget):
         # lat, lon, alt row
         loc_lla_layout = QtWidgets.QHBoxLayout()
 
-        self.loc_lat_line_edit = DisplayLineEdit("", round_=False)
+        self.loc_lat_line_edit = DisplayLineEdit("", round_digits=8)
         loc_lla_layout.addWidget(self.loc_lat_line_edit)
 
-        self.loc_lon_line_edit = DisplayLineEdit("", round_=False)
+        self.loc_lon_line_edit = DisplayLineEdit("", round_digits=8)
         loc_lla_layout.addWidget(self.loc_lon_line_edit)
 
-        self.loc_alt_line_edit = DisplayLineEdit("", round_=False)
+        self.loc_alt_line_edit = DisplayLineEdit("")
         loc_lla_layout.addWidget(self.loc_alt_line_edit)
 
         bottom_left_layout.addRow(

@@ -12,15 +12,14 @@ class FlightControlModule:
         self.gps_fcc = PyMAVLinkAgent()
 
     async def run(self) -> None:
-        asyncio.gather(
-            self.fcc.run(),
-            self.gps_fcc.run(),
-        )
+        self.gps_fcc.run_non_blocking()
+
+        asyncio.gather(self.fcc.run_non_blocking())
 
         while True:
             await asyncio.sleep(1)
 
 
 if __name__ == "__main__":
-    fcc = FlightControlModule()
-    asyncio.run(fcc.run())
+    fcm = FlightControlModule()
+    asyncio.run(fcm.run())
