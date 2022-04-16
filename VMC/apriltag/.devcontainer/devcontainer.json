@@ -1,0 +1,9 @@
+{
+    "build": {
+        "dockerfile": "../Dockerfile"
+    },
+    "extensions": [
+        "ms-vscode.cpptools", "ms-python.python", "twxs.cmake", "ms-azuretools.vscode-docker"
+    ],
+    "postCreateCommand": "pip install -r python/requirements.txt",
+}

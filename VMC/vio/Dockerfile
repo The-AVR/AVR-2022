@@ -1,6 +1,9 @@
 # adapted from https://github.com/stereolabs/zed-docker/blob/master/3.X/jetpack_4.X/py-runtime/Dockerfile
 
-FROM nvcr.io/nvidia/l4t-base:r32.6.1
+FROM nvcr.io/nvidia/l4t-base:r32.7.1
+
+# Fixes numpy issues
+ENV OPENBLAS_CORETYPE=AARCH64
 
 ENV L4T_MINOR_VERSION=6.1
 ENV ZED_SDK_MAJOR=3
@@ -11,6 +14,7 @@ ENV JETPACK_MINOR=6
 ENV DEBIAN_FRONTEND noninteractive
 
 # Install Python newer than 3.6
+# https://askubuntu.com/a/1297198
 RUN apt-get update -y || true \
  && apt-get install -y ca-certificates software-properties-common && update-ca-certificates
 RUN add-apt-repository ppa:deadsnakes/ppa \

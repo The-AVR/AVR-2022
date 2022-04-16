@@ -1,0 +1,17 @@
+{
+    "image": "docker.io/nikolaik/python-nodejs:python3.9-nodejs16",
+    "extensions": [
+        "ms-python.python",
+        "jack89ita.copy-filename",
+        "kisstkondoros.vscode-gutter-preview",
+        "Tyriar.luna-paint",
+        "DavidAnson.vscode-markdownlint",
+        "esbenp.prettier-vscode",
+        "eg2.vscode-npm-script",
+        "tamasfe.even-better-toml"
+    ],
+    "postCreateCommand": "pip install -r requirements.txt && npm install",
+    "forwardPorts": [
+        1313
+    ]
+}

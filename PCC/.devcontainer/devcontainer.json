@@ -1,0 +1,7 @@
+{
+    "image": "docker.io/library/python:3.9-buster",
+    "extensions": [
+        "platformio.platformio-ide"
+    ],
+    "postCreateCommand": "pip install -r requirements.txt && cd libraries/Queue && git reset --hard && git apply --verbose ../queue-default.patch"
+}
