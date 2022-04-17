@@ -38,7 +38,7 @@ jobs:
         run: python -m black ${{ inputs.project }} --verbose --check
 
       - name: Check Import Order
-        run: python -m isort ${{ inputs.project }} --verbose --check
+        run: python -m isort ${{ inputs.project }} --check
 
       - name: Check for Unused Imports
         run: python -m autoflake --recursive ${{ inputs.project }} --check
@@ -48,3 +48,6 @@ jobs:
 
       - name: Check Typing
         run: npx pyright ${{ inputs.project }} --verbose
+
+      - name: Linting
+        run: python -m pflake8 ${{ inputs.project }}

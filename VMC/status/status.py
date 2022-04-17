@@ -69,7 +69,7 @@ class StatusModule(MQTTModule):
         client.subscribe("vrc/#")
 
     def set_cpu_status(self) -> None:
-        ## Initialize power mode status
+        # Initialize power mode status
         cmd = ["/app/nvpmodel", "--verbose", "-f", "/app/nvpmodel.conf", "-m", "0"]
         try:
             subprocess.check_call(cmd, stderr=subprocess.STDOUT)
