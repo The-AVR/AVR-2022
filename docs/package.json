@@ -3,7 +3,7 @@
     "autoprefixer": "^10.4.4",
     "hugo-extended": "0.95.0",
     "postcss": "^8.4.12",
-    "postcss-cli": "^9.0.2"
+    "postcss-cli": "^9.1.0"
   },
   "devDependencies": {
     "broken-link-checker": "^0.7.8",
