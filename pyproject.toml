@@ -1,6 +1,2 @@
 [tool.isort]
     profile = "black"
-
-[tool.pyright]
-    # for now, ignoring GUIs
-    include = ["Libraries/**", "PX4/**", "VMC/FlightSoftware/**", "scripts/**", "docs/**"]

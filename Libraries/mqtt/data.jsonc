@@ -165,7 +165,7 @@
                 {
                     "key": "soc",
                     "type": "float",
-                    "docs": "State of charge (0-1)"
+                    "docs": "State of charge (0 - 100)"
                 },
                 {
                     "key": "timestamp",
@@ -322,6 +322,27 @@
                     "key": "vZ",
                     "type": "float",
                     "docs": "Z velocity in a local North/East/Down coordinate system"
+                },
+                {
+                    "key": "timestamp",
+                    "type": "str",
+                    "docs": "Time the message was sent in [ISO 8601 format](https://docs.python.org/3/library/datetime.html#datetime.datetime.isoformat)"
+                }
+            ]
+        },
+        {
+            "path": "vrc/fcm/gps_info",
+            "docs": "",
+            "payload": [
+                {
+                    "key": "num_satellites ",
+                    "type": "int",
+                    "docs": "Number of visible satellites in use"
+                },
+                {
+                    "key": "fix_type",
+                    "type": "str",
+                    "docs": "GPS fix type"
                 },
                 {
                     "key": "timestamp",
