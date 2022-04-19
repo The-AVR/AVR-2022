@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - "PX4/**.py"
-      - "requirements-dev.txt"
+      - "requirements.txt"
       - "package-lock.json"
 
 jobs:
@@ -15,3 +15,4 @@ jobs:
     uses: ./.github/workflows/python_checks.yml
     with:
       project: "PX4"
+      cache: false

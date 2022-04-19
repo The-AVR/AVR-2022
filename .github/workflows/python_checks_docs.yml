@@ -7,7 +7,7 @@ on:
       - main
     paths:
       - "docs/**.py"
-      - "requirements-dev.txt"
+      - "requirements.txt"
       - "package-lock.json"
 
 jobs:
