@@ -9,11 +9,6 @@ __pycache__/
 # python virtual environment for development
 .venv/
 
-# pyinstaller files
-*.spec
-build/
-dist/
-
 # pyright
 node_modules/
 
