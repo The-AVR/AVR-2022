@@ -8,7 +8,7 @@ on:
     paths:
       - "VMC/apriltag/python/**"
       - "Libraries/**"
-      - "requirements-dev.txt"
+      - "requirements.txt"
       - "package-lock.json"
 
 jobs:

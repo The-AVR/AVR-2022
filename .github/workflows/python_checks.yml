@@ -6,6 +6,10 @@ on:
       project:
         required: true
         type: string
+      cache:
+        required: false
+        type: boolean
+        default: true
 
 jobs:
   check:
@@ -20,17 +24,27 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16"
+          cache: npm
 
-      - name: Setup Python
+      - name: Setup Python (No Caching)
+        if: inputs.cache == false
         uses: actions/setup-python@v3
         with:
           python-version: "3.9"
+
+      - name: Setup Python (Caching)
+        if: inputs.cache == true
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+          cache-dependency-path: ${{ inputs.project }}
+          cache: pip
 
       - name: Install Packages
         run: |
           npm install
           python -m pip install pip wheel --upgrade
-          python -m pip install -r requirements-dev.txt
+          python -m pip install -r requirements.txt
           python ./scripts/install_requirements.py --directory ${{ inputs.project }} --strict
           python ./scripts/copy_libraries.py
 
