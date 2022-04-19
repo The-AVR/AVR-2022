@@ -1,6 +1,6 @@
 pyserial==3.5
 paho-mqtt==1.6.1
-PySide6==6.2.2
+PySide6==6.3.0
 loguru==0.6.0
 pyinstaller==5.0
 colour==0.1.5
