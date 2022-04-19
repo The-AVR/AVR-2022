@@ -18,7 +18,6 @@ class ZedPipeData(TypedDict):
     translation: ZedPipeDataTranslation
     velocity: Tuple[float, float, float]
     tracker_confidence: float
-    mapper_confidence: float
 
 
 # Largely adapted from this
@@ -131,6 +130,5 @@ class ZEDCamera(object):
             rotation=rotation,
             translation=translation,
             velocity=velocity,
-            tracker_confidence=0x3,
-            mapper_confidence=0x3,
+            tracker_confidence=self.zed_pose.pose_confidence,
         )

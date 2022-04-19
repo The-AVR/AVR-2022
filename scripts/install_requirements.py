@@ -13,6 +13,11 @@ def main(directory: str, strict: bool = False) -> None:
 
     # Install requirements.txt recursively
     for filepath in Path(directory).glob("**/requirements*.txt"):
+        # don't install any requirements.txt files that may be in the virtual env
+        # or in the PX4 temp directory
+        if ".venv" in str(filepath):
+            continue
+
         print(f" ----- Installing {filepath.absolute()} ----- ")
         subprocess.run(
             [

@@ -1,0 +1,22 @@
+name: Build Container VIO
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "VMC/vio/**"
+      - "Libraries/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "VMC/vio/**"
+      - "Libraries/**"
+
+jobs:
+  check:
+    uses: ./.github/workflows/container.yml
+    with:
+      image: "vio"

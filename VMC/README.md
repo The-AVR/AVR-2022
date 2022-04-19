@@ -41,7 +41,7 @@ and you may need to re-enter your `sudo` password a few times.
 To start the VRC software, just run:
 
 ```bash
-sudo python3 start.py up
+sudo python3 start.py run
 ```
 
 To stop the VRC software hit <kbd>Ctrl</kbd>+<kbd>C</kbd>.
