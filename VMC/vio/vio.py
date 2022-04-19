@@ -103,6 +103,7 @@ class VIOModule(MQTTModule):
             data = self.camera.get_pipe_data()
 
             if data is None:
+                logger.debug("Waiting on camera data")
                 continue
 
             # collect data from the sensor and transform it into "global" NED frame
