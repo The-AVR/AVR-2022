@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "autoprefixer": "^10.4.4",
-    "hugo-extended": "0.95.0",
+    "hugo-extended": "0.97.3",
     "postcss": "^8.4.12",
     "postcss-cli": "^9.0.2"
   },
