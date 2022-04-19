@@ -19,12 +19,6 @@ jobs:
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
-      - name: Get Latest Release
-        id: latest_release
-        uses: gregziegan/fetch-latest-release@v2.0.0
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -41,6 +35,13 @@ jobs:
 
       - name: Build PX4 Firmware
         run: python3 PX4/generate.py --px4
+
+      - name: Get Latest Release
+        if: github.event_name != 'pull_request'
+        id: latest_release
+        uses: gregziegan/fetch-latest-release@v2.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'

@@ -1,29 +1,16 @@
-name: Build Containers
+name: Build Container
 
 on:
-  workflow_dispatch:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - "VMC/**"
-  push:
-    branches:
-      - main
-    paths:
-      - "VMC/**"
+  workflow_call:
+    inputs:
+      image:
+        required: true
+        type: string
 
 jobs:
   build:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
-
-    strategy:
-      fail-fast: true
-      matrix:
-        # april tag module needs to be built on-device
-        # sandbox should be built by students
-        image: [fcm, fusion, mavp2p, mqtt, pcm, status, thermal, vio]
 
     steps:
       - name: Checkout Code
@@ -46,7 +33,7 @@ jobs:
         run: python scripts/copy_libraries.py
 
       - name: Cache PX4
-        if: matrix.image == 'fcm'
+        if: inputs.image == 'fcm'
         uses: actions/cache@v3
         with:
           path: PX4/build
@@ -58,7 +45,7 @@ jobs:
             px4-firmware
 
       - name: Generate Custom Pymavlink Package
-        if: matrix.image == 'fcm'
+        if: inputs.image == 'fcm'
         run: python3 PX4/generate.py --pymavlink
 
       - name: Github CR Login
@@ -72,9 +59,9 @@ jobs:
       - name: Build Container
         uses: docker/build-push-action@v2
         with:
-          context: VMC/${{ matrix.image }}
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/bellflight/vrc/2022/${{ matrix.image }}:latest
+          context: VMC/${{ inputs.image }}
+          push: ${{ github.event_name != 'pull_request' && inputs.image != 'sandbox' }}
+          tags: ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:latest
           platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max

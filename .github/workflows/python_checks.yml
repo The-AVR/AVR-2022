@@ -1,0 +1,53 @@
+name: Python Checks
+
+on:
+  workflow_call:
+    inputs:
+      project:
+        required: true
+        type: string
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+
+      - name: Install Packages
+        run: |
+          npm install
+          python -m pip install pip wheel --upgrade
+          python -m pip install -r requirements-dev.txt
+          python ./scripts/install_requirements.py --directory ${{ inputs.project }} --strict
+          python ./scripts/copy_libraries.py
+
+      - name: Check Formatting
+        run: python -m black ${{ inputs.project }} --verbose --check
+
+      - name: Check Import Order
+        run: python -m isort ${{ inputs.project }} --check
+
+      - name: Check for Unused Imports
+        run: python -m autoflake --recursive ${{ inputs.project }} --check
+
+      - name: Check Type Hints
+        run: python -m pyleft ${{ inputs.project }} --verbose
+
+      - name: Check Typing
+        run: npx pyright ${{ inputs.project }} --verbose
+
+      - name: Linting
+        run: python -m pflake8 ${{ inputs.project }}

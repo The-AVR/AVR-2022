@@ -100,10 +100,10 @@ class DispatcherManager(FCMMQTTModule):
                 self._publish_event("action_timeout_event", name)
                 self.currently_running_task = None
 
-            except Exception as e:
+            except Exception:
                 logger.exception("ERROR IN TIMEOUT HANDLER")
 
-        except Exception as e:
+        except Exception:
             logger.exception("ERROR IN TASK WAITER")
 
 
@@ -178,7 +178,7 @@ class FlightControlComputer(FCMMQTTModule):
                 # if the queue was empty, just wait
                 await asyncio.sleep(0.01)
 
-            except Exception as e:
+            except Exception:
                 logger.exception("Unexpected error in async_queue_action")
 
     async def run_non_blocking(self) -> asyncio.Future:
@@ -538,7 +538,7 @@ class FlightControlComputer(FCMMQTTModule):
             except queue.Empty:
                 await asyncio.sleep(0.1)
 
-            except Exception as e:
+            except Exception:
                 logger.exception("ERROR IN MAIN LOOP")
 
     async def simple_action_executor(
@@ -699,7 +699,7 @@ class FlightControlComputer(FCMMQTTModule):
         """
         Feeds offboard NED data to the drone.
         """
-        logger.debug(f"offboard_ned loop started")
+        logger.debug("offboard_ned loop started")
 
         @async_try_except()
         async def process_offboard_ned(msg: dict) -> None:
@@ -725,7 +725,7 @@ class FlightControlComputer(FCMMQTTModule):
         """
         Feeds offboard body data to the drone.
         """
-        logger.debug(f"offboard_body loop started")
+        logger.debug("offboard_body loop started")
 
         @async_try_except()
         async def process_offboard_body(msg: dict) -> None:

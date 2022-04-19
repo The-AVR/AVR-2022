@@ -37,7 +37,7 @@ class VIOModule(MQTTModule):
     def handle_resync(self, payload: VrcVioResyncMessage) -> None:
         # whenever new data is published to the ZEDCamera resync topic, we need to compute a new correction
         # to compensate for sensor drift over time.
-        if self.init_sync == False or self.continuous_sync == True:
+        if not self.init_sync or self.continuous_sync:
             heading_ref = payload["heading"]
             self.coord_trans.sync(
                 heading_ref, {"n": payload["n"], "e": payload["e"], "d": payload["d"]}

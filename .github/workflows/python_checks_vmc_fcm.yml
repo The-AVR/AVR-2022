@@ -1,0 +1,18 @@
+name: Python Checks VMC FCM
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "VMC/fcm/**"
+      - "Libraries/**"
+      - "requirements-dev.txt"
+      - "package-lock.json"
+
+jobs:
+  check:
+    uses: ./.github/workflows/python_checks.yml
+    with:
+      project: "VMC/fcm"

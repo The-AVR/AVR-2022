@@ -1,0 +1,17 @@
+name: Python Checks PX4
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "PX4/**.py"
+      - "requirements-dev.txt"
+      - "package-lock.json"
+
+jobs:
+  check:
+    uses: ./.github/workflows/python_checks.yml
+    with:
+      project: "PX4"
