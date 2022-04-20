@@ -166,8 +166,6 @@ bar
 $s chmod +x $VRC_DIR/VMC/status/nvpmodel
 bar
 
-/home/bell-proto/VRC-2022/VMC/status/nvpmodel
-
 echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 cd $VRC_DIR/VMC
