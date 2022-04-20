@@ -161,6 +161,13 @@ $s systemctl enable spio-mount.service
 $s systemctl start spio-mount.service
 bar
 
+echo -e "${CYAN}Setting up Status module${NC}"
+bar
+$s chmod +x $VRC_DIR/VMC/status/nvpmodel
+bar
+
+/home/bell-proto/VRC-2022/VMC/status/nvpmodel
+
 echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 cd $VRC_DIR/VMC
