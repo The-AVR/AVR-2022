@@ -50,7 +50,7 @@ class StatusModule(MQTTModule):
             self.spi, NUM_PIXELS, pixel_order=PIXEL_ORDER, auto_write=False
         )
 
-        #set up handling for turning off the lights on docker shutdown
+        # set up handling for turning off the lights on docker shutdown
         self.run_status_check = True
         signal.signal(signal.SIGINT, self.exit_gracefully)
         signal.signal(signal.SIGTERM, self.exit_gracefully)
@@ -144,9 +144,10 @@ class StatusModule(MQTTModule):
             time.sleep(1)
         self.all_off()
 
-    def exit_gracefully(self, *args):
+    def exit_gracefully(self, *args) -> None:
         self.run_status_check = False
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     status = StatusModule()
     status.run()

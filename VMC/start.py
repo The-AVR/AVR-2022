@@ -246,9 +246,8 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
 if __name__ == "__main__":
     check_sudo()
 
-
     min_modules = ["fcm", "fusion", "mavp2p", "mqtt", "vio"]
-    norm_modules = min_modules +  ["apriltag", "pcm", "status", "thermal"]
+    norm_modules = min_modules + ["apriltag", "pcm", "status", "thermal"]
     all_modules = norm_modules + ["sandbox"]
 
     parser = argparse.ArgumentParser()
