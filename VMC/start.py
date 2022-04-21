@@ -248,7 +248,7 @@ if __name__ == "__main__":
 
 
     min_modules = ["fcm", "fusion", "mavp2p", "mqtt", "vio"]
-    norm_modules = min_modules +  ["status"] #["apriltag", "pcm", "status", "thermal"]
+    norm_modules = min_modules +  ["status", "thermal"] #["apriltag", "pcm", "status", "thermal"]
     all_modules = norm_modules + ["sandbox"]
 
     parser = argparse.ArgumentParser()
