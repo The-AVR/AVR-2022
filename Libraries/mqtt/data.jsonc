@@ -662,12 +662,9 @@
             "docs": "",
             "payload": [
                 {
-                    "key": "mapper",
-                    "type": "float"
-                },
-                {
                     "key": "tracker",
-                    "type": "float"
+                    "type": "float",
+                    "docs": "Number between 0 and 100 of tracking confidence"
                 }
             ]
         },

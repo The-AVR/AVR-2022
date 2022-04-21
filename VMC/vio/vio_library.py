@@ -98,7 +98,7 @@ class CameraCoordinateTransformation:
         T, R, Z, S = t3d.affines.decompose44(H)
         eul = t3d.euler.mat2euler(R, axes="rxyz")
 
-        ## Find the heading offset...
+        # Find the heading offset...
         heading = eul[2]
 
         # wrap heading in (0, 2*pi)
@@ -121,7 +121,7 @@ class CameraCoordinateTransformation:
         T, R, Z, S = t3d.affines.decompose44(H)
         eul = t3d.euler.mat2euler(R, axes="rxyz")
 
-        ## Find the position offset
+        # Find the position offset
         pos_offset = [pos_ref["n"] - T[0], pos_ref["e"] - T[1], pos_ref["d"] - T[2]]
         logger.debug(f"TRACKCAM: Resync: Pos offset:{pos_offset}")
 

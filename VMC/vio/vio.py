@@ -37,7 +37,7 @@ class VIOModule(MQTTModule):
     def handle_resync(self, payload: VrcVioResyncMessage) -> None:
         # whenever new data is published to the ZEDCamera resync topic, we need to compute a new correction
         # to compensate for sensor drift over time.
-        if self.init_sync == False or self.continuous_sync == True:
+        if not self.init_sync or self.continuous_sync:
             heading_ref = payload["heading"]
             self.coord_trans.sync(
                 heading_ref, {"n": payload["n"], "e": payload["e"], "d": payload["d"]}
@@ -51,7 +51,6 @@ class VIOModule(MQTTModule):
         ned_vel: Tuple[float, float, float],
         rpy: Tuple[float, float, float],
         tracker_confidence: float,
-        mapper_confidence: float,
     ) -> None:
         if np.isnan(ned_pos).any():
             raise ValueError("ZEDCamera has NaNs for position")
@@ -89,7 +88,6 @@ class VIOModule(MQTTModule):
         self.send_message("vrc/vio/velocity/ned", vel_update)
 
         confidence_update = VrcVioConfidenceMessage(
-            mapper=mapper_confidence,
             tracker=tracker_confidence,
         )
         self.send_message("vrc/vio/confidence", confidence_update)
@@ -118,7 +116,6 @@ class VIOModule(MQTTModule):
                 ned_vel,
                 rpy,
                 data["tracker_confidence"],
-                data["mapper_confidence"],
             )
 
     def run(self) -> None:

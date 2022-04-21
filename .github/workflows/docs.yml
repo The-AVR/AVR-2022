@@ -53,9 +53,9 @@ jobs:
         working-directory: docs
         run: npm run build
 
-      - name: Check For Broken Links
-        working-directory: docs
-        run: npm run check-links
+      # - name: Check For Broken Links
+      #   working-directory: docs
+      #   run: npm run check-links
 
       - name: Deploy Site
         if: github.event_name != 'pull_request'

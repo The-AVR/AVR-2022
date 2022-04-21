@@ -1,0 +1,22 @@
+name: Build Container Status
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "VMC/status/**"
+      - "Libraries/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "VMC/status/**"
+      - "Libraries/**"
+
+jobs:
+  check:
+    uses: ./.github/workflows/container.yml
+    with:
+      image: "status"

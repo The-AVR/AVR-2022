@@ -17,4 +17,4 @@ cmd = [
 ]
 
 print(cmd)
-subprocess.check_call(cmd)
+subprocess.check_call(cmd, cwd=THIS_DIR)

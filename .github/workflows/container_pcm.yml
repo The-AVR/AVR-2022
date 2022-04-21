@@ -1,0 +1,22 @@
+name: Build Container PCM
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "VMC/pcm/**"
+      - "Libraries/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "VMC/pcm/**"
+      - "Libraries/**"
+
+jobs:
+  check:
+    uses: ./.github/workflows/container.yml
+    with:
+      image: "pcm"
