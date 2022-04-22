@@ -112,6 +112,7 @@ cd $VRC_DIR
 git config --global credential.helper cache
 # update repo
 git pull
+git submodule update --init --recursive
 # switch to main branch
 if [ "$DEVELOPMENT" != true ] ; then
     git checkout main
