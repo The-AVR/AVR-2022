@@ -1,3 +1,4 @@
 loguru==0.6.0
-paho-mqtt==1.5.1
+paho-mqtt==1.6.1
 adafruit-circuitpython-neopixel-spi==1.0.0
+Jetson.GPIO==2.0.17; sys_platform == 'linux' # implict dependency of adafruit modules
