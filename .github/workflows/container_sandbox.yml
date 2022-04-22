@@ -14,7 +14,7 @@ on:
       - "VMC/sandbox/**"
 
 jobs:
-  check:
+  sandbox:
     uses: ./.github/workflows/container.yml
     with:
       image: "sandbox"

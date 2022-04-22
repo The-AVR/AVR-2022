@@ -11,7 +11,7 @@ on:
       - "package-lock.json"
 
 jobs:
-  check:
+  docs:
     uses: ./.github/workflows/python_checks.yml
     with:
       project: "docs"

@@ -16,7 +16,7 @@ on:
       - "Libraries/**"
 
 jobs:
-  check:
+  thermal:
     uses: ./.github/workflows/container.yml
     with:
       image: "thermal"

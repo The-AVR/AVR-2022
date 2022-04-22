@@ -12,7 +12,7 @@ on:
       - "package-lock.json"
 
 jobs:
-  check:
+  gui:
     uses: ./.github/workflows/python_checks.yml
     with:
       project: "GUI"

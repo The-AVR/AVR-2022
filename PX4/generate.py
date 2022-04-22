@@ -16,7 +16,7 @@ def print2(msg: str) -> None:
     print(f"--- {msg}", flush=True)
 
 
-def container(build_pymavlink: bool, build_px4: bool) -> None:
+def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
     # code that runs inside the container
     px4_dir = os.path.join(THIS_DIR, "build", "PX4-Autopilot")
     pymavlink_dir = os.path.join(THIS_DIR, "build", "pymavlink")
@@ -152,7 +152,7 @@ def container(build_pymavlink: bool, build_px4: bool) -> None:
         for filename in os.listdir(os.path.join(pymavlink_dir, "dist")):
             shutil.copyfile(
                 os.path.join(pymavlink_dir, "dist", filename),
-                os.path.join(THIS_DIR, "target", filename),
+                os.path.join(THIS_DIR, "dist", filename),
             )
 
         # generate lua plugins for Wireshark
@@ -164,7 +164,7 @@ def container(build_pymavlink: bool, build_px4: bool) -> None:
                 "pymavlink.tools.mavgen",
                 "--lang=WLua",
                 "--wire-protocol=2.0",
-                f"--output={os.path.join(THIS_DIR, 'target', 'bell.lua')}",
+                f"--output={os.path.join(THIS_DIR, 'dist', 'bell.lua')}",
                 os.path.join(
                     px4_dir,
                     "mavlink",
@@ -189,7 +189,9 @@ def container(build_pymavlink: bool, build_px4: bool) -> None:
         )
         shutil.copyfile(
             os.path.join(px4_dir, "build", v5x_target, f"{v5x_target}.px4"),
-            os.path.join(THIS_DIR, "target", f"{v5x_target}.{PX4_VERSION}.px4"),
+            os.path.join(
+                THIS_DIR, "dist", f"{v5x_target}.{PX4_VERSION}.{git_hash}.px4"
+            ),
         )
 
         # nxp
@@ -200,7 +202,9 @@ def container(build_pymavlink: bool, build_px4: bool) -> None:
         )
         shutil.copyfile(
             os.path.join(px4_dir, "build", nxp_target, f"{nxp_target}.px4"),
-            os.path.join(THIS_DIR, "target", f"{nxp_target}.{PX4_VERSION}.px4"),
+            os.path.join(
+                THIS_DIR, "dist", f"{nxp_target}.{PX4_VERSION}.{git_hash}.px4"
+            ),
         )
 
 
@@ -208,14 +212,19 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
     # code that runs on the host operating system
 
     # make the target directory
-    target_dir = os.path.join(THIS_DIR, "target")
+    target_dir = os.path.join(THIS_DIR, "dist")
     os.makedirs(target_dir, exist_ok=True)
 
-    script_cmd = ["python3", "generate.py", "--container"]
-    if build_pymavlink:
-        script_cmd.append("--pymavlink")
-    if build_px4:
-        script_cmd.append("--px4")
+    git_hash = (
+        subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], cwd=THIS_DIR)
+        .decode("utf-8")
+        .strip()
+    )
+    script_cmd = (
+        ["python3", "generate.py"]
+        + sys.argv[1:]
+        + ["--container", f"--git-hash={git_hash}"]
+    )
 
     docker_image = "docker.io/px4io/px4-dev-nuttx-focal:latest"
     if build_pymavlink and not build_px4:
@@ -254,7 +263,8 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate a PX4/Pymavlink build")
-    parser.add_argument("--container", action="store_true", help="Internal use only")
+    parser.add_argument("--container", action="store_true", help=argparse.SUPPRESS)
+    parser.add_argument("--git-hash", type=str, help=argparse.SUPPRESS)
     parser.add_argument(
         "--pymavlink", action="store_true", help="Build Pymavlink package"
     )
@@ -266,6 +276,6 @@ if __name__ == "__main__":
         parser.error("Sorry, cannot build PX4 on ARM")
 
     if args.container:
-        container(args.pymavlink, args.px4)
+        container(args.pymavlink, args.px4, args.git_hash)
     else:
         host(args.pymavlink, args.px4)

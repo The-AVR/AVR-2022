@@ -1,14 +1,17 @@
 # adapted from https://github.com/stereolabs/zed-docker/blob/master/3.X/jetpack_4.X/py-runtime/Dockerfile
 
-FROM nvcr.io/nvidia/l4t-base:r32.6.1
+FROM nvcr.io/nvidia/l4t-base:r32.7.1
 
-ENV L4T_MINOR_VERSION=6.1
+ENV L4T_MINOR_VERSION=7.1
 ENV ZED_SDK_MAJOR=3
 ENV ZED_SDK_MINOR=6
 ENV JETPACK_MAJOR=4
 ENV JETPACK_MINOR=6
 
 ENV DEBIAN_FRONTEND noninteractive
+
+# Fix numpy issues
+ENV OPENBLAS_CORETYPE AARCH64
 
 # Install Python newer than 3.6
 RUN apt-get update -y || true \

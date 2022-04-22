@@ -14,7 +14,7 @@ on:
       - "PCC/**"
 
 jobs:
-  build:
+  pcc-build:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
@@ -45,7 +45,8 @@ jobs:
         working-directory: PCC
 
       - name: Rename Firmware
-        run: cp firmware.bin pcc_firmware.bin
+        shell: bash
+        run: cp firmware.bin pcc_firmware.$(git rev-parse --short HEAD).bin
         working-directory: PCC/.pio/build/adafruit_feather_m4
 
       - name: Get Latest Release
@@ -54,6 +55,14 @@ jobs:
         uses: gregziegan/fetch-latest-release@v2.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Delete Existing Firmware
+      #   if: github.event_name != 'pull_request'
+      #   uses: mknejp/delete-release-assets@v1
+      #   with:
+      #     token: ${{ github.token }}
+      #     tag: ${{ steps.latest_release.outputs.tag_name }}
+      #     assets: '*.bin'
 
       - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'
