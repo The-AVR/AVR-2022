@@ -69,7 +69,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: PCC/.pio/build/adafruit_feather_m4/pcc_firmware*.bin
+          file: PCC/.pio/build/adafruit_feather_m4/*.bin
           file_glob: true
           tag: ${{ steps.latest_release.outputs.tag_name }}
           overwrite: true
