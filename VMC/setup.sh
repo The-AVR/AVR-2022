@@ -35,7 +35,7 @@ fi
 # check to make sure code has already been cloned
 if [[ ! -d $VRC_DIR ]]; then
     echo "VRC repository has not been cloned to $VRC_DIR"
-    echo "Do this with '$s apt update && $s apt install -y git && git clone https://github.com/bellflight/VRC-2022 $VRC_DIR'"
+    echo "Do this with '$s apt update && $s apt install -y git && git clone --recurse-submodules https://github.com/bellflight/VRC-2022 $VRC_DIR'"
     exit 1
 fi
 
@@ -112,6 +112,7 @@ cd $VRC_DIR
 git config --global credential.helper cache
 # update repo
 git pull
+git submodule update --init --recursive
 # switch to main branch
 if [ "$DEVELOPMENT" != true ] ; then
     git checkout main

@@ -10,6 +10,9 @@ ENV JETPACK_MINOR=6
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# Fix numpy issues
+ENV OPENBLAS_CORETYPE AARCH64
+
 # Install Python newer than 3.6
 RUN apt-get update -y || true \
  && apt-get install -y ca-certificates software-properties-common && update-ca-certificates

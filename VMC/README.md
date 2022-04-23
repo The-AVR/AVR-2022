@@ -26,7 +26,7 @@ https://ghcr.io
 Run the following commands:
 
 ```bash
-git clone https://github.com/bellflight/VRC-2022 ~/VRC-2022
+git clone --recurse-submodules https://github.com/bellflight/VRC-2022 ~/VRC-2022
 cd ~/VRC-2022/VMC/
 chmod +x setup.sh
 ./setup.sh

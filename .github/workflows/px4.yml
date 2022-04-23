@@ -14,7 +14,7 @@ on:
       - "PX4/**"
 
 jobs:
-  build:
+  px4-build:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
@@ -42,6 +42,14 @@ jobs:
         uses: gregziegan/fetch-latest-release@v2.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      # - name: Delete Existing Firmware
+      #   if: github.event_name != 'pull_request'
+      #   uses: mknejp/delete-release-assets@v1
+      #   with:
+      #     token: ${{ github.token }}
+      #     tag: ${{ steps.latest_release.outputs.tag_name }}
+      #     assets: '*.px4'
 
       - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'

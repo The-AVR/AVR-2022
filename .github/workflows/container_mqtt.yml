@@ -14,7 +14,7 @@ on:
       - "VMC/mqtt/**"
 
 jobs:
-  check:
+  mqtt:
     uses: ./.github/workflows/container.yml
     with:
       image: "mqtt"

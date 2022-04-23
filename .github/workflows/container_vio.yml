@@ -16,7 +16,7 @@ on:
       - "Libraries/**"
 
 jobs:
-  check:
+  vio:
     uses: ./.github/workflows/container.yml
     with:
       image: "vio"
