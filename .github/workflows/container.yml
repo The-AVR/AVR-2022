@@ -70,7 +70,7 @@ jobs:
 
       - name: Delete Untagged Images
         if: github.event_name != 'pull_request' && inputs.image != 'sandbox'
-        uses: bots-house/ghcr-delete-image-action@v1.0.1
+        uses: bots-house/ghcr-delete-image-action@main
         with:
           owner: ${{ github.repository_owner }}
           name: vrc/2022/${{ inputs.image }}
