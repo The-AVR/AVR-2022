@@ -46,7 +46,7 @@ jobs:
 
       - name: Rename Firmware
         shell: bash
-        run: cp firmware.bin pcc_firmware.$(git rev-parse --short HEAD).bin
+        run: mv firmware.bin pcc_firmware.$(git rev-parse --short HEAD).bin
         working-directory: PCC/.pio/build/adafruit_feather_m4
 
       - name: Get Latest Release
