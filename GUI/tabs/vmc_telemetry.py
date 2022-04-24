@@ -241,7 +241,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         full_rgb = (11, 135, 0)
 
         diff = [f - e for f, e in zip(full_rgb, empty_rgb)]
-        smear = [int(d * soc) for d in diff]
+        smear = [int(d * soc / 100) for d in diff]
         color = tuple(e + s for e, s in zip(empty_rgb, smear))
 
         stylesheet = f"""
