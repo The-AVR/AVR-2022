@@ -167,7 +167,7 @@ bar
 if [ "$DEVELOPMENT" != true ] ; then
     cd $VRC_DIR
     $s python3 PX4/generate.py --pymavlink
-    $s python3 scripts/copy_libraries.py
+    python3 scripts/copy_libraries.py
 
     cd $VRC_DIR/VMC
     $s python3 start.py pull --norm
