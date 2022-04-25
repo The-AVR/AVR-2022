@@ -16,7 +16,7 @@ on:
       - "Libraries/**"
 
 jobs:
-  check:
+  fusion:
     uses: ./.github/workflows/container.yml
     with:
       image: "fusion"

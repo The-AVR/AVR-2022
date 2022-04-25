@@ -1,4 +1,5 @@
 import itertools
+import signal
 import subprocess
 import time
 from typing import Any, Dict, Optional, Tuple
@@ -19,6 +20,7 @@ CLR_AQUA = 0x00FFFF
 CLR_ORANGE = 0xF5A506
 CLR_YELLOW = 0xC1E300
 CLR_BLUE = 0x001EE3
+CLR_BLACK = 0x000000
 
 VIO_LED = 1
 PCC_LED = 2
@@ -47,6 +49,11 @@ class StatusModule(MQTTModule):
         self.pixels = neopixel.NeoPixel_SPI(
             self.spi, NUM_PIXELS, pixel_order=PIXEL_ORDER, auto_write=False
         )
+
+        # set up handling for turning off the lights on docker shutdown
+        self.run_status_check = True
+        signal.signal(signal.SIGINT, self.exit_gracefully)
+        signal.signal(signal.SIGTERM, self.exit_gracefully)
 
         self.red_status_all()
 
@@ -96,6 +103,11 @@ class StatusModule(MQTTModule):
             self.pixels[i] = COLORS[0]
         self.pixels.show()
 
+    def all_off(self) -> None:
+        for i in range(NUM_PIXELS):
+            self.pixels[i] = CLR_BLACK
+        self.pixels.show()
+
     def light_up(self, which_one: int, color: int) -> None:
         self.pixels[which_one] = color
         self.pixels.show()
@@ -127,9 +139,13 @@ class StatusModule(MQTTModule):
     def run(self) -> None:
         self.run_non_blocking()
 
-        while True:
+        while self.run_status_check:
             self.status_check()
             time.sleep(1)
+        self.all_off()
+
+    def exit_gracefully(self, *args) -> None:
+        self.run_status_check = False
 
 
 if __name__ == "__main__":

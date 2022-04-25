@@ -16,7 +16,7 @@ on:
       - "Libraries/**"
 
 jobs:
-  check:
+  pcm:
     uses: ./.github/workflows/container.yml
     with:
       image: "pcm"

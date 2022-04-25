@@ -1,6 +1,7 @@
 FROM nvcr.io/nvidia/l4t-ml:r32.6.1-py3
 
-ENV OPENBLAS_CORETYPE=CORTEXA57
+# Fix numpy issues
+ENV OPENBLAS_CORETYPE AARCH64
 
 # Needed as some repo certs are expired in the base image
 RUN apt-get update -y || true \
@@ -21,28 +22,20 @@ RUN python3.9 -m pip install pip wheel setuptools --upgrade
 
 WORKDIR /app
 
+# Copy libraries
+COPY c/libraries c/libraries
+
 # Install paho C library
-RUN git clone https://github.com/eclipse/paho.mqtt.c \
- && cd paho.mqtt.c \
- && git checkout v1.3.8 \
+RUN cd c/libraries/paho.mqtt.c \
  && cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON -DPAHO_WITH_SSL=ON -DPAHO_HIGH_PERFORMANCE=ON \
  && cmake --build build/ --target install \
  && ldconfig
 
 # Install paho C++ library
-RUN git clone https://github.com/eclipse/paho.mqtt.cpp \
- && cd paho.mqtt.cpp \
- && git checkout v1.2.0 \
+RUN cd c/libraries/paho.mqtt.cpp \
  && cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON \
  && cmake --build build/ --target install \
  && ldconfig
-
-# Clone dependencies
-RUN mkdir -p c/libraries
-
-RUN git clone https://github.com/nlohmann/json c/libraries/json \
- && cd c/libraries/json \
- && git checkout v3.10.2
 
 # RUN git clone https://github.com/NVIDIA-AI-IOT/isaac_ros_apriltag \
 #  && cd isaac_ros_apriltag \
@@ -54,7 +47,8 @@ RUN wget https://developer.nvidia.com/isaac/download/third_party/april_tags_v5_j
  && rm april_tags_v5_jp44_nano-tar-xz
 
 # Build the april tag application
-COPY c c
+COPY c/src c/src
+COPY c/CMakeLists.txt c/CMakeLists.txt
 RUN mkdir -p c/build \
  && cd c/build \
  && cmake .. \

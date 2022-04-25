@@ -8,13 +8,15 @@ on:
         type: string
 
 jobs:
-  build:
+  container-build:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
+        with:
+          submodules: recursive
 
       - name: Set up Python
         uses: actions/setup-python@v3
@@ -49,7 +51,7 @@ jobs:
         run: python3 PX4/generate.py --pymavlink
 
       - name: Github CR Login
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && inputs.image != 'sandbox'
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
@@ -65,3 +67,12 @@ jobs:
           platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Delete Untagged Images
+        if: github.event_name != 'pull_request' && inputs.image != 'sandbox'
+        uses: bots-house/ghcr-delete-image-action@main
+        with:
+          owner: ${{ github.repository_owner }}
+          name: vrc/2022/${{ inputs.image }}
+          token: ${{ github.actor }}
+          untagged-keep-latest: 1

@@ -12,7 +12,7 @@ on:
       - "package-lock.json"
 
 jobs:
-  check:
+  vmc-fcm:
     uses: ./.github/workflows/python_checks.yml
     with:
       project: "VMC/fcm"

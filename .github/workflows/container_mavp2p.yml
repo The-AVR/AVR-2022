@@ -14,7 +14,7 @@ on:
       - "VMC/mavp2p/**"
 
 jobs:
-  check:
+  mavp2p:
     uses: ./.github/workflows/container.yml
     with:
       image: "mavp2p"
