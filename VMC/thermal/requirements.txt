@@ -1,4 +1,4 @@
 loguru==0.6.0
 paho-mqtt==1.6.1
 adafruit-circuitpython-amg88xx==1.2.13
-Jetson.GPIO==2.0.17; sys_platform == 'linux' # implict dependency of adafruit modules
+Jetson.GPIO==2.0.18; sys_platform == 'linux' # implict dependency of adafruit modules
