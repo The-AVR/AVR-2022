@@ -74,5 +74,5 @@ jobs:
         with:
           owner: ${{ github.repository_owner }}
           name: vrc/2022/${{ inputs.image }}
-          token: ${{ github.actor }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           untagged-keep-latest: 1
