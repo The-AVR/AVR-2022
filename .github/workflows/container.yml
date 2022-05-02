@@ -7,9 +7,6 @@ on:
         required: true
         type: string
 
-env:
-  CONTAINER_PREFIX: "vrc/2022/"
-
 jobs:
   container-build:
     runs-on: ubuntu-latest
@@ -66,18 +63,7 @@ jobs:
         with:
           context: VMC/${{ inputs.image }}
           push: ${{ github.event_name != 'pull_request' && inputs.image != 'sandbox' }}
-          tags: ghcr.io/${{ github.repository_owner }}/${{ env.CONTAINER_PREFIX }}${{ inputs.image }}:latest
+          tags: ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:latest
           platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Delete Untagged Images
-        if: github.event_name != 'pull_request' && inputs.image != 'sandbox'
-        uses: vlaurin/action-ghcr-prune@v0.4.0
-        with:
-          organization: ${{ github.repository_owner }}
-          container: ${{ env.CONTAINER_PREFIX }}${{ inputs.image }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          untagged-keep-latest: 1
-          dry-run: true
-          untagged: true
