@@ -36,12 +36,14 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--directory",
+        "-d",
         type=str,
         default=os.path.join(os.path.dirname(__file__), ".."),
         help="Directory to walk. Defaults to repo root",
     )
     parser.add_argument(
         "--strict",
+        "-s",
         action="store_true",
         help="Fail if requirements.txt could not installed",
     )
