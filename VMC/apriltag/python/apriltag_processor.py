@@ -146,7 +146,7 @@ class AprilTagModule(MQTTModule):
 
             self.send_message("vrc/apriltags/selected", apriltag_position)
 
-    def angle_to_tag(self, pos: List[float]) -> float:
+    def angle_to_tag(self, pos: Tuple[float, float, float]) -> float:
         deg = math.degrees(
             math.atan2(pos[1], pos[0])
         )  # TODO - i think plus pi/2 bc this is respect to +x
@@ -156,7 +156,9 @@ class AprilTagModule(MQTTModule):
 
         return deg
 
-    def world_angle_to_tag(self, pos: List[float], tag_id: int) -> Optional[float]:
+    def world_angle_to_tag(
+        self, pos: Tuple[float, float, float], tag_id: int
+    ) -> Optional[float]:
         """
         returns the angle with respect to "north" in the "world frame"
         """
@@ -198,7 +200,15 @@ class AprilTagModule(MQTTModule):
 
     def handle_tag(
         self, tag: VrcApriltagsRawTags
-    ) -> Tuple[int, float, float, float, Optional[np.ndarray], List[float], float]:
+    ) -> Tuple[
+        int,
+        float,
+        float,
+        float,
+        Optional[np.ndarray],
+        Tuple[float, float, float],
+        float,
+    ]:
         """
         Calculates the distance, position, and heading of the drone in NED frame
         based on the tag detections.
@@ -227,17 +237,17 @@ class AprilTagModule(MQTTModule):
 
         T2, R2, Z2, S2 = t3d.affines.decompose44(H_aerobody_tag)
         rpy = t3d.euler.mat2euler(R2)
-        pos_rel = T2
+        pos_rel: Tuple[float, float, float] = T2  # type: ignore
 
-        horizontal_distance = np.linalg.norm([pos_rel[0], pos_rel[1]])
+        horizontal_distance: float = np.linalg.norm([pos_rel[0], pos_rel[1]])  # type: ignore
         vertical_distance = abs(pos_rel[2])
 
         heading = rpy[2]
         if heading < 0:
             heading += 2 * math.pi
 
-        heading = np.rad2deg(heading)
-        angle = self.angle_to_tag(pos_rel)
+        heading: float = np.rad2deg(heading)
+        angle = self.angle_to_tag(pos_rel)  # type: ignore
 
         # if we have a location definition for the visible tag
         if str(tag["id"]) in self.config["tag_truth"].keys():
