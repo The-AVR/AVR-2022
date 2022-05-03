@@ -67,12 +67,3 @@ jobs:
           platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Delete Untagged Images
-        if: github.event_name != 'pull_request' && inputs.image != 'sandbox'
-        uses: bots-house/ghcr-delete-image-action@main
-        with:
-          owner: ${{ github.repository_owner }}
-          name: vrc/2022/${{ inputs.image }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          untagged-keep-latest: 1
