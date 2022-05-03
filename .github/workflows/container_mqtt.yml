@@ -5,11 +5,13 @@ on:
   pull_request:
     branches:
       - main
+      - develop
     paths:
       - "VMC/mqtt/**"
   push:
     branches:
       - main
+      - develop
     paths:
       - "VMC/mqtt/**"
 

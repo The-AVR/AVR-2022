@@ -5,12 +5,14 @@ on:
   pull_request:
     branches:
       - main
+      - develop
     paths:
       - "VMC/pcm/**"
       - "Libraries/**"
   push:
     branches:
       - main
+      - develop
     paths:
       - "VMC/pcm/**"
       - "Libraries/**"

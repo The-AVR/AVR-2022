@@ -5,11 +5,13 @@ on:
   pull_request:
     branches:
       - main
+      - develop
     paths:
       - "PX4/**"
   push:
     branches:
       - main
+      - develop
     paths:
       - "PX4/**"
 
