@@ -130,7 +130,7 @@ class FlightControlComputer(FCMMQTTModule):
         self.heading = 0.0
 
         # telemetry crowd control
-        self.last_publish_time = time.time()
+        self.attitude_telem_last_publish_time = time.time()
 
     async def connect(self) -> None:
         """
@@ -456,9 +456,9 @@ class FlightControlComputer(FCMMQTTModule):
             self.heading = heading
 
             # publish telemetry every tenth of a second
-            if time.time() - self.last_publish_time > 0.1:
+            if time.time() - self.attitude_telem_last_publish_time > 0.1:
                 self.send_message("vrc/fcm/attitude/euler", update)
-                self.last_publish_time = time.time()
+                self.attitude_telem_last_publish_time = time.time()
 
     @async_try_except()
     async def velocity_ned_telemetry(self) -> None:
