@@ -1,8 +1,5 @@
-{% macro class(item, suffix, topic_path) %}
+{% macro class(item, suffix) %}
 ### {{ item.name }}{{ suffix }}
-{% if topic_path|length > 0 %}
-Topic: `{{ topic_path}}`
-{% endif -%}
 {% if 'docs' in item and item['docs']|length > 0 %}
 {{ item.docs }}
 {% endif -%}
@@ -24,5 +21,5 @@ There is no content for this class
 {%- endfor %}
 
 {%- for topic in topics %}
-{{ class(topic, "Message", topic.path) }}
+{{ class(topic, "Message") }}
 {%- endfor %}

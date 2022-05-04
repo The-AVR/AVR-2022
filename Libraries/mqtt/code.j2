@@ -1,8 +1,5 @@
 {% macro class(item, suffix) %}
 class {{ item.name }}{{ suffix }}(TypedDict):
-{%- if 'path' in item -%}
-{% set _=item.__setitem__('docs', 'Topic: `' + item.path + '`' + '\n\n    ' + item.docs) %}
-{%- endif -%}
 {%- if ('docs' in item and item['docs']|length > 0) %}
     """
     {{ item.docs }}
@@ -31,13 +28,13 @@ import copy
 import json
 from typing import (
     Any,
-    Dict,
     List,
     Literal,
     Optional,
     Protocol,
     Tuple,
     TypedDict,
+    Union,
     overload,
 )
 
@@ -53,7 +50,19 @@ from loguru import logger
 
 {% for topic in topics %}
 {{ class(topic, "Message") }}
+
+class _{{ topic.name }}Callable(Protocol):
+    """
+    Class used only for type-hinting MQTT callbacks
+    """
+    def __call__(self, payload: {{ topic.name }}Message) -> Any:
+        ...
+
 {% endfor %}
+
+# create typed dict of callbacks associated with topics
+_MQTTTopicMap = TypedDict("_MQTTTopicMap", {% raw %}{{% endraw %}{% for topic in topics %}"{{ topic.path }}": _{{ topic.name }}Callable,{% endfor %}{% raw %}}{% endraw %}, total=False)
+
 
 class MQTTMessageCache:
     def __init__(self) -> None:
@@ -65,21 +74,20 @@ class MQTTMessageCache:
     def __getitem__(self, key: Literal["{{ topic.path }}"]) -> {{ topic.name }}Message: ...
 {%- endfor %}
 
-    def __getitem__(self, key: str) -> Any:
+    def __getitem__(self, key: Literal[{% for topic in topics %}"{{ topic.path }}", {% endfor %}]) -> Union[None, {% for topic in topics %}{{ topic.name }}Message, {% endfor %}]:
         return self.__storage.get(key, None)
 
-    def __setitem__(self, key: str, value: Any) -> None:
-        # not bothering with overloads here as no one should be setting
-        # data in the cache other than us
+{%- for topic in topics %}
+
+    @overload
+    def __setitem__(self, key: Literal["{{ topic.path }}"], value: {{ topic.name }}Message) -> None: ...
+{%- endfor %}
+
+    def __setitem__(self, key: Literal[{% for topic in topics %}"{{ topic.path }}", {% endfor %}], value: Union[{% for topic in topics %}{{ topic.name }}Message, {% endfor %}]) -> None:
         self.__storage[key] = value
 
     def __contains__(self, key: str) -> bool:
         return key in self.__storage
-
-
-class MQTTCallable(Protocol):
-    def __call__(self, payload: Any) -> Any:
-        ...
 
 
 class MQTTModule:
@@ -105,7 +113,7 @@ class MQTTModule:
 
         # dictionary of MQTT topics to callback functions
         # this is intended to be overwritten by the child class
-        self.topic_map: Dict[str, MQTTCallable] = {}
+        self.topic_map: _MQTTTopicMap = {}
 
         # maintain a cache of the last message sent on a topic by this module
         self.message_cache = MQTTMessageCache()
@@ -168,7 +176,7 @@ class MQTTModule:
     def send_message(self, topic: Literal["{{ topic.path }}"], payload: {{ topic.name }}Message) -> None: ...
 {%- endfor %}
 
-    def send_message(self, topic: str, payload: Any) -> None:
+    def send_message(self, topic: Literal[{% for topic in topics %}"{{ topic.path }}", {% endfor %}], payload: Union[{% for topic in topics %}{{ topic.name }}Message, {% endfor %}]) -> None:
         """
         Sends a message to the MQTT broker.
         """
