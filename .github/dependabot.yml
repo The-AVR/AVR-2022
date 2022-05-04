@@ -29,15 +29,16 @@ updates:
     schedule:
       interval: "monthly"
 
-  - package-ecosystem: "pip"
-    directory: "/GUI"
-    schedule:
-      interval: "monthly"
+  # dependabot seems willing to look 1 level deep
+  # - package-ecosystem: "pip"
+  #   directory: "/GUI"
+  #   schedule:
+  #     interval: "monthly"
 
-  - package-ecosystem: "pip"
-    directory: "/PCC"
-    schedule:
-      interval: "monthly"
+  # - package-ecosystem: "pip"
+  #   directory: "/PCC"
+  #   schedule:
+  #     interval: "monthly"
 
   - package-ecosystem: "pip"
     directory: "/VMC/apriltag/python"
