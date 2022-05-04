@@ -35,17 +35,18 @@ updates:
       interval: "monthly"
     target-branch: "develop"
 
-  - package-ecosystem: "pip"
-    directory: "/GUI"
-    schedule:
-      interval: "monthly"
-    target-branch: "develop"
+  # dependabot seems willing to look 1 level deep
+  # - package-ecosystem: "pip"
+  #   directory: "/GUI"
+  #   schedule:
+  #     interval: "monthly"
+  #   target-branch: "develop"
 
-  - package-ecosystem: "pip"
-    directory: "/PCC"
-    schedule:
-      interval: "monthly"
-    target-branch: "develop"
+  # - package-ecosystem: "pip"
+  #   directory: "/PCC"
+  #   schedule:
+  #     interval: "monthly"
+  #   target-branch: "develop"
 
   - package-ecosystem: "pip"
     directory: "/VMC/apriltag/python"
