@@ -16,7 +16,8 @@
             "VMC/apriltag/python",
             "VMC/vio",
             "VMC/thermal",
-            "VMC/status"
+            "VMC/status",
+            "VMC/sandbox"
         ]
     },
     {

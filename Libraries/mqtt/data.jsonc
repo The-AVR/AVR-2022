@@ -846,6 +846,32 @@
                     "type": "str"
                 }
             ]
+        },
+        // status
+        {
+            "path": "vrc/status/light/pcm",
+            "docs": "",
+            "payload": []
+        },
+        {
+            "path": "vrc/status/light/vio",
+            "docs": "",
+            "payload": []
+        },
+        {
+            "path": "vrc/status/light/apriltags",
+            "docs": "",
+            "payload": []
+        },
+        {
+            "path": "vrc/status/light/fcm",
+            "docs": "",
+            "payload": []
+        },
+        {
+            "path": "vrc/status/light/thermal",
+            "docs": "",
+            "payload": []
         }
     ]
 }
