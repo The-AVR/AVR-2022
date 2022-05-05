@@ -1,4 +1,3 @@
-import copy
 import math
 import time
 
@@ -195,8 +194,8 @@ class FusionModule(MQTTModule):
             self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
             < self.config["COURSE_THRESHOLD"]
         ):
-            self.message_cache["vrc/fusion/course"] = copy.deepcopy(
-                {"course": payload["degrees"]}
+            self.message_cache["vrc/fusion/course"] = VrcFusionCourseMessage(
+                course=payload["degrees"]
             )
 
     @try_except(reraise=False)
@@ -221,12 +220,14 @@ class FusionModule(MQTTModule):
             # don't send that data to FCC
             if lat == 0 or lon == 0:
                 continue
+
             if "vrc/fusion/velocity/ned" not in self.message_cache:
                 logger.debug("Waiting for vrc/fusion/velocity/ned to be populated")
                 continue
             elif self.message_cache["vrc/fusion/velocity/ned"]["Vn"] is None:
                 logger.debug("vrc/fusion/velocity/ned/vn message cache is empty")
                 continue
+
             crs = 0
             if "vrc/fusion/course" in self.message_cache:
                 if self.message_cache["vrc/fusion/course"]["course"] is not None:
@@ -234,6 +235,7 @@ class FusionModule(MQTTModule):
             else:
                 logger.debug("Waiting for vrc/fusion/course message to be populated")
                 continue
+
             gs = 0
             if "vrc/fusion/groundspeed" in self.message_cache:
                 if (
