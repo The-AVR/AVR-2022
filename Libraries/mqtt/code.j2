@@ -61,7 +61,7 @@ class _{{ topic.name }}Callable(Protocol):
 {% endfor %}
 
 # create typed dict of callbacks associated with topics
-_MQTTTopicMap = TypedDict("_MQTTTopicMap", {% raw %}{{% endraw %}{% for topic in topics %}"{{ topic.path }}": _{{ topic.name }}Callable,{% endfor %}{% raw %}}{% endraw %}, total=False)
+_MQTTTopicMap = TypedDict("_MQTTTopicMap", {% raw %}{{% endraw %}{% for topic in topics %}"{{ topic.path }}": _{{ topic.name }}Callable, {% endfor %}{% raw %}}{% endraw %}, total=False)
 
 
 class MQTTMessageCache:
@@ -93,23 +93,21 @@ class MQTTMessageCache:
 class MQTTModule:
     """
     Generic MQTT Module class that should be inherited by other modules.
-    `topic_prefix` should be a lowercase string that is the namespace
-    for the class's MQTT messages. Additionally, the `topic_map` should
-    be a dictionary of topics to functions that will be called with a dictionary
-    payload.
+    The `topic_map` attribute should be a dictionary of topics to functions
+    that will be called with a payload.
     """
 
     def __init__(self):
-        # these should be not be changed, to match the docker-compose.yml file
+        # these should be not be changed
         self.mqtt_host = "mqtt"
         self.mqtt_port = 18830
 
         # create the MQTT client
-        self.mqtt_client = mqtt.Client()
+        self._mqtt_client = mqtt.Client()
 
         # set up the on connect and on message handlers
-        self.mqtt_client.on_connect = self.on_connect
-        self.mqtt_client.on_message = self.on_message
+        self._mqtt_client.on_connect = self.on_connect
+        self._mqtt_client.on_message = self.on_message
 
         # dictionary of MQTT topics to callback functions
         # this is intended to be overwritten by the child class
@@ -124,9 +122,9 @@ class MQTTModule:
         in a blocking manner.
         """
         # connect the MQTT client
-        self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
+        self._mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
         # run forever
-        self.mqtt_client.loop_forever()
+        self._mqtt_client.loop_forever()
 
     def run_non_blocking(self) -> None:
         """
@@ -134,9 +132,9 @@ class MQTTModule:
         in a non-blocking manner.
         """
         # connect the MQTT client
-        self.mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
+        self._mqtt_client.connect(host=self.mqtt_host, port=self.mqtt_port, keepalive=60)
         # run in background
-        self.mqtt_client.loop_start()
+        self._mqtt_client.loop_start()
 
     def on_message(
         self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage
@@ -181,6 +179,6 @@ class MQTTModule:
         Sends a message to the MQTT broker.
         """
         # logger.debug(f"Sending message to {topic}: {payload}")
-        self.mqtt_client.publish(topic, json.dumps(payload))
+        self._mqtt_client.publish(topic, json.dumps(payload))
         self.message_cache[topic] = copy.deepcopy(payload)
 
