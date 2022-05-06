@@ -8,7 +8,7 @@ from PySide6 import QtCore, QtWidgets
 
 from .base import BaseTabWidget
 
-GUI_DIR = os.path.join(os.path.dirname(__file__), ".")
+GUI_DIR = os.path.join(os.path.dirname(__file__), "..")
 
 class MQTTLoggerWidget(BaseTabWidget):
     # This widget is a logger of MQTT messages
