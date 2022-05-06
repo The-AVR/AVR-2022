@@ -10,7 +10,9 @@ else:
     DATA_DIR = os.path.join(os.path.dirname(__file__), "..")
     ROOT_DIR = DATA_DIR
 
+# root dir is the directory of the main entrypoint
 ROOT_DIR = os.path.abspath(ROOT_DIR)
+# data dir is the root directory within the application itself
 DATA_DIR = os.path.abspath(DATA_DIR)
 
 
@@ -86,6 +88,14 @@ class _Config:
     @mavlink_port.setter
     def mavlink_port(self, value: int) -> None:
         return self.__set("mavlink_port", value)
+
+    @property
+    def log_file_directory(self) -> str:
+        return self.__get("log_file_directory", os.path.join(ROOT_DIR, "logs"))
+
+    @log_file_directory.setter
+    def log_file_directory(self, value: str) -> None:
+        return self.__set("log_file_directory", value)
 
 
 config = _Config()

@@ -1,41 +1,39 @@
 from __future__ import annotations
-from enum import unique
 
+import csv
+import datetime
 import os
-from datetime import datetime
-from tkinter import W
-from typing import Any, Dict
+from io import TextIOWrapper
+from typing import Optional
 
+from lib.config import config
 from PySide6 import QtCore, QtWidgets
 
 from .base import BaseTabWidget
 
-import csv
-
-GUI_DIR = os.path.join(os.path.dirname(__file__), "..")
 
 class MQTTLoggerWidget(BaseTabWidget):
-    # This widget is a logger of MQTT messages
-    # Logs the messages from MQTT to a csv that and can be used for debugging or data analysis.
-
-    send_message: QtCore.SignalInstance = QtCore.Signal(str, str)  # type: ignore
-
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
 
-        self.clipboard = QtWidgets.QApplication.clipboard()
-
         self.setWindowTitle("MQTT Logger")
 
-        # secondary data store to maintain dict of topics and the last message recieved
-        self.topic_payloads: Dict[str, Any] = {}
-
         # Access the Filesystem
-        self.filesystem = QtWidgets.QFileSystemModel()
-        self.filesystem.setRootPath(GUI_DIR)
+        os.makedirs(config.log_file_directory, exist_ok=True)
+
+        # setting this environment variable will allow the file size to be
+        # automatically updated after the file handle is closed
+        os.environ["QT_FILESYSTEMMODEL_WATCH_FILES"] = "True"
+
+        self.filesystem_model = QtWidgets.QFileSystemModel()
+        self.filesystem_model.setRootPath(config.log_file_directory)
 
         # stop/start state
         self.recording = False
+
+        # active file handles
+        self.file_handle: Optional[TextIOWrapper] = None
+        self.csv_writer = None
 
     def build(self) -> None:
         """
@@ -44,35 +42,32 @@ class MQTTLoggerWidget(BaseTabWidget):
         layout = QtWidgets.QVBoxLayout(self)
         self.setLayout(layout)
 
-        main_layout = QtWidgets.QSplitter(QtCore.Qt.Vertical)
-        layout.addWidget(main_layout)
-
-        # File viewing widget
-        file_viewer_widget = QtWidgets.QGroupBox("Log Explorer")
-        file_viewer_layout = QtWidgets.QVBoxLayout()
-        file_viewer_widget.setLayout(file_viewer_layout)
+        self.directory_label = QtWidgets.QLabel(config.log_file_directory)
+        layout.addWidget(self.directory_label)
 
         self.file_tree = QtWidgets.QTreeView()
-        self.file_tree.setModel(self.filesystem)
-        self.file_tree.setRootIndex(self.filesystem.index("logs"))
+        self.file_tree.setModel(self.filesystem_model)
+        self.file_tree.setRootIndex(self.filesystem_model.index(config.log_file_directory))
         self.file_tree.setSortingEnabled(True)
         self.file_tree.sortByColumn(0, QtCore.Qt.DescendingOrder)
-        file_viewer_layout.addWidget(self.file_tree)
+        layout.addWidget(self.file_tree)
 
         self.recording_button = QtWidgets.QPushButton("Start Recording")
-        file_viewer_layout.addWidget(self.recording_button)
-        self.recording_button.clicked.connect(self.toggle_recording)  # type: ignore
+        layout.addWidget(self.recording_button)
 
-        main_layout.addWidget(file_viewer_widget)
+        self.recording_button.clicked.connect(self.toggle_recording)  # type: ignore
 
     def clear(self) -> None:
         """
         Clear data out of the widget.
         """
-        self.topic_payloads = {}
-
+        # reset recording state
         self.recording = False
         self.recording_button.setText("Record")
+
+        # close file handle
+        if self.file_handle is not None:
+            self.file_handle.close()
 
     def toggle_recording(self) -> None:
         """
@@ -80,22 +75,32 @@ class MQTTLoggerWidget(BaseTabWidget):
         """
         self.recording = not self.recording
 
-        unique_log = datetime.now().strftime("%Y-%m-%d_%H%M-%S")
-        file_name = os.path.join(GUI_DIR, "logs",
-            "MQTTlog_{}.csv".format(unique_log)
-            )
-        print(file_name)
         if self.recording:
-            # open new log file
-            with open(file_name,mode='w') as log_file:
-                self.log_writer = csv.writer(log_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-                self.log_writer.writerow(["TimeDate","Topic","Message"])
+            # generate new file name
+            filename = os.path.join(
+                config.log_file_directory,
+                f"MQTTLog_{datetime.datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.csv",
+            )
+
+            # open file
+            self.file_handle = open(filename, "w", newline="")
+
+            # create CSV writer
+            self.csv_writer = csv.writer(self.file_handle)
+            self.csv_writer.writerow(["Timestamp", "Topic", "Message"])
+
+            # set button text
             self.recording_button.setText("Stop Recording")
+
         else:
+            # close file handle
+            if self.file_handle is not None:
+                self.file_handle.close()
+
+            # set button text
             self.recording_button.setText("Record")
 
     def process_message(self, topic: str, payload: str) -> None:
-        # sourcery skip: assign-if-exp
         """
         Process a new message on a topic.
         """
@@ -103,9 +108,8 @@ class MQTTLoggerWidget(BaseTabWidget):
         if not self.recording:
             return
 
-        # insert into secondary storage
-        self.topic_payloads[topic] = payload
-
         # Write time_stamp, topic, payload to log file
-        time_stamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-        self.log_writer.writerow([time_stamp, topic, payload])
+        if self.csv_writer is not None:
+            self.csv_writer.writerow(
+                [datetime.datetime.now().isoformat(), topic, payload]
+            )

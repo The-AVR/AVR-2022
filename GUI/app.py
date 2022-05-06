@@ -197,9 +197,6 @@ class MainWindow(QtWidgets.QWidget):
         self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
             self.mqtt_logger_widget.process_message
         )
-        self.mqtt_logger_widget.send_message.connect(
-            self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
-        )
 
         # pcc tester widget
 
@@ -239,6 +236,7 @@ class MainWindow(QtWidgets.QWidget):
         # telemetry stuff is special case
         if not self.mqtt_connected:
             self.mqtt_debug_widget.clear()
+            self.mqtt_logger_widget.clear()
             self.vmc_telemetry_widget.clear()
 
     def set_serial_connected_state(self, connection_state: ConnectionState) -> None:
