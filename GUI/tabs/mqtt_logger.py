@@ -1,12 +1,16 @@
 from __future__ import annotations
+from enum import unique
 
 import os
 from datetime import datetime
+from tkinter import W
 from typing import Any, Dict
 
 from PySide6 import QtCore, QtWidgets
 
 from .base import BaseTabWidget
+
+import csv
 
 GUI_DIR = os.path.join(os.path.dirname(__file__), "..")
 
@@ -76,17 +80,16 @@ class MQTTLoggerWidget(BaseTabWidget):
         """
         self.recording = not self.recording
 
-        file_name = "{}/logs/MQTTlog_{}.csv".format(
-            GUI_DIR, datetime.now().strftime("%Y-%m-%d_%H%M-%S")
-        )
-
+        unique_log = datetime.now().strftime("%Y-%m-%d_%H%M-%S")
+        file_name = os.path.join(GUI_DIR, "logs",
+            "MQTTlog_{}.csv".format(unique_log)
+            )
+        print(file_name)
         if self.recording:
             # open new log file
-            log_file = QtCore.QFile(file_name)
-            log_file.open(QtCore.QFile.WriteOnly)
-            self.log = QtCore.QTextStream(log_file)
-            self.log << "TimeDate, Topic, Message\n"
-
+            with open(file_name,mode='w') as log_file:
+                self.log_writer = csv.writer(log_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+                self.log_writer.writerow(["TimeDate","Topic","Message"])
             self.recording_button.setText("Stop Recording")
         else:
             self.recording_button.setText("Record")
@@ -105,4 +108,4 @@ class MQTTLoggerWidget(BaseTabWidget):
 
         # Write time_stamp, topic, payload to log file
         time_stamp = datetime.now().strftime("%m/%d/%Y, %H:%M:%S")
-        self.log << "{}, {}, {}\n".format(time_stamp, topic, payload)
+        self.log_writer.writerow([time_stamp, topic, payload])
