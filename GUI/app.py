@@ -187,17 +187,17 @@ class MainWindow(QtWidgets.QWidget):
             self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
         )
 
-        # mqtt debug widget
+        # mqtt logger widget
 
-        self.mqtt_debug_widget = MQTTLoggerWidget(self)
-        self.mqtt_debug_widget.build()
-        self.mqtt_debug_widget.pop_in.connect(self.tabs.pop_in)
-        self.tabs.addTab(self.mqtt_debug_widget, self.mqtt_debug_widget.windowTitle())
+        self.mqtt_logger_widget = MQTTLoggerWidget(self)
+        self.mqtt_logger_widget.build()
+        self.mqtt_logger_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.mqtt_logger_widget, self.mqtt_logger_widget.windowTitle())
 
         self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
-            self.mqtt_debug_widget.process_message
+            self.mqtt_logger_widget.process_message
         )
-        self.mqtt_debug_widget.send_message.connect(
+        self.mqtt_logger_widget.send_message.connect(
             self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
         )
 
@@ -221,6 +221,7 @@ class MainWindow(QtWidgets.QWidget):
         # list of widgets that are mqtt connected
         widgets = [
             self.mqtt_debug_widget,
+            self.mqtt_logger_widget,
             self.vmc_control_widget,
             self.vmc_telemetry_widget,
             self.thermal_view_control_widget,
