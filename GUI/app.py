@@ -6,6 +6,7 @@ from loguru import logger
 from PySide6 import QtCore, QtGui, QtWidgets
 from tabs.connection.main import MainConnectionWidget
 from tabs.mqtt_debug import MQTTDebugWidget
+from tabs.mqtt_logger import MQTTLoggerWidget
 from tabs.pcc_tester import PCCTesterWidget
 from tabs.thermal_view_control import ThermalViewControlWidget
 from tabs.vmc_control import VMCControlWidget
@@ -186,6 +187,20 @@ class MainWindow(QtWidgets.QWidget):
             self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
         )
 
+        # mqtt debug widget
+
+        self.mqtt_debug_widget = MQTTLoggerWidget(self)
+        self.mqtt_debug_widget.build()
+        self.mqtt_debug_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.mqtt_debug_widget, self.mqtt_debug_widget.windowTitle())
+
+        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+            self.mqtt_debug_widget.process_message
+        )
+        self.mqtt_debug_widget.send_message.connect(
+            self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
+        )
+
         # pcc tester widget
 
         self.pcc_tester_widget = PCCTesterWidget(
@@ -196,7 +211,7 @@ class MainWindow(QtWidgets.QWidget):
         self.tabs.addTab(self.pcc_tester_widget, self.pcc_tester_widget.windowTitle())
 
         # set initial state
-
+        # changed value for testing. turn back off prior to merge
         self.set_mqtt_connected_state(ConnectionState.disconnected)
         self.set_serial_connected_state(ConnectionState.disconnected)
 
