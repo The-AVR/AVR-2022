@@ -8,8 +8,7 @@ from PySide6 import QtCore, QtWidgets
 
 from .base import BaseTabWidget
 
-GUI_DIR = os.path.dirname(os.path.dirname(__file__))
-
+GUI_DIR = os.path.join(os.path.dirname(__file__), ".")
 
 class MQTTLoggerWidget(BaseTabWidget):
     # This widget is a logger of MQTT messages
@@ -29,7 +28,7 @@ class MQTTLoggerWidget(BaseTabWidget):
 
         # Access the Filesystem
         self.filesystem = QtWidgets.QFileSystemModel()
-        self.filesystem.setRootPath(QtCore.QDir(path=GUI_DIR).absolutePath())
+        self.filesystem.setRootPath(GUI_DIR)
 
         # stop/start state
         self.recording = False
@@ -51,7 +50,7 @@ class MQTTLoggerWidget(BaseTabWidget):
 
         self.file_tree = QtWidgets.QTreeView()
         self.file_tree.setModel(self.filesystem)
-        self.file_tree.setRootIndex(self.filesystem.index("{}/logs/".format(GUI_DIR)))
+        self.file_tree.setRootIndex(self.filesystem.index("logs"))
         self.file_tree.setSortingEnabled(True)
         self.file_tree.sortByColumn(0, QtCore.Qt.DescendingOrder)
         file_viewer_layout.addWidget(self.file_tree)
