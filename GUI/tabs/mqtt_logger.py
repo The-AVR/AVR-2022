@@ -7,9 +7,51 @@ from io import TextIOWrapper
 from typing import Optional
 
 from lib.config import config
-from PySide6 import QtCore, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from .base import BaseTabWidget
+
+
+class LogFileViewWidget(QtWidgets.QTreeView):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+
+        # setting this environment variable will allow the file size to be
+        # automatically updated after the file handle is closed
+        os.environ["QT_FILESYSTEMMODEL_WATCH_FILES"] = "True"
+
+        self.filesystem_model = QtWidgets.QFileSystemModel()
+        self.filesystem_model.setRootPath(config.log_file_directory)
+
+        self.setModel(self.filesystem_model)
+        self.setRootIndex(self.filesystem_model.index(config.log_file_directory))
+
+        # dont allow nested folders to be expanded
+        self.setItemsExpandable(False)
+
+        self.setSortingEnabled(True)
+        self.sortByColumn(0, QtCore.Qt.DescendingOrder)
+
+        # open files on double click
+        self.doubleClicked.connect(lambda index: os.startfile(self.filesystem_model.filePath(index)))  # type: ignore
+
+    def contextMenuEvent(self, event: QtGui.QContextMenuEvent) -> None:
+        # override the normal right click event.
+        menu = QtWidgets.QMenu(self)
+
+        # needs to be done before the menu is poped up, otherwise the QEvent will expire
+        selected_index = self.indexAt(event.pos())
+
+        # check if anything is selected
+        if selected_index.row() == -1:
+            return
+
+        # add delete action
+        delete_file_action = QtGui.QAction("Delete", self)
+        delete_file_action.triggered.connect(lambda: self.filesystem_model.remove(selected_index))  # type: ignore
+        menu.addAction(delete_file_action)
+
+        menu.popup(QtGui.QCursor.pos())
 
 
 class MQTTLoggerWidget(BaseTabWidget):
@@ -20,13 +62,6 @@ class MQTTLoggerWidget(BaseTabWidget):
 
         # Access the Filesystem
         os.makedirs(config.log_file_directory, exist_ok=True)
-
-        # setting this environment variable will allow the file size to be
-        # automatically updated after the file handle is closed
-        os.environ["QT_FILESYSTEMMODEL_WATCH_FILES"] = "True"
-
-        self.filesystem_model = QtWidgets.QFileSystemModel()
-        self.filesystem_model.setRootPath(config.log_file_directory)
 
         # stop/start state
         self.recording = False
@@ -45,11 +80,7 @@ class MQTTLoggerWidget(BaseTabWidget):
         self.directory_label = QtWidgets.QLabel(config.log_file_directory)
         layout.addWidget(self.directory_label)
 
-        self.file_tree = QtWidgets.QTreeView()
-        self.file_tree.setModel(self.filesystem_model)
-        self.file_tree.setRootIndex(self.filesystem_model.index(config.log_file_directory))
-        self.file_tree.setSortingEnabled(True)
-        self.file_tree.sortByColumn(0, QtCore.Qt.DescendingOrder)
+        self.file_tree = LogFileViewWidget(self)
         layout.addWidget(self.file_tree)
 
         self.recording_button = QtWidgets.QPushButton("Start Recording")
