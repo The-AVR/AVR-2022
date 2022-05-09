@@ -22,6 +22,8 @@ class LogFileViewWidget(QtWidgets.QTreeView):
 
         self.filesystem_model = QtWidgets.QFileSystemModel()
         self.filesystem_model.setRootPath(config.log_file_directory)
+        self.filesystem_model.setNameFilters(['*.csv'])
+        self.filesystem_model.setNameFilterDisables(False)
 
         self.setModel(self.filesystem_model)
         self.setRootIndex(self.filesystem_model.index(config.log_file_directory))
