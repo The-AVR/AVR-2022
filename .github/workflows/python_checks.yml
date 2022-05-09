@@ -49,13 +49,43 @@ jobs:
           python ./scripts/copy_libraries.py
 
       - name: Check Formatting
-        run: python -m black ${{ inputs.project }} --verbose --check
+        run: python scripts/step_summary.py
+        env:
+          RUN_CMD: python -m black ${{ inputs.project }} --verbose --check
+          CMD_FAILURE_TEXT: |
+            ## Formatting Failure :x:
+
+            Run the following command locally and commit the changes:
+
+            ```bash
+            python -m black ${{ inputs.project }}
+            ````
 
       - name: Check Import Order
-        run: python -m isort ${{ inputs.project }} --check
+        run: python scripts/step_summary.py
+        env:
+          RUN_CMD: python -m isort ${{ inputs.project }} --check
+          CMD_FAILURE_TEXT: |
+            ## Formatting Failure :x:
+
+            Run the following command locally and commit the changes:
+
+            ```bash
+            python -m isort ${{ inputs.project }}
+            ````
 
       - name: Check for Unused Imports
-        run: python -m autoflake --recursive ${{ inputs.project }} --check
+        run: python scripts/step_summary.py
+        env:
+          RUN_CMD: python -m autoflake --recursive ${{ inputs.project }} --check
+          CMD_FAILURE_TEXT: |
+            ## Unused Import(s) Detected :x:
+
+            Run the following command locally and commit the changes:
+
+            ```bash
+            python -m autoflake --recursive --in-place --remove-all-unused-imports ${{ inputs.project }}
+            ````
 
       - name: Check Type Hints
         run: python -m pyleft ${{ inputs.project }} --verbose
