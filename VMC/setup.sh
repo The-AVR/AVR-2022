@@ -165,14 +165,14 @@ bar
 echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 if [ "$DEVELOPMENT" != true ] ; then
-    cd $VRC_DIR
-    $s python3 PX4/generate.py --pymavlink
-    python3 scripts/copy_libraries.py
-
     cd $VRC_DIR/VMC
     $s python3 start.py pull --norm
     $s python3 start.py build --norm
 else
+    cd $VRC_DIR
+    $s python3 PX4/generate.py --pymavlink
+    python3 scripts/copy_libraries.py
+
     cd $VRC_DIR/VMC
     $s python3 start.py pull --norm --local
     $s python3 start.py build --norm --local
