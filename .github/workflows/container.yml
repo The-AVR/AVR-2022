@@ -52,7 +52,7 @@ jobs:
 
       - name: Github CR Login
         if: github.event_name != 'pull_request' && inputs.image != 'sandbox'
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
