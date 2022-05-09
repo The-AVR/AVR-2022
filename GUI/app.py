@@ -208,7 +208,6 @@ class MainWindow(QtWidgets.QWidget):
         self.tabs.addTab(self.pcc_tester_widget, self.pcc_tester_widget.windowTitle())
 
         # set initial state
-        # changed value for testing. turn back off prior to merge
         self.set_mqtt_connected_state(ConnectionState.disconnected)
         self.set_serial_connected_state(ConnectionState.disconnected)
 
