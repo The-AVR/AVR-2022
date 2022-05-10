@@ -3,6 +3,7 @@ import os
 import signal
 import subprocess
 import sys
+import shutil
 import tempfile
 from typing import Any, List
 
@@ -132,6 +133,18 @@ def status_service(compose_services: dict, local: bool = False) -> None:
         "depends_on": ["mqtt"],
         "restart": "unless-stopped",
         "privileged": True,
+        "volumes": [
+            {
+                "type": "bind",
+                "source": shutil.which("nvpmodel"),
+                "target": "/app/nvpmodel",
+            },
+            {
+                "type": "bind",
+                "source": "/etc/nvpmodel.conf",
+                "target": "/app/nvpmodel.conf",
+            }
+        ],
     }
 
     if local:

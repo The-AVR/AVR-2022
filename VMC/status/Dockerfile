@@ -12,6 +12,4 @@ RUN cp /usr/local/lib/python3.9/site-packages/Jetson/GPIO/99-gpio.rules /etc/ude
 
 COPY . .
 
-RUN chmod +x nvpmodel
-
 CMD ["python3.9", "status.py"]
