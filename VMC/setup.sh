@@ -193,6 +193,7 @@ bar
 echo -e "${CYAN}Cleaning up${NC}"
 bar
 $s apt autoremove -y
+$s docker system prune -f
 bar
 
 echo -e "${CYAN}Performing self-test${NC}"
