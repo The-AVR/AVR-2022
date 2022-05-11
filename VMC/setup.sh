@@ -104,6 +104,8 @@ bar
 $s apt install -y git apt-transport-https ca-certificates apt-utils software-properties-common wget htop nano python3 python3-wheel python3-pip jq
 $s -H python3 -m pip install pip wheel --upgrade
 $s -H python3 -m pip install -r $VRC_DIR/VMC/scripts/requirements.txt
+# point 'python' to 'python3'
+$s apt install python-is-python3
 # set to high-power 10W mode. 1 is 5W mode
 $s nvpmodel -m 0
 
