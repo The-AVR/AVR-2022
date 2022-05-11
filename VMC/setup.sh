@@ -170,6 +170,7 @@ if [ "$DEVELOPMENT" != true ] ; then
     $s python3 start.py build --norm
 else
     cd $VRC_DIR
+    git config --global --add safe.directory $VRC_DIR
     $s python3 PX4/generate.py --pymavlink
     python3 scripts/copy_libraries.py
 
@@ -192,6 +193,7 @@ bar
 echo -e "${CYAN}Cleaning up${NC}"
 bar
 $s apt autoremove -y
+$s docker system prune -f
 bar
 
 echo -e "${CYAN}Performing self-test${NC}"
