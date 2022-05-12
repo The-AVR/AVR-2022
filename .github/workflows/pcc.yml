@@ -45,6 +45,10 @@ jobs:
         run: pio run --verbose
         working-directory: PCC
 
+      - name: Run Checks
+        run: pio check --skip-packages
+        working-directory: PCC
+
       - name: Rename Firmware
         shell: bash
         run: mv firmware.bin pcc_firmware.$(git rev-parse --short HEAD).bin
