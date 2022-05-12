@@ -19,7 +19,7 @@ and download the `pcc_firmware.<version>.bin` file.
 
 ![Download this firmware file](2022-05-12-07-14-49.png)
 
-Now you're ready to flash your PCC! Follow the next steps *exactly* to not
+Now you're ready to flash your PCC! Follow the next steps _exactly_ to not
 run into any issues.
 
 First, plug your PCC into your computer with the provided MicroUSB cable.
