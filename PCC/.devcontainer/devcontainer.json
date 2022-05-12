@@ -3,5 +3,5 @@
     "extensions": [
         "platformio.platformio-ide"
     ],
-    "postCreateCommand": "python setup.py"
+    "postCreateCommand": "python setup.py && git config --global core.autocrlf input"
 }

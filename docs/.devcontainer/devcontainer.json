@@ -10,7 +10,7 @@
         "eg2.vscode-npm-script",
         "tamasfe.even-better-toml"
     ],
-    "postCreateCommand": "python setup.py",
+    "postCreateCommand": "python setup.py && git config --global core.autocrlf input",
     "forwardPorts": [
         1313
     ]
