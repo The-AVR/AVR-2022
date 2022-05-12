@@ -28,23 +28,7 @@ Plug your servos and LED strip into the designated connections on the PCC:
 
 ### Back at the Computer
 
-Open VS Code
-
-- Open PCC -> Python folder
-- On the bottom left, select our VRC env
-
-![](selectvrcenvironment.JPG)
-
-- Connect the PCC to your computer.
-- Open the `gui_test.py` file
-- Click the play button
-
-![](PCC_gui_start.JPG)
-
-- Select the COM Port that corresponds to your PCC
-  (I have tried on two machines, it should enumerate to COM 6)
-
-![](PCC_gui_window.JPG)
+TBD
 
 {{% alert title="Success" color="success" %}}
 Click around and try the different buttons,
