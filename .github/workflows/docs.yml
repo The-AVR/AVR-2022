@@ -41,10 +41,7 @@ jobs:
 
       - name: Install Dependencies
         working-directory: docs
-        run: |
-          npm install
-          python -m pip install pip wheel --upgrade
-          python -m pip install -r requirements.txt
+        run: python setup.py
 
       - name: Check Formatting
         working-directory: docs

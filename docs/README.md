@@ -1,38 +1,27 @@
 ## Tooling
 
 The generate the static site, we use the [Hugo](https://gohugo.io/)
-static site generator. While not strictly needed to develop the site,
+static site generator. While not strictly needed to write content for the site,
 it is very nice to have installed in order to preview the site.
 
-Make sure to install the extended version of Hugo, as we utilize some of the
-asset processing functionality only in the extended version
-(this is in the `package.json` file, so if you want to use `npm`,
-run it with `npx hugo` instead.)
-
-`npm` is not required to preview the site, but it is required to build it.
-
-Additionally we also use the [Docsy](https://docsy.dev) theme by Google for this.
+The site based on the [Docsy](https://docsy.dev) theme by Google.
 This is a `git` submodule, so make sure you've initialized this repo's submodules:
 
 ```bash
 git submodule update --init --recursive
 ```
 
-If you want to update this submodule to the latest version, run:
+To build or preview the site, make sure you have `npm` and `python3` installed.
+To install all the dependencies, run
 
 ```bash
-git submodule update --remote --merge
-cd themes/docsy git
-submodule update --init --recursive
+python setup.py
 ```
-
-(make sure to commit this change back to the repo).
 
 To preview the site, `cd` into this `docs` directory and run:
 
 ```bash
-hugo serve
-# or `npm run server`
+npm run server
 ```
 
 This will give you a URL like this to preview the site:
@@ -41,9 +30,12 @@ This will give you a URL like this to preview the site:
 Environment: "development"
 Serving pages from memory
 Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
-Web Server is available at //localhost:1205/ (bind address 127.0.0.1)
+Web Server is available at //localhost:1313/ (bind address 127.0.0.1)
 Press Ctrl+C to stop
 ```
+
+Go to [http://localhost:1313](http://localhost:1313) in your browser to see the site
+running on your machine.
 
 ## Structure
 
@@ -190,25 +182,6 @@ For all other functionality, see the
 [Docsy documentation](https://www.docsy.dev/docs/adding-content/shortcodes/).
 
 ## Building
-
-To build the site, you must have `hugo` extended installed. Additionally,
-you must install the required `npm` packages from this directory
-(these facilitate SCSS compilation):
-
-```bash
-npm install
-```
-
-Additionally, install the needed Python packages:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-This is for a script that finds all of the JS and CSS files hosted on 3rd party CDNs
-and downloads them to a local directory and rewrites the
-the HTML tag. I don't really like how the theme uses like 4 different CDNs,
-and I rather we host all of the required assets.
 
 To build the website, just run:
 

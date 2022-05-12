@@ -671,7 +671,7 @@
         // apriltag
         {
             "path": "vrc/apriltags/selected",
-            "docs": "",
+            "docs": "This topic publishes its best candidate for position feedback",
             "payload": [
                 {
                     "key": "tag_id",
@@ -707,7 +707,7 @@
         },
         {
             "path": "vrc/apriltags/raw",
-            "docs": "",
+            "docs": "This topic publishes the raw tag data",
             "payload": [
                 {
                     "key": "tags",
@@ -749,7 +749,7 @@
         },
         {
             "path": "vrc/apriltags/visible",
-            "docs": "",
+            "docs": "This topic publishes the transformed tag data",
             "payload": [
                 {
                     "key": "tags",
