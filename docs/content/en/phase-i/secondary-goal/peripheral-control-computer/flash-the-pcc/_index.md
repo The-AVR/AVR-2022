@@ -59,8 +59,9 @@ everything flashed correctly.
 ![Verificiation complete](2022-05-12-07-36-32.png)
 
 Finally, to get the PCC out of bootloader mode, and make sure the firmware is working
-correctly, unplug the PCC and plug it back in. The bright green LED should remain off
-and the original COM port should show back up in device manager.
+correctly, unplug the PCC and plug it back in, or press the reset button once.
+The bright green LED should remain off and the original COM port should show
+back up in device manager.
 
 {{% alert title="Success" color="success" %}}
 You're now ready to test it out!
