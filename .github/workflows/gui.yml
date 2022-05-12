@@ -30,13 +30,10 @@ jobs:
           cache: pip
           cache-dependency-path: GUI
 
-      - name: Copy Libraries
-        run: python scripts/copy_libraries.py
-
-      - name: Prepare Python
+      - name: Install Packages
         run: |
-          python -m pip install pip wheel --upgrade
-          python -m pip install -r GUI/requirements.txt
+          python scripts/install_requirements.py --directory GUI --strict
+          python scripts/copy_libraries.py
 
       - name: Build GUI
         run: python GUI/build.py

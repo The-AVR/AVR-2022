@@ -43,10 +43,8 @@ jobs:
       - name: Install Packages
         run: |
           npm install
-          python -m pip install pip wheel --upgrade
-          python -m pip install -r requirements.txt
-          python ./scripts/install_requirements.py --directory ${{ inputs.project }} --strict
-          python ./scripts/copy_libraries.py
+          python scripts/install_requirements.py --directory ${{ inputs.project }} --strict
+          python scripts/copy_libraries.py
 
       - name: Check Formatting
         run: python scripts/step_summary.py

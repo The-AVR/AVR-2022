@@ -1,6 +1,6 @@
+import os
 import subprocess
 import sys
-import os
 
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 
@@ -31,15 +31,11 @@ if __name__ == "__main__":
 
     # install platformio
     subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "pip", "wheel", "--upgrade"]
-    )
-    subprocess.check_call(
         [
             sys.executable,
-            "-m",
-            "pip",
-            "install",
-            "-r",
-            os.path.join(THIS_DIR, "requirements.txt"),
+            os.path.join(THIS_DIR, "..", "scripts", "install_requirements.py"),
+            "--directory",
+            THIS_DIR,
+            "--strict",
         ]
     )
