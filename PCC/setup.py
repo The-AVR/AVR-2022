@@ -13,6 +13,7 @@ if __name__ == "__main__":
         [
             "git",
             "apply",
+            "--ignore-whitespace",
             "--verbose",
             os.path.join(THIS_DIR, "libraries", "queue-default.patch"),
         ],
