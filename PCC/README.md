@@ -1,46 +1,24 @@
+# Peripheral Control Computer Firmware
 
-This directory is intended for project specific (private) libraries.
-PlatformIO will compile them to static libraries and link into executable file.
+## Setup
 
-The source code of each library should be placed in a an own separate directory
-("lib/your_library_name/[here are source files]").
+Run
 
-For example, see a structure of the following two libraries `Foo` and `Bar`:
-
-|--lib
-|  |
-|  |--Bar
-|  |  |--docs
-|  |  |--examples
-|  |  |--src
-|  |     |- Bar.c
-|  |     |- Bar.h
-|  |  |- library.json (optional, custom build options, etc) https://docs.platformio.org/page/librarymanager/config.html
-|  |
-|  |--Foo
-|  |  |- Foo.c
-|  |  |- Foo.h
-|  |
-|  |- README --> THIS FILE
-|
-|- platformio.ini
-|--src
-   |- main.c
-
-and a contents of `src/main.c`:
-```
-#include <Foo.h>
-#include <Bar.h>
-
-int main (void)
-{
-  ...
-}
-
+```bash
+python setup.py
 ```
 
-PlatformIO Library Dependency Finder will find automatically dependent
-libraries scanning project source files.
+## Building
 
-More information about PlatformIO Library Dependency Finder
-- https://docs.platformio.org/page/librarymanager/ldf.html
+To build the firmware, run
+
+```bash
+pio run
+```
+
+This will create a `firmware.bin` file in `PCC/.pio/build/adafruit_feather_m4`.
+
+## Flashing
+
+Follow the instructions in the documentation, or use the upload functionality
+in PlatformIO directly.
