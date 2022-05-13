@@ -15,4 +15,4 @@ jobs:
   pcc:
     uses: ./.github/workflows/python_checks.yml
     with:
-      project: "pcc"
+      project: "PCC"
