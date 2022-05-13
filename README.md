@@ -94,7 +94,7 @@ python scripts/install_requirements.py
 
 ## Running Containers on a Jetson
 
-If on a Jetson, clone the repoistory and check out the git branch you want.
+If on a Jetson, clone the repository and check out the git branch you want.
 You can now follow the instructions inside
 [VMC/README.md](VMC/README.md) to run the `setup.sh`
 script and add `--dev` for development.
