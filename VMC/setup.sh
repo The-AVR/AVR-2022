@@ -104,8 +104,12 @@ bar
 $s apt install -y git apt-transport-https ca-certificates apt-utils software-properties-common wget htop nano python3 python3-wheel python3-pip jq
 $s -H python3 -m pip install pip wheel --upgrade
 $s -H python3 -m pip install -r $VRC_DIR/VMC/scripts/requirements.txt
+
 # set to high-power 10W mode. 1 is 5W mode
 $s nvpmodel -m 0
+# make sure SPI is enabled
+# PYTHONPATH needs to be set so the Jetson.Board libraries are available
+$s PYTHONPATH=/opt/nvidia/jetson-io/ python3 $VRC_DIR/VMC/scripts/enable_spi.py
 
 cd $VRC_DIR
 # cache the git credentials (mainly during development)
