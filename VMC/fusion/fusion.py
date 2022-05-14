@@ -188,7 +188,9 @@ class FusionModule(MQTTModule):
         self.send_message("vrc/fusion/attitude/heading", heading_update)
 
         # if the groundspeed is below the threshold, we lock the course to the heading
-        if ("vrc/fusion/groundspeed" not in self.message_cache)|(self.message_cache["vrc/fusion/groundspeed"] is None):
+        if ("vrc/fusion/groundspeed" not in self.message_cache) | (
+            self.message_cache["vrc/fusion/groundspeed"] is None
+        ):
             logger.debug("Empty groundspeed in fuse att heading")
         elif (
             self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
@@ -208,7 +210,11 @@ class FusionModule(MQTTModule):
         while True:
             time.sleep(1 / self.config["HIL_GPS_UPDATE_FREQ"])
 
-            if "vrc/fusion/geo" not in self.message_cache | self.message_cache["vrc/fusion/geo"] is None:
+            if (
+                "vrc/fusion/geo"
+                not in self.message_cache | self.message_cache["vrc/fusion/geo"]
+                is None
+            ):
                 logger.debug("Waiting for vrc/fusion/geo to be populated")
                 continue
 
@@ -221,7 +227,12 @@ class FusionModule(MQTTModule):
             if lat == 0 or lon == 0:
                 continue
 
-            if "vrc/fusion/velocity/ned" not in self.message_cache | self.message_cache["vrc/fusion/velocity/ned"] is None:
+            if (
+                "vrc/fusion/velocity/ned"
+                not in self.message_cache
+                | self.message_cache["vrc/fusion/velocity/ned"]
+                is None
+            ):
                 logger.debug("Waiting for vrc/fusion/velocity/ned to be populated")
                 continue
             elif self.message_cache["vrc/fusion/velocity/ned"]["Vn"] is None:
