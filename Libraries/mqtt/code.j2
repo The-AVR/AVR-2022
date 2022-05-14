@@ -76,7 +76,7 @@ class MQTTMessageCache:
 
     def __getitem__(self, key: Literal[{% for topic in topics %}"{{ topic.path }}", {% endfor %}]) -> Union[None, {% for topic in topics %}{{ topic.name }}Message, {% endfor %}]:
         if key not in [{% for topic in topics %}"{{ topic.path }}", {% endfor %}]:
-            raise KeyError('Topic not defined')
+            return KeyError('Topic not defined')
         else:
             return self.__storage.get(key, None)
 
