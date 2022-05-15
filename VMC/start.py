@@ -143,7 +143,7 @@ def status_service(compose_services: dict, local: bool = False) -> None:
                 "type": "bind",
                 "source": "/etc/nvpmodel.conf",
                 "target": "/app/nvpmodel.conf",
-            }
+            },
         ],
     }
 

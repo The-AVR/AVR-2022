@@ -3,7 +3,7 @@
     "topics": [
         // autonomous
         {
-            "path": "vrc/autonmous",
+            "path": "vrc/autonomous",
             "docs": "This enables enable or disable autonomous mode. This is not used by any Bell code, but available to students to listen to who may wish to not always be running their autonomous mode,",
             "payload": [
                 {
