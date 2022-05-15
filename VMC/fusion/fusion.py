@@ -190,7 +190,10 @@ class FusionModule(MQTTModule):
         # if the groundspeed is below the threshold, we lock the course to the heading
         if (
             "vrc/fusion/groundspeed" not in self.message_cache
-            or self.message_cache["vrc/fusion/groundspeed"] is None
+        ):
+            logger.debug("Empty groundspeed in fuse att heading")
+        elif (
+            self.message_cache["vrc/fusion/groundspeed"] is None
         ):
             logger.debug("Empty groundspeed in fuse att heading")
         elif (
