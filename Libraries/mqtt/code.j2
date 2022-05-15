@@ -71,11 +71,14 @@ class MQTTMessageCache:
 {%- for topic in topics %}
 
     @overload
-    def __getitem__(self, key: Literal["{{ topic.path }}"]) ->{{ topic.name }}Message: ...
+    def __getitem__(self, key: Literal["{{ topic.path }}"]) -> Optional[{{ topic.name }}Message]: ...
 {%- endfor %}
 
-    def __getitem__(self, key: Literal[{% for topic in topics %}"{{ topic.path }}", {% endfor %}]) -> Union[{% for topic in topics %}{{ topic.name }}Message, {% endfor %}]:
-        return self.__storage[key]
+    def __getitem__(self, key: Literal[{% for topic in topics %}"{{ topic.path }}", {% endfor %}]) -> Union[None, {% for topic in topics %}{{ topic.name }}Message, {% endfor %}]:
+        if key not in [{% for topic in topics %}"{{ topic.path }}", {% endfor %}]:
+            raise KeyError('Topic not defined')
+        else:
+            return self.__storage.get(key, None)
 
 {%- for topic in topics %}
 
