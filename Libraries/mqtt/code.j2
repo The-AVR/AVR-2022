@@ -62,32 +62,8 @@ class _{{ topic.name }}Callable(Protocol):
 
 # create typed dict of callbacks associated with topics
 _MQTTTopicMap = TypedDict("_MQTTTopicMap", {% raw %}{{% endraw %}{% for topic in topics %}"{{ topic.path }}": _{{ topic.name }}Callable, {% endfor %}{% raw %}}{% endraw %}, total=False)
-
-
-class MQTTMessageCache:
-    def __init__(self) -> None:
-        self.__storage = {}
-
-{%- for topic in topics %}
-
-    @overload
-    def __getitem__(self, key: Literal["{{ topic.path }}"]) -> {{ topic.name }}Message: ...
-{%- endfor %}
-
-    def __getitem__(self, key: Literal[{% for topic in topics %}"{{ topic.path }}", {% endfor %}]) -> Union[None, {% for topic in topics %}{{ topic.name }}Message, {% endfor %}]:
-        return self.__storage[key]
-
-{%- for topic in topics %}
-
-    @overload
-    def __setitem__(self, key: Literal["{{ topic.path }}"], value: {{ topic.name }}Message) -> None: ...
-{%- endfor %}
-
-    def __setitem__(self, key: Literal[{% for topic in topics %}"{{ topic.path }}", {% endfor %}], value: Union[{% for topic in topics %}{{ topic.name }}Message, {% endfor %}]) -> None:
-        self.__storage[key] = value
-
-    def __contains__(self, key: str) -> bool:
-        return key in self.__storage
+# create typed dict of messages associated with topics
+_MQTTMessageCache = TypedDict("_MQTTMessageCache", {% raw %}{{% endraw %}{% for topic in topics %}"{{ topic.path }}": {{ topic.name }}Message, {% endfor %}{% raw %}}{% endraw %}, total=False)
 
 
 class MQTTModule:
@@ -114,7 +90,7 @@ class MQTTModule:
         self.topic_map: _MQTTTopicMap = {}
 
         # maintain a cache of the last message sent on a topic by this module
-        self.message_cache = MQTTMessageCache()
+        self.message_cache: _MQTTMessageCache = {}
 
     def run(self) -> None:
         """

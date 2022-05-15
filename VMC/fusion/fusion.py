@@ -188,11 +188,9 @@ class FusionModule(MQTTModule):
         self.send_message("vrc/fusion/attitude/heading", heading_update)
 
         # if the groundspeed is below the threshold, we lock the course to the heading
-        if (
-            "vrc/fusion/groundspeed" not in self.message_cache
-            or self.message_cache["vrc/fusion/groundspeed"] is None
-        ):
+        if "vrc/fusion/groundspeed" not in self.message_cache:
             logger.debug("Empty groundspeed in fuse att heading")
+
         elif (
             self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
             < self.config["COURSE_THRESHOLD"]
@@ -252,6 +250,14 @@ class FusionModule(MQTTModule):
                 logger.debug("vrc/fusion/groundspeed message cache is empty")
                 continue
 
+            if "vrc/fusion/attitude/heading" in self.message_cache:
+                heading = int(
+                    self.message_cache["vrc/fusion/attitude/heading"]["heading"] * 100
+                )
+            else:
+                logger.debug("Waiting for vrc/fusion/attitude/heading to be populated")
+                continue
+
             hil_gps_update = VrcFusionHilGpsMessage(
                 time_usec=int(time.time() * 1000000),
                 fix_type=int(
@@ -272,9 +278,7 @@ class FusionModule(MQTTModule):
                 satellites_visible=int(
                     self.config["hil_gps_constants"]["satellites_visible"]
                 ),
-                heading=int(
-                    self.message_cache["vrc/fusion/attitude/heading"]["heading"] * 100
-                ),
+                heading=heading,
             )
             self.send_message("vrc/fusion/hil_gps", hil_gps_update)
 
