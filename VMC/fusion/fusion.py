@@ -193,6 +193,8 @@ class FusionModule(MQTTModule):
             or self.message_cache["vrc/fusion/groundspeed"] is None
         ):
             logger.debug("Empty groundspeed in fuse att heading")
+        elif self.message_cache["vrc/fusion/groundspeed"] is None:
+            logger.debug("Empty groundspeed in fuse att heading")
         elif (
             self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
             < self.config["COURSE_THRESHOLD"]
