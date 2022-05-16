@@ -9,7 +9,7 @@ cmd = [
     "--onefile",
     "--noconfirm",
     "--name",
-    "VRCGUI",
+    f"VRCGUI.{subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], text=True).strip()}",
     "--icon",
     os.path.join(THIS_DIR, "lib", "img", "logo.ico"),
     "--add-data",

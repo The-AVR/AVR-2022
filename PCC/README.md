@@ -13,10 +13,10 @@ python setup.py
 To build the firmware, run
 
 ```bash
-pio run
+python build.py
 ```
 
-This will create a `firmware.bin` file in `PCC/.pio/build/adafruit_feather_m4`.
+This will create a `pcc_firmware.<hash>.bin` file in `PCC/.pio/build/adafruit_feather_m4`.
 
 ## Flashing
 
