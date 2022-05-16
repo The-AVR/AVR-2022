@@ -230,7 +230,11 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
         .decode("utf-8")
         .strip()
     )
-    script_cmd = ["python3"] + sys.argv + ["--container", f"--git-hash={git_hash}"]
+    script_cmd = (
+        ["python3", "build.py"]
+        + sys.argv[1:]
+        + ["--container", f"--git-hash={git_hash}"]
+    )
 
     docker_image = "docker.io/px4io/px4-dev-nuttx-focal:latest"
     if build_pymavlink and not build_px4:
