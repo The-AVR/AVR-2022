@@ -48,7 +48,7 @@ jobs:
 
       - name: Build Custom Pymavlink Package
         if: inputs.image == 'fcm'
-        run: python3 PX4/build.py --pymavlink
+        run: python PX4/build.py --pymavlink
 
       - name: Github CR Login
         if: github.event_name != 'pull_request'
@@ -58,12 +58,17 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get Date
+        run: echo "DATE_TAG=$(date +'%Y-%m-%d-%H-%m')" >> $GITHUB_ENV
+
       - name: Build Container
         uses: docker/build-push-action@v3
         with:
           context: VMC/${{ inputs.image }}
           push: ${{ github.event_name != 'pull_request' }}
-          tags: ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:latest
+          tags: |
+            ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:latest
+            ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:${{ env.DATE_TAG }}
           platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max
