@@ -46,12 +46,12 @@ jobs:
             px4-firmware-${{ hashFiles('PX4/patches/**') }}
             px4-firmware
 
-      - name: Generate Custom Pymavlink Package
+      - name: Build Custom Pymavlink Package
         if: inputs.image == 'fcm'
-        run: python3 PX4/generate.py --pymavlink
+        run: python3 PX4/build.py --pymavlink
 
       - name: Github CR Login
-        if: github.event_name != 'pull_request' && inputs.image != 'sandbox'
+        if: github.event_name != 'pull_request'
         uses: docker/login-action@v2
         with:
           registry: ghcr.io
@@ -62,7 +62,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: VMC/${{ inputs.image }}
-          push: ${{ github.event_name != 'pull_request' && inputs.image != 'sandbox' }}
+          push: ${{ github.event_name != 'pull_request' }}
           tags: ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:latest
           platforms: linux/arm64
           cache-from: type=gha
