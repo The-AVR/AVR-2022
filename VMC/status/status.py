@@ -38,11 +38,11 @@ class StatusModule(MQTTModule):
         self.initialized = False
 
         self.topic_map = {
-            "vrc/status/light_pcm": self.light_status,
-            "vrc/status/light_vio": self.light_status,
-            "vrc/status/light_apriltags": self.light_status,
-            "vrc/status/light_fcm": self.light_status,
-            "vrc/status/light_thermal": self.light_status,
+            "vrc/status/light/pcm": self.light_status,
+            "vrc/status/light/vio": self.light_status,
+            "vrc/status/light/apriltags": self.light_status,
+            "vrc/status/light/fcm": self.light_status,
+            "vrc/status/light/thermal": self.light_status,
         }
 
         self.spi = board.SPI()
@@ -112,7 +112,7 @@ class StatusModule(MQTTModule):
         self.pixels[which_one] = color
         self.pixels.show()
 
-    def light_status(self, payload: dict) -> None:
+    def light_status(self, payload: Any) -> None:
         for color, i in itertools.product(COLORS, range(NUM_PIXELS)):
             self.pixels[i] = color
             self.pixels.show()

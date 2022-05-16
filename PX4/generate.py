@@ -215,6 +215,16 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
     target_dir = os.path.join(THIS_DIR, "dist")
     os.makedirs(target_dir, exist_ok=True)
 
+    subprocess.check_output(
+        [
+            "git",
+            "config",
+            "--global",
+            "--add",
+            "safe.directory",
+            os.path.abspath(os.path.join(THIS_DIR, "..")),
+        ]
+    )
     git_hash = (
         subprocess.check_output(["git", "rev-parse", "--short", "HEAD"], cwd=THIS_DIR)
         .decode("utf-8")

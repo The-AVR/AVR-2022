@@ -3,40 +3,65 @@ title: "Flash the PCC"
 weight: 3
 ---
 
-**VS Code can do more than just Python! We can even compile and deploy code to
-microcontroller-based devices, like our PCC. In this tutorial, we'll get
-VS Code ready to upload our code to the PCC.**
+To flash your PCC, you need to download and install a tool called BOSSA first.
+Go to [this page](https://github.com/shumatech/BOSSA/releases/) and download and install
+the `bossa-x64-<version>.msi` file. Make sure to install the device drivers
+that it prompts you to install as well.
 
-## Install PlatformIO
+![Download this installer file](2022-05-12-07-12-10.png)
 
-- Open VS Code
-- Open the extensions drawer (or press CTRL + SHIFT + X)
-- Search for and install the PlatformIO IDE
+![Run through the setup wizard](2022-05-12-07-12-59.png)
 
-![](platformio_extension.JPG)
+After getting BOSSA installed, you need to also download the PCC firmware that you'll
+be loading. Go to the
+[VRC release page](https://github.com/bellflight/VRC-2022/releases/tag/stable)
+and download the `pcc_firmware.<version>.bin` file.
 
-### Open the VRC Peripheral Software Project
+![Download this firmware file](2022-05-12-07-14-49.png)
 
-- Click **PIO** button
-- Click **Open**
-- Click **Projects**
-- Click **Add Existing**
-- Navigate to where you cloned the VRC Phase I Repo
-- Click **MCU Software**, then **Open**
-- Your project will show up
-- Click **Open** once more
+Now you're ready to flash your PCC! Follow the next steps _exactly_ to not
+run into any issues.
 
-### Flashing the PCC
+First, plug your PCC into your computer with the provided MicroUSB cable.
+Open Device Manager in Windows, and you should see at least one entry under
+"Ports (COM & LPT)" (if this doesn't happen, that's okay, it means the firmware isn't
+loaded or corrupted, but we're about to overwrite it anyways).
 
-- Once the project is open, let PIO build the Intellisense Index and download the
-  necessary packages it needs (see the blue bar at bottom of
-  VS Code window for progress)
-- Once that's done, open the `src/main.cpp` file
-- Click the **checkmark** (the program should build)
-- Plug your assembled PCC into a USB port on your computer
-- Click the **right arrow** (project should flash onto PCC)
+![Normal PCC COM port](2022-05-12-07-20-39.png)
 
-![Gif of steps to upload code to PCC](Webp.net-gifmaker.gif)
+Quickly double-tap the little reset button right next to the MicroUSB connector.
+The LED next to the button should briefly flash red before turning solid green.
+Additionally, the PCC should also now show up as a USB device in Windows
+titled "FEATHERBOOT", and the COM port you saw before should now be gone and
+replaced with one with a different number. This puts the PCC into bootloader mode
+so we can flash new firmware.
+
+![Bootloader PCC COM port](2022-05-12-07-21-43.png)
+
+Open BOSSA and select the COM port that has now shown up from the previous step.
+Also select the firmware file you downloaded.
+
+{{% alert title="Warning" color="warning" %}}
+Forgetting this next step will cause lots of confusing results!
+{{% /alert %}}
+
+In BOSSA, **make sure to put in a flash offset of `0x4000`** and select "Erase all".
+
+![BOSSA settings](2022-05-12-07-32-22.png)
+
+Now, you can hit the "Write" button!
+
+![Flashing complete](2022-05-12-07-34-07.png)
+
+You can also optionally click the "Verify" button as well just to make sure
+everything flashed correctly.
+
+![Verificiation complete](2022-05-12-07-36-32.png)
+
+Finally, to get the PCC out of bootloader mode, and make sure the firmware is working
+correctly, unplug the PCC and plug it back in, or press the reset button once.
+The bright green LED should remain off and the original COM port should show
+back up in device manager.
 
 {{% alert title="Success" color="success" %}}
 You're now ready to test it out!

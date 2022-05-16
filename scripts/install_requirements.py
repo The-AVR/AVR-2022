@@ -6,8 +6,22 @@ from pathlib import Path
 
 
 def main(directory: str, strict: bool = False) -> None:
+    # make sure pip and wheel are up-to-date
     subprocess.run(
         [sys.executable, "-m", "pip", "install", "wheel", "pip", "--upgrade"],
+        check=True,
+    )
+
+    # install dev tools
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pip",
+            "install",
+            "-r",
+            os.path.join(os.path.dirname(__file__), "..", "requirements.txt"),
+        ],
         check=True,
     )
 

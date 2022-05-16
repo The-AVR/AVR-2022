@@ -104,8 +104,14 @@ bar
 $s apt install -y git apt-transport-https ca-certificates apt-utils software-properties-common wget htop nano python3 python3-wheel python3-pip jq
 $s -H python3 -m pip install pip wheel --upgrade
 $s -H python3 -m pip install -r $VRC_DIR/VMC/scripts/requirements.txt
+
 # set to high-power 10W mode. 1 is 5W mode
 $s nvpmodel -m 0
+# make sure SPI is enabled
+# header 1 is the 40pin header
+# gotten from `sudo /opt/nvidia/jetson-io/config-by-pin.py -l`
+# https://docs.nvidia.com/jetson/archives/r34.1/DeveloperGuide/text/HR/ConfiguringTheJetsonExpansionHeaders.html#config-by-function-configure-header-s-by-special-function
+$s python3 /opt/nvidia/jetson-io/config-by-function.py -o dtb 1="spi1"
 
 cd $VRC_DIR
 # cache the git credentials (mainly during development)
@@ -165,14 +171,14 @@ bar
 echo -e "${CYAN}Preparing VRC software${NC}"
 bar
 if [ "$DEVELOPMENT" != true ] ; then
-    cd $VRC_DIR
-    $s python3 PX4/generate.py --pymavlink
-    python3 scripts/copy_libraries.py
-
     cd $VRC_DIR/VMC
     $s python3 start.py pull --norm
     $s python3 start.py build --norm
 else
+    cd $VRC_DIR
+    $s python3 PX4/generate.py --pymavlink
+    python3 scripts/copy_libraries.py
+
     cd $VRC_DIR/VMC
     $s python3 start.py pull --norm --local
     $s python3 start.py build --norm --local
@@ -192,6 +198,7 @@ bar
 echo -e "${CYAN}Cleaning up${NC}"
 bar
 $s apt autoremove -y
+$s docker system prune -f
 bar
 
 echo -e "${CYAN}Performing self-test${NC}"

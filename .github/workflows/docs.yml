@@ -41,14 +41,21 @@ jobs:
 
       - name: Install Dependencies
         working-directory: docs
-        run: |
-          npm install
-          python -m pip install pip wheel --upgrade
-          python -m pip install -r requirements.txt
+        run: python setup.py
 
       - name: Check Formatting
         working-directory: docs
-        run: npm run check-formatting
+        run: python ../scripts/step_summary.py
+        env:
+          RUN_CMD: npm run check-formatting
+          CMD_FAILURE_TEXT: |
+            ## Formatting Failure :x:
+
+            Run the following command locally and commit the changes:
+
+            ```bash
+            npm run format
+            ````
 
       - name: Build Site
         working-directory: docs

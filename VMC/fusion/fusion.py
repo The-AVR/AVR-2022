@@ -1,4 +1,3 @@
-import copy
 import math
 import time
 
@@ -191,12 +190,13 @@ class FusionModule(MQTTModule):
         # if the groundspeed is below the threshold, we lock the course to the heading
         if "vrc/fusion/groundspeed" not in self.message_cache:
             logger.debug("Empty groundspeed in fuse att heading")
+
         elif (
             self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
             < self.config["COURSE_THRESHOLD"]
         ):
-            self.message_cache["vrc/fusion/course"] = copy.deepcopy(
-                {"course": payload["degrees"]}
+            self.message_cache["vrc/fusion/course"] = VrcFusionCourseMessage(
+                course=payload["degrees"]
             )
 
     @try_except(reraise=False)
@@ -221,12 +221,14 @@ class FusionModule(MQTTModule):
             # don't send that data to FCC
             if lat == 0 or lon == 0:
                 continue
+
             if "vrc/fusion/velocity/ned" not in self.message_cache:
                 logger.debug("Waiting for vrc/fusion/velocity/ned to be populated")
                 continue
             elif self.message_cache["vrc/fusion/velocity/ned"]["Vn"] is None:
                 logger.debug("vrc/fusion/velocity/ned/vn message cache is empty")
                 continue
+
             crs = 0
             if "vrc/fusion/course" in self.message_cache:
                 if self.message_cache["vrc/fusion/course"]["course"] is not None:
@@ -234,6 +236,7 @@ class FusionModule(MQTTModule):
             else:
                 logger.debug("Waiting for vrc/fusion/course message to be populated")
                 continue
+
             gs = 0
             if "vrc/fusion/groundspeed" in self.message_cache:
                 if (
@@ -245,6 +248,14 @@ class FusionModule(MQTTModule):
                     )
             else:
                 logger.debug("vrc/fusion/groundspeed message cache is empty")
+                continue
+
+            if "vrc/fusion/attitude/heading" in self.message_cache:
+                heading = int(
+                    self.message_cache["vrc/fusion/attitude/heading"]["heading"] * 100
+                )
+            else:
+                logger.debug("Waiting for vrc/fusion/attitude/heading to be populated")
                 continue
 
             hil_gps_update = VrcFusionHilGpsMessage(
@@ -267,9 +278,7 @@ class FusionModule(MQTTModule):
                 satellites_visible=int(
                     self.config["hil_gps_constants"]["satellites_visible"]
                 ),
-                heading=int(
-                    self.message_cache["vrc/fusion/attitude/heading"]["heading"] * 100
-                ),
+                heading=heading,
             )
             self.send_message("vrc/fusion/hil_gps", hil_gps_update)
 

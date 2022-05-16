@@ -4,7 +4,7 @@ import json
 from typing import Any, Literal, Tuple
 
 from lib.mqtt_library import (
-    VrcAutonmousMessage,
+    VrcAutonomousMessage,
     VrcPcmResetMessage,
     VrcPcmSetBaseColorMessage,
     VrcPcmSetServoOpenCloseMessage,
@@ -199,4 +199,4 @@ class VMCControlWidget(BaseTabWidget):
         """
         Set autonomous mode
         """
-        self.publish_message("vrc/autonomous", VrcAutonmousMessage(enable=state))
+        self.publish_message("vrc/autonomous", VrcAutonomousMessage(enable=state))

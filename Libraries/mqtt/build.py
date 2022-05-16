@@ -62,6 +62,12 @@ def main() -> None:
             # generate a class name
             topic["name"] = titleify(topic["path"])
 
+        # prepend path to topics docs
+        if "docs" not in topic:
+            topic["docs"] = ""
+
+        topic["docs"] = f"Topic: `{topic['path']}`\n\n    {topic['docs']}".strip()
+
         # add generated klasses to seperate list
         klasses.extend(process_klass(topic))
 

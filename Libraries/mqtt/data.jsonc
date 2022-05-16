@@ -3,7 +3,7 @@
     "topics": [
         // autonomous
         {
-            "path": "vrc/autonmous",
+            "path": "vrc/autonomous",
             "docs": "This enables enable or disable autonomous mode. This is not used by any Bell code, but available to students to listen to who may wish to not always be running their autonomous mode,",
             "payload": [
                 {
@@ -671,7 +671,7 @@
         // apriltag
         {
             "path": "vrc/apriltags/selected",
-            "docs": "",
+            "docs": "This topic publishes its best candidate for position feedback",
             "payload": [
                 {
                     "key": "tag_id",
@@ -707,7 +707,7 @@
         },
         {
             "path": "vrc/apriltags/raw",
-            "docs": "",
+            "docs": "This topic publishes the raw tag data",
             "payload": [
                 {
                     "key": "tags",
@@ -749,7 +749,7 @@
         },
         {
             "path": "vrc/apriltags/visible",
-            "docs": "",
+            "docs": "This topic publishes the transformed tag data",
             "payload": [
                 {
                     "key": "tags",
@@ -846,6 +846,32 @@
                     "type": "str"
                 }
             ]
+        },
+        // status
+        {
+            "path": "vrc/status/light/pcm",
+            "docs": "",
+            "payload": []
+        },
+        {
+            "path": "vrc/status/light/vio",
+            "docs": "",
+            "payload": []
+        },
+        {
+            "path": "vrc/status/light/apriltags",
+            "docs": "",
+            "payload": []
+        },
+        {
+            "path": "vrc/status/light/fcm",
+            "docs": "",
+            "payload": []
+        },
+        {
+            "path": "vrc/status/light/thermal",
+            "docs": "",
+            "payload": []
         }
     ]
 }

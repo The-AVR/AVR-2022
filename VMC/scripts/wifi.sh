@@ -33,6 +33,7 @@ elif [ "$1" == "--create" ]; then
     # create hotpsot
     echo "===== Creating network $ssid with password $password ====="
     sudo nmcli device wifi hotspot ifname wlan0 ssid "$ssid" password "$password"
+    sudo nmcli connection modify Hotspot connection.autoconnect yes
 
 elif [ "$1" == "--disconnect" ]; then
     echo "Disconnecting WiFi, errors are normal"
