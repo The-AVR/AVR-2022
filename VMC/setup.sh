@@ -159,6 +159,10 @@ $s service docker start
 # $s usermod -aG docker "$USER"
 # newgrp docker
 # set -e
+
+$s docker rm -f $(docker ps -a -q)
+$s docker volume rm $(docker volume ls -q)
+
 bar
 
 echo -e "${CYAN}Installing spio service${NC}"
