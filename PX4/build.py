@@ -143,9 +143,10 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
         pymavlink_dist_dir = os.path.join(pymavlink_dir, "dist")
 
         # clean the pymavlink build dir
-        for filename in os.listdir(pymavlink_dist_dir):
-            if filename.endswith(".tar.gz") or filename.endswith(".whl"):
-                os.remove(os.path.join(pymavlink_dist_dir, filename))
+        if os.path.isdir(pymavlink_dist_dir):
+            for filename in os.listdir(pymavlink_dist_dir):
+                if filename.endswith(".tar.gz") or filename.endswith(".whl"):
+                    os.remove(os.path.join(pymavlink_dist_dir, filename))
 
         # clean the target build dir
         for filename in os.listdir(DIST_DIR):
@@ -197,9 +198,10 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
         px4_build_dir = os.path.join(px4_dir, "build")
 
         # clean the PX4 build dir
-        for filename in os.listdir(px4_build_dir):
-            if filename.endswith(".px4"):
-                os.remove(os.path.join(px4_build_dir, filename))
+        if os.path.isdir(px4_build_dir):
+            for filename in os.listdir(px4_build_dir):
+                if filename.endswith(".px4"):
+                    os.remove(os.path.join(px4_build_dir, filename))
 
         # clean the target build dir
         for filename in os.listdir(DIST_DIR):
@@ -233,8 +235,7 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
     # code that runs on the host operating system
 
     # make the target directory
-    target_dir = os.path.join(THIS_DIR, "dist")
-    os.makedirs(target_dir, exist_ok=True)
+    os.makedirs(DIST_DIR, exist_ok=True)
 
     subprocess.check_output(
         [
@@ -285,10 +286,10 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
                 os.remove(os.path.join(fcm_dir, filename))
 
         # copy new files
-        for filename in os.listdir(target_dir):
+        for filename in os.listdir(DIST_DIR):
             if filename.endswith(".whl") or filename.endswith(".tar.gz"):
                 shutil.copyfile(
-                    os.path.join(target_dir, filename), os.path.join(fcm_dir, filename)
+                    os.path.join(DIST_DIR, filename), os.path.join(fcm_dir, filename)
                 )
 
 
