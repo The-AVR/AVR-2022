@@ -5,13 +5,17 @@ weight: 1
 
 ## Uploading PX4 firmware using QGC
 
-[PX4](https://px4.io/) is the recommended firmware that we will be running
+[PX4](https://px4.io/) is firmware that we will be running
 on the VRC drone. It is an open-source flight stack containing all the
-software necessary to get your drone into the air. In Phase 2 of the
-competition we will introduce you to a modified version of PX4
-provided by the Bell team.
+software necessary to get your drone into the air.
 
-In the Firmware screen you can upload a new version of PX4.
+To facilitate some of the extra functionality required for our drone
+to fly in stabilized flight mode without a GPS, you need use a custom version of PX4
+Bell engineers have developed. Go to the latest
+[VRC software release](https://github.com/bellflight/VRC-2022/releases/tag/stable)
+and download the `px4_fmu-v5x_default.<px4 version>.<hash>.px4` file.
+
+In the Firmware screen in QGroundControl you can upload a new version of PX4.
 To access the firmware screen make sure to click on the Q logo in the
 top left of the screen and then click on **Vehicle Setup > Firmware**.
 You will see the following screen.
@@ -26,14 +30,14 @@ It will recognize the connection and initiate the process.
 
 QGC will ask you to plug in your FC using a USB cable.
 A popup will appear that asks you which firmware you want to use.
-We will use the **PX4 Pro Stable Release**.
+select "Advanced Settings", then "Custom firmware file..."
 
-![Loading PX4 Pro Stable Release onto FC](qgc_firmware_load.png)
+![Loading PX4 Pro Stable Release onto FC](image3.png)
 
-After clicking **OK** to upload PX4 to the FC you will see a progress bar.
-This process should take no more than 2-3 minutes.
+Then click "Ok" and select the firmware file you downloaded.
+Now, you will see a progress bar. This process should take no more than 2-3 minutes.
 
-![](qgc_firmware_progress.png)
+![](image4.png)
 
 After the PX4 firmware is successfully loaded you will be presented with
 the default **Vehicle Setup** screen. It is necessary to go through the

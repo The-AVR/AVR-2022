@@ -1,6 +1,7 @@
 ---
 title: "Preparing the Jetson"
 weight: 1
+description: "Physically assemble the Jetson"
 ---
 
 ![](nano_combo.png)

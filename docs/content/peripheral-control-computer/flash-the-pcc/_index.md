@@ -4,7 +4,7 @@ weight: 3
 ---
 
 To flash your PCC, you need to download and install a tool called BOSSA first.
-Go to [this page](https://github.com/shumatech/BOSSA/releases/) and download and install
+Go to [this page](https://github.com/shumatech/BOSSA/releases/latest) and download and install
 the `bossa-x64-<version>.msi` file. Make sure to install the device drivers
 that it prompts you to install as well.
 
