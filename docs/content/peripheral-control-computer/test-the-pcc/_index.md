@@ -26,7 +26,7 @@ Plug your servos and LED strip into the designated connections on the PCC:
 - The servos plug into channels 0-3, with the yellow signal wire of
   the servo facing the Adafruit logo on the PCB.
 
-### Back at the Computer
+## Back at the Computer
 
 Now it's time to download VRC GUI program. Go to the latest
 [VRC software release](https://github.com/bellflight/VRC-2022/releases/tag/stable)
