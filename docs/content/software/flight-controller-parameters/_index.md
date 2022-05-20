@@ -3,13 +3,18 @@ title: "Flight Controller Parameters"
 weight: 2
 ---
 
-After flashing the custom firmware onto your flight controller,
+After configuring the VRC software on your Jetson,
 you need to also load custom parameters into your flight controller as well.
-These are basically settings that configure how the flight controller works and
-settings around how the drone flies.
+These settings configure how the flight controller processes sensor input,
+and we need to tell it to unconditionally trust the data the VRC software feeds it.
 
 First, download this parameter file from GitHub:
 [https://github.com/bellflight/VRC-2022/blob/main/PX4/VRCParameters.params](https://github.com/bellflight/VRC-2022/blob/main/PX4/VRCParameters.params)
+
+The easiest way to download the file is to click the "Raw" button,
+then right-click the page, and select "Save page as".
+
+![The location of the "Raw" button](2022-05-20-11-47-18.png)
 
 Like flashing the flight controller firmware, you'll need to plug in the FC
 to your computer with the MicroUSB cable.

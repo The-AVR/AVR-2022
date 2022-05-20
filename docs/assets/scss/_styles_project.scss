@@ -3,13 +3,13 @@
     display: none !important;
 }
 
-// give alerts a background color
-.alert {
-    background-color: #ebebeb;
+// speed up chevron transition
+nav.foldable-nav *::before {
+    transition: 0.1s !important;
 }
 
-// disable transitions on sidebar
-nav.foldable-nav *::before {
+// disable collapse transition on sidebar
+ul.foldable {
     transition: none !important;
 }
 
@@ -17,4 +17,11 @@ nav.foldable-nav *::before {
 .td-navbar .navbar-brand svg {
     height: 35px;
     width: 30px;
+}
+
+// give alerts a background color and box shadow
+.alert {
+    background-color: #ebebeb;
+    box-shadow: 1px 2px 3px rgba(0, 0, 0, 0.5);
+    border-radius: 5px;
 }
