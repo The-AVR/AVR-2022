@@ -12,6 +12,16 @@ def main(directory: str, strict: bool = False) -> None:
         check=True,
     )
 
+    # check if we're outside a virtual environment and container and CI
+    if (
+        sys.base_prefix == sys.prefix  # no virtual environment
+        and not os.path.exists("/.dockerenv")  # no container
+        and os.getenv("CI") is None  # no github actions
+        and os.getenv("BUILD_BUILDID") is None  # no azure pipelines
+    ):
+        print("Not inside a docker container or virtual environment, exiting")
+        sys.exit(1)
+
     # install dev tools
     subprocess.run(
         [
