@@ -26,7 +26,7 @@ To do this we will change one parameter in PX4's configuration known as
 [all PX4 parameters here](https://docs.px4.io/v1.11/en/advanced_config/parameter_reference.html).
 It's not important to understand all of these parameters, although it is
 important to understand the process of changing them, as this will be necessary
-for Phase 2 of VRC.
+in the advanced assembly of your drone.
 
 In the video below we give an overview of why this parameter needs to be
 changed and how to do it. You will learn how to assign a value of **22027**

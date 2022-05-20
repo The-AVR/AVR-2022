@@ -6,8 +6,8 @@ weight: 3
 ## Setup
 
 After
-[setting up your VMC in Phase I]({{< relref "../../vehicle-management-computer/first-boot" >}})
-you're now ready to install the Phase 2 software.
+[setting up your VMC]({{< relref "../../vehicle-management-computer/first-boot" >}})
+you're now ready to install the VRC software.
 There are two possible ways to setup your Jetson.
 
 ### Option 1 (KVM)
@@ -27,7 +27,7 @@ in the bottom left (the 9 squares) or with the shortcut
 ### Option 2 (Serial)
 
 The second (and more complicated) method of setting up your Jetson is using PuTTy
-[like you did in Phase 1]({{< relref "../../vehicle-management-computer/first-boot" >}}).
+[like you did before]({{< relref "../../vehicle-management-computer/first-boot" >}}).
 If you want to power the Jetson via USB (if it's not connected to
 a wall adapter or a battery) remove the jumper behind the barrel jack,
 

@@ -1,7 +1,7 @@
 ---
 title: "VRC Drone Kit Contents"
 weight: 1
-description: "This page lists the contents of the Bell VRC drone kit necessary for the Phase 1 stabilized flight goal"
+description: "This page lists the contents of the Bell VRC drone kit necessary for the basic stabilized flight goal"
 ---
 
 As you read through this page please be sure to refer to the
@@ -10,8 +10,8 @@ which contains definitions of many of the components on this page.
 The Bell VRC drone kit includes all of the components required to build your
 own autonomous quadcopter. The kit provides a frame, motors, electronic speed
 controllers, flight controller, and some additional peripherals.
-This section will cover a majority of the components included for Phase
-1 of the competition.
+This section will cover a majority of the components included for basic
+assembly of the drone.
 
 ---
 

@@ -4,11 +4,11 @@ weight: 2
 ---
 
 For teams that want to write their own code to run on their drone,
-we recommend doing so through the "vrc_sandbox" in the Phase II repo:
-[https://github.com/bellflight/VRC-2022/tree/main/VMC/FlightSoftware/sandbox](https://github.com/bellflight/VRC-2022/tree/main/VMC/FlightSoftware/sandbox).
+we recommend doing so through the "sandbox" in the GitHub repository:
+[https://github.com/bellflight/VRC-2022/tree/main/VMC/sandbox](https://github.com/bellflight/VRC-2022/tree/main/VMC/sandbox).
 This has already been configured to be very simple to get started with.
 
-1. Edit the contents of `VMC/FlightSoftware/sandbox/sandbox.py` with your desired code.
+1. Edit the contents of `VMC/sandbox/sandbox.py` with your desired code.
    Read the comments within the file to understand what's going on
 2. Un-comment the sandbox module from the `docker-compose.yml` file to enable it
    with the rest of the VMC software

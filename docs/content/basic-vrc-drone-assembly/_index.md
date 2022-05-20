@@ -18,10 +18,10 @@ first flight test.
 
 ![VRC drone ready for first flight](vrc_phase1_completed_build.jpg)
 
-A simple block diagram can be used to represent the components of the Phase I drone.
-As you move throughout this GitBook keep these details in mind.
+A simple block diagram can be used to represent the components of the basic drone.
+As you move throughout this documentation keep these details in mind.
 It will help you gain a high-level understanding of what we're trying to accomplish.
 
-![Block diagram of Phase I drone components](vrc_block_diagram.png)
+![Block diagram of basic drone components](vrc_block_diagram.png)
 
 Let's get started with assembly!

@@ -17,4 +17,4 @@ and performing your first flight test!**
 
 We know it has been a challenging and hopefully rewarding journey,
 and there will be a lot more exciting things planned as you work towards
-Phase 2 of the competition.
+the competition.

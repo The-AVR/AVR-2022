@@ -3,7 +3,7 @@ title: "How Do Coding Challenges Work?"
 weight: 1
 ---
 
-For Phase II teams will be encouraged to participate in two coding challenges.
+During the competition teams will be encouraged to participate in two coding challenges.
 
 Challenge 1 will be to leverage the
 [AprilTags](https://roboticsknowledgebase.com/wiki/sensing/apriltags/) that will be
@@ -27,7 +27,7 @@ Check out more about this challenge at the link below:
 ## How do we perform the coding challenges?
 
 In the
-[GitHub for Phase II](https://github.com/bellflight/VRC-2022/tree/main/VMC/FlightSoftware/README.md)
+[GitHub repository](https://github.com/bellflight/VRC-2022/tree/main/VMC/README.md)
 we've provided an area for you to write
 Python in order to accomplish your goals. The software stack for VRC is
 made up of a series of modules, which are actually independent

@@ -11,8 +11,8 @@ It is required to do the calibration at least once and should be repeated whenev
 adding new components to the VRC drone or if flight becomes less stable.
 
 {{% alert title="Note" color="note" %}}
-Given Phase 2 of VRC will require additional autonomy components and peripherals,
-it is a good practice to understand the calibration process in detail.
+Given advanced assembly of your drone will require additional autonomy components
+and peripherals, it is a good practice to understand the calibration process in detail.
 {{% /alert %}}
 
 Click on **Sensors** in the navigation menu and let's walk

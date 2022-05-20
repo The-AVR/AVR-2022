@@ -97,7 +97,8 @@ More info [here](https://docs.qgroundcontrol.com/master/en/SetupView/Radio.html)
 ## Vehicle Management Computer (VMC)
 
 The Vehicle Management Computer is the companion computer that performs various
-tasks and communicates with the Flight Controller. This is where your custom software will be run to complete the challenges for Phase II.
+tasks and communicates with the Flight Controller. This is where your custom software
+will be run to complete the challenges for the competiton.
 
 ## Vertical Robotics Competition (VRC)
 

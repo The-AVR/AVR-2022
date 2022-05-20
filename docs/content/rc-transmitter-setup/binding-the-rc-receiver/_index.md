@@ -13,7 +13,7 @@ Aside from the physical connection we also need to establish a wireless connecti
 between the transmitter and the receiver. This wireless connection happens through a
 process known as **binding**. Binding is what will allow us to control the VRC drone
 with the transmitter and change flight modes, which will become important in
-Phase 2 of the competition.
+the competition.
 
 **Out of the box, the receiver and transmitter should be automatically bound
 to each other.** If this is the case, the RC transmitter display would look

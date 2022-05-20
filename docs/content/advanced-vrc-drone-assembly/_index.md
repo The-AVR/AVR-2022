@@ -3,11 +3,11 @@ title: "Advanced VRC Drone Assembly"
 weight: 9
 ---
 
-Please make sure you've successfully **built** and **flown** your VRC Phase I drone.
+Please make sure you've successfully **built** and **flown** your basic VRC drone.
 You will be making some extensive modifications to your drone in
-preparation for Phase II.
+preparation for advanced assembly.
 
-The modifications for Phase II will require some disassembly and the following
+The modifications for advanced assembly will require some disassembly and the following
 additions to your drone:
 
 - **3D printed components**
@@ -27,13 +27,13 @@ additions to your drone:
 - **Peripheral Control Computer (PCC)**
   - For LED and servo actuation
 
-![Block Diagram for the Phase II Drone](phaseI-II.drawio.png)
+![Block Diagram for the Advanced Drone](phaseI-II.drawio.png)
 
 Please make sure to 3D print the following parts before beginning your
-VRC Phase II modifications. These are necessary to complete Phase II
+advanced drone modifications. These are necessary to complete advanced assembly
 and prepare for competition day.
 
-- [Phase II landing gear](https://github.com/bellflight/VRC-2022/blob/main/3DPrints/Misc/Drone_Landing_Spike.STL) (x4)
+- [Landing gear](https://github.com/bellflight/VRC-2022/blob/main/3DPrints/Misc/Drone_Landing_Spike.STL) (x4)
   - Estimated print time: 1 hour 20 minutes per leg
 - [VMC mounting blocks](https://github.com/bellflight/VRC-2022/blob/main/3DPrints/JetsonNano/Jetson_Blocks.STL) (x2)
   - Estimated print time: 52 minutes per block

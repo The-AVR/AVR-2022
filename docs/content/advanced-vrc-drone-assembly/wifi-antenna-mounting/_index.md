@@ -3,14 +3,14 @@ title: "WiFi Antenna Mounting"
 weight: 5
 ---
 
-In Phase I we covered how to
+Before we covered how to
 [attach the WiFi antennas to the VMC]({{< relref "../../vehicle-management-computer/preparing-the-jetson" >}}).
-These need to be mounted and secured so that during Phase II you have a good
+These need to be mounted and secured so that during the competition you have a good
 wireless link (2.4 GHz) between the ground station and the VMC.
 This will allow for bidirectional communication between the ground station
 and VRC drone connected to the same network. The WiFi antennas will be attached to the
 [3D printed mount]({{< relref "../../" >}})
-covered earlier in the GitBook.
+covered earlier in the documentation.
 
 ![3D printed WiFi antenna mount](wifi_antenna_before_mounting.jpg)
 

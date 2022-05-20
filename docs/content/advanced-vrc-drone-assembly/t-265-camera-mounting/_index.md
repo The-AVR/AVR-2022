@@ -14,7 +14,7 @@ to work with, therefore we've provided a much shorter one.
 
 You should have printed the
 [T-265 mount from the pre-requisites section]({{< relref "../../" >}})
-of this GitBook. The 3D printed mount will attach to the
+of this documentation. The 3D printed mount will attach to the
 back of the T-265 using two M3 screws.
 
 ![The T-265 is attached to the 3D printed mount with M3 screws](t265_parts.jpg)
@@ -42,6 +42,6 @@ and into one of the ports on the VMC.
 
 {{% alert title="Note" color="note" %}}
 As you're going through the build process make note of any cables that may
-obstruct the drone's propellers. The photos provided throughout this GitBook
+obstruct the drone's propellers. The photos provided throughout this documentation
 show how we've mounted things and provide an sufficient amount of clearance.
 {{% /alert %}}

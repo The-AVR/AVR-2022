@@ -7,7 +7,7 @@ weight: 4
 
 We will now mount the VMC using the
 [3D printed components]({{< relref "../../" >}})
-overed in the pre-requisites section of this GitBook.
+overed in the pre-requisites section.
 This includes the VMC mounting blocks and case.
 The VMC is the "brains" behind your VRC drone build and will be responsible
 for running the Bell software stack during testing and on competition day.
@@ -60,7 +60,7 @@ and barrel plug into the VMC as shown in the photo below.
 
 ## Cooling
 
-During Phase II testing you will be running the VRC software stack on your VMC.
+During advanced testing you will be running the VRC software stack on your VMC.
 Since we make extensive use of the VMC's CPU and GPU it can heat up significantly.
 It's important to keep your VMC cool and in this section you will install a cooling
 fan onto the top of the VMC heat sink.

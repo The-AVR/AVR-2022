@@ -6,10 +6,10 @@ description: "This page covers the steps to make sure the FC is connected proper
 
 ## Connector Pinout
 
-For **Phase 1** we are only concerned with indoor flight in a stabilized flight mode.
-This will make our wiring incredibly simple. In **Phase 2** we will add some additional
-connections that will allow us to hold position and fly autonomously in a
-GPS-denied environment. The image below shows all the ports and servo
+For the **basic drone** we are only concerned with indoor flight in a stabilized flight mode.
+This will make our wiring incredibly simple. With the **advanced drone** we will add
+some additional connections that will allow us to hold position and fly autonomously
+in a GPS-denied environment. The image below shows all the ports and servo
 connections available on the FC.
 
 ![Port locations and servo connections for FC](fc_pinout.png)

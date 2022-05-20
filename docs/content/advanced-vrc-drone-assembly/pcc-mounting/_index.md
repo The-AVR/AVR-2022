@@ -3,11 +3,11 @@ title: "PCC Mounting"
 weight: 8
 ---
 
-In Phase I you learned how to
+You've learned how to
 [assemble the PCC]({{< relref "../../peripheral-control-computer/physical-assembly" >}})
 and
 [interface with it over USB]({{< relref "../../peripheral-control-computer/test-the-pcc" >}})
-connected to a computer. In Phase II you will take this a step further
+connected to a computer. Now you will take this a step further
 by mounting the PCC to your VRC drone and interface with it using
 the VRC software stack. This will enable you to control the LED ring
 color and actuate (open/close) servos programmatically.
@@ -27,7 +27,7 @@ using the Scotch/3M adhesive.
 
 ## Power
 
-Earlier in the GitBook we covered wiring the PCC buck converter.
+Earlier in the documentation we covered wiring the PCC buck converter.
 Now it's time for us to connect the power leads from the buck converter to the PCC.
 This will allow the PCC to be powered from the VRC drone's battery.
 There's a good chance your power leads are too short to reach the PCC once
@@ -52,7 +52,7 @@ for negative, which matches the leads coming off the buck converter.
 ![Positive (yellow) and negative (wires) connected to the PCC's power input](pcc_buck_converter_power.jpg)
 
 {{% alert title="Danger" color="danger" %}}
-Be sure to remove the USB jumper cable that you used for testing in Phase I.
+Be sure to remove the USB jumper cable that you used for testing.
 This jumper is no longer necessary now that you've provided adequate power
 to the PCC. This will allow for servos to actuate without any problems.
 {{% /alert %}}
@@ -106,7 +106,7 @@ of the LED ring.
 The servos for your VRC build will be used during practice and on
 competition day. This section will cover how to connect your servos,
 but it's up to your team to determine the best mounting option.
-Later in this GitBook you will learn how to actuate the servos from the
+Later in this documentation you will learn how to actuate the servos from the
 GCS as well as code!
 
 The servos and extension cables can be found in **Box 5** of your VRC kit.

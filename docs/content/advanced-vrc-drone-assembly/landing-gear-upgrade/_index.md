@@ -25,8 +25,9 @@ the risk of cracking the 3D printed leg.
 ![Hex driver and needle nose pliers are used to secure the 3D printed leg](landing_gear_needle_nose.jpg)
 
 Repeat this process for all four legs and then reattach the top plate of the frame.
-Be sure to revisit the Phase I GitBook for
-[installing the top plate]({{< relref "../../basic-vrc-drone-assembly/top-plate-and-arms" >}}) if you need a refresher. Your landing gear upgrade is now complete.
+Be sure to revisit the basic drone assembly for
+[installing the top plate]({{< relref "../../basic-vrc-drone-assembly/top-plate-and-arms" >}})
+if you need a refresher. Your landing gear upgrade is now complete.
 Look at how much space is now beneath your VRC drone!
 
 ![3D printed landing gear upgrade complete](landing_gear_upgrade_complete.jpg)

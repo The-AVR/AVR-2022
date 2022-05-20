@@ -6,12 +6,13 @@ weight: 3
 It's important that the FC and VMC can communicate with each other.
 This bi-directional communication will allow us to receive telemetry
 data from the FC and send data to it from the VMC. If you recall,
-in Phase I we communicated with the FC using a micro-USB cable connected to a
-PC running QGroundControl. What you will be able to do in Phase II is communicate over a WiFi network, which will make this process easier.
+before we communicated with the FC using a micro-USB cable connected to a
+PC running QGroundControl. What you will be able to do now is communicate over a
+WiFi network, which will make this process easier.
 
 In addition to a wireless link between the VRC drone and QGC you will learn
 how to configure position hold capabilities using external cameras. You may
-have noticed in Phase I that the VRC drone required constant input from the
+have noticed with the basic drone that the drone required constant input from the
 pilot to maintain position in **stabilized** flight mode. With the assistance
 of these cameras you will be able to hover in **position** mode with ease!
 The cable we build in this section makes this all possible.

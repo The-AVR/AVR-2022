@@ -18,7 +18,7 @@ You can find the necessary installer by going to the
 Go ahead and install QGC before proceeding to the next section.
 
 {{% alert title="Note" color="note" %}}
-All testing and configuration throughout the GitBook was done
+All testing and configuration throughout the documentation was done
 with QGC version 4.1.1. We encourage you to use this version,
 which will allow us to help troubleshoot any issues more easily.
 You can find the file labeled `QGroundControl-Installer.exe` at

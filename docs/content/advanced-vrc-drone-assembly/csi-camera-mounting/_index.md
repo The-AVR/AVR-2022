@@ -8,7 +8,7 @@ and connect it to the VMC using a ribbon cable.
 CSI stands for **Camera Serial Interface** and is an industry standard that makes
 it easy to communicate with a host processor, in our case the VMC.
 
-The CSI camera is instrumental in Phase II for identifying April Tags and
+The CSI camera is instrumental in the advanced drone for identifying April Tags and
 assisting with the position hold flight mode. It's important that this camera
 is mounted in the correct location and orientation. You can locate the camera
 and ribbon cables in **Box 7** of your VRC kit.

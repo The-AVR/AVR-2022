@@ -3,7 +3,7 @@ title: "VMC and PCC Power"
 weight: 1
 ---
 
-Two main components of your Phase II build are the **Vehicle Management Computer**
+Two main components of your advanced build are the **Vehicle Management Computer**
 (VMC), which runs the VRC software stack and the **Peripheral Control Computer** (PCC),
 which will allow teams to manually and programmatically control the LED ring
 and actuate up to four servos.
@@ -132,7 +132,7 @@ will connect them to the PCC in a future step.
 ## Connecting Buck Converters to PDB
 
 With the VMC and PCC buck converters ready to go we will now connect them to the PDB
-of the VRC drone. If you recall from Phase 1, the PDB sits in between the top and
+of the VRC drone. If you recall from before, the PDB sits in between the top and
 bottom plates of the frame. **Remove the top plate of the frame to expose the PDB.**
 
 After removing the top plate make sure to plug the VMC buck converter into the
@@ -171,9 +171,9 @@ The buck converters will be mounted where the existing landing gear are attached
 It's much easier to remove the landing gear with the top plate removed,
 so let's go ahead and do that. In the next section we will upgrade the landing gear,
 which will provide plenty of clearance beneath the VRC drone. This will be very
-important for the Phase II competition.
+important for the competition.
 
-![Phase 1 landing gear ready to be removed](landing_gear_attachment.jpg)
+![Basic landing gear ready to be removed](landing_gear_attachment.jpg)
 
 ## Mounting Buck Converters
 
