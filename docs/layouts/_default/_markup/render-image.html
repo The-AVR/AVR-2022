@@ -1,5 +1,6 @@
 <!-- Centers image, and imposes max height based on view height. Makes URL absolute if not -->
 <img style="margin-left: auto; margin-right: auto; display: block; max-width: 100%; max-height: 60vh" class="glightbox" src="{{ if or ( hasPrefix .Destination "/" ) ( hasPrefix .Destination "http" ) }}{{ .Destination | safeURL }}{{ else }}/{{ replace .Page.File.Dir "\\" "/" }}{{ .Destination | safeURL }}{{ end }}" alt="{{ .Text }}">
 {{ if .Text }}
-<p style="text-align: center; margin-top: -1em; color: grey">{{ .Text }}</p>
+<!-- Allow markdown in the subtitle -->
+<p style="text-align: center; margin-top: -1em; color: grey">{{ safeHTML .Text }}</p>
 {{ end }}

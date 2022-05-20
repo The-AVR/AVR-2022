@@ -28,7 +28,24 @@ Plug your servos and LED strip into the designated connections on the PCC:
 
 ### Back at the Computer
 
-TBD
+Now it's time to download VRC GUI program. Go to the latest
+[VRC software release](https://github.com/bellflight/VRC-2022/releases/tag/stable)
+and download the `VRCGUI.<hash>.exe` file. Like QGroundControl,
+you may need to bypass some warnings about being an untrusted file.
+
+![Select "Keep"](2022-05-20-12-34-24.png)
+
+![Select "Keep anyway"](2022-05-20-12-34-37.png)
+
+Launch the executable. You should be presented with a screen like this:
+
+![VRC GUI Home Screen](2022-05-20-12-35-28.png)
+
+In the Serial section, select the COM Port your PCC enumerates as. Click "Connect"
+and the "PCC Tester" should now be enabled (we'll talk about the other tabs in
+a later section).
+
+TODO add image
 
 {{% alert title="Success" color="success" %}}
 Click around and try the different buttons,
