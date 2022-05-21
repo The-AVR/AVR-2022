@@ -1,6 +1,13 @@
-<!-- Centers image, and imposes max height based on view height. Makes URL absolute if not -->
-<img style="margin-left: auto; margin-right: auto; display: block; max-width: 100%; max-height: 60vh" class="glightbox" src="{{ if or ( hasPrefix .Destination "/" ) ( hasPrefix .Destination "http" ) }}{{ .Destination | safeURL }}{{ else }}/{{ replace .Page.File.Dir "\\" "/" }}{{ .Destination | safeURL }}{{ end }}" alt="{{ .Text }}">
+<!-- Makes URL absolute if not -->
+{{ $image_url := "" }}
+{{ if or ( hasPrefix .Destination "/" ) ( hasPrefix .Destination "http" ) }}
+    {{ $image_url = .Destination | safeURL }}
+{{ else }}
+    {{ $image_url = printf "%s%s%s" ("/") (replace .Page.File.Dir "\\" "/") (.Destination | safeURL) }}
+{{ end }}
+
+<img loading="lazy" class="glightbox" src="{{ $image_url }}" alt="{{ .Text }}">
 {{ if .Text }}
 <!-- Allow markdown in the subtitle -->
-<p style="text-align: center; margin-top: -1em; color: grey">{{ safeHTML .Text }}</p>
+<p class="glightbox-subtitle">{{ safeHTML .Text }}</p>
 {{ end }}
