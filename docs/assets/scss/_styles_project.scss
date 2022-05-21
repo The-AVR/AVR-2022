@@ -27,6 +27,7 @@ ul.foldable {
 }
 
 // extra image styling
+
 // center image, and add a max height
 .glightbox {
   margin-left: auto;
@@ -36,8 +37,36 @@ ul.foldable {
   max-height: 60vh;
 }
 
+// make the subtitle closer to the image, and soften the color
 .glightbox-subtitle {
   text-align: center;
   margin-top: -1em;
   color: grey;
+}
+
+// Fix page scroll being reset on image open
+.glightbox-open {
+  overflow: initial !important;
+}
+
+// Add magnifying glass icon to image on hover
+.glightbox:hover {
+  cursor: zoom-in !important;
+}
+
+// https://spdevuk.com/how-to-create-code-copy-button/
+div.highlight button {
+  color: #adb5bd;
+  box-sizing: border-box;
+  transition: 0.2s ease-out;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0);
+  padding: 5px 10px;
+  font-size: 0.8em;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 0 0.15rem;
 }

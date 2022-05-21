@@ -3,7 +3,6 @@ title: "Bell VRC"
 
 cascade:
   - type: "docs"
-
 ---
 
 Welcome to the documentation for the Bell Vertical Robotics Competition!
