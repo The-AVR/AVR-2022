@@ -9,7 +9,7 @@
     "prettier": "^2.6.2"
   },
   "scripts": {
-    "build": "hugo --cleanDestinationDir --enableGitInfo --verbose && python postprocess.py",
+    "build": "hugo --cleanDestinationDir --verbose && python postprocess.py",
     "check-formatting": "prettier --check content/",
     "format": "prettier --write content/",
     "server": "python -c \"import webbrowser; webbrowser.open('http://localhost:1313')\" && hugo server -p 1313"
