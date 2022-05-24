@@ -209,6 +209,14 @@ echo -n "Testing Nvidia container runtime... "
 ($s docker run --rm --gpus all --env NVIDIA_DISABLE_REQUIRE=1 nvcr.io/nvidia/cuda:11.4.1-base-ubuntu18.04 echo -e "${LIGHTGREEN}Passed!${NC}") || (echo -e "${LIGHTRED}Failed!${NC}" && exit 1)
 bar
 
+echo -e "${CYAN}Configuring fan to auto-start at boot"
+
+$s cp $VRC_DIR/VMC/scripts/vrc-fan.service /etc/systemd/system/vrc-fan.service
+$s systemctl enable vrc-fan.service
+$s systemctl start vrc-fan.service
+
+bar
+
 echo -e "${GREEN}VRC 2022 finished setting up!${NC}"
 echo -e "${GREEN}Please reboot your VMC.${NC}"
 bar
