@@ -114,8 +114,6 @@ class MQTTClient(QtCore.QObject):
         if not topic:
             return
 
-        print(payload)
-        print(type(payload))
         if not isinstance(payload, str):
             payload = json.dumps(payload)
 
