@@ -57,7 +57,7 @@ pygmentsStyle = "monokai"
 
     # A link to latest version of the docs. Used in the "version-banner" partial to
     # point people to the main doc site.
-    url_latest_version = "https://bellflight.github.io"
+    url_latest_version = "https://bellflight.github.io/VRC-2022"
 
     # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
     github_repo = "https://github.com/bellflight/VRC-2022"
@@ -126,4 +126,4 @@ pygmentsStyle = "monokai"
     name   = "Forums"
     weight = 100
     pre    = "<i class='fa fa-users'></i>"
-    url    = ""
+    url    = "https://github.com/bellflight/VRC-2022/discussions"
