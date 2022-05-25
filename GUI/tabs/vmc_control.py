@@ -1,7 +1,6 @@
 from __future__ import annotations
 
-import json
-from typing import Any, Literal, Tuple
+from typing import Literal, Tuple
 
 from lib.mqtt_library import (
     VrcAutonomousMessage,
@@ -18,7 +17,7 @@ class VMCControlWidget(BaseTabWidget):
     # This is the primary control widget for the drone. This allows the user
     # to set LED color, open/close servos etc.
 
-    send_message: QtCore.SignalInstance = QtCore.Signal(str, str)  # type: ignore
+    send_message: QtCore.SignalInstance = QtCore.Signal(str, object)  # type: ignore
 
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
@@ -165,17 +164,11 @@ class VMCControlWidget(BaseTabWidget):
 
         layout.addWidget(reset_groupbox, 3, 3, 1, 1)
 
-    def publish_message(self, topic: str, payload: Any) -> None:
-        """
-        Publish a message to a topic
-        """
-        self.send_message.emit(topic, json.dumps(payload))
-
     def set_servo(self, number: int, action: Literal["open", "close"]) -> None:
         """
         Set a servo state
         """
-        self.publish_message(
+        self.send_message.emit(
             "vrc/pcc/set_servo_open_close",
             VrcPcmSetServoOpenCloseMessage(servo=number, action=action),
         )
@@ -191,7 +184,7 @@ class VMCControlWidget(BaseTabWidget):
         """
         Set LED color
         """
-        self.publish_message(
+        self.send_message.emit(
             "vrc/pcm/set_base_color", VrcPcmSetBaseColorMessage(wrgb=color)
         )
 
@@ -199,4 +192,4 @@ class VMCControlWidget(BaseTabWidget):
         """
         Set autonomous mode
         """
-        self.publish_message("vrc/autonomous", VrcAutonomousMessage(enable=state))
+        self.send_message.emit("vrc/autonomous", VrcAutonomousMessage(enable=state))

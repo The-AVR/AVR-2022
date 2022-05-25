@@ -129,7 +129,7 @@ class MQTTDebugWidget(BaseTabWidget):
     # This widget is an effective clone of MQTT Explorer for diagnostic purposes.
     # Displays the latest MQTT message for every topic in a tree view.
 
-    send_message: QtCore.SignalInstance = QtCore.Signal(str, str)  # type: ignore
+    send_message: QtCore.SignalInstance = QtCore.Signal(str, object)  # type: ignore
 
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
