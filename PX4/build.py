@@ -10,6 +10,7 @@ import sys
 PX4_VERSION = "v1.12.3"
 
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
+DIST_DIR = os.path.join(THIS_DIR, "dist")
 
 
 def print2(msg: str) -> None:
@@ -139,6 +140,19 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
             os.path.join(pymavlink_dir, "message_definitions", "v1.0"),
         )
 
+        pymavlink_dist_dir = os.path.join(pymavlink_dir, "dist")
+
+        # clean the pymavlink build dir
+        if os.path.isdir(pymavlink_dist_dir):
+            for filename in os.listdir(pymavlink_dist_dir):
+                if filename.endswith(".tar.gz") or filename.endswith(".whl"):
+                    os.remove(os.path.join(pymavlink_dist_dir, filename))
+
+        # clean the target build dir
+        for filename in os.listdir(DIST_DIR):
+            if filename.endswith(".tar.gz") or filename.endswith(".whl"):
+                os.remove(os.path.join(DIST_DIR, filename))
+
         # make a new environment with the mavlink dialect set
         new_env = os.environ.copy()
         new_env["MAVLINK_DIALECT"] = "bell"
@@ -149,10 +163,10 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
         )
 
         # copy the outputs to the target directory
-        for filename in os.listdir(os.path.join(pymavlink_dir, "dist")):
+        for filename in os.listdir(pymavlink_dist_dir):
             shutil.copyfile(
-                os.path.join(pymavlink_dir, "dist", filename),
-                os.path.join(THIS_DIR, "dist", filename),
+                os.path.join(pymavlink_dist_dir, filename),
+                os.path.join(DIST_DIR, filename),
             )
 
         # generate lua plugins for Wireshark
@@ -164,7 +178,7 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
                 "pymavlink.tools.mavgen",
                 "--lang=WLua",
                 "--wire-protocol=2.0",
-                f"--output={os.path.join(THIS_DIR, 'dist', 'bell.lua')}",
+                f"--output={os.path.join(DIST_DIR, 'bell.lua')}",
                 os.path.join(
                     px4_dir,
                     "mavlink",
@@ -181,6 +195,19 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
     if build_px4:
         print2("Building PX4 firmware")
 
+        px4_build_dir = os.path.join(px4_dir, "build")
+
+        # clean the PX4 build dir
+        if os.path.isdir(px4_build_dir):
+            for filename in os.listdir(px4_build_dir):
+                if filename.endswith(".px4"):
+                    os.remove(os.path.join(px4_build_dir, filename))
+
+        # clean the target build dir
+        for filename in os.listdir(DIST_DIR):
+            if filename.endswith(".px4"):
+                os.remove(os.path.join(DIST_DIR, filename))
+
         # pixhawk
         v5x_target = "px4_fmu-v5x_default"
         subprocess.check_call(
@@ -188,10 +215,8 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
             cwd=px4_dir,
         )
         shutil.copyfile(
-            os.path.join(px4_dir, "build", v5x_target, f"{v5x_target}.px4"),
-            os.path.join(
-                THIS_DIR, "dist", f"{v5x_target}.{PX4_VERSION}.{git_hash}.px4"
-            ),
+            os.path.join(px4_build_dir, v5x_target, f"{v5x_target}.px4"),
+            os.path.join(DIST_DIR, f"{v5x_target}.{PX4_VERSION}.{git_hash}.px4"),
         )
 
         # nxp
@@ -201,10 +226,8 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
             cwd=px4_dir,
         )
         shutil.copyfile(
-            os.path.join(px4_dir, "build", nxp_target, f"{nxp_target}.px4"),
-            os.path.join(
-                THIS_DIR, "dist", f"{nxp_target}.{PX4_VERSION}.{git_hash}.px4"
-            ),
+            os.path.join(px4_build_dir, nxp_target, f"{nxp_target}.px4"),
+            os.path.join(DIST_DIR, f"{nxp_target}.{PX4_VERSION}.{git_hash}.px4"),
         )
 
 
@@ -212,8 +235,7 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
     # code that runs on the host operating system
 
     # make the target directory
-    target_dir = os.path.join(THIS_DIR, "dist")
-    os.makedirs(target_dir, exist_ok=True)
+    os.makedirs(DIST_DIR, exist_ok=True)
 
     subprocess.check_output(
         [
@@ -231,7 +253,7 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
         .strip()
     )
     script_cmd = (
-        ["python3", "generate.py"]
+        ["python3", "build.py"]
         + sys.argv[1:]
         + ["--container", f"--git-hash={git_hash}"]
     )
@@ -264,10 +286,10 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
                 os.remove(os.path.join(fcm_dir, filename))
 
         # copy new files
-        for filename in os.listdir(target_dir):
+        for filename in os.listdir(DIST_DIR):
             if filename.endswith(".whl") or filename.endswith(".tar.gz"):
                 shutil.copyfile(
-                    os.path.join(target_dir, filename), os.path.join(fcm_dir, filename)
+                    os.path.join(DIST_DIR, filename), os.path.join(fcm_dir, filename)
                 )
 
 
