@@ -35,7 +35,7 @@ jobs:
             px4-package
 
       - name: Build PX4 Firmware
-        run: python3 PX4/generate.py --px4
+        run: python3 PX4/build.py --px4
 
       - name: Get Latest Release
         if: github.event_name != 'pull_request'
@@ -44,13 +44,13 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Delete Existing Firmware
-      #   if: github.event_name != 'pull_request'
-      #   uses: mknejp/delete-release-assets@v1
-      #   with:
-      #     token: ${{ github.token }}
-      #     tag: ${{ steps.latest_release.outputs.tag_name }}
-      #     assets: '*.px4'
+      - name: Delete Existing Firmware
+        if: github.event_name != 'pull_request'
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ steps.latest_release.outputs.tag_name }}
+          assets: '*.px4'
 
       - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'

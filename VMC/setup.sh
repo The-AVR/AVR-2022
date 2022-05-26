@@ -176,7 +176,7 @@ if [ "$DEVELOPMENT" != true ] ; then
     $s python3 start.py build --norm
 else
     cd $VRC_DIR
-    $s python3 PX4/generate.py --pymavlink
+    $s python3 PX4/build.py --pymavlink
     python3 scripts/copy_libraries.py
 
     cd $VRC_DIR/VMC

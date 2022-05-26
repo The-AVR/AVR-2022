@@ -32,6 +32,15 @@ jobs:
           cache: pip
           cache-dependency-path: PCC
 
+      - name: Cache PlatformIO
+        uses: actions/cache@v3
+        with:
+          path: PCC/pio
+          key: pio-${{ hashFiles('PCC/platformio.ini') }}-${{ hashFiles('PCC/requirements.txt') }}
+          restore-keys: |
+            pio-${{ hashFiles('PCC/platformio.ini') }}
+            pio
+
       - name: Setup PlatformIO
         run: python setup.py
         working-directory: PCC
@@ -41,13 +50,8 @@ jobs:
         working-directory: PCC
 
       - name: Build Firmware
-        run: pio run --verbose
+        run: python build.py
         working-directory: PCC
-
-      - name: Rename Firmware
-        shell: bash
-        run: mv firmware.bin pcc_firmware.$(git rev-parse --short HEAD).bin
-        working-directory: PCC/.pio/build/adafruit_feather_m4
 
       - name: Get Latest Release
         if: github.event_name != 'pull_request'
@@ -56,13 +60,13 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Delete Existing Firmware
-      #   if: github.event_name != 'pull_request'
-      #   uses: mknejp/delete-release-assets@v1
-      #   with:
-      #     token: ${{ github.token }}
-      #     tag: ${{ steps.latest_release.outputs.tag_name }}
-      #     assets: '*.bin'
+      - name: Delete Existing Firmware
+        if: github.event_name != 'pull_request'
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ steps.latest_release.outputs.tag_name }}
+          assets: '*.bin'
 
       - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'
