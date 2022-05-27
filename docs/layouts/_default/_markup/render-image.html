@@ -6,9 +6,7 @@
     {{ $image_url = printf "%s%s%s" ("/") (replace .Page.File.Dir "\\" "/") (.Destination | safeURL) }}
 {{ end }}
 
-{{ $image := .Page.Resources.GetMatch .Destination }}
-
-<img loading="lazy" class="glightbox" src="{{ $image_url }}" width="{{ $image.Width }}" height="{{ $image.Height }}" alt="{{ .Text }}">
+<img loading="lazy" class="glightbox" src="{{ $image_url }}" alt="{{ .Text }}">
 {{ if .Text }}
 <!-- Allow markdown in the subtitle -->
 <p class="glightbox-subtitle">{{ safeHTML .Text }}</p>
