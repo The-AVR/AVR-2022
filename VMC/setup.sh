@@ -161,11 +161,19 @@ $s service docker start
 # set -e
 bar
 
-echo -e "${CYAN}Installing spio service${NC}"
+echo -e "${CYAN}Installing boot services${NC}"
 bar
+
+# install spi mount service
 $s cp $VRC_DIR/VMC/scripts/spio-mount.service /etc/systemd/system/spio-mount.service
 $s systemctl enable spio-mount.service
 $s systemctl start spio-mount.service
+
+#install the fan-enable service
+$s cp $VRC_DIR/VMC/scripts/vrc-fan.service /etc/systemd/system/vrc-fan.service
+$s systemctl enable vrc-fan.service
+$s systemctl start vrc-fan.service
+
 bar
 
 echo -e "${CYAN}Preparing VRC software${NC}"
@@ -207,14 +215,6 @@ bar
 # KEEP THIS, saved our bacon once
 echo -n "Testing Nvidia container runtime... "
 ($s docker run --rm --gpus all --env NVIDIA_DISABLE_REQUIRE=1 nvcr.io/nvidia/cuda:11.4.1-base-ubuntu18.04 echo -e "${LIGHTGREEN}Passed!${NC}") || (echo -e "${LIGHTRED}Failed!${NC}" && exit 1)
-bar
-
-echo -e "${CYAN}Configuring fan to auto-start at boot${NC}"
-bar
-#install the fan-enable service
-$s cp $VRC_DIR/VMC/scripts/vrc-fan.service /etc/systemd/system/vrc-fan.service
-$s systemctl enable vrc-fan.service
-$s systemctl start vrc-fan.service
 bar
 
 echo -e "${GREEN}VRC 2022 finished setting up!${NC}"
