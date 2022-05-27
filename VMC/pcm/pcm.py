@@ -44,8 +44,9 @@ class PeripheralControlModule(MQTTModule):
     def run(self) -> None:
         super().run_non_blocking()
 
-        while self.ser.in_waiting > 0:
-            self.ser.read(1)
+        while True:
+            while self.ser.in_waiting > 0:
+                self.ser.read(1)
             time.sleep(0.01)
 
     def set_base_color(self, payload: VrcPcmSetBaseColorMessage) -> None:
