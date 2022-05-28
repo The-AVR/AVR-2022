@@ -1,7 +1,6 @@
 {
-    "image": "docker.io/nikolaik/python-nodejs:python3.9-nodejs16",
+    "image": "docker.io/library/node:18-bullseye",
     "extensions": [
-        "ms-python.python",
         "jack89ita.copy-filename",
         "kisstkondoros.vscode-gutter-preview",
         "Tyriar.luna-paint",
@@ -10,7 +9,7 @@
         "eg2.vscode-npm-script",
         "tamasfe.even-better-toml"
     ],
-    "postCreateCommand": "python setup.py && git config --global core.autocrlf input",
+    "postCreateCommand": "npm install && git config --global core.autocrlf input",
     "forwardPorts": [
         1313
     ]
