@@ -7,7 +7,8 @@
         "DavidAnson.vscode-markdownlint",
         "esbenp.prettier-vscode",
         "eg2.vscode-npm-script",
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        "mushan.vscode-paste-image"
     ],
     "postCreateCommand": "npm install && git config --global core.autocrlf input",
     "forwardPorts": [
