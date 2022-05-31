@@ -10,13 +10,13 @@
     "toml": "^3.0.0"
   },
   "devDependencies": {
-    "prettier": "^2.6.2",
-    "open-cli": "^7.0.1"
+    "open": "^8.4.0",
+    "prettier": "^2.6.2"
   },
   "scripts": {
     "build": "hugo --cleanDestinationDir --verbose && node postprocess.js",
     "check-formatting": "prettier --check content/",
     "format": "prettier --write content/",
-    "server": "open-cli 'http://localhost:1313' && hugo server -p 1313"
+    "server": "node -e \"const open = require('open'); open('http://localhost:1313');\" && hugo server -p 1313"
   }
 }
