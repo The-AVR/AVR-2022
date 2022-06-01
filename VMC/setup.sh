@@ -160,9 +160,8 @@ $s service docker start
 # newgrp docker
 # set -e
 
-$s docker-compose down
-$s docker rm -f $(sudo docker ps -a -q)
-$s docker volume rm $(sudo docker volume ls -q)
+$s docker rm -f $($s docker ps -a -q)
+$s docker volume rm $($s docker volume ls -q)
 
 bar
 
