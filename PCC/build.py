@@ -9,10 +9,15 @@ cmd = ["pio", "run", "--verbose"]
 print(cmd)
 subprocess.check_call(cmd, cwd=THIS_DIR)
 
+target = os.path.join(
+    BUILD_DIR,
+    f"pcc_firmware.{subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], text=True).strip()}.bin",
+)
+if os.path.isfile(target):
+    print(f"{target} already exists, replacing")
+    os.remove(target)
+
 os.rename(
     os.path.join(BUILD_DIR, "firmware.bin"),
-    os.path.join(
-        BUILD_DIR,
-        f"pcc_firmware.{subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], text=True).strip()}.bin",
-    ),
+    target,
 )
