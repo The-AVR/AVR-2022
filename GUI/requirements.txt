@@ -4,5 +4,5 @@ PySide6-Essentials==6.3.0
 loguru==0.6.0
 pyinstaller==5.0.1
 colour==0.1.5
-scipy==1.8.0
+scipy==1.8.1
 numpy==1.22.3
