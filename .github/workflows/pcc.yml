@@ -35,7 +35,7 @@ jobs:
       - name: Cache PlatformIO
         uses: actions/cache@v3
         with:
-          path: PCC/pio
+          path: PCC/.pio
           key: pio-${{ hashFiles('PCC/platformio.ini') }}-${{ hashFiles('PCC/requirements.txt') }}
           restore-keys: |
             pio-${{ hashFiles('PCC/platformio.ini') }}
