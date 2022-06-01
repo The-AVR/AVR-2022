@@ -1,4 +1,4 @@
 loguru==0.6.0
-numpy==1.22.3
+numpy==1.22.4
 paho-mqtt==1.6.1
 pymap3d==2.8.0
