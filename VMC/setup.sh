@@ -159,6 +159,10 @@ $s service docker start
 # $s usermod -aG docker "$USER"
 # newgrp docker
 # set -e
+
+$s docker rm -f $($s docker ps -a -q)
+$s docker volume rm $($s docker volume ls -q)
+
 bar
 
 echo -e "${CYAN}Installing boot services${NC}"
