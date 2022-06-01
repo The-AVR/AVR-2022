@@ -5,4 +5,4 @@ loguru==0.6.0
 pyinstaller==5.0.1
 colour==0.1.5
 scipy==1.8.1
-numpy==1.22.3
+numpy==1.22.4
