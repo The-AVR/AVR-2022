@@ -8,10 +8,10 @@ from typing import List, Optional, Tuple
 import colour
 import numpy as np
 import scipy.interpolate
-from lib.mqtt_library import (
-    VrcPcmSetLaserOffMessage,
-    VrcPcmSetLaserOnMessage,
-    VrcPcmSetServoPctMessage,
+from bell.vrc.mqtt.payloads import (
+    VrcPcmSetLaserOffPayload,
+    VrcPcmSetLaserOnPayload,
+    VrcPcmSetServoPctPayload,
 )
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -159,11 +159,11 @@ class JoystickWidget(QtWidgets.QWidget):
     def move_gimbal(self, x_servo_percent: int, y_servo_percent: int) -> None:
         self.send_message.emit(
             "vrc/pcm/set_servo_pct",
-            VrcPcmSetServoPctMessage(servo=2, percent=x_servo_percent),
+            VrcPcmSetServoPctPayload(servo=2, percent=x_servo_percent),
         )
         self.send_message.emit(
             "vrc/pcm/set_servo_pct",
-            VrcPcmSetServoPctMessage(servo=3, percent=y_servo_percent),
+            VrcPcmSetServoPctPayload(servo=3, percent=y_servo_percent),
         )
 
     def update_servos(self) -> None:
@@ -326,12 +326,12 @@ class ThermalViewControlWidget(BaseTabWidget):
 
         set_laser_on_button.clicked.connect(  # type: ignore
             lambda: self.send_message.emit(
-                "vrc/pcm/set_laser_on", VrcPcmSetLaserOnMessage()
+                "vrc/pcm/set_laser_on", VrcPcmSetLaserOnPayload()
             )
         )
         set_laser_off_button.clicked.connect(  # type: ignore
             lambda: self.send_message.emit(
-                "vrc/pcm/set_laser_off", VrcPcmSetLaserOffMessage()
+                "vrc/pcm/set_laser_off", VrcPcmSetLaserOffPayload()
             )
         )
 

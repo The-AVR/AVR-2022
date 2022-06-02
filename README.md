@@ -80,12 +80,6 @@ Activate the virtual environment:
 source .venv/bin/activate # Linux
 ```
 
-Now, generate and copy the libraries:
-
-```bash
-python scripts/copy_libraries.py
-```
-
 Finally, you can install all the dependencies so you get autocomplete and type hinting:
 
 ```bash

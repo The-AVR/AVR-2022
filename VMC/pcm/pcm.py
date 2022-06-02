@@ -1,19 +1,19 @@
 import time
 
-import serial
-from mqtt_library import (
-    MQTTModule,
-    VrcPcmResetMessage,
-    VrcPcmSetBaseColorMessage,
-    VrcPcmSetLaserOffMessage,
-    VrcPcmSetLaserOnMessage,
-    VrcPcmSetServoMaxMessage,
-    VrcPcmSetServoMinMessage,
-    VrcPcmSetServoOpenCloseMessage,
-    VrcPcmSetServoPctMessage,
-    VrcPcmSetTempColorMessage,
+from bell.vrc.mqtt.client import MQTTModule
+from bell.vrc.mqtt.payloads import (
+    VrcPcmResetPayload,
+    VrcPcmSetBaseColorPayload,
+    VrcPcmSetLaserOffPayload,
+    VrcPcmSetLaserOnPayload,
+    VrcPcmSetServoMaxPayload,
+    VrcPcmSetServoMinPayload,
+    VrcPcmSetServoOpenClosePayload,
+    VrcPcmSetServoPctPayload,
+    VrcPcmSetTempColorPayload,
 )
-from pcc_library import PeripheralControlComputer
+from bell.vrc.serial.client import SerialLoop
+from bell.vrc.serial.pcc import PeripheralControlComputer
 
 
 class PeripheralControlModule(MQTTModule):
@@ -21,7 +21,7 @@ class PeripheralControlModule(MQTTModule):
         super().__init__()
 
         # PCC connection
-        self.ser = serial.Serial()
+        self.ser = SerialLoop()
         self.ser.port = port
         self.ser.baudrate = baud_rate
         self.ser.open()
@@ -43,48 +43,44 @@ class PeripheralControlModule(MQTTModule):
 
     def run(self) -> None:
         super().run_non_blocking()
+        self.ser.run()
 
-        while True:
-            while self.ser.in_waiting > 0:
-                self.ser.read(1)
-            time.sleep(0.01)
-
-    def set_base_color(self, payload: VrcPcmSetBaseColorMessage) -> None:
+    def set_base_color(self, payload: VrcPcmSetBaseColorPayload) -> None:
         wrgb = payload["wrgb"]
         self.pcc.set_base_color(wrgb=list(wrgb))
 
-    def set_temp_color(self, payload: VrcPcmSetTempColorMessage) -> None:
+    def set_temp_color(self, payload: VrcPcmSetTempColorPayload) -> None:
         wrgb = payload["wrgb"]
         time = payload.get("time", 0.5)  # default of 0.5 seconds
         self.pcc.set_temp_color(wrgb=list(wrgb), time=time)
 
-    def set_servo_open_close(self, payload: VrcPcmSetServoOpenCloseMessage) -> None:
+    def set_servo_open_close(self, payload: VrcPcmSetServoOpenClosePayload) -> None:
         servo = payload["servo"]
         action = payload["action"]
         self.pcc.set_servo_open_close(servo, action)
 
-    def set_servo_min(self, payload: VrcPcmSetServoMinMessage) -> None:
+    def set_servo_min(self, payload: VrcPcmSetServoMinPayload) -> None:
         servo = payload["servo"]
         min_pulse = payload["min_pulse"]
         self.pcc.set_servo_min(servo, min_pulse)
 
-    def set_servo_max(self, payload: VrcPcmSetServoMaxMessage) -> None:
+    def set_servo_max(self, payload: VrcPcmSetServoMaxPayload) -> None:
         servo = payload["servo"]
         max_pulse = payload["max_pulse"]
         self.pcc.set_servo_max(servo, max_pulse)
 
-    def set_servo_pct(self, payload: VrcPcmSetServoPctMessage) -> None:
+    def set_servo_pct(self, payload: VrcPcmSetServoPctPayload) -> None:
         servo = payload["servo"]
         percent = payload["percent"]
         self.pcc.set_servo_pct(servo, percent)
 
-    def set_laser_on(self, payload: VrcPcmSetLaserOnMessage) -> None:
+    def set_laser_on(self, payload: VrcPcmSetLaserOnPayload) -> None:
         self.pcc.set_laser_on()
 
-    def set_laser_off(self, payload: VrcPcmSetLaserOffMessage) -> None:
+    def set_laser_off(self, payload: VrcPcmSetLaserOffPayload) -> None:
         self.pcc.set_laser_off()
 
-    def reset(self, payload: VrcPcmResetMessage) -> None:
+    def reset(self, payload: VrcPcmResetPayload) -> None:
         self.pcc.reset_vrc_peripheral()
 
 

@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import Literal, Tuple
 
-from lib.mqtt_library import (
-    VrcAutonomousMessage,
-    VrcPcmResetMessage,
-    VrcPcmSetBaseColorMessage,
-    VrcPcmSetServoOpenCloseMessage,
+from bell.vrc.mqtt.payloads import (
+    VrcAutonomousPayload,
+    VrcPcmResetPayload,
+    VrcPcmSetBaseColorPayload,
+    VrcPcmSetServoOpenClosePayload,
 )
 from PySide6 import QtCore, QtWidgets
 
@@ -170,7 +170,7 @@ class VMCControlWidget(BaseTabWidget):
         """
         self.send_message.emit(
             "vrc/pcc/set_servo_open_close",
-            VrcPcmSetServoOpenCloseMessage(servo=number, action=action),
+            VrcPcmSetServoOpenClosePayload(servo=number, action=action),
         )
 
     def set_servo_all(self, action: Literal["open", "close"]) -> None:
@@ -185,11 +185,11 @@ class VMCControlWidget(BaseTabWidget):
         Set LED color
         """
         self.send_message.emit(
-            "vrc/pcm/set_base_color", VrcPcmSetBaseColorMessage(wrgb=color)
+            "vrc/pcm/set_base_color", VrcPcmSetBaseColorPayload(wrgb=color)
         )
 
     def set_autonomous(self, state: bool) -> None:
         """
         Set autonomous mode
         """
-        self.send_message.emit("vrc/autonomous", VrcAutonomousMessage(enable=state))
+        self.send_message.emit("vrc/autonomous", VrcAutonomousPayload(enable=state))

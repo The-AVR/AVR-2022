@@ -3,8 +3,9 @@ import time
 
 import adafruit_amg88xx
 import board
+from bell.vrc.mqtt.client import MQTTModule
+from bell.vrc.mqtt.payloads import VrcThermalReadingPayload
 from loguru import logger
-from mqtt_library import MQTTModule, VrcThermalReadingMessage
 
 
 class ThermalModule(MQTTModule):
@@ -31,7 +32,7 @@ class ThermalModule(MQTTModule):
         base64_string = base64_encoded.decode("utf-8")
 
         self.send_message(
-            "vrc/thermal/reading", VrcThermalReadingMessage(data=base64_string)
+            "vrc/thermal/reading", VrcThermalReadingPayload(data=base64_string)
         )
 
     def run(self) -> None:

@@ -189,7 +189,6 @@ if [ "$DEVELOPMENT" != true ] ; then
 else
     cd $VRC_DIR
     $s python3 PX4/build.py --pymavlink
-    python3 scripts/copy_libraries.py
 
     cd $VRC_DIR/VMC
     $s python3 start.py pull --norm --local

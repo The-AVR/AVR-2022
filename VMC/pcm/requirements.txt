@@ -1,3 +1,2 @@
 loguru==0.6.0
-paho-mqtt==1.6.1
-pyserial==3.5
+bell-vrc-libraries[mqtt,serial]==0.1.1
