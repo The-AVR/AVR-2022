@@ -128,7 +128,7 @@ class ThermalView(QtWidgets.QWidget):
 
 class JoystickWidget(QtWidgets.QWidget):
 
-    send_message: QtCore.SignalInstance = QtCore.Signal(str, str)  # type: ignore
+    send_message: QtCore.SignalInstance = QtCore.Signal(str, object)  # type: ignore
 
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
@@ -159,11 +159,11 @@ class JoystickWidget(QtWidgets.QWidget):
     def move_gimbal(self, x_servo_percent: int, y_servo_percent: int) -> None:
         self.send_message.emit(
             "vrc/pcm/set_servo_pct",
-            json.dumps(VrcPcmSetServoPctMessage(servo=2, percent=x_servo_percent)),
+            VrcPcmSetServoPctMessage(servo=2, percent=x_servo_percent),
         )
         self.send_message.emit(
             "vrc/pcm/set_servo_pct",
-            json.dumps(VrcPcmSetServoPctMessage(servo=3, percent=y_servo_percent)),
+            VrcPcmSetServoPctMessage(servo=3, percent=y_servo_percent),
         )
 
     def update_servos(self) -> None:
@@ -278,7 +278,7 @@ class JoystickWidget(QtWidgets.QWidget):
 
 class ThermalViewControlWidget(BaseTabWidget):
 
-    send_message: QtCore.SignalInstance = QtCore.Signal(str, str)  # type: ignore
+    send_message: QtCore.SignalInstance = QtCore.Signal(str, object)  # type: ignore
 
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)

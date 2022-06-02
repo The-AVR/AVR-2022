@@ -1,3 +1,4 @@
+import json
 from typing import Any, Optional
 
 import paho.mqtt.client as mqtt
@@ -106,12 +107,15 @@ class MQTTClient(QtCore.QObject):
         logger.info("Disconnected from MQTT server")
         self.connection_state.emit(ConnectionState.disconnected)
 
-    def publish(self, topic: str, payload: str) -> None:
+    def publish(self, topic: str, payload: Any) -> None:
         """
         Publish an MQTT message. Proxy function to the underlying client
         """
         if not topic:
             return
+
+        if not isinstance(payload, str):
+            payload = json.dumps(payload)
 
         logger.debug(f"Publishing message {topic}: {payload}")
         self.client.publish(topic, payload)

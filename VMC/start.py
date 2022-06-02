@@ -199,9 +199,12 @@ def prepare_compose_file(local: bool = False) -> str:
     mqtt_service(compose_services, local)
     pcm_service(compose_services, local)
     sandbox_service(compose_services)
-    status_service(compose_services, local)
     thermal_service(compose_services, local)
     vio_service(compose_services, local)
+
+    # nvpmodel not available on Windows
+    if os.name != "nt":
+        status_service(compose_services, local)
 
     # construct full dict
     compose_data = {"version": "3", "services": compose_services}
@@ -220,7 +223,12 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
     compose_file = prepare_compose_file(local)
 
     # run docker-compose
-    cmd = ["docker-compose", "--project-name", "VRC-2022", "--file", compose_file]
+    project_name = "VRC-2022"
+    if os.name == "nt":
+        # for some reason on Windows docker-compose doesn't like upper case???
+        project_name = project_name.lower()
+
+    cmd = ["docker-compose", "--project-name", project_name, "--file", compose_file]
 
     if action == "build":
         cmd += ["build"] + modules
