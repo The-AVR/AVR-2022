@@ -45,4 +45,4 @@ if __name__ == "__main__":
 
     if platformio.VERSION[0] >= 6:
         # https://docs.platformio.org/en/latest/core/userguide/pkg/cmd_install.html#cmd-pkg-install
-        subprocess.check_call(["pio", "pkg", "install"])
+        subprocess.check_call(["pio", "pkg", "install"], cwd=THIS_DIR)
