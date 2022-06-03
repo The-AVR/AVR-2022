@@ -23,6 +23,7 @@ from bell.vrc.mqtt.payloads import (
     VrcFusionHilGpsPayload,
 )
 from bell.vrc.utils.decorators import async_try_except, try_except
+from bell.vrc.utils.timing import rate_limit
 from loguru import logger
 from mavsdk.action import ActionError
 from mavsdk.geofence import Point, Polygon
@@ -128,9 +129,6 @@ class FlightControlComputer(FCMMQTTModule):
         self.is_armed: bool = False
         self.fcc_mode = "UNKNOWN"
         self.heading = 0.0
-
-        # telemetry crowd control
-        self.attitude_telem_last_publish_time = time.time()
 
     async def connect(self) -> None:
         """
@@ -456,9 +454,10 @@ class FlightControlComputer(FCMMQTTModule):
             self.heading = heading
 
             # publish telemetry every tenth of a second
-            if time.time() - self.attitude_telem_last_publish_time > 0.1:
-                self.send_message("vrc/fcm/attitude/euler", update)
-                self.attitude_telem_last_publish_time = time.time()
+            rate_limit(
+                lambda: self.send_message("vrc/fcm/attitude/euler", update),
+                frequency=10,
+            )
 
     @async_try_except()
     async def velocity_ned_telemetry(self) -> None:
@@ -972,7 +971,6 @@ class PyMAVLinkAgent(MQTTModule):
         }
 
         self.num_frames = 0
-        self.last_publish_time = time.time()
 
     @try_except()
     def run_non_blocking(self) -> None:
@@ -1017,9 +1015,10 @@ class PyMAVLinkAgent(MQTTModule):
         self.num_frames += 1
 
         # publish stats every second
-        if time.time() - self.last_publish_time > 1:
-            self.send_message(
+        rate_limit(
+            lambda: self.send_message(
                 "vrc/fcm/hil_gps_stats",
                 VrcFcmHilGpsStatsPayload(num_frames=self.num_frames),
-            )
-            self.last_publish_time = time.time()
+            ),
+            frequency=1,
+        )

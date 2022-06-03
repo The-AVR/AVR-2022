@@ -12,7 +12,7 @@ from bell.vrc.mqtt.payloads import (
     VrcVioResyncPayload,
     VrcVioVelocityNedPayload,
 )
-from bell.vrc.utils.decorators import try_except
+from bell.vrc.utils.decorators import try_except, run_forever
 from loguru import logger
 from vio_library import CameraCoordinateTransformation
 from zed_library import ZEDCamera
@@ -92,31 +92,28 @@ class VIOModule(MQTTModule):
         )
         self.send_message("vrc/vio/confidence", confidence_update)
 
+    @run_forever(frequency=10)
     @try_except(reraise=False)
     def process_camera_data(self) -> None:
-        # start the loop
-        logger.debug("Beginning data loop")
-        while True:
-            time.sleep(1 / self.CAM_UPDATE_FREQ)
-            data = self.camera.get_pipe_data()
+        data = self.camera.get_pipe_data()
 
-            if data is None:
-                logger.debug("Waiting on camera data")
-                continue
+        if data is None:
+            logger.debug("Waiting on camera data")
+            return
 
-            # collect data from the sensor and transform it into "global" NED frame
-            (
-                ned_pos,
-                ned_vel,
-                rpy,
-            ) = self.coord_trans.transform_trackcamera_to_global_ned(data)
+        # collect data from the sensor and transform it into "global" NED frame
+        (
+            ned_pos,
+            ned_vel,
+            rpy,
+        ) = self.coord_trans.transform_trackcamera_to_global_ned(data)
 
-            self.publish_updates(
-                ned_pos,
-                ned_vel,
-                rpy,
-                data["tracker_confidence"],
-            )
+        self.publish_updates(
+            ned_pos,
+            ned_vel,
+            rpy,
+            data["tracker_confidence"],
+        )
 
     def run(self) -> None:
         self.run_non_blocking()

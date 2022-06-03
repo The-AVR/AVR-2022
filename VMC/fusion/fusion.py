@@ -23,7 +23,7 @@ from bell.vrc.mqtt.payloads import (
     VrcVioResyncPayload,
     VrcVioVelocityNedPayload,
 )
-from bell.vrc.utils.decorators import try_except
+from bell.vrc.utils.decorators import run_forever, try_except
 from loguru import logger
 
 
@@ -41,7 +41,6 @@ class FusionModule(MQTTModule):
                 "epv": 5,
                 "satellites_visible": 13,
             },
-            "HIL_GPS_UPDATE_FREQ": 10,
             "COURSE_THRESHOLD": 10,
             "POS_DETLA_THRESHOLD": 10,
             "POS_D_THRESHOLD": 30,
@@ -199,6 +198,7 @@ class FusionModule(MQTTModule):
                 course=payload["degrees"]
             )
 
+    @run_forever(frequency=10)
     @try_except(reraise=False)
     def assemble_hil_gps_message(self) -> None:
         """
@@ -206,81 +206,78 @@ class FusionModule(MQTTModule):
         message that is exactly what the FCC needs to generate the hil_gps message
         (with heading)
         """
-        while True:
-            time.sleep(1 / self.config["HIL_GPS_UPDATE_FREQ"])
+        if "vrc/fusion/geo" not in self.message_cache:
+            logger.debug("Waiting for vrc/fusion/geo to be populated")
+            return
 
-            if "vrc/fusion/geo" not in self.message_cache:
-                logger.debug("Waiting for vrc/fusion/geo to be populated")
-                continue
+        goedetic = self.message_cache["vrc/fusion/geo"]
+        lat = int(goedetic["lat"] * 10000000)  # convert to int32 format
+        lon = int(goedetic["lon"] * 10000000)  # convert to int32 format
 
-            goedetic = self.message_cache["vrc/fusion/geo"]
-            lat = int(goedetic["lat"] * 10000000)  # convert to int32 format
-            lon = int(goedetic["lon"] * 10000000)  # convert to int32 format
+        # if lat / lon is 0, that means the ned -> lla conversion hasn't run yet,
+        # don't send that data to FCC
+        if lat == 0 or lon == 0:
+            return
 
-            # if lat / lon is 0, that means the ned -> lla conversion hasn't run yet,
-            # don't send that data to FCC
-            if lat == 0 or lon == 0:
-                continue
+        if "vrc/fusion/velocity/ned" not in self.message_cache:
+            logger.debug("Waiting for vrc/fusion/velocity/ned to be populated")
+            return
+        elif self.message_cache["vrc/fusion/velocity/ned"]["Vn"] is None:
+            logger.debug("vrc/fusion/velocity/ned/vn message cache is empty")
+            return
 
-            if "vrc/fusion/velocity/ned" not in self.message_cache:
-                logger.debug("Waiting for vrc/fusion/velocity/ned to be populated")
-                continue
-            elif self.message_cache["vrc/fusion/velocity/ned"]["Vn"] is None:
-                logger.debug("vrc/fusion/velocity/ned/vn message cache is empty")
-                continue
+        crs = 0
+        if "vrc/fusion/course" in self.message_cache:
+            if self.message_cache["vrc/fusion/course"]["course"] is not None:
+                crs = int(self.message_cache["vrc/fusion/course"]["course"])
+        else:
+            logger.debug("Waiting for vrc/fusion/course message to be populated")
+            return
 
-            crs = 0
-            if "vrc/fusion/course" in self.message_cache:
-                if self.message_cache["vrc/fusion/course"]["course"] is not None:
-                    crs = int(self.message_cache["vrc/fusion/course"]["course"])
-            else:
-                logger.debug("Waiting for vrc/fusion/course message to be populated")
-                continue
-
-            gs = 0
-            if "vrc/fusion/groundspeed" in self.message_cache:
-                if (
+        gs = 0
+        if "vrc/fusion/groundspeed" in self.message_cache:
+            if (
+                self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
+                is not None
+            ):
+                gs = int(
                     self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
-                    is not None
-                ):
-                    gs = int(
-                        self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
-                    )
-            else:
-                logger.debug("vrc/fusion/groundspeed message cache is empty")
-                continue
-
-            if "vrc/fusion/attitude/heading" in self.message_cache:
-                heading = int(
-                    self.message_cache["vrc/fusion/attitude/heading"]["heading"] * 100
                 )
-            else:
-                logger.debug("Waiting for vrc/fusion/attitude/heading to be populated")
-                continue
+        else:
+            logger.debug("vrc/fusion/groundspeed message cache is empty")
+            return
 
-            hil_gps_update = VrcFusionHilGpsPayload(
-                time_usec=int(time.time() * 1000000),
-                fix_type=int(
-                    self.config["hil_gps_constants"]["fix_type"]
-                ),  # 3 - 3D fix
-                lat=lat,
-                lon=lon,
-                alt=int(
-                    self.message_cache["vrc/fusion/geo"]["alt"] * 1000
-                ),  # convert m to mm
-                eph=int(self.config["hil_gps_constants"]["eph"]),  # cm
-                epv=int(self.config["hil_gps_constants"]["epv"]),  # cm
-                vel=gs,
-                vn=int(self.message_cache["vrc/fusion/velocity/ned"]["Vn"]),
-                ve=int(self.message_cache["vrc/fusion/velocity/ned"]["Ve"]),
-                vd=int(self.message_cache["vrc/fusion/velocity/ned"]["Vd"]),
-                cog=int(crs * 100),
-                satellites_visible=int(
-                    self.config["hil_gps_constants"]["satellites_visible"]
-                ),
-                heading=heading,
+        if "vrc/fusion/attitude/heading" in self.message_cache:
+            heading = int(
+                self.message_cache["vrc/fusion/attitude/heading"]["heading"] * 100
             )
-            self.send_message("vrc/fusion/hil_gps", hil_gps_update)
+        else:
+            logger.debug("Waiting for vrc/fusion/attitude/heading to be populated")
+            return
+
+        hil_gps_update = VrcFusionHilGpsPayload(
+            time_usec=int(time.time() * 1000000),
+            fix_type=int(
+                self.config["hil_gps_constants"]["fix_type"]
+            ),  # 3 - 3D fix
+            lat=lat,
+            lon=lon,
+            alt=int(
+                self.message_cache["vrc/fusion/geo"]["alt"] * 1000
+            ),  # convert m to mm
+            eph=int(self.config["hil_gps_constants"]["eph"]),  # cm
+            epv=int(self.config["hil_gps_constants"]["epv"]),  # cm
+            vel=gs,
+            vn=int(self.message_cache["vrc/fusion/velocity/ned"]["Vn"]),
+            ve=int(self.message_cache["vrc/fusion/velocity/ned"]["Ve"]),
+            vd=int(self.message_cache["vrc/fusion/velocity/ned"]["Vd"]),
+            cog=int(crs * 100),
+            satellites_visible=int(
+                self.config["hil_gps_constants"]["satellites_visible"]
+            ),
+            heading=heading,
+        )
+        self.send_message("vrc/fusion/hil_gps", hil_gps_update)
 
     @try_except(reraise=True)
     def on_apriltag_message(self, msg: VrcApriltagsSelectedPayload) -> None:
