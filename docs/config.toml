@@ -107,7 +107,7 @@ pygmentsStyle = "monokai"
 [params.links]
 [[params.links.user]]
     name = "Bell Flight"
-    url  = "https://bellflight.com"
+    url  = "https://www.bellflight.com"
     icon = "fa fa-helicopter"
     desc = "Welcome to the Future of Flight"
 
