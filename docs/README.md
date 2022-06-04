@@ -14,7 +14,7 @@ git submodule update --init --recursive
 ```
 
 To build or preview the site, make sure you have `npm` installed.
-To install all the dependencies, simply run
+To install all the dependencies, simply `cd` into this `docs` directory and run:
 
 ```bash
 npm install
