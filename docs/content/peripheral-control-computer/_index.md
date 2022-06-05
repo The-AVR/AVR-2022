@@ -5,3 +5,5 @@ description: "This guide covers the steps for assembling the Peripheral Control 
 ---
 
 ![](pcchighlight.png)
+
+{{< nextcopy >}}

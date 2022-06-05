@@ -21,3 +21,5 @@ more detailed user manual for the radio controller is available for download bel
 
 The following sections will cover numerous aspects of the transmitter configuration
 required to fly your VRC drone.
+
+{{< nextcopy >}}

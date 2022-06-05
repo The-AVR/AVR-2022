@@ -27,3 +27,7 @@ the antennas onto each side. Tilt the antennas facing outward and slide the
 mount onto the rails behind the RC receiver mount as show in the photo below.
 
 ![Rear of the VRC drone frame with WiFi antenna mount secured to the rails](wifi_antenna_mounting_complete.jpg)
+
+
+
+{{< nextcopy >}}

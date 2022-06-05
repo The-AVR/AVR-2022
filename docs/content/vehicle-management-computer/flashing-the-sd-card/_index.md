@@ -44,3 +44,5 @@ You will get a number of warnings that you're about to format and wipe this SD c
 Go ahead and click through all of these, you know what you're doing.
 Rufus will begin flashing the SD card and at the end and will let you know
 when it's finished.
+
+{{< nextcopy >}}

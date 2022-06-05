@@ -25,3 +25,5 @@ It will help you gain a high-level understanding of what we're trying to accompl
 ![Block diagram of basic drone components](vrc_block_diagram.png)
 
 Let's get started with assembly!
+
+{{< nextcopy >}}

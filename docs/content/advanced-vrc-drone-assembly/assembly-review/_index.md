@@ -7,3 +7,5 @@ weight: 10
 review all that we covered during the advanced hardware modifications.
 
 {{< youtube tqwe0PIzlGE >}}
+
+{{< nextcopy >}}

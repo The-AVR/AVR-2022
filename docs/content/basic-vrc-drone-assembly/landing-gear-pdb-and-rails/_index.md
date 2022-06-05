@@ -128,3 +128,5 @@ to the screws for the rails and connected plates. In any case make sure to check
 the screws regularly, especially if you have any payload attached
 to these rails (such as a camera module).
 {{% /alert %}}
+
+{{< nextcopy >}}

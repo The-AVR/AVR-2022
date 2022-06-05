@@ -4,3 +4,5 @@ weight: 8
 ---
 
 ![](vmc_highlight.png)
+
+{{< nextcopy >}}

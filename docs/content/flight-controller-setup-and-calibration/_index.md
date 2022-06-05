@@ -27,3 +27,5 @@ You can find the file labeled `QGroundControl-Installer.exe` at
 
 The following sections will guide you through the process of using
 QGC to set up your FC. Let's get started!
+
+{{< nextcopy >}}

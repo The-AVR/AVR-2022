@@ -46,3 +46,6 @@ and prepare for competition day.
   - Estimated print time: 1 hour 30 minutes
 - [Rotor guards](https://github.com/bellflight/VRC-2022/tree/main/3DPrints/PropGuards) (x4)
   - Estimated print time: 2 hours 30 minutes per motor
+
+
+{{< nextcopy >}}

@@ -31,3 +31,5 @@ if you need a refresher. Your landing gear upgrade is now complete.
 Look at how much space is now beneath your VRC drone!
 
 ![3D printed landing gear upgrade complete](landing_gear_upgrade_complete.jpg)
+
+{{< nextcopy >}}

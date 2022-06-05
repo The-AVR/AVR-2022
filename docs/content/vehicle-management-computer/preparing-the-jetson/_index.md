@@ -28,3 +28,5 @@ description: "Physically assemble the Jetson"
 {{% alert title="Success" color="success" %}}
 Now you're ready to flash the SD Card!
 {{% /alert %}}
+
+{{< nextcopy >}}

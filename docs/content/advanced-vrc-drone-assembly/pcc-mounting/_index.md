@@ -119,3 +119,5 @@ Make sure that the brown wire (ground) faces the edge of the PCC and the
 signal wire (orange) faces the bottom of the board.
 
 ![Servos connected to PCC](servos_connected_to_pcc.jpg)
+
+{{< nextcopy >}}

@@ -68,3 +68,5 @@ Motor rotation is important to make sure the drone can gain altitude and hover.
 This will be covered shortly, but know that swapping any two of the three motor
 leads will reverse the motor rotation.
 {{% /alert %}}
+
+{{< nextcopy >}}
