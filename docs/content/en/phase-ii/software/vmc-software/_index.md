@@ -88,12 +88,10 @@ You'll need to accept that you trust a certificate the first time.
 Now, run the following commands in sequence:
 
 ```bash
-sudo apt update
-sudo apt install git -y
 git clone https://github.com/bellflight/VRC-2022 ~/VRC-2022
-cd ~/VRC-2022/VMC/FlightSoftware/
-chmod +x setup.sh
-./setup.sh
+cd ~/VRC-2022/VMC/
+chmod +x setup.py
+./setup.py
 ```
 
 {{% alert title="Note" color="note" %}}
@@ -147,12 +145,12 @@ If a new version is ever available, you just need to go into the
 directory the repo is cloned to, pull the latest code, and re-run the setup script:
 
 ```bash
-cd ~/VRC-2022/VMC/FlightSoftware/
+cd ~/VRC-2022/VMC/
 git pull
-./setup.sh
+./setup.py
 ```
 
-The `setup.sh` script is safe to run at any time,
+The `setup.py` script is safe to run at any time,
 it won't mess anything up by running it after everything is already configured.
 
 ## Running

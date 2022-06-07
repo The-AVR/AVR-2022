@@ -28,8 +28,8 @@ Run the following commands:
 ```bash
 git clone --recurse-submodules https://github.com/bellflight/VRC-2022 ~/VRC-2022
 cd ~/VRC-2022/VMC/
-chmod +x setup.sh
-./setup.sh
+chmod +x setup.py
+./setup.py
 ```
 
 Please note, this setup script WILL take a while the first time
@@ -52,5 +52,5 @@ If you ever need to update the VRC software, run:
 # Update the git repo
 git pull
 # Re-run the setup script
-./setup.sh
+./setup.py
 ```
