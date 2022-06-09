@@ -90,7 +90,7 @@ python scripts/install_requirements.py
 
 If on a Jetson, clone the repository and check out the git branch you want.
 You can now follow the instructions inside
-[VMC/README.md](VMC/README.md) to run the `setup.sh`
+[VMC/README.md](VMC/README.md) to run the `setup.py`
 script and add `--dev` for development.
 
 Note, with `start.py` commands, make sure to add `--local` to the command.
