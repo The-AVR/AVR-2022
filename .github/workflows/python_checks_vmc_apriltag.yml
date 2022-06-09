@@ -8,7 +8,6 @@ on:
       - develop
     paths:
       - "VMC/apriltag/python/**"
-      - "Libraries/**"
       - "requirements.txt"
       - "package-lock.json"
 
