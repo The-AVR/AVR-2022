@@ -33,8 +33,7 @@ chmod +x setup.py
 ```
 
 Please note, this setup script WILL take a while the first time
-(depending on your download speed),
-and you may need to re-enter your `sudo` password a few times.
+(depending on your download speed).
 
 ## Usage
 
