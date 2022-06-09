@@ -89,7 +89,7 @@ Now, run the following commands in sequence:
 
 ```bash
 git clone https://github.com/bellflight/VRC-2022 ~/VRC-2022
-cd ~/VRC-2022/VMC/
+cd ~/VRC-2022/VMC/scripts
 chmod +x setup.py
 ./setup.py
 ```
@@ -145,7 +145,7 @@ If a new version is ever available, you just need to go into the
 directory the repo is cloned to, pull the latest code, and re-run the setup script:
 
 ```bash
-cd ~/VRC-2022/VMC/
+cd ~/VRC-2022/VMC/scripts
 git pull
 ./setup.py
 ```
@@ -159,8 +159,8 @@ To run the VMCsoftware, just go into the directory
 the code was cloned to, and run the command `sudo docker-compose up`:
 
 ```bash
-cd ~/VRC-2022/VMC/FlightSoftware/
-sudo docker-compose up
+cd ~/VRC-2022/VMC/
+./start.py run
 ```
 
 ![](image7.png)
