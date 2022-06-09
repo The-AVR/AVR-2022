@@ -105,9 +105,9 @@ def main(development):
     orig_username = subprocess.check_output(["id", "-nu", os.environ["SUDO_UID"]]).decode("utf-8").strip()
     # run a few commands as the original user, so as not to break permissons
     print("Configuring credential cache")
-    subprocess.check_call(["su", "-", orig_username, "-c", "git config --global credential.helper cache"])
+    subprocess.check_call(["runuser", orig_username, "--", "git", "config", "--global", "credential.helper", "cache"])
     print("Fetching latest code")
-    subprocess.check_call(["su", "-", orig_username, "-c", f"cd {VRC_DIR} && git fetch"])
+    subprocess.check_call(["runuser", orig_username, "--", "git", "fetch"])
 
     # check if we're on the main branch
     if not development:
@@ -190,7 +190,7 @@ def main(development):
 
 
 
-    print_title("Removing Old Docker data")
+    print_title("Removing Old Docker Data")
     print("Removing old Docker containers")
     containers = subprocess.check_output(["docker", "container", "ps", "-a", "-q"]).decode("utf-8").splitlines()
     for container in containers:
@@ -217,7 +217,7 @@ def main(development):
     with open(daemon_json, "r") as fp:
         daemon_data = json.load(fp)
 
-    if not daemon_data.get("default-runtime", "") == "nvidia":
+    if daemon_data.get("default-runtime", "") != "nvidia":
         print(f"Updating {daemon_json}")
 
         daemon_data["default-runtime"] = "nvidia"
