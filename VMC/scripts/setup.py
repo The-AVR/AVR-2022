@@ -132,7 +132,8 @@ def main(development):
         sys.exit(1)
 
     print("Making sure submodules are up-to-date")
-    subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(VRC_DIR, '.git')}", f"--work-tree={VRC_DIR}", "submodule", "update", "--init", "--recursive"]), cwd=VRC_DIR)
+    # https://stackoverflow.com/a/64621032
+    subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(VRC_DIR, '.git')}", "--work-tree=.", "-C", VRC_DIR, "submodule", "update", "--init", "--recursive"]), cwd=VRC_DIR)
 
     print_bar()
 
