@@ -46,11 +46,13 @@ def print_title(title):
     print(f"{CYAN}{title}{NC}")
     print_bar()
 
+
 def original_user_cmd(username, cmd):
     """
     Take a command list, and return a version that runs as the given username.
     """
     return ["sudo", "-u", username, "-i"] + cmd
+
 
 def main(development):
     if not os.path.isdir(VRC_DIR):
