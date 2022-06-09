@@ -1,5 +1,4 @@
-import json
-from typing import Any, Optional
+from typing import Any
 
 import paho.mqtt.client as mqtt
 from lib.config import config
@@ -32,11 +31,7 @@ class MQTTClient(QtCore.QObject):
         self.client.on_disconnect = self.on_disconnect
 
     def on_connect(
-        self,
-        client: mqtt.Client,
-        userdata: Any,
-        rc: int,
-        properties: Optional[mqtt.Properties] = None,
+        self, client: mqtt.Client, userdata: Any, flags: dict, rc: int
     ) -> None:
         """
         Callback when the MQTT client connects
@@ -113,9 +108,6 @@ class MQTTClient(QtCore.QObject):
         """
         if not topic:
             return
-
-        if not isinstance(payload, str):
-            payload = json.dumps(payload)
 
         logger.debug(f"Publishing message {topic}: {payload}")
         self.client.publish(topic, payload)

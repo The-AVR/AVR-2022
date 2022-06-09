@@ -5,12 +5,12 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 import transforms3d as t3d
-from mqtt_library import (
-    MQTTModule,
-    VrcApriltagsRawMessage,
+from bell.vrc.mqtt.client import MQTTModule
+from bell.vrc.mqtt.payloads import (
+    VrcApriltagsRawPayload,
     VrcApriltagsRawTags,
-    VrcApriltagsSelectedMessage,
-    VrcApriltagsVisibleMessage,
+    VrcApriltagsSelectedPayload,
+    VrcApriltagsVisiblePayload,
     VrcApriltagsVisibleTags,
     VrcApriltagsVisibleTagsPosWorld,
 )
@@ -70,7 +70,7 @@ class AprilTagModule(MQTTModule):
             H_to_from = f"H_{name}_cam"
             self.tm[H_to_from] = np.eye(4)
 
-    def on_apriltag_message(self, payload: VrcApriltagsRawMessage) -> None:
+    def on_apriltag_message(self, payload: VrcApriltagsRawPayload) -> None:
         tag_list: List[VrcApriltagsVisibleTags] = []
 
         min_dist = 1000000
@@ -123,7 +123,7 @@ class AprilTagModule(MQTTModule):
             tag_list.append(tag)
 
         self.send_message(
-            "vrc/apriltags/visible", VrcApriltagsVisibleMessage(tags=tag_list)
+            "vrc/apriltags/visible", VrcApriltagsVisiblePayload(tags=tag_list)
         )
 
         if closest_tag is not None:
@@ -134,7 +134,7 @@ class AprilTagModule(MQTTModule):
             assert pos_world["y"] is not None
             assert pos_world["z"] is not None
 
-            apriltag_position = VrcApriltagsSelectedMessage(
+            apriltag_position = VrcApriltagsSelectedPayload(
                 tag_id=tag_list[closest_tag]["id"],
                 pos={
                     "n": pos_world["x"],

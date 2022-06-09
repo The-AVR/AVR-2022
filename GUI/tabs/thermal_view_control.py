@@ -8,10 +8,10 @@ from typing import List, Optional, Tuple
 import colour
 import numpy as np
 import scipy.interpolate
-from lib.mqtt_library import (
-    VrcPcmSetLaserOffMessage,
-    VrcPcmSetLaserOnMessage,
-    VrcPcmSetServoPctMessage,
+from bell.vrc.mqtt.payloads import (
+    VrcPcmSetLaserOffPayload,
+    VrcPcmSetLaserOnPayload,
+    VrcPcmSetServoPctPayload,
 )
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -126,10 +126,7 @@ class ThermalView(QtWidgets.QWidget):
                 )
 
 
-class JoystickWidget(QtWidgets.QWidget):
-
-    send_message: QtCore.SignalInstance = QtCore.Signal(str, object)  # type: ignore
-
+class JoystickWidget(BaseTabWidget):
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
 
@@ -157,13 +154,13 @@ class JoystickWidget(QtWidgets.QWidget):
         return QtCore.QPointF(self.width() / 2, self.height() / 2)
 
     def move_gimbal(self, x_servo_percent: int, y_servo_percent: int) -> None:
-        self.send_message.emit(
+        self.send_message(
             "vrc/pcm/set_servo_pct",
-            VrcPcmSetServoPctMessage(servo=2, percent=x_servo_percent),
+            VrcPcmSetServoPctPayload(servo=2, percent=x_servo_percent),
         )
-        self.send_message.emit(
+        self.send_message(
             "vrc/pcm/set_servo_pct",
-            VrcPcmSetServoPctMessage(servo=3, percent=y_servo_percent),
+            VrcPcmSetServoPctPayload(servo=3, percent=y_servo_percent),
         )
 
     def update_servos(self) -> None:
@@ -277,9 +274,6 @@ class JoystickWidget(QtWidgets.QWidget):
 
 
 class ThermalViewControlWidget(BaseTabWidget):
-
-    send_message: QtCore.SignalInstance = QtCore.Signal(str, object)  # type: ignore
-
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
 
@@ -322,16 +316,14 @@ class ThermalViewControlWidget(BaseTabWidget):
         layout.addWidget(joystick_groupbox)
 
         # connect signals
-        joystick.send_message.connect(self.send_message.emit)
+        joystick.emit_message.connect(self.emit_message.emit)
 
         set_laser_on_button.clicked.connect(  # type: ignore
-            lambda: self.send_message.emit(
-                "vrc/pcm/set_laser_on", VrcPcmSetLaserOnMessage()
-            )
+            lambda: self.send_message("vrc/pcm/set_laser_on", VrcPcmSetLaserOnPayload())
         )
         set_laser_off_button.clicked.connect(  # type: ignore
-            lambda: self.send_message.emit(
-                "vrc/pcm/set_laser_off", VrcPcmSetLaserOffMessage()
+            lambda: self.send_message(
+                "vrc/pcm/set_laser_off", VrcPcmSetLaserOffPayload()
             )
         )
 

@@ -3,13 +3,13 @@ from __future__ import annotations
 import json
 from typing import Dict
 
-from lib.mqtt_library import (
-    VrcFcmAttitudeEulerMessage,
-    VrcFcmBatteryMessage,
-    VrcFcmGpsInfoMessage,
-    VrcFcmLocationGlobalMessage,
-    VrcFcmLocationLocalMessage,
-    VrcFcmStatusMessage,
+from bell.vrc.mqtt.payloads import (
+    VrcFcmAttitudeEulerPayload,
+    VrcFcmBatteryPayload,
+    VrcFcmGpsInfoPayload,
+    VrcFcmLocationGlobalPayload,
+    VrcFcmLocationLocalPayload,
+    VrcFcmStatusPayload,
 )
 from lib.widgets import DisplayLineEdit, StatusLabel
 from PySide6 import QtCore, QtWidgets
@@ -215,7 +215,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.att_p_line_edit.setText("")
         self.att_y_line_edit.setText("")
 
-    def update_satellites(self, payload: VrcFcmGpsInfoMessage) -> None:
+    def update_satellites(self, payload: VrcFcmGpsInfoPayload) -> None:
         """
         Update satellites information
         """
@@ -223,7 +223,7 @@ class VMCTelemetryWidget(BaseTabWidget):
             f"{payload['num_satellites']} visible, {payload['fix_type']}"
         )
 
-    def update_battery(self, payload: VrcFcmBatteryMessage) -> None:
+    def update_battery(self, payload: VrcFcmBatteryPayload) -> None:
         """
         Update battery information
         """
@@ -258,7 +258,7 @@ class VMCTelemetryWidget(BaseTabWidget):
 
         self.battery_percent_bar.setStyleSheet(stylesheet)
 
-    def update_status(self, payload: VrcFcmStatusMessage) -> None:
+    def update_status(self, payload: VrcFcmStatusPayload) -> None:
         """
         Update status information
         """
@@ -272,7 +272,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.armed_label.setText(f"<span style='color:{color};'>{text}</span>")
         self.flight_mode_label.setText(payload["mode"])
 
-    def update_local_location(self, payload: VrcFcmLocationLocalMessage) -> None:
+    def update_local_location(self, payload: VrcFcmLocationLocalPayload) -> None:
         """
         Update local location information
         """
@@ -280,7 +280,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.loc_y_line_edit.setText(str(payload["dY"]))
         self.loc_z_line_edit.setText(str(payload["dZ"]))
 
-    def update_global_location(self, payload: VrcFcmLocationGlobalMessage) -> None:
+    def update_global_location(self, payload: VrcFcmLocationGlobalPayload) -> None:
         """
         Update global location information
         """
@@ -288,7 +288,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.loc_lon_line_edit.setText(str(payload["lon"]))
         self.loc_alt_line_edit.setText(str(payload["alt"]))
 
-    def update_euler_attitude(self, payload: VrcFcmAttitudeEulerMessage) -> None:
+    def update_euler_attitude(self, payload: VrcFcmAttitudeEulerPayload) -> None:
         """
         Update euler attitude information
         """

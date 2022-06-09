@@ -3,7 +3,7 @@ from typing import Optional, Tuple
 
 import cv2
 from loguru import logger
-
+from bell.vrc.utils.decorators import run_forever
 
 class CaptureDevice:
     def __init__(
@@ -66,16 +66,13 @@ class CaptureDevice:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         return ret, img
 
+    @run_forever(frequency=100)
     def run(self) -> None:
-        while True:
-            # try to read frame
-            ret, _ = self.read()
+        # try to read frame
+        ret, _ = self.read()
 
-            if not ret:
-                logger.warning("cv2.VideoCapture read failed")
-
-            # limit us to 100 Hz
-            time.sleep(0.01)
+        if not ret:
+            logger.warning("cv2.VideoCapture read failed")
 
 
 if __name__ == "__main__":

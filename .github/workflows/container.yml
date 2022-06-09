@@ -31,9 +31,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
-      - name: Copy Libraries
-        run: python scripts/copy_libraries.py
-
       - name: Cache PX4
         if: inputs.image == 'fcm'
         uses: actions/cache@v3

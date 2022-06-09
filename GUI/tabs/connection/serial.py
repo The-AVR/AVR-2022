@@ -1,10 +1,10 @@
 import threading
 import time
 
-import serial
+from bell.vrc.serial.client import SerialLoop
+from bell.vrc.serial.ports import list_serial_ports
 from lib.config import config
 from lib.enums import ConnectionState
-from lib.pcc_library import list_serial_ports
 from lib.widgets import IntLineEdit
 from loguru import logger
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -20,7 +20,7 @@ class SerialClient(QtCore.QObject):
     def __init__(self) -> None:
         super().__init__()
 
-        self.client = serial.Serial()
+        self.client = SerialLoop()
 
     def read_loop(self) -> None:
         """

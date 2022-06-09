@@ -7,8 +7,8 @@ from typing import Any, Dict, Optional, Tuple
 import board
 import neopixel_spi as neopixel
 import paho.mqtt.client as mqtt
+from bell.vrc.mqtt.client import MQTTModule
 from loguru import logger
-from mqtt_library import MQTTModule
 
 NUM_PIXELS = 12
 PIXEL_ORDER = neopixel.GRB

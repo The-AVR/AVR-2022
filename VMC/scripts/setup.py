@@ -27,10 +27,15 @@ def check_sudo():
     if os.geteuid() != 0:
         # re run ourselves with sudo
         print("Needing sudo privledges, re-lauching")
-        sys.exit(
-            subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode
-        )
 
+        try:
+            sys.exit(
+                subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode
+            )
+        except PermissionError:
+            sys.exit(0)
+        except KeyboardInterrupt:
+            sys.exit(1)
 
 def print_bar():
     """
@@ -271,7 +276,6 @@ def main(development):
     # build pymavlink
     if development:
         subprocess.check_call(["python3", os.path.join(VRC_DIR, "PX4", "build.py"), "--pymavlink"])
-        subprocess.check_call(["python3", os.path.join(VRC_DIR, "scripts", "copy_libraries.py")])
 
     # make sure docker is logged in
     proc = subprocess.run(["docker", "pull", "ghcr.io/bellflight/vrc/2022/mqtt:latest"])

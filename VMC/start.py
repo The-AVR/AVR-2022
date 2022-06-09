@@ -31,10 +31,15 @@ def check_sudo() -> None:
 
     # re run ourselves with sudo
     print("Needing sudo privledges to run docker, re-lauching")
-    sys.exit(
-        subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode
-    )
 
+    try:
+        sys.exit(
+            subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode
+        )
+    except PermissionError:
+        sys.exit(0)
+    except KeyboardInterrupt:
+        sys.exit(1)
 
 def apriltag_service(compose_services: dict) -> None:
     apriltag_data = {

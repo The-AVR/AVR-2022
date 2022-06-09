@@ -1,4 +1,2 @@
 *.whl
 *.tar.gz
-mqtt_library.py
-decorator_library.py

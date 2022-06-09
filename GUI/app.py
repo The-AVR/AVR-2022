@@ -151,7 +151,7 @@ class MainWindow(QtWidgets.QWidget):
         self.vmc_control_widget.pop_in.connect(self.tabs.pop_in)
         self.tabs.addTab(self.vmc_control_widget, self.vmc_control_widget.windowTitle())
 
-        self.vmc_control_widget.send_message.connect(
+        self.vmc_control_widget.emit_message.connect(
             self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
         )
 
@@ -169,7 +169,7 @@ class MainWindow(QtWidgets.QWidget):
             self.thermal_view_control_widget.process_message
         )
 
-        self.thermal_view_control_widget.send_message.connect(
+        self.thermal_view_control_widget.emit_message.connect(
             self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
         )
 
@@ -183,7 +183,7 @@ class MainWindow(QtWidgets.QWidget):
         self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
             self.mqtt_debug_widget.process_message
         )
-        self.mqtt_debug_widget.send_message.connect(
+        self.mqtt_debug_widget.emit_message.connect(
             self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
         )
 

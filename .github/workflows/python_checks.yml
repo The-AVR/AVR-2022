@@ -44,12 +44,11 @@ jobs:
         run: |
           npm install
           python scripts/install_requirements.py --directory ${{ inputs.project }} --strict
-          python scripts/copy_libraries.py
 
       - name: Check Formatting
         run: python scripts/step_summary.py
         env:
-          RUN_CMD: python -m black ${{ inputs.project }} --verbose --check
+          RUN_CMD: python -m black ${{ inputs.project }} --check
           CMD_FAILURE_TEXT: |
             ## Formatting Failure :x:
 

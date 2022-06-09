@@ -16,9 +16,15 @@ def check_sudo():
     if os.geteuid() != 0:
         # re run ourselves with sudo
         print("Needing sudo privledges, re-lauching")
-        sys.exit(
-            subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode
-        )
+
+        try:
+            sys.exit(
+                subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode
+            )
+        except PermissionError:
+            sys.exit(0)
+        except KeyboardInterrupt:
+            sys.exit(1)
 
 def disconnect():
     """
