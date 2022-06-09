@@ -11,7 +11,6 @@ For Bell employees and partners, work items are tracked on [Trello](https://trel
 - `3DPrints`: 3D printing files and source CAD files
 - `docs`: Documentation site
 - `GUI`: All-in-one GUI
-- `Libraries`: Shared libraries that get copied around
 - `PCC`: PCC firmware
 - `PX4`: PX4 and MAVLink files
 - `RVR`: RVR files

@@ -1,5 +1,4 @@
 import math
-import time
 from typing import Tuple
 
 import numpy as np
@@ -12,7 +11,7 @@ from bell.vrc.mqtt.payloads import (
     VrcVioResyncPayload,
     VrcVioVelocityNedPayload,
 )
-from bell.vrc.utils.decorators import try_except, run_forever
+from bell.vrc.utils.decorators import run_forever, try_except
 from loguru import logger
 from vio_library import CameraCoordinateTransformation
 from zed_library import ZEDCamera
