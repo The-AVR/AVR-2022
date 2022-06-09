@@ -271,6 +271,12 @@ def main(development):
         subprocess.check_call(["python3", os.path.join(VRC_DIR, "PX4", "build.py"), "--pymavlink"])
         subprocess.check_call(["python3", os.path.join(VRC_DIR, "scripts", "copy_libraries.py")])
 
+    # make sure docker is logged in
+    proc = subprocess.run(["docker", "pull", "ghcr.io/bellflight/vrc/2022/mqtt:latest"])
+    if proc.returncode != 0:
+        print("Please log into GitHub container registry:")
+        subprocess.check_call(["docker", "login", "ghcr.io"])
+
     # pull images
     cmd = ["python3", os.path.join(VRC_DIR, "VMC", "start.py"), "pull", "--norm"]
     if development:
