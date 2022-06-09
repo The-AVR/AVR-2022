@@ -105,9 +105,9 @@ def main(development):
     orig_username = subprocess.check_output(["id", "-nu", os.environ["SUDO_UID"]]).decode("utf-8").strip()
     # run a few commands as the original user, so as not to break permissons
     print("Configuring credential cache")
-    subprocess.check_call(["runuser", orig_username, "--", "git", "config", "--global", "credential.helper", "cache"])
+    subprocess.check_call(["runuser", orig_username, "-c", "git config --global credential.helper cache"])
     print("Fetching latest code")
-    subprocess.check_call(["runuser", orig_username, "--", "git", "fetch"])
+    subprocess.check_call(["runuser", orig_username, "-c", "git fetch"])
 
     # check if we're on the main branch
     if not development:
