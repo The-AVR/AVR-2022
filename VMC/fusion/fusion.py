@@ -236,13 +236,8 @@ class FusionModule(MQTTModule):
 
         gs = 0
         if "vrc/fusion/groundspeed" in self.message_cache:
-            if (
-                self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
-                is not None
-            ):
-                gs = int(
-                    self.message_cache["vrc/fusion/groundspeed"]["groundspeed"]
-                )
+            if self.message_cache["vrc/fusion/groundspeed"]["groundspeed"] is not None:
+                gs = int(self.message_cache["vrc/fusion/groundspeed"]["groundspeed"])
         else:
             logger.debug("vrc/fusion/groundspeed message cache is empty")
             return
@@ -257,9 +252,7 @@ class FusionModule(MQTTModule):
 
         hil_gps_update = VrcFusionHilGpsPayload(
             time_usec=int(time.time() * 1000000),
-            fix_type=int(
-                self.config["hil_gps_constants"]["fix_type"]
-            ),  # 3 - 3D fix
+            fix_type=int(self.config["hil_gps_constants"]["fix_type"]),  # 3 - 3D fix
             lat=lat,
             lon=lon,
             alt=int(

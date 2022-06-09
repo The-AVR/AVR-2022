@@ -2,8 +2,9 @@ import time
 from typing import Optional, Tuple
 
 import cv2
-from loguru import logger
 from bell.vrc.utils.decorators import run_forever
+from loguru import logger
+
 
 class CaptureDevice:
     def __init__(
