@@ -46,6 +46,11 @@ def print_title(title):
     print(f"{CYAN}{title}{NC}")
     print_bar()
 
+def original_user_cmd(username, cmd):
+    """
+    Take a command list, and return a version that runs as the given username.
+    """
+    return ["sudo", "-u", username, "-i"] + cmd
 
 def main(development):
     if not os.path.isdir(VRC_DIR):
@@ -105,9 +110,9 @@ def main(development):
     orig_username = subprocess.check_output(["id", "-nu", os.environ["SUDO_UID"]]).decode("utf-8").strip()
     # run a few commands as the original user, so as not to break permissons
     print("Configuring credential cache")
-    subprocess.check_call(["runuser", orig_username, "-c", "git config --global credential.helper cache"])
+    subprocess.check_call(original_user_cmd(orig_username, ["git", "config", "--global", "credential.helper", "cache"]))
     print("Fetching latest code")
-    subprocess.check_call(["runuser", orig_username, "-c", "git fetch"], cwd=VRC_DIR)
+    subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(VRC_DIR, '.git')}", f"--work-tree={VRC_DIR}", "fetch"]), cwd=VRC_DIR)
 
     # check if we're on the main branch
     if not development:
@@ -127,7 +132,7 @@ def main(development):
         sys.exit(1)
 
     print("Making sure submodules are up-to-date")
-    subprocess.check_call(["runuser", orig_username, "-c", "git submodule update --init --recursive"], cwd=VRC_DIR)
+    subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(VRC_DIR, '.git')}", f"--work-tree={VRC_DIR}", "submodule", "update", "--init", "--recursive"]), cwd=VRC_DIR)
 
     print_bar()
 
