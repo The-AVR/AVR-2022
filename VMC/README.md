@@ -27,7 +27,7 @@ Run the following commands:
 
 ```bash
 git clone --recurse-submodules https://github.com/bellflight/VRC-2022 ~/VRC-2022
-cd ~/VRC-2022/VMC/
+cd ~/VRC-2022/VMC/scripts
 chmod +x setup.py
 ./setup.py
 ```
@@ -41,7 +41,7 @@ and you may need to re-enter your `sudo` password a few times.
 To start the VRC software, just run:
 
 ```bash
-sudo python3 start.py run
+./start.py run
 ```
 
 To stop the VRC software hit <kbd>Ctrl</kbd>+<kbd>C</kbd>.
