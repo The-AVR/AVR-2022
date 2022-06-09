@@ -107,7 +107,7 @@ def main(development):
     print("Configuring credential cache")
     subprocess.check_call(["runuser", orig_username, "-c", "git config --global credential.helper cache"])
     print("Fetching latest code")
-    subprocess.check_call(["runuser", orig_username, "-c", "git fetch"])
+    subprocess.check_call(["runuser", orig_username, "-c", "git fetch"], cwd=VRC_DIR)
 
     # check if we're on the main branch
     if not development:
@@ -127,7 +127,7 @@ def main(development):
         sys.exit(1)
 
     print("Making sure submodules are up-to-date")
-    subprocess.check_call(["su", "-", orig_username, "-c", f"cd {VRC_DIR} && git submodule update --init --recursive"])
+    subprocess.check_call(["runuser", orig_username, "-c", "git submodule update --init --recursive"], cwd=VRC_DIR)
 
     print_bar()
 
