@@ -53,7 +53,7 @@ def connect():
     # connect
     cmd = ["nmcli", "device", "wifi", "connect", ssid]
     if password:
-        cmd.append(password)
+        cmd.extend(["password", password])
 
     print(f"===== Connecting to network {ssid} =====")
     subprocess.check_call(cmd)
