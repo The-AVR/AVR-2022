@@ -8,13 +8,11 @@ on:
       - develop
     paths:
       - "VMC/pcm/**"
-      - "Libraries/**"
   push:
     branches:
       - main
     paths:
       - "VMC/pcm/**"
-      - "Libraries/**"
 
 jobs:
   pcm:

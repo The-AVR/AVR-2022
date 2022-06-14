@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import contextlib
 import json
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -129,8 +129,6 @@ class MQTTDebugWidget(BaseTabWidget):
     # This widget is an effective clone of MQTT Explorer for diagnostic purposes.
     # Displays the latest MQTT message for every topic in a tree view.
 
-    send_message: QtCore.SignalInstance = QtCore.Signal(str, str)  # type: ignore
-
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
 
@@ -208,7 +206,7 @@ class MQTTDebugWidget(BaseTabWidget):
         self.tree_widget.preload_data.connect(self.preload_data)
 
         self.send_button.clicked.connect(  # type: ignore
-            lambda: self.send_message.emit(
+            lambda: self.send_message(
                 self.topic_line_edit.text(), self.payload_text_edit.toPlainText()
             )
         )
@@ -318,6 +316,16 @@ class MQTTDebugWidget(BaseTabWidget):
         # set the data
         self.data_view.setText(payload)
 
+    def set_item_background(
+        self, item: QtWidgets.QTreeWidgetItem, color: Tuple[int, int, int]
+    ) -> None:
+        """
+        Set the background color for an item.
+        """
+        # a runtime error is thrown if the item is already deleted (disconnected)
+        with contextlib.suppress(RuntimeError):
+            item.setBackground(0, QtGui.QColor(*color))
+
     def blink_item(self, item: QtWidgets.QTreeWidgetItem, topic: str) -> None:
         """
         Blink the background color of an item
@@ -329,11 +337,11 @@ class MQTTDebugWidget(BaseTabWidget):
             timer.deleteLater()
         else:
             # otherwise, set background to grey
-            item.setBackground(0, QtGui.QColor(220, 220, 220))
+            self.set_item_background(item, (220, 220, 220))
 
         # start new timer to clear background
         timer = QtCore.QTimer()
-        timer.timeout.connect(lambda: item.setBackground(0, QtGui.QColor(255, 255, 255)))  # type: ignore
+        timer.timeout.connect(lambda: self.set_item_background(item, (255, 255, 255)))  # type: ignore
         timer.setSingleShot(True)
         timer.start(100)
 

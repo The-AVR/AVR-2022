@@ -1,15 +1,14 @@
 from __future__ import annotations
 
-import json
-from typing import Any, Literal, Tuple
+from typing import Literal, Tuple
 
-from lib.mqtt_library import (
-    VrcAutonmousMessage,
-    VrcPcmResetMessage,
-    VrcPcmSetBaseColorMessage,
-    VrcPcmSetServoOpenCloseMessage,
+from bell.vrc.mqtt.payloads import (
+    VrcAutonomousPayload,
+    VrcPcmResetPayload,
+    VrcPcmSetBaseColorPayload,
+    VrcPcmSetServoOpenClosePayload,
 )
-from PySide6 import QtCore, QtWidgets
+from PySide6 import QtWidgets
 
 from .base import BaseTabWidget
 
@@ -17,8 +16,6 @@ from .base import BaseTabWidget
 class VMCControlWidget(BaseTabWidget):
     # This is the primary control widget for the drone. This allows the user
     # to set LED color, open/close servos etc.
-
-    send_message: QtCore.SignalInstance = QtCore.Signal(str, str)  # type: ignore
 
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
@@ -160,24 +157,18 @@ class VMCControlWidget(BaseTabWidget):
 
         reset_button = QtWidgets.QPushButton("Reset Peripheals")
         reset_button.setStyleSheet("background-color: yellow")
-        reset_button.clicked.connect(lambda: self.publish_message("vrc/pcm/reset", VrcPcmResetMessage()))  # type: ignore
+        reset_button.clicked.connect(lambda: self.send_message("vrc/pcm/reset", VrcPcmResetPayload()))  # type: ignore
         reset_layout.addWidget(reset_button)
 
         layout.addWidget(reset_groupbox, 3, 3, 1, 1)
-
-    def publish_message(self, topic: str, payload: Any) -> None:
-        """
-        Publish a message to a topic
-        """
-        self.send_message.emit(topic, json.dumps(payload))
 
     def set_servo(self, number: int, action: Literal["open", "close"]) -> None:
         """
         Set a servo state
         """
-        self.publish_message(
-            "vrc/pcc/set_servo_open_close",
-            VrcPcmSetServoOpenCloseMessage(servo=number, action=action),
+        self.send_message(
+            "vrc/pcm/set_servo_open_close",
+            VrcPcmSetServoOpenClosePayload(servo=number, action=action),
         )
 
     def set_servo_all(self, action: Literal["open", "close"]) -> None:
@@ -191,12 +182,12 @@ class VMCControlWidget(BaseTabWidget):
         """
         Set LED color
         """
-        self.publish_message(
-            "vrc/pcm/set_base_color", VrcPcmSetBaseColorMessage(wrgb=color)
+        self.send_message(
+            "vrc/pcm/set_base_color", VrcPcmSetBaseColorPayload(wrgb=color)
         )
 
     def set_autonomous(self, state: bool) -> None:
         """
         Set autonomous mode
         """
-        self.publish_message("vrc/autonomous", VrcAutonmousMessage(enable=state))
+        self.send_message("vrc/autonomous", VrcAutonomousPayload(enable=state))
