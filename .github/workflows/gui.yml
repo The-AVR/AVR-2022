@@ -31,9 +31,7 @@ jobs:
           cache-dependency-path: GUI
 
       - name: Install Packages
-        run: |
-          python scripts/install_requirements.py --directory GUI --strict
-          python scripts/copy_libraries.py
+        run: python scripts/install_requirements.py --directory GUI --strict
 
       - name: Build GUI
         run: python GUI/build.py
@@ -44,6 +42,14 @@ jobs:
         uses: gregziegan/fetch-latest-release@v2.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete Existing GUI
+        if: github.event_name != 'pull_request'
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ steps.latest_release.outputs.tag_name }}
+          assets: '*.exe'
 
       - name: Upload GUI to Release
         if: github.event_name != 'pull_request'

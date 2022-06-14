@@ -8,7 +8,6 @@ on:
       - develop
     paths:
       - "VMC/thermal/**"
-      - "Libraries/**"
       - "requirements.txt"
       - "package-lock.json"
 

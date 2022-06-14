@@ -8,11 +8,6 @@ on:
       - develop
     paths:
       - "VMC/sandbox/**"
-  push:
-    branches:
-      - main
-    paths:
-      - "VMC/sandbox/**"
 
 jobs:
   sandbox:

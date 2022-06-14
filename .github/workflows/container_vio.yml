@@ -8,13 +8,11 @@ on:
       - develop
     paths:
       - "VMC/vio/**"
-      - "Libraries/**"
   push:
     branches:
       - main
     paths:
       - "VMC/vio/**"
-      - "Libraries/**"
 
 jobs:
   vio:

@@ -8,13 +8,11 @@ on:
       - develop
     paths:
       - "VMC/fcm/**"
-      - "Libraries/**"
   push:
     branches:
       - main
     paths:
       - "VMC/fcm/**"
-      - "Libraries/**"
 
 jobs:
   fcm:

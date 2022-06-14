@@ -11,7 +11,6 @@ For Bell employees and partners, work items are tracked on [Trello](https://trel
 - `3DPrints`: 3D printing files and source CAD files
 - `docs`: Documentation site
 - `GUI`: All-in-one GUI
-- `Libraries`: Shared libraries that get copied around
 - `PCC`: PCC firmware
 - `PX4`: PX4 and MAVLink files
 - `RVR`: RVR files
@@ -80,12 +79,6 @@ Activate the virtual environment:
 source .venv/bin/activate # Linux
 ```
 
-Now, generate and copy the libraries:
-
-```bash
-python scripts/copy_libraries.py
-```
-
 Finally, you can install all the dependencies so you get autocomplete and type hinting:
 
 ```bash
@@ -96,7 +89,7 @@ python scripts/install_requirements.py
 
 If on a Jetson, clone the repository and check out the git branch you want.
 You can now follow the instructions inside
-[VMC/README.md](VMC/README.md) to run the `setup.sh`
+[VMC/README.md](VMC/README.md) to run the `setup.py`
 script and add `--dev` for development.
 
 Note, with `start.py` commands, make sure to add `--local` to the command.
