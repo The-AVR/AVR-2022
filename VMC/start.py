@@ -300,34 +300,35 @@ if __name__ == "__main__":
         "-m",
         "--min",
         action="store_true",
-        help=f"Perform action on minimal modules ({', '.join(sorted(min_modules))}). Will overwrite any modules explicitly specified.",
+        help=f"Perform action on minimal modules ({', '.join(sorted(min_modules))}). Adds to any modules explicitly specified.",
     )
     exgroup.add_argument(
         "-n",
         "--norm",
         action="store_true",
-        help=f"Perform action on normal modules ({', '.join(sorted(norm_modules))}). Will overwrite any modules explicitly specified. If nothing else is specified, this is the default.",
+        help=f"Perform action on normal modules ({', '.join(sorted(norm_modules))}). Adds to any modules explicitly specified. If nothing else is specified, this is the default.",
     )
     exgroup.add_argument(
         "-a",
         "--all",
         action="store_true",
-        help=f"Perform action on all modules ({', '.join(sorted(all_modules))}). Will overwrite any modules explicitly specified.",
+        help=f"Perform action on all modules ({', '.join(sorted(all_modules))}). Adds to any modules explicitly specified.",
     )
 
     args = parser.parse_args()
 
     if args.min:
         # minimal modules selected
-        args.modules = min_modules
+        args.modules += min_modules
     elif args.norm:
         # normal modules selected
-        args.modules = norm_modules
+        args.modules += norm_modules
     elif args.all:
         # all modules selected
-        args.modules = all_modules
+        args.modules += all_modules
     elif not args.modules:
         # nothing specified, default to normal
         args.modules = norm_modules
 
+    args.modules = list(set(args.modules))  # remove duplicates
     main(action=args.action, modules=args.modules, local=args.local)
