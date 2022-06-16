@@ -1,35 +1,33 @@
 ---
 title: "GUI"
-description: "For teams that choose not to write any autonomous code, we have provided a small desktop app to help control the peripherals connected to the PCC."
 weight: 5
 ---
 
 ## Setup
 
-TODO
+You should have already setup the VRC GUI when testing your PCC [here]({{< relref "../../peripheral-control-computer/test-the-pcc/#software-setup" >}}).
 
 ## Usage
 
-Now, you'll be able to open the file `GUI/app.py` and hit the Play button in VS Code.
+Open the application. You'll be brought to the Connections tab.
+After starting the VRC software on your Jetson, put in the Jetson's
+IP address under the "MQTT" section. Leave the port as is.
 
-{{% alert title="Note" color="note" %}}
-The VRC software must be already be running on the VMC!
-{{% /alert %}}
+![Connections tab](2022-06-16-12-22-06.png)
 
-When the application starts, it'll ask for the IP address of your drone.
+Click "Connect", and make sure the application properly connects.
 
-![](image.png)
+![](2022-06-16-12-23-17.png)
 
-Enter that, and click "Ok". The application will now connect to your drone.
+If the application is unable to connect to your drone, the state will show as
+"Failure". Make sure the software is running, and you got the IP address correct.
 
-![](image1.png)
+After the application connects, all the VMC-related tabs will become enabled.
 
-If the application is unable to connect to your drone,
-it'll show an error message and exit.
+## Tabs
 
-### Control Window
+### VMC Control
 
-![](image2.png)
 
 Now, you can click the buttons to change the color of the LEDs,
 open and close servos, and do a full peripheral computer reset.
@@ -66,13 +64,17 @@ the entire time.
 Example implementation:
 
 ```python
-class Sandbox():
+from bell.vrc.mqtt.client import MQTTModule
+from bell.vrc.mqtt.payloads import VrcAutonomousPayload
+
+class Sandbox(MQTTModule):
     def __init__(self) -> None:
         self.enabled = False
+        self.topic_map = {"vrc/autonomous": self.on_autonomous_message}
 
     ...
 
-    def on_autonomous_message(self, payload: dict) -> None:
+    def on_autonomous_message(self, payload: VrcAutonomousPayload) -> None:
         self.enabled = payload["enable"]
 
     def autonomous_code(self) -> None:
@@ -80,9 +82,7 @@ class Sandbox():
             do_stuff()
 ```
 
-### MQTT Explorer Window
-
-![](image4.png)
+### MQTT Debugger
 
 The MQTT Explorer window is a debug console that shows all of
 the MQTT messages being sent by the software running on the drone.

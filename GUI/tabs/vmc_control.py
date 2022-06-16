@@ -155,7 +155,7 @@ class VMCControlWidget(BaseTabWidget):
         reset_layout = QtWidgets.QVBoxLayout()
         reset_groupbox.setLayout(reset_layout)
 
-        reset_button = QtWidgets.QPushButton("Reset Peripheals")
+        reset_button = QtWidgets.QPushButton("Reset PCC")
         reset_button.setStyleSheet("background-color: yellow")
         reset_button.clicked.connect(lambda: self.send_message("vrc/pcm/reset", VrcPcmResetPayload()))  # type: ignore
         reset_layout.addWidget(reset_button)
