@@ -7,9 +7,53 @@ After
 [setting up your VMC]({{< relref "../../vehicle-management-computer/first-boot" >}})
 you're now ready to install the VRC software.
 
+## Internet
+
+In order to install the VRC software, your Jetson needs to have an internet connection.
+The easiest way by far is if you have ethernet available. If so, just plug
+an ethernet cable into your Jetson and you should be good to go.
+
+If you don't have ethernet, you can use a WiFi connection. First, you can list
+the available networks with:
+
+```bash
+nmcli device wifi list
+```
+
+Example:
+
+![WiFi network list](2022-06-15-17-38-04.png)
+
+Hit <kbd>q</kbd> to exit the list.
+
+If the Jetson is already connected to a WiFi network, you can disconnect it with:
+
+```bash
+sudo nmcli device disconnect wlan0
+```
+
+To connect to a WiFi network, run:
+
+```bash
+# with a password
+sudo nmcli device wifi connect <network name> password <password>
+
+# without a password
+sudo nmcli device wifi connect <network name>
+```
+
+such as:
+
+```bash
+sudo nmcli device wifi connect "Keep my WiFi's name out of your mouth" password "smithslap"
+```
+
+If your network name or password has a space or other special characters,
+you'll need to wrap it in quotes as shown above.
+
 ## Install
 
-Log in to your Jetson and run the following commands in sequence:
+Run the following commands in sequence:
 
 ```bash
 git clone --recurse-submodules https://github.com/bellflight/VRC-2022 ~/VRC-2022

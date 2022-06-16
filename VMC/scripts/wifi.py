@@ -80,7 +80,7 @@ def create():
 
     assert len(password) >= 8
 
-    print(f"===== Removing old connections =====")
+    print("===== Removing old connections =====")
     # disconnect any existing connections
     disconnect()
 

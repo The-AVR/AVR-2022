@@ -3,10 +3,39 @@ title: "Running VMC Software"
 weight: 4
 ---
 
+## Networking
+
+Before running the VMC software, we highly recommend that you configure
+the Jetson to act as it's own WiFi network you can connect to. To do this,
+login to the Jetson, go into the "VMC" directory,
+and run the command `./scripts/wifi.py create`:
+
+```bash
+cd ~/VRC-2022/VMC/
+./scripts/wifi.py create
+```
+
+This will walk you through creating a WiFi network that you can connect to.
+
+![WiFi setup wizard](2022-06-15-19-06-22.png)
+
+{{% alert title="Tip" color="tip" %}}
+
+You can also use the the `disconnect` command to disconnect from all WiFi networks
+and disable the hotspot, or the `connect` command to more easily connect to an
+existing WiFi network.
+
+![Disconnect/Connect to WiFi networks](2022-06-15-19-08-45.png)
+
+{{% /alert %}}
+
+After connecting to the WiFi network, your Jetson will _always_ have the IP address
+`10.42.0.1`, which you can use to [connect to via SSH]({{< relref "../../vehicle-management-computer/connecting-to-the-jetson/#ssh" >}}).
+
 ## Running
 
-To start off simply, go into the directory
-the code was cloned to, and run the command `./start.py run`:
+After connecting to your Jetson via the hotspot, go into the "VMC" directory,
+and run the command `./start.py run`:
 
 ```bash
 cd ~/VRC-2022/VMC/
