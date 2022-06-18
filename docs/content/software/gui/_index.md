@@ -1,6 +1,6 @@
 ---
 title: "GUI"
-weight: 5
+weight: 6
 ---
 
 ## Setup
@@ -41,6 +41,8 @@ To reattach a tab, just close the window.
 
 ### VMC Telemetry
 
+![VMC Telemetry Tab](2022-06-18-12-22-08.png)
+
 This tab is a sort of QGroundControl "Lite" that shows the most important
 telemetry information from the drone. This is **NOT** a full replacement for
 QGroundControl, but quick view of important information while your drone is flying.
@@ -57,13 +59,13 @@ required for stabilized flight and April Tag detection. These indicators will
 turn green once MQTT messages are recieved from a module, and will
 turn red if more than a second has elapsed since the last recieved message.
 
-TODO image
+![Module status indicators](2022-06-18-12-22-33.png)
 
 If all 4 indicators are green, you are good to fly!
 
 ### VMC Control
 
-TODO image
+![VMC Control Tab](2022-06-18-12-21-50.png)
 
 This tab allows you to control various aspects of the drone, including the
 LEDs, and servos connected to the PCC.
@@ -131,7 +133,7 @@ The bounds of the box are the gimbal's limit.
 
 ### MQTT Debugger
 
-TODO image
+![MQTT Debugger Tab](2022-06-18-13-03-59.png)
 
 This tab is a debugging tool that shows all MQTT messages
 that are passing through the VRC software, along with giving
@@ -142,27 +144,53 @@ is a tree view of all the topics with the levels deonting "/"s in the topic name
 When you click on a topic, on the right side will show the last payload recieved
 on that topic, and will update live.
 
-TODO image
+![Viewing live data from a topic](2022-06-18-13-04-42.png)
 
 To show or hide topics, click the arrow on the left of the trip item to expand or hide
 the next level, or right-click the topic and select
-"Expand children" or "Collapse children". To expand or collapse everything, select
-"Expand all" or "Collapse all".
+"Expand Children" or "Collapse Children". To expand or collapse everything, select
+"Expand All" or "Collapse All".
 
-TODO image
+![Expanding or collapsing child topics](2022-06-18-13-05-15.png)
 
 At the bottom of the viewer is a "Running"/"Paused" button that will cause the
 viewer to update live, or freeze the current view. This is not associated with the
 MQTT connection in the Connections tabs. This only stops the viewer from updating
 when trying to look at data.
 
+![Running/paused button](2022-06-18-13-05-25.png)
+
+In the bottom half of the tab is the message sender. You can put in the topic
+you want to send a message to and the payload of the message. Click the "Send"
+button at the bottom to send the message, and you will see it show up above
+in the message viewer.
+
+![Message sender](2022-06-18-13-31-24.png)
+
+{{% alert title="Danger" color="danger" %}}
+Send MQTT messages at your own risk! This is a debugging tool,
+and incorrectly formatted messages, or messages with bogus data
+may cause the flight software to crash, digitially and/or physically.
+{{% /alert %}}
+
+If you want to copy an existing message, right-click on an item in the message
+viewer and select "Preload data". This will prefill the topic and payload
+of the message into the message sender.
+
+![Preload data option](2022-06-18-13-32-27.png)
+
+Alternatively, you can select "Copy Topic" or "Copy Payload" to copy the topic
+or payload to your clipboard.
+
 ### MQTT Logger
 
-TODO image
+![MQTT Logger tab](2022-06-18-13-16-44.png)
 
 This tab is another debugging tool, that can be used to create
 a log of MQTT data that can be analyzed at a later time.
-This will create a folder called "logs" next to the `.exe` and create a new
+
+Clicking the "Record" button at the bottom
+will create a folder called "logs" next to the `.exe` and create a new
 log file with the starting timestamp in the name. The log file is just a `.csv` file
 with 3 columns:
 
@@ -190,6 +218,9 @@ Timestamp,Topic,Payload
 2022-05-15T16:05:21.915846,vrc/vio/confidence,"{""tracker"": 41}"
 ```
 
+To stop recording, click the "Stop recording" button. This will stop writing to the
+log file.
+
 You can do a lot of things with this data. For example,
 you can plot how your drone flew through 3D space using
 `matplotlib` and `pandas`:
@@ -200,10 +231,11 @@ import json
 import matplotlib.pyplot as plt
 import pandas as pd
 
+# load in the CSV file
 df = pd.read_csv("MQTTLog_2022-05-10_17-08-27.csv")
-
+# parse the JSON data into the Pandas dataframe
 df = df.join(df["Payload"].apply(json.loads).apply(pd.Series))
-
+# filter to only data from the vrc/fcm/location/global topic
 px4_data = df[df["Topic"] == "vrc/fcm/location/global"]
 
 fig = plt.figure()
@@ -221,9 +253,51 @@ plt.show()
 
 ![Using `matplotlib` to plot a drone's flight](2022-06-17-11-31-33.png)
 
+Another example is plotting the drone's battery remaining over time:
+
+```python
+import csv
+import datetime
+import json
+
+import matplotlib.pyplot as plt
+
+filename = "MQTTLog_2022-05-15_16-05-21.csv"
+
+x = []
+y = []
+
+with open(filename, "r") as fp:
+    # create a DictReader to read the CSV file
+    reader = csv.DictReader(fp)
+    for row in reader:
+        # only get data from the vrc/fcm/battery topic
+        if row["Topic"] == "vrc/fcm/battery":
+            # parse the JSON data
+            payload = json.loads(row["Message"])
+
+            # convert the timestamp to a Python datetime object
+            x.append(datetime.datetime.fromisoformat(row["Timestamp"]))
+            y.append(payload["soc"])
+
+fig = plt.figure()
+
+plt.plot(x, y)
+
+plt.xlabel("Time")
+plt.ylabel("Battery %")
+
+plt.ylim(0, 105)
+plt.grid(True)
+
+plt.show()
+```
+
+![Using `matplotlib` to plot battery percentage](2022-06-18-13-46-34.png)
+
 ### PCC Tester
 
-TODO image
+![PCC Tester tab](2022-06-18-12-06-12.png)
 
 This is covered when
 [testing the PCC]({{< relref "../../peripheral-control-computer/test-the-pcc/#pcc-tester" >}})

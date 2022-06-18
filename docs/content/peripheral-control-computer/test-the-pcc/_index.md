@@ -93,7 +93,9 @@ deactivate
 
 ## PCC Tester
 
-Launch the application. You should be presented with a screen like this:
+Before, you launch the application, plug the PCC into your computer with a
+MicroUSB cable. The application will not recognize anything plugged in after it starts.
+Now, launch the application. You should be presented with a screen like this:
 
 ![VRC GUI Home Screen](2022-05-20-12-35-28.png)
 
@@ -101,7 +103,7 @@ In the Serial section, select the COM Port your PCC enumerates as. Click "Connec
 and the "PCC Tester" should now be enabled (we'll talk about the other tabs in
 a later section).
 
-TODO add image
+![PCC Tester Tab](2022-06-18-12-06-12.png)
 
 Click around and try the different buttons,
 your PCC should light up the LED and move some servos!

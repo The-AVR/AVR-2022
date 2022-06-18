@@ -4,13 +4,19 @@ weight: 3
 descrription: "This pages goes over different methods you can use to login to your Jetson"
 ---
 
+You'll need to login to your Jetson many times to setup and run software.
+Out of the box, your Jetson will have a default user account called
+`vrc` with a password of `bellvrc22`.
+
+Here are 3 possible methods you can use.
+
 ## Monitor and Keyboard
 
 Possibly the simplest way to connect to your Jetson is with
 a monitor and keyboard. You'll just need a monitor that has HDMI or DisplayPort
 that you can plug in to the Jetson.
 
-If you've already set up your Jetson,
+Once at the desktop,
 you can open a terminal by clicking the application launcher
 in the bottom left (the 9 squares) or with the keyboard shortcut
 <kbd>Ctrl</kbd>+<kbd>Alt</kbd>+<kbd>t</kbd>.
@@ -25,6 +31,16 @@ and download and install the `putty-64bit-<version>-installer.msi` file.
 ![Download this installer file](2022-05-20-09-53-32.png)
 
 ![Run through the setup wizard](2022-05-20-09-54-21.png)
+
+{{% alert title="Note" color="note" %}}
+For Linux users, run
+
+```bash
+sudo apt install putty
+sudo putty
+```
+
+{{% /alert %}}
 
 Now, if you want to power the Jetson via USB (if the Jetson is not connected to
 a wall adapter or a battery) remove the jumper behind the barrel jack.
@@ -60,6 +76,13 @@ Jetson to connect to a network, but don't know what the IP address is.
 {{% /alert %}}
 
 ## SSH
+
+{{% alert title="Note" color="note" %}}
+This only works if you've already configured the operating system on the Jetson.
+If you're setting up your Jetson from scratch, you'll need to use
+a different method.
+{{% /alert %}}
+
 
 In the future, you'll want to use SSH to login to your Jetson,
 as it is far more convenient. SSH is way to login to a Linux system

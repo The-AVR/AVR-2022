@@ -4,7 +4,7 @@ weight: 3
 ---
 
 After
-[setting up your VMC]({{< relref "../../vehicle-management-computer/first-boot" >}})
+[setting up your VMC]({{< relref "../../vehicle-management-computer/system-setup" >}})
 you're now ready to install the VRC software.
 
 ## Internet
@@ -66,7 +66,7 @@ This clones the software repo, changes directory into the repo you
 just cloned, makes the setup script executable,
 and then executes the setup script.
 
-![setup script starting](2022-06-14-19-50-52.png)
+![Setup script starting](2022-06-14-19-50-52.png)
 
 This setup script will automatically install and configure
 everything needed on your Jetson to get it ready for competition.

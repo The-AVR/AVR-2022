@@ -84,8 +84,9 @@ After mounting the cooling fan plug the connector into your VMC as shown below.
 ![Cooling fan connected to VMC](vmc_cooling_plugged_in.jpg)
 
 {{% alert title="Note" color="note" %}}
-The cooling fan only operates when your VMC exceeds a certain temperature.
-Once it cools the VMC beneath the temperature threshold it will shut off.
+The cooling fan automatically turns on to 100% when the VMC is powered on.
+This functionality was installed as part of the VRC software, and helps
+keep the VMC cool.
 {{% /alert %}}
 
 {{< nextcopy >}}
