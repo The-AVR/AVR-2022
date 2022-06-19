@@ -8,13 +8,11 @@ on:
       - develop
     paths:
       - "VMC/thermal/**"
-      - "Libraries/**"
   push:
     branches:
       - main
     paths:
       - "VMC/thermal/**"
-      - "Libraries/**"
 
 jobs:
   thermal:

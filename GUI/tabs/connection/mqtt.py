@@ -1,4 +1,4 @@
-from typing import Any, Optional
+from typing import Any
 
 import paho.mqtt.client as mqtt
 from lib.config import config
@@ -31,11 +31,7 @@ class MQTTClient(QtCore.QObject):
         self.client.on_disconnect = self.on_disconnect
 
     def on_connect(
-        self,
-        client: mqtt.Client,
-        userdata: Any,
-        rc: int,
-        properties: Optional[mqtt.Properties] = None,
+        self, client: mqtt.Client, userdata: Any, flags: dict, rc: int
     ) -> None:
         """
         Callback when the MQTT client connects
@@ -106,7 +102,7 @@ class MQTTClient(QtCore.QObject):
         logger.info("Disconnected from MQTT server")
         self.connection_state.emit(ConnectionState.disconnected)
 
-    def publish(self, topic: str, payload: str) -> None:
+    def publish(self, topic: str, payload: Any) -> None:
         """
         Publish an MQTT message. Proxy function to the underlying client
         """

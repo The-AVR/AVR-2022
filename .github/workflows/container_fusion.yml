@@ -8,13 +8,11 @@ on:
       - develop
     paths:
       - "VMC/fusion/**"
-      - "Libraries/**"
   push:
     branches:
       - main
     paths:
       - "VMC/fusion/**"
-      - "Libraries/**"
 
 jobs:
   fusion:

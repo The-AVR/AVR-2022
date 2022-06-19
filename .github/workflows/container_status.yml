@@ -8,14 +8,11 @@ on:
       - develop
     paths:
       - "VMC/status/**"
-      - "Libraries/**"
   push:
     branches:
       - main
     paths:
       - "VMC/status/**"
-      - "Libraries/**"
-
 jobs:
   status:
     uses: ./.github/workflows/container.yml

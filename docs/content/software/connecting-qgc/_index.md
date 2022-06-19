@@ -1,6 +1,6 @@
 ---
 title: "Connecting QGC"
-weight: 4
+weight: 5
 ---
 
 Once you have the VMC software running on your drone,
@@ -25,3 +25,8 @@ Now whenever you want to connect QGC to your done, go back to
 and click "Connect" at the bottom.
 
 ![](image2.png)
+
+Go back to the main QGC screen and you should see your drone at the Bell headquarters
+with 13 satellites visible.
+
+![](2022-06-18-14-01-41.png)

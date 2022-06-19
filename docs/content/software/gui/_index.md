@@ -1,50 +1,87 @@
 ---
 title: "GUI"
-description: "For teams that choose not to write any autonomous code, we have provided a small desktop app to help control the peripherals connected to the PCC."
-weight: 5
+weight: 6
 ---
 
 ## Setup
 
-TODO
+You should have already setup the VRC GUI when testing your PCC
+[here]({{< relref "../../peripheral-control-computer/test-the-pcc/#software-setup" >}}).
 
 ## Usage
 
-Now, you'll be able to open the file `GUI/app.py` and hit the Play button in VS Code.
+Open the application. You'll be brought to the Connections tab.
+After starting the VRC software on your Jetson, put in the Jetson's
+IP address under the "MQTT" section. Leave the port as is.
 
-{{% alert title="Note" color="note" %}}
-The VRC software must be already be running on the VMC!
-{{% /alert %}}
+![Connections tab](2022-06-16-12-22-06.png)
 
-When the application starts, it'll ask for the IP address of your drone.
+Click "Connect", and make sure the application properly connects.
 
-![](image.png)
+![Connection state](2022-06-16-12-23-17.png)
 
-Enter that, and click "Ok". The application will now connect to your drone.
+If the application is unable to connect to your drone, the state will show as
+"Failure". Make sure the software is running, and you got the IP address correct.
 
-![](image1.png)
+After the application connects, all the VMC-related tabs will become enabled.
 
-If the application is unable to connect to your drone,
-it'll show an error message and exit.
+## Tabs
 
-### Control Window
+The functionality of the application is broken up into multiple tabs. These
+tabs are automatically enabled/disabled based on the connectivity currently
+available. These tabs can be re-ordered as desired. Additionally,
+the tabs can be popped out into seperate windows to create a multi-pane
+view, either by double clicking the tab, or right-clicking and selecting "Pop out".
 
-![](image2.png)
+![You can also double-click to pop out a tab](popout.gif)
 
-Now, you can click the buttons to change the color of the LEDs,
-open and close servos, and do a full peripheral computer reset.
+To reattach a tab, just close the window.
 
-At the bottom of the control window are status icons for the various
-software modules, indicating if they're online. If these are all green,
-you are good to fly!
+![Re-attaching a tab](popin.gif)
 
-![Four green status indicators](image3.png)
+### VMC Telemetry
+
+![VMC Telemetry Tab](2022-06-18-12-22-08.png)
+
+This tab is a sort of QGroundControl "Lite" that shows the most important
+telemetry information from the drone. This is **NOT** a full replacement for
+QGroundControl, but quick view of important information while your drone is flying.
+
+At the top is the status of the flight controller, with information about
+the current GPS fix, battery level and voltage, armed status, and selected
+flight mode.
+
+In the middle is the current location of the drone in local and global coordinates,
+along with the current attitude of the drone in roll, pitch, yaw.
+
+Finally, at the bottom is a display of the status of the software modules
+required for stabilized flight and April Tag detection. These indicators will
+turn green once MQTT messages are recieved from a module, and will
+turn red if more than a second has elapsed since the last recieved message.
+
+![Module status indicators](2022-06-18-12-22-33.png)
+
+If all 4 indicators are green, you are good to fly!
+
+### VMC Control
+
+![VMC Control Tab](2022-06-18-12-21-50.png)
+
+This tab allows you to control various aspects of the drone, including the
+LEDs, and servos connected to the PCC.
+
+Click the individual open/close buttons to open/close individual servos, or click
+the open/close all buttons at the top of open/close all of the servos at once.
+
+Click the color buttons to change the color of the LEDs
+to one of the presets (red, green, blue). The "clear" button at the bottom
+turns off the LEDs.
 
 #### Autonomous Mode
 
-As for the "Autonomous" buttons of the software,
+As for the "Autonomous" buttons in the tab,
 this is purely optional for the teams that have chosen to write autonomous code.
-These buttons send a message to the MQTT topic `vrc/autonomous` with a payload of
+These buttons send a message to the MQTT topic `vrc/autonomous` with a payload of:
 
 ```json
 // enable button
@@ -66,28 +103,201 @@ the entire time.
 Example implementation:
 
 ```python
-class Sandbox():
+from bell.vrc.mqtt.client import MQTTModule
+from bell.vrc.mqtt.payloads import VrcAutonomousPayload
+
+class Sandbox(MQTTModule):
     def __init__(self) -> None:
         self.enabled = False
+        self.topic_map = {"vrc/autonomous": self.on_autonomous_message}
 
     ...
 
-    def on_autonomous_message(self, payload: dict) -> None:
+    def on_autonomous_message(self, payload: VrcAutonomousPayload) -> None:
         self.enabled = payload["enable"]
 
     def autonomous_code(self) -> None:
-        if self.enabled:
+        while self.enabled:
             do_stuff()
 ```
 
-### MQTT Explorer Window
+### Thermal View/Control
 
-![](image4.png)
+![Thermal view and control tab](2022-06-17-11-30-17.png)
 
-The MQTT Explorer window is a debug console that shows all of
-the MQTT messages being sent by the software running on the drone.
-The relevant topics and data structures needed to write your own
-autonomous software is covered in the README of the Phase II repository:
-[https://github.com/bellflight/VRC-2022/](https://github.com/bellflight/VRC-2022/)
+This tab shows a view of the thermal camera, and provides a means of
+controlling the gimbal and turning the associated laser on and off.
 
-You can safely close this window.
+To use the gimbal, click and drag the black dot and move it around within the box.
+The bounds of the box are the gimbal's limit.
+
+### MQTT Debugger
+
+![MQTT Debugger Tab](2022-06-18-13-03-59.png)
+
+This tab is a debugging tool that shows all MQTT messages
+that are passing through the VRC software, along with giving
+you the ability to manually send messages.
+
+In the top half of the tab is the message viewer. On the left side
+is a tree view of all the topics with the levels deonting "/"s in the topic name.
+When you click on a topic, on the right side will show the last payload recieved
+on that topic, and will update live.
+
+![Viewing live data from a topic](2022-06-18-13-04-42.png)
+
+To show or hide topics, click the arrow on the left of the trip item to expand or hide
+the next level, or right-click the topic and select
+"Expand Children" or "Collapse Children". To expand or collapse everything, select
+"Expand All" or "Collapse All".
+
+![Expanding or collapsing child topics](2022-06-18-13-05-15.png)
+
+At the bottom of the viewer is a "Running"/"Paused" button that will cause the
+viewer to update live, or freeze the current view. This is not associated with the
+MQTT connection in the Connections tabs. This only stops the viewer from updating
+when trying to look at data.
+
+![Running/paused button](2022-06-18-13-05-25.png)
+
+In the bottom half of the tab is the message sender. You can put in the topic
+you want to send a message to and the payload of the message. Click the "Send"
+button at the bottom to send the message, and you will see it show up above
+in the message viewer.
+
+![Message sender](2022-06-18-13-31-24.png)
+
+{{% alert title="Danger" color="danger" %}}
+Send MQTT messages at your own risk! This is a debugging tool,
+and incorrectly formatted messages, or messages with bogus data
+may cause the flight software to crash, digitially and/or physically.
+{{% /alert %}}
+
+If you want to copy an existing message, right-click on an item in the message
+viewer and select "Preload data". This will prefill the topic and payload
+of the message into the message sender.
+
+![Preload data option](2022-06-18-13-32-27.png)
+
+Alternatively, you can select "Copy Topic" or "Copy Payload" to copy the topic
+or payload to your clipboard.
+
+### MQTT Logger
+
+![MQTT Logger tab](2022-06-18-13-16-44.png)
+
+This tab is another debugging tool, that can be used to create
+a log of MQTT data that can be analyzed at a later time.
+
+Clicking the "Record" button at the bottom
+will create a folder called "logs" next to the `.exe` and create a new
+log file with the starting timestamp in the name. The log file is just a `.csv` file
+with 3 columns:
+
+1. Timestamp that the message was sent
+2. Topic of the message
+3. Payload of the message (JSON data as a string)
+
+Short example:
+
+```csv
+Timestamp,Topic,Payload
+2022-05-15T16:05:21.861220,vrc/fcm/location/local,"{""dX"": -2.5455074310302734, ""dY"": -1.5015729665756226, ""dZ"": 2.0492169857025146, ""timestamp"": ""2022-05-15T18:43:51.529153""}"
+2022-05-15T16:05:21.865960,vrc/fcm/attitude/euler,"{""roll"": 0.3597148656845093, ""pitch"": -1.1968730688095093, ""yaw"": -115.29061126708984, ""timestamp"": ""2022-05-15T18:43:51.533150""}"
+2022-05-15T16:05:21.867091,vrc/fcm/location/global,"{""lat"": 32.8085261, ""lon"": -97.1563602, ""alt"": -0.1720000058412552, ""hdg"": -6245.665443087664, ""timestamp"": ""2022-05-15T18:43:51.534187""}"
+2022-05-15T16:05:21.867533,vrc/fcm/velocity,"{""vX"": 0.009999999776482582, ""vY"": 0.0, ""vZ"": -0.009999999776482582, ""timestamp"": ""2022-05-15T18:43:51.535720""}"
+2022-05-15T16:05:21.886569,vrc/fusion/hil_gps,"{""time_usec"": 1652640231557357, ""fix_type"": 3, ""lat"": 328085260, ""lon"": -971563603, ""alt"": 165206, ""eph"": 20, ""epv"": 5, ""vel"": 0, ""vn"": 0, ""ve"": 0, ""vd"": 0, ""cog"": 24600, ""satellites_visible"": 13, ""heading"": 24638}"
+2022-05-15T16:05:21.890844,vrc/fcm/location/global,"{""lat"": 32.8085261, ""lon"": -97.1563602, ""alt"": -0.1720000058412552, ""hdg"": -6245.528183606103, ""timestamp"": ""2022-05-15T18:43:51.557302""}"
+2022-05-15T16:05:21.891264,vrc/fcm/velocity,"{""vX"": 0.009999999776482582, ""vY"": 0.0, ""vZ"": -0.009999999776482582, ""timestamp"": ""2022-05-15T18:43:51.560023""}"
+2022-05-15T16:05:21.901353,vrc/fcm/location/local,"{""dX"": -2.5456197261810303, ""dY"": -1.5016621351242065, ""dZ"": 2.049142837524414, ""timestamp"": ""2022-05-15T18:43:51.571278""}"
+2022-05-15T16:05:21.909915,vrc/vio/position/ned,"{""n"": -254.60606976676002, ""e"": -143.7991712686676, ""d"": -370.6543833582757}"
+2022-05-15T16:05:21.913765,vrc/vio/orientation/eul,"{""psi"": -2.870100228693062, ""theta"": 0.7509557925331154, ""phi"": -1.982899257543946}"
+2022-05-15T16:05:21.914391,vrc/fusion/position/ned,"{""n"": -254.60606976676002, ""e"": -143.7991712686676, ""d"": -370.6543833582757}"
+2022-05-15T16:05:21.914799,vrc/vio/heading,"{""degrees"": 246.38824134310744}"
+2022-05-15T16:05:21.915277,vrc/vio/velocity/ned,"{""n"": 0.006583199572207324, ""e"": -0.020817144593196127, ""d"": 0.02579902535054221}"
+2022-05-15T16:05:21.915846,vrc/vio/confidence,"{""tracker"": 41}"
+```
+
+To stop recording, click the "Stop recording" button. This will stop writing to the
+log file.
+
+You can do a lot of things with this data. For example,
+you can plot how your drone flew through 3D space using
+`matplotlib` and `pandas`:
+
+```python
+import json
+
+import matplotlib.pyplot as plt
+import pandas as pd
+
+# load in the CSV file
+df = pd.read_csv("MQTTLog_2022-05-10_17-08-27.csv")
+# parse the JSON data into the Pandas dataframe
+df = df.join(df["Payload"].apply(json.loads).apply(pd.Series))
+# filter to only data from the vrc/fcm/location/global topic
+px4_data = df[df["Topic"] == "vrc/fcm/location/global"]
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+
+ax.plot3D(px4_data["lat"], px4_data["lon"], px4_data["alt"], label="PX4")
+
+ax.set_xlabel("Latitude")
+ax.set_xlabel("Longitude")
+ax.set_zlabel("Altitude")
+
+plt.legend()
+plt.show()
+```
+
+![Using `matplotlib` to plot a drone's flight](2022-06-17-11-31-33.png)
+
+Another example is plotting the drone's battery remaining over time:
+
+```python
+import csv
+import datetime
+import json
+
+import matplotlib.pyplot as plt
+
+filename = "MQTTLog_2022-05-15_16-05-21.csv"
+
+x = []
+y = []
+
+with open(filename, "r") as fp:
+    # create a DictReader to read the CSV file
+    reader = csv.DictReader(fp)
+    for row in reader:
+        # only get data from the vrc/fcm/battery topic
+        if row["Topic"] == "vrc/fcm/battery":
+            # parse the JSON data
+            payload = json.loads(row["Message"])
+
+            # convert the timestamp to a Python datetime object
+            x.append(datetime.datetime.fromisoformat(row["Timestamp"]))
+            y.append(payload["soc"])
+
+fig = plt.figure()
+
+plt.plot(x, y)
+
+plt.xlabel("Time")
+plt.ylabel("Battery %")
+
+plt.ylim(0, 105)
+plt.grid(True)
+
+plt.show()
+```
+
+![Using `matplotlib` to plot battery percentage](2022-06-18-13-46-34.png)
+
+### PCC Tester
+
+![PCC Tester tab](2022-06-18-12-06-12.png)
+
+This is covered when
+[testing the PCC]({{< relref "../../peripheral-control-computer/test-the-pcc/#pcc-tester" >}})

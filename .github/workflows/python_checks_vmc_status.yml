@@ -8,7 +8,6 @@ on:
       - develop
     paths:
       - "VMC/status/**"
-      - "Libraries/**"
       - "requirements.txt"
       - "package-lock.json"
 
