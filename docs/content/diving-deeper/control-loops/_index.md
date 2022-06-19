@@ -1,5 +1,6 @@
 ---
 title: "Control Loops"
+weight: 3
 ---
 
 ## Control Loops

@@ -1,5 +1,6 @@
 ---
 title: "Architecture"
+weight: 2
 ---
 
 ## General

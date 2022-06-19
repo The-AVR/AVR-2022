@@ -1,5 +1,6 @@
 ---
 title: "Glossary"
+weight: 1
 ---
 
 ## 4S LiPo
