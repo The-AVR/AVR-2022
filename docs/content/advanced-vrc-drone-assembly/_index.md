@@ -48,4 +48,3 @@ and prepare for competition day.
   - Estimated print time: 2 hours 30 minutes per motor
 
 
-{{< nextcopy >}}

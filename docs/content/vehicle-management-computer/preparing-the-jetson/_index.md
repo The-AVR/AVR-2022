@@ -29,4 +29,3 @@ description: "Physically assemble the Jetson"
 Now you're ready to flash the SD Card!
 {{% /alert %}}
 
-{{< nextcopy >}}

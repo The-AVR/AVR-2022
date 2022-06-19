@@ -99,4 +99,3 @@ All other numbers will stop fluctuating and the final (fully charged) voltage of
 the battery will be shown in the top right corner
 (this should be **16.8V** or very close to it.)
 
-{{< nextcopy >}}

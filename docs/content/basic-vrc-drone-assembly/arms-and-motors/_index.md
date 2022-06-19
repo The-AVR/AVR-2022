@@ -88,4 +88,3 @@ assembling the bottom part of the VRC drone frame.
 
 ![Motors and arms fully assembled](all_arms_and_motors.jpg)
 
-{{< nextcopy >}}

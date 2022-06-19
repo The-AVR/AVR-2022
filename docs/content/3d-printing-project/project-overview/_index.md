@@ -65,4 +65,3 @@ As long as the VMC can fit into the mount and **any** cables that can be
 connected to the VMC are unobstructed by your design, the design fits
 the requirements for the keep out zone.
 
-{{< nextcopy >}}

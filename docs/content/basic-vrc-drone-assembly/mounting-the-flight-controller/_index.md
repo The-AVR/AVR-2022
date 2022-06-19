@@ -62,4 +62,3 @@ header pins (labeled PWM).
 
 ![FC stuck to carbon plate and ready for wiring](fc_mounted_to_top_plate.jpg)
 
-{{< nextcopy >}}

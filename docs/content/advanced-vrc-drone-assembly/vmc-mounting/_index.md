@@ -88,4 +88,3 @@ The cooling fan only operates when your VMC exceeds a certain temperature.
 Once it cools the VMC beneath the temperature threshold it will shut off.
 {{% /alert %}}
 
-{{< nextcopy >}}

@@ -9,4 +9,3 @@ flight mode just like we did in the basic flight test.
 
 {{< youtube YOd--u4T2BQ >}}
 
-{{< nextcopy >}}

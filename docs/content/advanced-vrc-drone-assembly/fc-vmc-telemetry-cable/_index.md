@@ -65,4 +65,3 @@ The crimp housing is now complete. This will plug into the header pins on
 the VMC in the next section, so don't worry about plugging it in just yet.
 It's much easier to mount the VMC and plug this housing in later.
 
-{{< nextcopy >}}

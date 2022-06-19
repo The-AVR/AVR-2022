@@ -105,4 +105,3 @@ please don't hesitate to post in the
 [Ask an Engineer](https://teams.microsoft.com/l/team/19%3a21c615dc691c4f289fb9fda44c862df3%40thread.tacv2/conversations?groupId=6baa0f71-7580-4c72-905f-2b6ee58685c3&tenantId=771923a0-2465-44c5-8531-b9366e228aad)
 channel in Microsoft Teams.
 
-{{< nextcopy >}}

@@ -91,4 +91,3 @@ When using the cell checker, you need to plug it in with the contacts
 and the plug towards the left side of the checker.
 {{% /alert %}}
 
-{{< nextcopy >}}

@@ -30,4 +30,3 @@ mount onto the rails behind the RC receiver mount as show in the photo below.
 
 
 
-{{< nextcopy >}}

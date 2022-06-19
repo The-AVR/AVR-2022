@@ -81,4 +81,3 @@ done while on the bench or performing maintenance. Only attach propellers
 when the area is clear and you are ready to fly.
 {{% /alert %}}
 
-{{< nextcopy >}}

@@ -101,4 +101,3 @@ more time to make sure the hex nuts are nice and tight.
 
 ![All motor arms secured and motors pointing straight up](motors_top_down.jpg)
 
-{{< nextcopy >}}

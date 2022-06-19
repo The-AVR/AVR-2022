@@ -19,4 +19,3 @@ found on Amazon:
 - 3 x [10-Pack of Aluminum Standoffs (80mm)](https://www.amazon.com/uxcell-Aluminum-Standoff-Fastener-Quadcopter/dp/B01MSAHZQO/)
 - 1 x [100-Pack of 14mm Long M3 Screws](https://www.amazon.com/M3x14mm-Screw-Socket-Screws-100Pcs/dp/B0143GZU4W/)
 
-{{< nextcopy >}}

@@ -26,4 +26,3 @@ It will help you gain a high-level understanding of what we're trying to accompl
 
 Let's get started with assembly!
 
-{{< nextcopy >}}

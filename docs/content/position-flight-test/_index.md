@@ -5,4 +5,3 @@ weight: 12
 
 {{< youtube 8iqc8hrASdI >}}
 
-{{< nextcopy >}}

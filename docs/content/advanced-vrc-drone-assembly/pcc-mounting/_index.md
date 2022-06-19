@@ -120,4 +120,3 @@ signal wire (orange) faces the bottom of the board.
 
 ![Servos connected to PCC](servos_connected_to_pcc.jpg)
 
-{{< nextcopy >}}

@@ -67,4 +67,3 @@ confirm options.
 
 Choose the "maxn" power mode
 
-{{< nextcopy >}}

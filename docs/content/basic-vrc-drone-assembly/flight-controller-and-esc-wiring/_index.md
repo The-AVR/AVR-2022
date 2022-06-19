@@ -69,4 +69,3 @@ This will be covered shortly, but know that swapping any two of the three motor
 leads will reverse the motor rotation.
 {{% /alert %}}
 
-{{< nextcopy >}}
