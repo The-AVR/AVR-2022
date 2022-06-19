@@ -90,5 +90,3 @@ Choose the "MAXN" power mode.
 ![](2022-06-18-16-24-52.png)
 
 Let the installation finish. Once it's done, reboot your Jetson.
-
-{{< nextcopy >}}
