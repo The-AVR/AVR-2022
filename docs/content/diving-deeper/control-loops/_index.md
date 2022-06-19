@@ -5,7 +5,8 @@ title: "Control Loops"
 ## Control Loops
 
 When a drone flies, there are many things going on at once,
-some of them are happening much more quickly than others. We can break these down as inner-loops and outer-loops.
+some of them are happening much more quickly than others. We can break these down as
+inner-loops and outer-loops.
 
 ![](loops.png)
 
