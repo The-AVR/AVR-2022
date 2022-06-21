@@ -4,10 +4,10 @@ weight: 2
 description: "Flash the Jetson SD card with the operating system"
 ---
 
-{{% alert title="Warning" color="warning" %}}
+{{% pageinfo color="warning" %}}
 Your Jetson should already have the operating system installed and configured for you.
 These instructions are provided in case you need to wipe your Jetson and start fresh.
-{{% /alert %}}
+{{% /pageinfo %}}
 
 To flash the SD card, you need to download a tool called Rufus first.
 Go to [this page](https://github.com/pbatard/rufus/releases/latest) and download
@@ -31,7 +31,8 @@ When you launch the application, it should look something like this:
 
 ![Rufus main window](2022-05-20-09-36-05.png)
 
-1. Make sure the correct device is selected. If your SD card is not blank, it will probably have a different label.
+1. Make sure the correct device is selected. If your SD card is not blank,
+   it will probably have a different label.
 2. Select the `.img` file in the folder you extracted.
 
 ![sd-blob-b01.img](2022-05-20-09-38-54.png)
@@ -42,6 +43,5 @@ You will get a number of warnings that you're about to format and wipe this SD c
 ![Rufus warnings](2022-05-20-09-40-33.png)
 
 Go ahead and click through all of these, you know what you're doing.
-Rufus will begin flashing the SD card and at the end and will let you know
+Rufus will begin flashing the SD card and at the end will let you know
 when it's finished.
-

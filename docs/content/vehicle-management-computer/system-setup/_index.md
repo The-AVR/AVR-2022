@@ -4,10 +4,10 @@ weight: 4
 description: "After flashing the SD card, set up the first user account"
 ---
 
-{{% alert title="Warning" color="warning" %}}
+{{% pageinfo color="warning" %}}
 Your Jetson should already have the operating system installed and configured for you.
 These instructions are provided in case you need to wipe your Jetson and start fresh.
-{{% /alert %}}
+{{% /pageinfo %}}
 
 ## Initial Setup
 
