@@ -24,7 +24,11 @@ in the bottom left (the 9 squares) or with the keyboard shortcut
 ## Serial
 
 Another method of logging in to your Jetson is over a serial connection.
-To do this, you'll need a serial client such as PuTTy.
+To do this, you'll need a serial client.
+
+### Windows
+
+For Windows, we recommend PuTTy.
 Go to [this page](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
 and download and install the `putty-64bit-<version>-installer.msi` file.
 
@@ -32,15 +36,16 @@ and download and install the `putty-64bit-<version>-installer.msi` file.
 
 ![Run through the setup wizard](2022-05-20-09-54-21.png)
 
-{{% alert title="Note" color="note" %}}
-For Linux users, run
+### MacOS
+
+TODO
+
+### Linux
 
 ```bash
 sudo apt install putty
 sudo putty
 ```
-
-{{% /alert %}}
 
 Now, if you want to power the Jetson via USB (if the Jetson is not connected to
 a wall adapter or a battery) remove the jumper behind the barrel jack.
@@ -55,16 +60,20 @@ Plug in a MicroUSB cable to the Jetson,
 
 ![](image2.png)
 
-and then into your computer. Open up Device Manager,
+and then into your computer.
+
+{{% alert title="Tip" color="tip" %}}
+For Windows, open up Device Manager,
 
 ![](2022-06-15-19-42-25.png)
 
 and find out what COM port your Jetson is on.
 
 ![Look under Ports (COM & LPT). My Jetson enumerated as COM4](comport.PNG)
+{{% /alert %}}
 
-Open up PuTTy, choose the COM port you found above for the Serial line,
-and put in `115200` as speed.
+Open up PuTTy, choose the COM port or the serial device `/dev/ttyACM0` for the
+Serial line, and put in `115200` as speed.
 
 ![](putty_config.PNG)
 
