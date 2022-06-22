@@ -58,4 +58,3 @@ recommend a zip tie to secure the cable to the VMC block.
 {{% /alert %}}
 
 ![CSI camera connected to VMC](csi_camera_connected_to_vmc.jpg)
-

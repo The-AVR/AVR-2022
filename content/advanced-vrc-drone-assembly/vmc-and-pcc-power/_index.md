@@ -186,4 +186,3 @@ VRC drone frame. We recommend using a strong double-sided adhesive such as the
 {{% alert title="Tip" color="tip" %}}
 Don't attach your top plate just yet! We need to keep it removed for the next section.
 {{% /alert %}}
-

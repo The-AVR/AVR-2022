@@ -88,4 +88,3 @@ The cooling fan automatically turns on to 100% when the VMC is powered on.
 This functionality was installed as part of the VRC software, and helps
 keep the VMC cool.
 {{% /alert %}}
-

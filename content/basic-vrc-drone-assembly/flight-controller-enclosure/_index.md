@@ -54,4 +54,3 @@ This gives a visual representation of ports and will come in handy when we begin
 to wire everything together. Not to mention it looks really cool!
 
 ![FC with label](fc_with_label.jpg)
-

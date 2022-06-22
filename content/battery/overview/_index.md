@@ -90,4 +90,3 @@ When using the cell checker, you need to plug it in with the contacts
 (silver tabs) facing up and (black plastic arrows facing down)
 and the plug towards the left side of the checker.
 {{% /alert %}}
-

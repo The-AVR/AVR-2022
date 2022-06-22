@@ -27,7 +27,7 @@ available to you:
 - A laptop with one of the following:
   - Windows 10/11 with admin privileges
   - MacOS TODO
-  - Debian-based Linux (Ubuntu, Pop!_OS, Mint, etc) with `sudo` privileges
+  - Debian-based Linux (Ubuntu, Pop!\_OS, Mint, etc) with `sudo` privileges
 - Basic shop tools and supplies:
   - Zip ties
   - Soldering iron

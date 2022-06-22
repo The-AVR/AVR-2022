@@ -80,4 +80,3 @@ We want to reinforce the importance of keeping propellers off your VRC
 done while on the bench or performing maintenance. Only attach propellers
 when the area is clear and you are ready to fly.
 {{% /alert %}}
-

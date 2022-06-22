@@ -30,4 +30,3 @@ sudo apt install libfuse2
 
 The following sections will guide you through the process of using
 QGC to set up your FC. Let's get started!
-

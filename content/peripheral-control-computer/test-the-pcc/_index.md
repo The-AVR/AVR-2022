@@ -116,8 +116,8 @@ anything they shouldn't be.
 If nothing on the PCC works:
 
 1. Make sure you selected the right serial port in the GUI. Sometimes phantom COM
-ports show up on Windows which you will be able to select, and won't do anything.
+   ports show up on Windows which you will be able to select, and won't do anything.
 2. Make sure your firmware flashed correctly. Follow
-[the steps]({{< relref "../flash-the-pcc" >}})
-again and pay close attention.
+   [the steps]({{< relref "../flash-the-pcc" >}})
+   again and pay close attention.
 3. Finally, as stated above, double check all of your solder connections.

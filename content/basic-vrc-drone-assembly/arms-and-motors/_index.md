@@ -87,4 +87,3 @@ the top and bottom plates of the frame. In the next section, we will begin
 assembling the bottom part of the VRC drone frame.
 
 ![Motors and arms fully assembled](all_arms_and_motors.jpg)
-

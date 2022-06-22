@@ -45,4 +45,3 @@ As you're going through the build process make note of any cables that may
 obstruct the drone's propellers. The photos provided throughout this documentation
 show how we've mounted things and provide an sufficient amount of clearance.
 {{% /alert %}}
-

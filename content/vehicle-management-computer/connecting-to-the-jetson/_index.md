@@ -83,7 +83,6 @@ If you're setting up your Jetson from scratch, you'll need to use
 a different method.
 {{% /alert %}}
 
-
 In the future, you'll want to use SSH to login to your Jetson,
 as it is far more convenient. SSH is way to login to a Linux system
 over a network. However, to do so, you'll need to know

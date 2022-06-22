@@ -107,4 +107,3 @@ without much force, clamp them to the rails as seen below.
 Nice work! The bottom assembly of the drone is pretty much complete.
 In an upcoming section, we'll cover battery safety and mounting with the
 included strap. The strap will mount through the slits in the battery plate.
-

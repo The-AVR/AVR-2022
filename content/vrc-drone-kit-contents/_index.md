@@ -132,4 +132,3 @@ incredibly important. In an upcoming section,
 just before the initial flight test, we will cover battery basics in detail.
 
 ![](venom_batt_charger.jpg)
-
