@@ -1,5 +1,5 @@
 cmake_minimum_required (VERSION 2.8.11)
-project (vrcapriltags)
+project (avrapriltags)
 
 set(CMAKE_CXX_STANDARD 11)
 
@@ -19,8 +19,8 @@ link_directories("/opt/nvidia/vpi1/lib64")
 
 link_libraries(april_tagging cudart cuda cublas opencv_core opencv_videoio opencv_imgproc opencv_highgui nvvpi paho-mqttpp3 paho-mqtt3as)
 
-set(SOURCE_FILES src/vrcapriltags.cpp src/apriltags.cpp src/undistort.cpp src/cam_properties.cpp)
+set(SOURCE_FILES src/avrapriltags.cpp src/apriltags.cpp src/undistort.cpp src/cam_properties.cpp)
 
-add_executable (vrcapriltags ${SOURCE_FILES})
-target_link_libraries(vrcapriltags PRIVATE nlohmann_json::nlohmann_json)
-# target_link_libraries(vrcapriltags paho-mqttpp3)
+add_executable (avrapriltags ${SOURCE_FILES})
+target_link_libraries(avrapriltags PRIVATE nlohmann_json::nlohmann_json)
+# target_link_libraries(avrapriltags paho-mqttpp3)

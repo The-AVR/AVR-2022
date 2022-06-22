@@ -64,8 +64,8 @@ jobs:
           context: VMC/${{ inputs.image }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:latest
-            ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:${{ env.DATE_TAG }}
+            ghcr.io/bellflight/avr/2022/${{ inputs.image }}:latest
+            ghcr.io/bellflight/avr/2022/${{ inputs.image }}:${{ env.DATE_TAG }}
           platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max

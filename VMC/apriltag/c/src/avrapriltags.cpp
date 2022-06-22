@@ -37,8 +37,8 @@ int main()
     //############################################# SETUP MQTT ####################################################################################
     const std::string SERVER_ADDRESS{"tcp://mqtt:18830"};
     const std::string CLIENT_ID{"nvapriltags"};
-    const std::string TAG_TOPIC{"vrc/apriltags/raw"};
-    const std::string FPS_TOPIC{"vrc/apriltags/fps"};
+    const std::string TAG_TOPIC{"avr/apriltags/raw"};
+    const std::string FPS_TOPIC{"avr/apriltags/fps"};
 
     const int QOS = 0;
     mqtt::client client(SERVER_ADDRESS, CLIENT_ID);

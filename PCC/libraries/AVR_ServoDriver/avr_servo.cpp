@@ -1,22 +1,22 @@
-#include "vrc_servo.hpp"
+#include "avr_servo.hpp"
 
-VRCServo::VRCServo() : Adafruit_PWMServoDriver()
+AVRServo::AVRServo() : Adafruit_PWMServoDriver()
 {
     servo_min = SERVOMIN;
     servo_max = SERVOMAX;
 }
 
-void VRCServo::open_servo(uint8_t servo)
+void AVRServo::open_servo(uint8_t servo)
 {
     setPWM(servo, 0, servo_max);
 }
 
-void VRCServo::close_servo(uint8_t servo)
+void AVRServo::close_servo(uint8_t servo)
 {
     setPWM(servo, 0, servo_min);
 }
 
-void VRCServo::set_servo_percent(uint8_t servo, uint8_t percent)
+void AVRServo::set_servo_percent(uint8_t servo, uint8_t percent)
 {
     if (percent > 100)
         percent = 100;
@@ -25,7 +25,7 @@ void VRCServo::set_servo_percent(uint8_t servo, uint8_t percent)
 
     setPWM(servo, 0, pwm);
 }
-uint8_t VRCServo::check_controller(void)
+uint8_t AVRServo::check_controller(void)
 {
     int res = (int)readPrescale();
 

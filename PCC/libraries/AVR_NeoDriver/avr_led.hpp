@@ -2,10 +2,10 @@
 #include <Wire.h>
 #include <Adafruit_NeoPixel.h>
 
-class VRCLED : public Adafruit_NeoPixel
+class AVRLED : public Adafruit_NeoPixel
 {
 public:
-    VRCLED(uint8_t pin, uint8_t num_pixels, neoPixelType t = NEO_GRBW);
+    AVRLED(uint8_t pin, uint8_t num_pixels, neoPixelType t = NEO_GRBW);
     void show_temp_color(uint32_t seconds);
     void set_temp_color_target(uint8_t white, uint8_t red, uint8_t green, uint8_t blue);
     void set_base_color_target(uint8_t white, uint8_t red, uint8_t green, uint8_t blue);

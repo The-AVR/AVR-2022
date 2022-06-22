@@ -98,7 +98,7 @@ class MainWindow(QtWidgets.QWidget):
         super().__init__()
 
         set_icon(self)
-        self.setWindowTitle("VRC GUI")
+        self.setWindowTitle("AVR GUI")
 
         self.mqtt_connected = False
         self.serial_connected = False

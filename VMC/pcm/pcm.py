@@ -1,17 +1,17 @@
-from bell.vrc.mqtt.client import MQTTModule
-from bell.vrc.mqtt.payloads import (
-    VrcPcmResetPayload,
-    VrcPcmSetBaseColorPayload,
-    VrcPcmSetLaserOffPayload,
-    VrcPcmSetLaserOnPayload,
-    VrcPcmSetServoMaxPayload,
-    VrcPcmSetServoMinPayload,
-    VrcPcmSetServoOpenClosePayload,
-    VrcPcmSetServoPctPayload,
-    VrcPcmSetTempColorPayload,
+from bell.avr.mqtt.client import MQTTModule
+from bell.avr.mqtt.payloads import (
+    AvrPcmResetPayload,
+    AvrPcmSetBaseColorPayload,
+    AvrPcmSetLaserOffPayload,
+    AvrPcmSetLaserOnPayload,
+    AvrPcmSetServoMaxPayload,
+    AvrPcmSetServoMinPayload,
+    AvrPcmSetServoOpenClosePayload,
+    AvrPcmSetServoPctPayload,
+    AvrPcmSetTempColorPayload,
 )
-from bell.vrc.serial.client import SerialLoop
-from bell.vrc.serial.pcc import PeripheralControlComputer
+from bell.avr.serial.client import SerialLoop
+from bell.avr.serial.pcc import PeripheralControlComputer
 
 
 class PeripheralControlModule(MQTTModule):
@@ -28,58 +28,58 @@ class PeripheralControlModule(MQTTModule):
 
         # MQTT topics
         self.topic_map = {
-            "vrc/pcm/set_base_color": self.set_base_color,
-            "vrc/pcm/set_temp_color": self.set_temp_color,
-            "vrc/pcm/set_servo_open_close": self.set_servo_open_close,
-            "vrc/pcm/set_servo_min": self.set_servo_min,
-            "vrc/pcm/set_servo_max": self.set_servo_max,
-            "vrc/pcm/set_laser_on": self.set_laser_on,
-            "vrc/pcm/set_laser_off": self.set_laser_off,
-            "vrc/pcm/set_servo_pct": self.set_servo_pct,
-            "vrc/pcm/reset": self.reset,
+            "avr/pcm/set_base_color": self.set_base_color,
+            "avr/pcm/set_temp_color": self.set_temp_color,
+            "avr/pcm/set_servo_open_close": self.set_servo_open_close,
+            "avr/pcm/set_servo_min": self.set_servo_min,
+            "avr/pcm/set_servo_max": self.set_servo_max,
+            "avr/pcm/set_laser_on": self.set_laser_on,
+            "avr/pcm/set_laser_off": self.set_laser_off,
+            "avr/pcm/set_servo_pct": self.set_servo_pct,
+            "avr/pcm/reset": self.reset,
         }
 
     def run(self) -> None:
         super().run_non_blocking()
         self.ser.run()
 
-    def set_base_color(self, payload: VrcPcmSetBaseColorPayload) -> None:
+    def set_base_color(self, payload: AvrPcmSetBaseColorPayload) -> None:
         wrgb = payload["wrgb"]
         self.pcc.set_base_color(wrgb=list(wrgb))
 
-    def set_temp_color(self, payload: VrcPcmSetTempColorPayload) -> None:
+    def set_temp_color(self, payload: AvrPcmSetTempColorPayload) -> None:
         wrgb = payload["wrgb"]
         time = payload.get("time", 0.5)  # default of 0.5 seconds
         self.pcc.set_temp_color(wrgb=list(wrgb), time=time)
 
-    def set_servo_open_close(self, payload: VrcPcmSetServoOpenClosePayload) -> None:
+    def set_servo_open_close(self, payload: AvrPcmSetServoOpenClosePayload) -> None:
         servo = payload["servo"]
         action = payload["action"]
         self.pcc.set_servo_open_close(servo, action)
 
-    def set_servo_min(self, payload: VrcPcmSetServoMinPayload) -> None:
+    def set_servo_min(self, payload: AvrPcmSetServoMinPayload) -> None:
         servo = payload["servo"]
         min_pulse = payload["min_pulse"]
         self.pcc.set_servo_min(servo, min_pulse)
 
-    def set_servo_max(self, payload: VrcPcmSetServoMaxPayload) -> None:
+    def set_servo_max(self, payload: AvrPcmSetServoMaxPayload) -> None:
         servo = payload["servo"]
         max_pulse = payload["max_pulse"]
         self.pcc.set_servo_max(servo, max_pulse)
 
-    def set_servo_pct(self, payload: VrcPcmSetServoPctPayload) -> None:
+    def set_servo_pct(self, payload: AvrPcmSetServoPctPayload) -> None:
         servo = payload["servo"]
         percent = payload["percent"]
         self.pcc.set_servo_pct(servo, percent)
 
-    def set_laser_on(self, payload: VrcPcmSetLaserOnPayload) -> None:
+    def set_laser_on(self, payload: AvrPcmSetLaserOnPayload) -> None:
         self.pcc.set_laser_on()
 
-    def set_laser_off(self, payload: VrcPcmSetLaserOffPayload) -> None:
+    def set_laser_off(self, payload: AvrPcmSetLaserOffPayload) -> None:
         self.pcc.set_laser_off()
 
-    def reset(self, payload: VrcPcmResetPayload) -> None:
-        self.pcc.reset_vrc_peripheral()
+    def reset(self, payload: AvrPcmResetPayload) -> None:
+        self.pcc.reset_avr_peripheral()
 
 
 if __name__ == "__main__":

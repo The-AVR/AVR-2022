@@ -1,6 +1,6 @@
 #include "serial_lib.hpp"
 
-VRCSerialParser::VRCSerialParser(Adafruit_USBD_CDC port, cppQueue queue_q)
+AVRSerialParser::AVRSerialParser(Adafruit_USBD_CDC port, cppQueue queue_q)
 {
     serial_bus = port;
 
@@ -9,7 +9,7 @@ VRCSerialParser::VRCSerialParser(Adafruit_USBD_CDC port, cppQueue queue_q)
     q = queue_q;
 }
 
-void VRCSerialParser::poll(void)
+void AVRSerialParser::poll(void)
 {
     if (serial_bus.available())
     {
@@ -160,7 +160,7 @@ void VRCSerialParser::poll(void)
     }
 }
 
-cmd_result VRCSerialParser::get_command(packet_t *msg)
+cmd_result AVRSerialParser::get_command(packet_t *msg)
 {
     //we have fully formed messages waiting, service them.
     if (q.getCount())
@@ -179,7 +179,7 @@ cmd_result VRCSerialParser::get_command(packet_t *msg)
     }
 }
 
-uint8_t VRCSerialParser::crc8_dvb_s2(uint8_t crc, unsigned char a)
+uint8_t AVRSerialParser::crc8_dvb_s2(uint8_t crc, unsigned char a)
 {
     crc ^= a;
     for (int ii = 0; ii < 8; ++ii)
@@ -196,7 +196,7 @@ uint8_t VRCSerialParser::crc8_dvb_s2(uint8_t crc, unsigned char a)
     return crc;
 }
 
-uint8_t VRCSerialParser::calc_crc(uint8_t *buffer, uint16_t length)
+uint8_t AVRSerialParser::calc_crc(uint8_t *buffer, uint16_t length)
 {
     int i = 0;
     uint8_t crc = 0;

@@ -15,7 +15,7 @@ LIGHTGREEN = "\033[1;32m"
 CYAN = "\033[0;36m"
 NC = "\033[0m"  # No Color
 
-VRC_DIR = os.path.join(os.path.expanduser("~"), "VRC-2022")
+AVR_DIR = os.path.join(os.path.expanduser("~"), "AVR-2022")
 
 # fmt: off
 
@@ -60,9 +60,9 @@ def original_user_cmd(username, cmd):
 
 
 def main(development):
-    if not os.path.isdir(VRC_DIR):
-        print(f"VRC repository has not been cloned to {VRC_DIR}")
-        print(f"Do this with 'git clone --recurse-submodules https://github.com/bellflight/VRC-2022 {VRC_DIR}'")
+    if not os.path.isdir(AVR_DIR):
+        print(f"AVR repository has not been cloned to {AVR_DIR}")
+        print(f"Do this with 'git clone --recurse-submodules https://github.com/bellflight/AVR-2022 {AVR_DIR}'")
         sys.exit(1)
 
 
@@ -119,20 +119,20 @@ def main(development):
     print("Configuring credential cache")
     subprocess.check_call(original_user_cmd(orig_username, ["git", "config", "--global", "credential.helper", "cache"]))
     print("Fetching latest code")
-    subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(VRC_DIR, '.git')}", f"--work-tree={VRC_DIR}", "fetch"]), cwd=VRC_DIR)
+    subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(AVR_DIR, '.git')}", f"--work-tree={AVR_DIR}", "fetch"]), cwd=AVR_DIR)
 
     # check if we're on the main branch
     if not development:
         print("Making sure we're on the main branch")
-        current_branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=VRC_DIR).decode("utf-8").strip()
+        current_branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=AVR_DIR).decode("utf-8").strip()
         if current_branch != "main":
             print(f"{LIGHTRED}WARNING:{NC} Not currently on the main branch, run 'git checkout main && git pull' then re-run this script")
             sys.exit(1)
 
     # check if we're on the latest commit
     print("Making sure we have the latest code")
-    local_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=VRC_DIR).decode("utf-8").strip()
-    upstream_commit = subprocess.check_output(["git", "rev-parse", "@{u}"], cwd=VRC_DIR).decode("utf-8").strip()
+    local_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=AVR_DIR).decode("utf-8").strip()
+    upstream_commit = subprocess.check_output(["git", "rev-parse", "@{u}"], cwd=AVR_DIR).decode("utf-8").strip()
 
     if local_commit != upstream_commit:
         print(f"{LIGHTRED}WARNING:{NC} Remote changes exist that are not present locally. Run 'git pull' then re-run this script")
@@ -140,7 +140,7 @@ def main(development):
 
     print("Making sure submodules are up-to-date")
     # https://stackoverflow.com/a/64621032
-    subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(VRC_DIR, '.git')}", "--work-tree=.", "-C", VRC_DIR, "submodule", "update", "--init", "--recursive"]), cwd=VRC_DIR)
+    subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(AVR_DIR, '.git')}", "--work-tree=.", "-C", AVR_DIR, "submodule", "update", "--init", "--recursive"]), cwd=AVR_DIR)
 
     print_bar()
 
@@ -180,7 +180,7 @@ def main(development):
     # install pip packages
     print("Installing Python Packages")
     subprocess.check_call(["python3", "-m", "pip", "install", "--upgrade", "pip", "wheel"], stderr=subprocess.DEVNULL)
-    subprocess.check_call(["python3", "-m", "pip", "install", "-r", os.path.join(VRC_DIR, "VMC", "scripts", "requirements.txt")], stderr=subprocess.DEVNULL)
+    subprocess.check_call(["python3", "-m", "pip", "install", "-r", os.path.join(AVR_DIR, "VMC", "scripts", "requirements.txt")], stderr=subprocess.DEVNULL)
 
     if development:
         subprocess.check_call(["python3", "-m", "pip", "install", "--upgrade", "jetson-stats"], stderr=subprocess.DEVNULL)
@@ -241,7 +241,7 @@ def main(development):
 
     # needed so that the shared libs are included in the docker container creation from the host
     print("Copying Docker runtime libraries definition")
-    shutil.copy(os.path.join(VRC_DIR, "VMC/apriltag/linux/vrc.csv"), "/etc/nvidia-container-runtime/host-files-for-container.d/")
+    shutil.copy(os.path.join(AVR_DIR, "VMC/apriltag/linux/avr.csv"), "/etc/nvidia-container-runtime/host-files-for-container.d/")
 
     # restart docker so new runtime takes into effect
     print("Restarting Docker service")
@@ -252,10 +252,10 @@ def main(development):
 
 
     print_title("Installing Boot Services")
-    services = ["spio-mount.service", "vrc-fan.service"]
+    services = ["spio-mount.service", "fan-100.service"]
     for service in services:
         print(f"Installing {service}")
-        shutil.copy(os.path.join(VRC_DIR, "VMC", "scripts", service), "/etc/systemd/system/")
+        shutil.copy(os.path.join(AVR_DIR, "VMC", "scripts", service), "/etc/systemd/system/")
         subprocess.check_call(["systemctl", "enable", service])
         subprocess.check_call(["systemctl", "start", service])
     print_bar()
@@ -263,7 +263,7 @@ def main(development):
 
 
     print_title("Obtaining ZED Camera Configuration")
-    zed_serial = subprocess.check_output(["docker", "run", "--rm", "--mount", f"type=bind,source={os.path.join(VRC_DIR, 'VMC/vio/settings')},target=/usr/local/zed/settings/", "--privileged", "docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6", "python3", "-c", "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();"]).decode("utf-8").strip()
+    zed_serial = subprocess.check_output(["docker", "run", "--rm", "--mount", f"type=bind,source={os.path.join(AVR_DIR, 'VMC/vio/settings')},target=/usr/local/zed/settings/", "--privileged", "docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6", "python3", "-c", "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();"]).decode("utf-8").strip()
     if zed_serial == "0":
         print(f"{LIGHTRED}WARNING:{NC} ZED camera not detected, skipping settings download")
     else:
@@ -272,25 +272,25 @@ def main(development):
 
 
 
-    print_title("Building VRC Software")
+    print_title("Building AVR Software")
     # build pymavlink
     if development:
-        subprocess.check_call(["python3", os.path.join(VRC_DIR, "PX4", "build.py"), "--pymavlink"])
+        subprocess.check_call(["python3", os.path.join(AVR_DIR, "PX4", "build.py"), "--pymavlink"])
 
     # make sure docker is logged in
-    proc = subprocess.run(["docker", "pull", "ghcr.io/bellflight/vrc/2022/mqtt:latest"])
+    proc = subprocess.run(["docker", "pull", "ghcr.io/bellflight/avr/2022/mqtt:latest"])
     if proc.returncode != 0:
         print("Please log into GitHub container registry:")
         subprocess.check_call(["docker", "login", "ghcr.io"])
 
     # pull images
-    cmd = ["python3", os.path.join(VRC_DIR, "VMC", "start.py"), "pull", "--norm"]
+    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "pull", "--norm"]
     if development:
         cmd.append("--local")
     subprocess.check_call(cmd)
 
     # build images
-    cmd = ["python3", os.path.join(VRC_DIR, "VMC", "start.py"), "build", "--norm"]
+    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "build", "--norm"]
     if development:
         cmd.append("--local")
     subprocess.check_call(cmd)
@@ -314,7 +314,7 @@ def main(development):
 
 
 
-    print(f"{GREEN}VRC setup has completed{NC}")
+    print(f"{GREEN}AVR setup has completed{NC}")
     print(f"{GREEN}Please reboot your VMC{NC}")
 
     if input("Would you like to reboot now? (y/n): ").lower() == "y":
@@ -323,7 +323,7 @@ def main(development):
 if __name__ == "__main__":
     check_sudo()
 
-    parser = argparse.ArgumentParser(description="Setup the Jetson for VRC")
+    parser = argparse.ArgumentParser(description="Setup the Jetson for AVR")
     parser.add_argument("--development", "--dev", action="store_true", help="Development setup")
 
     args = parser.parse_args()
