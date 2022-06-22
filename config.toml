@@ -19,7 +19,7 @@ disableKinds = ["RSS"]
 enableGitInfo = true
 
 # content directory settings
-contentDir                     = "content"
+contentDir                     = "content/en"
 defaultContentLanguage         = "en"
 defaultContentLanguageInSubdir = false
 
@@ -63,7 +63,7 @@ pygmentsStyle = "monokai"
     github_repo = "https://github.com/bellflight/VRC-2022"
 
     # Specify a value here if your content directory is not in your repo's root directory
-    github_subdir = ""
+    # github_subdir = ""
 
     # Uncomment this if you have a newer GitHub repo with "main" as the default branch,
     # or specify a new value if you want to reference another branch in your GitHub links

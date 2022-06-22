@@ -5,7 +5,7 @@ description: "This page lists the contents of the Bell VRC drone kit necessary f
 ---
 
 As you read through this page please be sure to refer to the
-[glossary]({{< relref "../../../diving-deeper/glossary" >}}),
+[glossary]({{< relref "../diving-deeper/glossary" >}}),
 which contains definitions of many of the components on this page.
 The Bell VRC drone kit includes all of the components required to build your
 own autonomous quadcopter. The kit provides a frame, motors, electronic speed
