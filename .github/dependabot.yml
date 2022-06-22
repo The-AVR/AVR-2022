@@ -7,7 +7,6 @@ updates:
       interval: "monthly"
     target-branch: "develop"
 
-
   # Maintain dependencies for Git Submodules
   - package-ecosystem: "gitsubmodule"
     directory: "/"
@@ -18,12 +17,6 @@ updates:
   # Maintain dependencies for npm
   - package-ecosystem: "npm"
     directory: "/"
-    schedule:
-      interval: "monthly"
-    target-branch: "develop"
-
-  - package-ecosystem: "npm"
-    directory: "/docs"
     schedule:
       interval: "monthly"
     target-branch: "develop"

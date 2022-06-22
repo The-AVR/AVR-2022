@@ -2,15 +2,7 @@
     "recommendations": [
         // general
         "shardulm94.trailing-spaces",
-        // for docs
-        "kisstkondoros.vscode-gutter-preview",
-        "davidanson.vscode-markdownlint",
-        "tyriar.luna-paint",
-        "mushan.vscode-paste-image",
-        "jack89ita.copy-filename",
-        "esbenp.prettier-vscode",
-        // for PCC
-        "platformio.platformio-ide",
+        // for Apriltags
         "ms-vscode.cpptools",
         "twxs.cmake",
         // for Python
