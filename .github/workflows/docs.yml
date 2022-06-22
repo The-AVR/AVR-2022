@@ -33,7 +33,6 @@ jobs:
         run:  npm run check-formatting
 
       - name: Build Site
-        working-directory: docs
         run: npm run build
 
       # - name: Check For Broken Links
