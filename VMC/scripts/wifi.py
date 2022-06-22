@@ -66,8 +66,8 @@ def create():
     with open("/sys/class/net/wlan0/address", "r") as fp:
         mac_addr = fp.read().strip().replace(":", "")
 
-    default_ssid = f"VRCDrone-{mac_addr}"
-    default_password = "bellvrc22"
+    default_ssid = f"AVRDrone-{mac_addr}"
+    default_password = "bellavr22"
 
     # get inputs
     ssid = input(f"Enter the SSID to create (default '{default_ssid}'): ")

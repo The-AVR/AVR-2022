@@ -7,10 +7,10 @@
 #define USMAX 2400    // This is the rounded 'maximum' microsecond length based on the maximum pulse of 600
 #define SERVO_FREQ 50 // Analog servos run at ~50 Hz updates
 
-class VRCServo : public Adafruit_PWMServoDriver
+class AVRServo : public Adafruit_PWMServoDriver
 {
 public:
-    VRCServo();
+    AVRServo();
 
     void open_servo(uint8_t servo);
     void close_servo(uint8_t servo);

@@ -23,7 +23,7 @@ typedef enum
     SET_TEMP_COLOR,
     SET_LASER_ON,
     SET_LASER_OFF,
-    RESET_VRC_PERIPH,
+    RESET_AVR_PERIPH,
     CHECK_SERVO_CONTROLLER,
     COMMAND_END
 } commands;
@@ -43,10 +43,10 @@ typedef enum
 static char *outgoing_preamble = "$P>"; //towards arduino
 static char *incoming_preamble = "$P<"; //towards jetson
 
-class VRCSerialParser
+class AVRSerialParser
 {
 public:
-    VRCSerialParser(Adafruit_USBD_CDC port, cppQueue queue_q);
+    AVRSerialParser(Adafruit_USBD_CDC port, cppQueue queue_q);
     void poll(void);
     uart_states get_state(void);
     cmd_result get_command(packet_t *msg);

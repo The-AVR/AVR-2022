@@ -56,7 +56,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Date
-        run: echo "DATE_TAG=$(date +'%Y-%m-%d-%H-%m')" >> $GITHUB_ENV
+        run: echo "DATE_TAG=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
 
       - name: Build Container
         uses: docker/build-push-action@v3
@@ -64,8 +64,8 @@ jobs:
           context: VMC/${{ inputs.image }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
-            ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:latest
-            ghcr.io/bellflight/vrc/2022/${{ inputs.image }}:${{ env.DATE_TAG }}
+            ghcr.io/bellflight/avr/2022/${{ inputs.image }}:latest
+            ghcr.io/bellflight/avr/2022/${{ inputs.image }}:${{ env.DATE_TAG }}
           platforms: linux/arm64
           cache-from: type=gha
           cache-to: type=gha,mode=max

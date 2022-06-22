@@ -1,11 +1,11 @@
-#include "vrc_led.hpp"
+#include "avr_led.hpp"
 
-VRCLED::VRCLED(uint8_t pin, uint8_t num_pixels, neoPixelType t) : Adafruit_NeoPixel(num_pixels, pin, t)
+AVRLED::AVRLED(uint8_t pin, uint8_t num_pixels, neoPixelType t) : Adafruit_NeoPixel(num_pixels, pin, t)
 {
     current_color = 255 << 24;
 }
 
-void VRCLED::show_temp_color(uint32_t seconds)
+void AVRLED::show_temp_color(uint32_t seconds)
 {
     //set up the operation
     temp_duration = seconds;
@@ -17,7 +17,7 @@ void VRCLED::show_temp_color(uint32_t seconds)
     temp_running = true;
 }
 
-void VRCLED::set_temp_color_target(uint8_t white, uint8_t red, uint8_t green, uint8_t blue)
+void AVRLED::set_temp_color_target(uint8_t white, uint8_t red, uint8_t green, uint8_t blue)
 {
     uint32_t c = 0;
 
@@ -30,7 +30,7 @@ void VRCLED::set_temp_color_target(uint8_t white, uint8_t red, uint8_t green, ui
     temp_color = c;
 }
 
-void VRCLED::set_base_color_target(uint8_t white, uint8_t red, uint8_t green, uint8_t blue)
+void AVRLED::set_base_color_target(uint8_t white, uint8_t red, uint8_t green, uint8_t blue)
 {
     uint32_t c = 0;
 
@@ -43,7 +43,7 @@ void VRCLED::set_base_color_target(uint8_t white, uint8_t red, uint8_t green, ui
     base_color = c;
 }
 
-void VRCLED::set_strip_color()
+void AVRLED::set_strip_color()
 {
     //update the memory matrix for the strip color
     uint16_t i = 0;
@@ -55,7 +55,7 @@ void VRCLED::set_strip_color()
     needs_color_update = true;
 }
 
-void VRCLED::run(void)
+void AVRLED::run(void)
 {
     //see if were running a temporary color
     if (temp_running)

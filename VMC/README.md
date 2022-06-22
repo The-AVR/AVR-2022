@@ -1,12 +1,12 @@
-# VRC-2022
+# AVR-2022
 
 ## Setup
 
 Run the following commands:
 
 ```bash
-git clone --recurse-submodules https://github.com/bellflight/VRC-2022 ~/VRC-2022
-cd ~/VRC-2022/VMC/scripts
+git clone --recurse-submodules https://github.com/bellflight/AVR-2022 ~/AVR-2022
+cd ~/AVR-2022/VMC/scripts
 chmod +x setup.py
 ./setup.py
 ```
@@ -59,15 +59,15 @@ This may not be an exhaustive list, as upstream sources may change CDNs or domai
 
 ## Usage
 
-To start the VRC software, just run:
+To start the AVR software, just run:
 
 ```bash
 ./start.py run
 ```
 
-To stop the VRC software hit <kbd>Ctrl</kbd>+<kbd>C</kbd>.
+To stop the AVR software hit <kbd>Ctrl</kbd>+<kbd>C</kbd>.
 
-If you ever need to update the VRC software, run:
+If you ever need to update the AVR software, run:
 
 ```bash
 # Update the git repo

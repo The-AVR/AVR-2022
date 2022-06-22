@@ -7,7 +7,7 @@ from typing import Any, Dict, Optional, Tuple
 import board
 import neopixel_spi as neopixel
 import paho.mqtt.client as mqtt
-from bell.vrc.mqtt.client import MQTTModule
+from bell.avr.mqtt.client import MQTTModule
 from loguru import logger
 
 NUM_PIXELS = 12
@@ -38,11 +38,11 @@ class StatusModule(MQTTModule):
         self.initialized = False
 
         self.topic_map = {
-            "vrc/status/light/pcm": self.light_status,
-            "vrc/status/light/vio": self.light_status,
-            "vrc/status/light/apriltags": self.light_status,
-            "vrc/status/light/fcm": self.light_status,
-            "vrc/status/light/thermal": self.light_status,
+            "avr/status/light/pcm": self.light_status,
+            "avr/status/light/vio": self.light_status,
+            "avr/status/light/apriltags": self.light_status,
+            "avr/status/light/fcm": self.light_status,
+            "avr/status/light/thermal": self.light_status,
         }
 
         self.spi = board.SPI()
@@ -73,7 +73,7 @@ class StatusModule(MQTTModule):
     ) -> None:
         super().on_connect(client, userdata, rc, properties)
         # additionally subscribe to all topics
-        client.subscribe("vrc/#")
+        client.subscribe("avr/#")
 
     def set_cpu_status(self) -> None:
         # Initialize power mode status
@@ -87,11 +87,11 @@ class StatusModule(MQTTModule):
 
     def check_status(self, topic: str) -> None:
         lookup: Dict[str, Tuple[int, int]] = {
-            "vrc/vio": (VIO_LED, CLR_PURPLE),
-            "vrc/pcm": (PCC_LED, CLR_AQUA),
-            "vrc/fcm": (FCC_LED, CLR_ORANGE),
-            "vrc/thermal": (THERMAL_LED, CLR_BLUE),
-            "vrc/apriltags": (APRIL_LED, CLR_YELLOW),
+            "avr/vio": (VIO_LED, CLR_PURPLE),
+            "avr/pcm": (PCC_LED, CLR_AQUA),
+            "avr/fcm": (FCC_LED, CLR_ORANGE),
+            "avr/thermal": (THERMAL_LED, CLR_BLUE),
+            "avr/apriltags": (APRIL_LED, CLR_YELLOW),
         }
 
         for key, value in lookup.items():

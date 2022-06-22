@@ -11,7 +11,7 @@ from typing import Any, List
 
 import yaml
 
-IMAGE_BASE = "ghcr.io/bellflight/vrc/2022/"
+IMAGE_BASE = "ghcr.io/bellflight/avr/2022/"
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -230,7 +230,7 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
     compose_file = prepare_compose_file(local)
 
     # run docker-compose
-    project_name = "VRC-2022"
+    project_name = "AVR-2022"
     if os.name == "nt":
         # for some reason on Windows docker-compose doesn't like upper case???
         project_name = project_name.lower()

@@ -1,7 +1,7 @@
 from typing import Optional, Tuple
 
 import cv2
-from bell.vrc.utils.decorators import run_forever
+from bell.avr.utils.decorators import run_forever
 from loguru import logger
 
 
