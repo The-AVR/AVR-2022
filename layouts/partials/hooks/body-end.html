@@ -1,0 +1,30 @@
+<!-- https://remarkablemark.org/blog/2021/06/01/add-copy-code-to-clipboard-button-to-jeyll-site/ -->
+<script>
+    var codeBlocks = document.querySelectorAll('.highlight pre');
+    codeBlocks.forEach(function (codeBlock) {
+        var copyButton = document.createElement('button');
+        copyButton.className = 'copy';
+        copyButton.type = 'button';
+        copyButton.ariaLabel = 'Copy code to clipboard';
+        copyButton.innerText = 'Copy';
+        codeBlock.append(copyButton);
+        copyButton.addEventListener('click', function () {
+            var code = codeBlock.querySelector('code').innerText.trim();
+            window.navigator.clipboard.writeText(code);
+            copyButton.innerText = 'Copied';
+            var fourSeconds = 4000;
+            setTimeout(function () {
+                copyButton.innerText = 'Copy';
+            }, fourSeconds);
+        });
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"
+    integrity="sha384-Lcg6/G/AHqVn603GN2UHyiIV/TPsuh4QkJNKsdCAUmzbItQ9oSceVj00Zf5tM0EG"
+    crossorigin="anonymous">
+</script>
+
+<script type="text/javascript">
+    lightbox = GLightbox({});
+</script>

@@ -1,0 +1,8 @@
+*.lock
+
+node_modules/
+
+resources/_gen
+public/
+
+.vscode/settings.json

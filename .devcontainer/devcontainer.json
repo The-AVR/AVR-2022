@@ -1,0 +1,17 @@
+{
+    "image": "docker.io/library/node:18-bullseye",
+    "extensions": [
+        "jack89ita.copy-filename",
+        "kisstkondoros.vscode-gutter-preview",
+        "Tyriar.luna-paint",
+        "DavidAnson.vscode-markdownlint",
+        "esbenp.prettier-vscode",
+        "eg2.vscode-npm-script",
+        "tamasfe.even-better-toml",
+        "mushan.vscode-paste-image"
+    ],
+    "postCreateCommand": "npm install && git config --global core.autocrlf input",
+    "forwardPorts": [
+        1313
+    ]
+}
