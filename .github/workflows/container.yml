@@ -56,7 +56,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Get Date
-        run: echo "DATE_TAG=$(date +'%Y-%m-%d-%H-%m')" >> $GITHUB_ENV
+        run: echo "DATE_TAG=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
 
       - name: Build Container
         uses: docker/build-push-action@v3
