@@ -3,11 +3,6 @@
 	url = https://github.com/SMFSW/Queue
 	branch = v1.9
 	shallow = true
-[submodule "docs/themes/docsy"]
-	path = docs/themes/docsy
-	url = https://github.com/google/docsy
-	branch = v0.2.0
-	shallow = true
 [submodule "VMC/apriltag/c/libraries/paho.mqtt.c"]
 	path = VMC/apriltag/c/libraries/paho.mqtt.c
 	url = https://github.com/eclipse/paho.mqtt.c
