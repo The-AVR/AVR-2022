@@ -1,3 +1,5 @@
+# Documentation
+
 ## Tooling
 
 The generate the static site, we use the [Hugo](https://gohugo.io/)
@@ -11,11 +13,11 @@ This is a `git` submodule, so make sure you've initialized this repo's submodule
 git submodule update --init --recursive
 ```
 
-To build or preview the site, make sure you have `npm` and `python3` installed.
-To install all the dependencies, run
+To build or preview the site, make sure you have `npm` installed.
+To install all the dependencies, simply `cd` into this `docs` directory and run:
 
 ```bash
-python setup.py
+npm install
 ```
 
 To preview the site, `cd` into this `docs` directory and run:

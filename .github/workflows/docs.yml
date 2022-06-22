@@ -28,20 +28,13 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "18"
           cache-dependency-path: docs
           cache: npm
 
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.9"
-          cache-dependency-path: docs
-          cache: pip
-
       - name: Install Dependencies
         working-directory: docs
-        run: python setup.py
+        run: npm install
 
       - name: Check Formatting
         working-directory: docs

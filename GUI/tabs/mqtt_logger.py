@@ -120,7 +120,7 @@ class MQTTLoggerWidget(BaseTabWidget):
 
             # create CSV writer
             self.csv_writer = csv.writer(self.file_handle)
-            self.csv_writer.writerow(["Timestamp", "Topic", "Message"])
+            self.csv_writer.writerow(["Timestamp", "Topic", "Payload"])
 
             # set button text
             self.recording_button.setText("Stop Recording")

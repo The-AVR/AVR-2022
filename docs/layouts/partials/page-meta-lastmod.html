@@ -1,0 +1,109 @@
+{{$level := newScratch }}
+{{ if (eq .Page.Weight 0) }}
+ {{$level.Set "level" 1}}
+  {{$level.Set "sections" .Page.Sections}}
+   {{$level.Set "weight" 0}}
+    {{ else }}
+     {{ if (eq .Page.Parent.Weight 0) }}
+      {{$level.Set "level" 2}}
+       {{$level.Set "sections" .Page.Sections}}
+{{$level.Set "weight" .Page.Weight}}
+{{ else }}
+{{ if (eq .Page.Parent.Parent.Weight 0) }}
+ {{$level.Set "level" 3}}
+  {{$level.Set "sections" .Page.Parent.Sections}}
+   {{$level.Set "weight" .Page.Weight}}
+    {{ end }}
+     {{ end }}
+      {{ end }}
+
+{{$levelPerm := $level.Get "level"}}
+{{$levelSections := $level.Get "sections"}}
+{{$levelWeight := $level.Get "weight"}}
+ {{$levelNext := $level.Get "weight"}}
+  {{$level.Set "success" 0}}
+   {{$level.Set "prevsuccess" 0}}
+{{$level.Set "success" 0}}
+{{$level.Set "prevsuccess" 0}}
+
+<br>
+
+{{ if (eq $levelPerm 3) }}
+  {{$weightParent:= .Page.Parent.Weight}}
+  {{ range $levelSections }}
+      {{if (eq .Weight (add $levelWeight -1))}}
+          <a class="btn btn-primary" title = "Previous" href="{{ .Permalink }}" style="float: left;"><span class="mr-1">←</span>{{ T "ui_pager_prev" }}</a>
+          {{$level.Set "prevsuccess" 1}}
+      {{ end }}
+  {{ end }}
+  {{if (eq 0 ($level.Get "prevsuccess"))}}
+      <a class="btn btn-primary" title = "Previous" href="{{  .Page.Parent.Permalink}}" style="float: left;"><span class="mr-1">←</span>{{ T "ui_pager_prev" }}</a>
+  {{ end }}
+  {{ range $levelSections }}
+      {{if (eq .Weight (add $levelWeight 1))}}
+          <a class="btn btn-primary" title = "Next"  href="{{ .Permalink }}" style="float: right;">{{ T "ui_pager_next" }}<span class="ml-1">→</span></a>
+          {{$level.Set "success" 1}}
+      {{ end }}
+  {{ end }}
+  {{ range .Page.Parent.Parent.Sections }}
+      {{if (eq 0 ($level.Get "success"))}}
+          {{if (eq .Weight (add $weightParent 1))}}
+              <a class="btn btn-primary" title = "Next" href="{{ .Permalink }}" style="float: right;">{{ T "ui_pager_next" }}<span class="ml-1">→</span></a>
+              {{$level.Set "success" 1}}
+          {{ end }}
+      {{ end }}
+  {{ end }}
+{{ end }}
+{{$level.Set "success" 0}}
+{{ if (eq $levelPerm 2) }}
+  {{$weightParent := .Page.Parent.Weight}}
+  {{ range .Page.Parent.Sections }}
+      {{if (eq .Weight (add $levelWeight -1))}}
+          {{ range .Sections }}
+               {{$level.Set "lastpage" .Permalink}}
+          {{end}}
+          {{$lastpage := $level.Get "lastpage"}}
+          <a class="btn btn-primary" title = "Previous" href="{{ $lastpage }}" style="float: left;"><span class="mr-1">←</span>{{ T "ui_pager_prev" }}</a>
+          {{$level.Set "success" 1}}
+      {{ end }}
+  {{ end }}
+  {{if (eq 0 ($level.Get "success"))}}
+      {{ range .Page.Sections }}
+           {{if (eq .Weight 1)}}
+              {{$level.Set "lastpage" .Permalink}}
+              {{$lastpage := $level.Get "lastpage"}}
+              <a class="btn btn-primary" title = "Previous" href="{{ $lastpage }}" style="float: left;"><span class="mr-1">←</span>{{ T "ui_pager_prev" }}</a>
+              {{$level.Set "success" 1}}
+          {{ end }}
+      {{ end }}
+  {{ end }}
+{{ end }}
+{{$level.Set "success" 0}}
+{{ if (eq $levelPerm 2) }}
+  {{$weightParent := .Page.Parent.Weight}}
+  {{ range .Page.Sections }}
+      {{if (eq .Weight 1)}}
+          <a class="btn btn-primary" title = "Next" href="{{ .Permalink }}" style="float: right;">{{ T "ui_pager_next" }}<span class="ml-1">→</span></a>
+          {{$level.Set "success" 1}}
+      {{ end }}
+  {{ end }}
+  {{if (eq 0 ($level.Get "success"))}}
+      {{ range .Page.Parent.Sections }}
+      {{if (eq .Weight (add $levelWeight 1))}}
+          <a class="btn btn-primary" title = "Next" href="{{ .Permalink }}" style="float: right;">{{ T "ui_pager_next" }}<span class="ml-1">→</span></a>
+          {{$level.Set "success" 1}}
+      {{ end }}
+  {{ end }}
+{{ end }}
+{{ end }}
+
+<br>
+
+ {{ if and (.GitInfo) (.Site.Params.github_repo) -}}
+<div class="text-muted mt-5 pt-3 border-top">
+    {{ T "post_last_mod" }} {{ .Lastmod.Format .Site.Params.time_format_default -}} {{ with .GitInfo }}: {{/* Trim WS */ -}}
+    <a href="{{ $.Site.Params.github_repo }}/commit/{{ .Hash }}">
+      {{- .Subject }} ({{ .AbbreviatedHash }}) {{- /* Trim WS */ -}}
+    </a> {{- end }}
+</div>
+{{ end -}}
