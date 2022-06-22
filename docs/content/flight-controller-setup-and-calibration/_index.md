@@ -14,15 +14,18 @@ the drone, such as an autonomous mission planner.
 
 QGC can be downloaded and installed on Windows, Mac, and Linux operating systems.
 You can find the necessary installer by going to the
-[downloads page](http://qgroundcontrol.com/downloads/).
+[downloads page](https://docs.qgroundcontrol.com/master/en/getting_started/download_and_install.html).
+Follow the steps there for your operating system.
 Go ahead and install QGC before proceeding to the next section.
 
 {{% alert title="Note" color="note" %}}
-All testing and configuration throughout the documentation was done
-with QGC version 4.1.1. We encourage you to use this version,
-which will allow us to help troubleshoot any issues more easily.
-You can find the file labeled `QGroundControl-Installer.exe` at
-[this link](https://github.com/mavlink/qgroundcontrol/releases/tag/v4.1.1).
+For Ubuntu 22.04 users, you may need to additionally install `libfuse2` before the
+AppImage will work:
+
+```bash
+sudo apt install libfuse2
+```
+
 {{% /alert %}}
 
 The following sections will guide you through the process of using

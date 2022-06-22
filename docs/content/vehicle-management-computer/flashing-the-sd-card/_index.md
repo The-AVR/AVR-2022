@@ -9,22 +9,21 @@ Your Jetson should already have the operating system installed and configured fo
 These instructions are provided in case you need to wipe your Jetson and start fresh.
 {{% /pageinfo %}}
 
-To flash the SD card, you need to download a tool called Rufus first.
-Go to [this page](https://github.com/pbatard/rufus/releases/latest) and download
-the `rufus-<version>.exe` file.
-
-![Download this installer file](2022-05-20-09-16-54.png)
-
-Now, you need to download the Jetson's operating system. The file you want is
+First, you need to download the Jetson's operating system. The file you want is
 [jetson-nano-jp461-sd-card-image.zip](https://developer.nvidia.com/embedded/l4t/r32_release_v7.1/jp_4.6.1_b110_sd_card/jeston_nano/jetson-nano-jp461-sd-card-image.zip).
 For reference, this is the latest "Jetson Nano Developer Kit SD Card Image" from
 [Nvidia's website](https://developer.nvidia.com/embedded/downloads).
 This is a large file, so it will take a while.
 
-After the `.zip` file finishes downloading, extract this file
-(right-click, "Extract All..." in Windows File Explorer).
+After the `.zip` file finishes downloading, extract this file.
 
-![Extracting a .zip file on Windows](2022-05-20-09-11-42.png)
+## Windows
+
+To flash the SD card, you need to download a tool called Rufus.
+Go to [this page](https://github.com/pbatard/rufus/releases/latest) and download
+the `rufus-<version>.exe` file.
+
+![Download this installer file](2022-05-20-09-16-54.png)
 
 Once you have the file extracted, go ahead and launch Rufus.
 When you launch the application, it should look something like this:
@@ -45,3 +44,7 @@ You will get a number of warnings that you're about to format and wipe this SD c
 Go ahead and click through all of these, you know what you're doing.
 Rufus will begin flashing the SD card and at the end will let you know
 when it's finished.
+
+## MacOS/Linux
+
+TODO
