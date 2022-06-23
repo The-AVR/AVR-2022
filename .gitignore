@@ -1,6 +1,7 @@
 *.lock
 
 node_modules/
+.venv/
 
 resources/_gen
 public/
