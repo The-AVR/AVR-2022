@@ -3,7 +3,7 @@ title: "Airframe"
 weight: 2
 ---
 
-The VRC drone is 500mm in size and is represented by the diagonal
+The AVR drone is 500mm in size and is represented by the diagonal
 distance between motors. If you were to measure the distance it would be
 close to 500mm. In QGC you will now configure the drone frame, which will
 provide optimal settings for flight. Select **Airframe** in the navigation menu.

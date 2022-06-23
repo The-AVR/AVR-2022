@@ -99,6 +99,3 @@ Some tips for building your own program:
   the analog pins are correctly called out in the block code shown above.
 - Try changing the proximity sensor sensitivity and the speed to see if you
   can make your RVR the fastest and most reliable!
-
-If you have questions you can always reach out to us through the
-[Microsoft Teams VRC Portal](https://teams.microsoft.com/dl/launcher/launcher.html?url=%2F_%23%2Fl%2Fteam%2F19%3A21c615dc691c4f289fb9fda44c862df3%40thread.tacv2%2Fconversations%3FgroupId%3D6baa0f71-7580-4c72-905f-2b6ee58685c3%26tenantId%3D771923a0-2465-44c5-8531-b9366e228aad&type=team&deeplinkId=daf2e519-e92e-4cbe-8e71-dc0b4bd90266&directDl=true&msLaunch=true&enableMobilePage=true&suppressPrompt=true).

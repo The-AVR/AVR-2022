@@ -35,16 +35,16 @@ and and the topics used to control the actuators attached to the PCC.
 
 Your program should take into account things like:
 
-- **the drone's speed, which can be found on the "vrc/velocity" topic**
+- **the drone's speed, which can be found on the "avr/velocity" topic**
   (is the drone moving fast or slow?)
-- **the drone's position relative to the bullseye, which can be found on the "vrc/apriltags/visible_tags" topic**
+- **the drone's position relative to the bullseye, which can be found on the "avr/apriltags/visible_tags" topic**
   (how close is the drone to the apriltag?)
-- **the ID of the tag under the drone, also on the "vrc/apriltags/visible_tags" topic**
+- **the ID of the tag under the drone, also on the "avr/apriltags/visible_tags" topic**
   (which package should I drop?)
 - **each actuator's relative position to the flight controller on the drone**
   (the positions reported by the apriltag module are relative to the flight controller.
   If your actuators are offset from the flight controller, your code should take that
   into account)
 
-in order to decide when to publish a message to the "vrc/pcc/set_servo_open_close"
+in order to decide when to publish a message to the "avr/pcc/set_servo_open_close"
 topic and release a package.

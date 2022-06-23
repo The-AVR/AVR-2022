@@ -7,8 +7,8 @@ In the world of drones and radio controllers, there are a lot of different proto
 in use. More information about these different protocols can be found
 [here](https://oscarliang.com/pwm-ppm-sbus-dsm2-dsmx-sumd-difference/).
 The FlySky FS-iA6B receiver that was included with the FlySky FS-i6S transmitter
-supports PWM, PPM, S.BUS, and i-BUS output, but the FC in the VRC kit only supports
-PPM and S.BUS. For the VRC drone, it is recommended to use the S.BUS protocol since
+supports PWM, PPM, S.BUS, and i-BUS output, but the FC in the AVR kit only supports
+PPM and S.BUS. For the AVR drone, it is recommended to use the S.BUS protocol since
 it is the most stable of the two and supports more channels.
 
 Configuring the RC receiver to output the S.BUS protocol can be done in the

@@ -8,7 +8,7 @@
 # will not unless you have a custom domain setup.
 baseURL = "/"
 
-title           = "Bell VRC Documentation"
+title           = "Bell AVR Documentation"
 enableRobotsTXT = true
 theme           = "docsy"
 

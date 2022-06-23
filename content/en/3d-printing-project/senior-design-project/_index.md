@@ -3,7 +3,7 @@ title: "Senior Design Project"
 weight: 2
 ---
 
-When the Bell VRC team decided to divide the 2021 competition into
+When the Bell AVR team decided to divide the 2021 competition into
 Phase 1 and Phase 2, it became clear that it would impact the seniors
 who graduate after Phase 1 and miss the excitement of Phase 2.
 The senior design project was created to highlight the seniors'

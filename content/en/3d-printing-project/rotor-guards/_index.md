@@ -6,7 +6,7 @@ weight: 3
 While we definitely recommend you take on the 3D Design Challenge,
 we understand that its not feasible for everyone. In that regard,
 we've provided a set of rotor guards that can be 3D printed and assembled
-with a few extra parts not shipped with your VRC Kit.
+with a few extra parts not shipped with your AVR Kit.
 
 ![Assembled Guard](top.jpg)
 

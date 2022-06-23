@@ -9,7 +9,7 @@ leaving several free channels which can be mapped to auxiliary control switches.
 Assigning switches, dials, and buttons on the transmitter to channels can be done
 using the **Aux. channels** option under the **Function** tab in the **Settings** menu.
 
-These channels will be useful throughout VRC and will let us do things like toggle a
+These channels will be useful throughout AVR and will let us do things like toggle a
 switch to change the current flight mode of the drone.
 
 ![Auxiliary channels in Function menu](tx_aux_channel.jpg)
@@ -19,7 +19,7 @@ You can press the icon to change the kind of input
 you can specify which exact input should be mapped to the channel.
 It is also explained in [section 6.7 of the transmitter manual]({{< static "files/FS-i6S-User-manual-20170706-compressed.pdf" >}}).
 
-For the VRC drone, we provide a default channel setup which allows for maximum
+For the AVR drone, we provide a default channel setup which allows for maximum
 utility of the available channels, which can be found below. In future references,
 we will always use the channel setup as provided here.
 

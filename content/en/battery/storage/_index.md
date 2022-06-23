@@ -77,4 +77,4 @@ Should you have any questions or concerns, please reach out to Venom Customer Se
 at [1-800-705-0620](tel:1-800-705-0620) or by starting a support case at
 [VenomPower.com](https://www.venompower.com/).
 If you reach out, please let them know that you are using the battery as
-part of Bell VRC.
+part of Bell AVR.

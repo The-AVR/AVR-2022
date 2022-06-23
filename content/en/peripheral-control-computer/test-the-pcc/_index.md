@@ -28,13 +28,13 @@ Plug your servos and LED strip into the designated connections on the PCC:
 
 ## Software Setup
 
-Now it's time to download the VRC GUI program.
+Now it's time to download the AVR GUI program.
 
 ### Windows
 
 Go to the latest
-[VRC software release](https://github.com/bellflight/VRC-2022/releases/tag/stable)
-and download the `VRCGUI.<hash>.exe` file. Like QGroundControl,
+[AVR software release](https://github.com/bellflight/VRC-2022/releases/tag/stable)
+and download the `AVRGUI.<hash>.exe` file. Like QGroundControl,
 you may need to bypass some warnings about being an untrusted file.
 
 ![Select "Keep"](2022-05-20-12-34-24.png)
@@ -43,7 +43,7 @@ you may need to bypass some warnings about being an untrusted file.
 
 ### Other Platforms
 
-For Linux and MacOS, we recommend running the VRC GUI from source. You'll need
+For Linux and MacOS, we recommend running the AVR GUI from source. You'll need
 to have Python 3.9 or Python 3.10 installed.
 
 For Linux users, here's how you can easily install Python 3.10:
@@ -62,9 +62,9 @@ and setup the dependencies.
 
 ```bash
 # clone the repo
-git clone https://github.com/bellflight/VRC-2022
+git clone https://github.com/bellflight/AVR-2022
 # cd into the repo
-cd VRC-2022
+cd AVR-2022
 # create a Python virtual environment
 # You may need to replace `python` here with `python3` or `python3.10`
 python -m venv .venv
@@ -80,7 +80,7 @@ In the future to run the application, you'll just need to activate the virtual
 environment first:
 
 ```bash
-cd VRC-2022
+cd AVR-2022
 source .venv/bin/activate
 python GUI/app.py
 ```
@@ -97,7 +97,7 @@ Before, you launch the application, plug the PCC into your computer with a
 MicroUSB cable. The application will not recognize anything plugged in after it starts.
 Now, launch the application. You should be presented with a screen like this:
 
-![VRC GUI Home Screen](2022-05-20-12-35-28.png)
+![AVR GUI Home Screen](2022-05-20-12-35-28.png)
 
 In the Serial section, select the COM Port your PCC enumerates as. Click "Connect"
 and the "PCC Tester" should now be enabled (we'll talk about the other tabs in

@@ -5,11 +5,11 @@ weight: 3
 
 After
 [setting up your VMC]({{< relref "../../vehicle-management-computer/system-setup" >}})
-you're now ready to install the VRC software.
+you're now ready to install the AVR software.
 
 ## Internet
 
-In order to install the VRC software, your Jetson needs to have an internet connection.
+In order to install the AVR software, your Jetson needs to have an internet connection.
 The easiest way by far is if you have ethernet available. If so, just plug
 an ethernet cable into your Jetson and you should be good to go.
 
@@ -56,8 +56,8 @@ you'll need to wrap it in quotes as shown above.
 Run the following commands in sequence:
 
 ```bash
-git clone --recurse-submodules https://github.com/bellflight/VRC-2022 ~/VRC-2022
-cd ~/VRC-2022/VMC/scripts
+git clone --recurse-submodules https://github.com/bellflight/AVR-2022 ~/AVR-2022
+cd ~/AVR-2022/VMC/scripts
 chmod +x setup.py
 ./setup.py
 ```
@@ -91,7 +91,7 @@ If a new version is ever available, you just need to go into the
 directory the repo is cloned to, pull the latest code, and re-run the setup script:
 
 ```bash
-cd ~/VRC-2022/VMC/scripts
+cd ~/AVR-2022/VMC/scripts
 git pull
 ./setup.py
 ```

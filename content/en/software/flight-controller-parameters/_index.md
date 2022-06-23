@@ -3,13 +3,13 @@ title: "Flight Controller Parameters"
 weight: 2
 ---
 
-After configuring the VRC software on your Jetson,
+After configuring the AVR software on your Jetson,
 you need to also load custom parameters into your flight controller as well.
 These settings configure how the flight controller processes sensor input,
-and we need to tell it to unconditionally trust the data the VRC software feeds it.
+and we need to tell it to unconditionally trust the data the AVR software feeds it.
 
 First, download this parameter file from GitHub:
-[https://github.com/bellflight/VRC-2022/blob/main/PX4/VRCParameters.params](https://github.com/bellflight/VRC-2022/blob/main/PX4/VRCParameters.params)
+[https://github.com/bellflight/VRC-2022/blob/main/PX4/AVRParameters.params](https://github.com/bellflight/VRC-2022/blob/main/PX4/AVRParameters.params)
 
 The easiest way to download the file is to click the "Raw" button,
 then right-click the page, and select "Save page as".
@@ -25,7 +25,7 @@ Now, open QGroundControl, click the "Q" in the top left, then
 ![](image.png)
 
 Click on "Tools" in the top right then select "Load from file..."
-and select the VRC parameter file you downloaded.
+and select the AVR parameter file you downloaded.
 
 ![](image1.png)
 

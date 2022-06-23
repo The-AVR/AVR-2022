@@ -86,7 +86,7 @@ the added advantage of not needing to copy the full URL and automatic checks to
 make sure the link is valid.
 
 ```markdown
-[building your VRC drone]({{< relref "../../primary-goal/vrc-drone-assembly" >}})
+[building your AVR drone]({{< relref "../../primary-goal/avr-drone-assembly" >}})
 ```
 
 ### Keyboard Buttons

@@ -17,5 +17,5 @@ This has already been configured to be very simple to get started with.
 
 ![](image.png)
 
-With that, you can start the VRC software like normal!
+With that, you can start the AVR software like normal!
 Your code will run alongside the rest of the VMC modules.

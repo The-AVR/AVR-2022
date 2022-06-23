@@ -6,9 +6,9 @@ description: "In this section we'll walk through the final steps of loading firm
 
 ## QGroundControl (QGC)
 
-Ground control software is used for configuration and monitoring of your VRC drone.
+Ground control software is used for configuration and monitoring of your AVR drone.
 We will be using QGroundControl as our ground control software of choice
-throughout VRC. With QGC you can upload firmware, configure flight modes,
+throughout AVR. With QGC you can upload firmware, configure flight modes,
 calibrate sensors and much more. It also provides different ways of controlling
 the drone, such as an autonomous mission planner.
 

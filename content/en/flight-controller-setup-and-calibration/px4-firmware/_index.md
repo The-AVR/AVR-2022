@@ -6,13 +6,13 @@ weight: 1
 ## Uploading PX4 firmware using QGC
 
 [PX4](https://px4.io/) is firmware that we will be running
-on the VRC drone. It is an open-source flight stack containing all the
+on the AVR drone. It is an open-source flight stack containing all the
 software necessary to get your drone into the air.
 
 To facilitate some of the extra functionality required for our drone
 to fly in stabilized flight mode without a GPS, you need use a custom version of PX4
 Bell engineers have developed. Go to the latest
-[VRC software release](https://github.com/bellflight/VRC-2022/releases/tag/stable)
+[AVR software release](https://github.com/bellflight/VRC-2022/releases/tag/stable)
 and download the `px4_fmu-v5x_default.<px4 version>.<hash>.px4` file.
 
 In the Firmware screen in QGroundControl you can upload a new version of PX4.

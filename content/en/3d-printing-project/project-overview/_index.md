@@ -3,7 +3,7 @@ title: "Project Overview"
 weight: 1
 ---
 
-As part of Phase 1 of the VRC, all members on the team will work together as a
+As part of Phase 1 of the AVR, all members on the team will work together as a
 group to conceptualize, design, fabricate, assemble, and test a
 solution to address two needs
 

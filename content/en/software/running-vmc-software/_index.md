@@ -11,7 +11,7 @@ login to the Jetson, go into the "VMC" directory,
 and run the command `./scripts/wifi.py create`:
 
 ```bash
-cd ~/VRC-2022/VMC/
+cd ~/AVR-2022/VMC/
 ./scripts/wifi.py create
 ```
 
@@ -38,7 +38,7 @@ After connecting to your Jetson via the hotspot, go into the "VMC" directory,
 and run the command `./start.py run`:
 
 ```bash
-cd ~/VRC-2022/VMC/
+cd ~/AVR-2022/VMC/
 ./start.py run
 ```
 
@@ -145,7 +145,7 @@ optional arguments:
 
 ## Troubleshooting
 
-Sometimes when starting the VRC software, things don't all start correctly.
+Sometimes when starting the AVR software, things don't all start correctly.
 
 ### Cannot start service pcm
 
@@ -153,20 +153,20 @@ Example output:
 
 ```text
 Needing sudo privledges to run docker, re-lauching
-Running command: docker-compose --project-name VRC-2022 --file /tmp/docker-compose-v5eqlg13.yml up --remove-orphans --force-recreate pcm
+Running command: docker-compose --project-name AVR-2022 --file /tmp/docker-compose-v5eqlg13.yml up --remove-orphans --force-recreate pcm
 /usr/local/lib/python3.6/dist-packages/paramiko/transport.py:33: CryptographyDeprecationWarning: Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography and will be removed in a future release.
   from cryptography.hazmat.backends import default_backend
-Creating network "vrc-2022_default" with the default driver
-Creating vrc-2022_mqtt_1 ... done
-Creating vrc-2022_pcm_1  ... error
+Creating network "avr-2022_default" with the default driver
+Creating avr-2022_mqtt_1 ... done
+Creating avr-2022_pcm_1  ... error
 
-ERROR: for vrc-2022_pcm_1  Cannot start service pcm: error gathering device information while adding custom device "/dev/ttyACM0": no such file or directory
+ERROR: for avr-2022_pcm_1  Cannot start service pcm: error gathering device information while adding custom device "/dev/ttyACM0": no such file or directory
 
 ERROR: for pcm  Cannot start service pcm: error gathering device information while adding custom device "/dev/ttyACM0": no such file or directory
 ERROR: Encountered errors while bringing up the project.
 ```
 
-This error means that the VRC software was unable to connect to the PCC.
+This error means that the AVR software was unable to connect to the PCC.
 If you are not using the PCC, follow the steps above to disable that module.
 
 Otherwise, to test that the PCC is correctly connected to the VMC, run the command:

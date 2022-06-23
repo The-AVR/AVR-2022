@@ -49,7 +49,7 @@ Enter a name, such as your school's name
 
 ![](2022-06-18-16-16-42.png)
 
-Choose a username, such as "vrc"
+Choose a username, such as "avr"
 
 ![](2022-06-18-16-17-00.png)
 

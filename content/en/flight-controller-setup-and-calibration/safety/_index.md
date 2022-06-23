@@ -8,7 +8,7 @@ weight: 7
 Previously, in the RC Transmitter Setup section, we covered
 [Setting Up Failsafe]({{< relref "../../rc-transmitter-setup/setting-up-failsafe" >}}).
 In QGC we need to make sure we disable some of the failsafe options, as many of
-them are related to GPS-enabled drones. VRC is all about indoor navigation in a
+them are related to GPS-enabled drones. AVR is all about indoor navigation in a
 GPS-denied environment therefore it warrants a different safety configuration.
 The video below walks through the setup process.
 
@@ -16,7 +16,7 @@ The video below walks through the setup process.
 
 ## Disable Safety Switch
 
-Bell VRC is about navigating indoors in a **GPS-denied** environment.
+Bell AVR is about navigating indoors in a **GPS-denied** environment.
 In many cases, users of GPS-based drones have a safety switch to pre-arm their drone.
 Since we do not have the requirement of this hardware we will need to
 disable the pre-arm check.

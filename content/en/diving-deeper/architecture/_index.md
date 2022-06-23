@@ -5,7 +5,7 @@ weight: 2
 
 ## General
 
-The software for VRC is designed around a pub/sub messaging system in order to exchange
+The software for AVR is designed around a pub/sub messaging system in order to exchange
 data throughout the system. This allows software modules to operate independently
 of each other, and to communicate with each other over a network.
 
@@ -16,24 +16,24 @@ publishing data to a topic (their email address), and you subscribe to all messa
 on a topic (your email address). However, a pub/sub system allows multiple clients
 to subscribe to the same topic.
 
-With that in mind, the core principles of VRC software architecture are as follows:
+With that in mind, the core principles of AVR software architecture are as follows:
 
 1. Data exchange must happen through the MQTT broker.
 2. All MQTT data must be JSON encoded.
 3. All modules are run as containers.
 
-Because of all of the hardware components of VRC (PCC, FCC, thermal camera, etc.),
+Because of all of the hardware components of AVR (PCC, FCC, thermal camera, etc.),
 what this generally means is that each module acts as a hardware to MQTT adapter.
 For example, the FCM module publishes telemetry data over MQTT, and feeds
 fake GPS data from MQTT to the FCC.
 
 This modular, open system makes it simple to add new modules or functionality
-to VRC. The [GUI]({{< relref "../../software/gui" >}}) for example,
+to AVR. The [GUI]({{< relref "../../software/gui" >}}) for example,
 is 100% based on consuming MQTT data.
 
 ## Modules
 
-Here is a description of the modules in VRC and what they all do.
+Here is a description of the modules in AVR and what they all do.
 
 ### AprilTag
 
@@ -43,7 +43,7 @@ The AprilTag module is responsible for using the images pulled from the CSI
 camera to scan for visible [AprilTags](https://april.eecs.umich.edu/software/apriltag).
 
 A low-level C++ program captures the images and hands them off to the Jetson's GPU
-for processing and publishes the raw detections to the "vrc/apriltags/raw" topic.
+for processing and publishes the raw detections to the "avr/apriltags/raw" topic.
 
 From here, a second program, written in Python subscribes to this topic,
 and upon new detections, uses linear algebra to perform a coordinate

@@ -5,13 +5,13 @@ weight: 6
 
 ## Setup
 
-You should have already setup the VRC GUI when testing your PCC
+You should have already setup the AVR GUI when testing your PCC
 [here]({{< relref "../../peripheral-control-computer/test-the-pcc/#software-setup" >}}).
 
 ## Usage
 
 Open the application. You'll be brought to the Connections tab.
-After starting the VRC software on your Jetson, put in the Jetson's
+After starting the AVR software on your Jetson, put in the Jetson's
 IP address under the "MQTT" section. Leave the port as is.
 
 ![Connections tab](2022-06-16-12-22-06.png)
@@ -81,7 +81,7 @@ turns off the LEDs.
 
 As for the "Autonomous" buttons in the tab,
 this is purely optional for the teams that have chosen to write autonomous code.
-These buttons send a message to the MQTT topic `vrc/autonomous` with a payload of:
+These buttons send a message to the MQTT topic `avr/autonomous` with a payload of:
 
 ```json
 // enable button
@@ -103,17 +103,17 @@ the entire time.
 Example implementation:
 
 ```python
-from bell.vrc.mqtt.client import MQTTModule
-from bell.vrc.mqtt.payloads import VrcAutonomousPayload
+from bell.avr.mqtt.client import MQTTModule
+from bell.avr.mqtt.payloads import AvrAutonomousPayload
 
 class Sandbox(MQTTModule):
     def __init__(self) -> None:
         self.enabled = False
-        self.topic_map = {"vrc/autonomous": self.on_autonomous_message}
+        self.topic_map = {"avr/autonomous": self.on_autonomous_message}
 
     ...
 
-    def on_autonomous_message(self, payload: VrcAutonomousPayload) -> None:
+    def on_autonomous_message(self, payload: AvrAutonomousPayload) -> None:
         self.enabled = payload["enable"]
 
     def autonomous_code(self) -> None:
@@ -136,7 +136,7 @@ The bounds of the box are the gimbal's limit.
 ![MQTT Debugger Tab](2022-06-18-13-03-59.png)
 
 This tab is a debugging tool that shows all MQTT messages
-that are passing through the VRC software, along with giving
+that are passing through the AVR software, along with giving
 you the ability to manually send messages.
 
 In the top half of the tab is the message viewer. On the left side
@@ -202,20 +202,20 @@ Short example:
 
 ```csv
 Timestamp,Topic,Payload
-2022-05-15T16:05:21.861220,vrc/fcm/location/local,"{""dX"": -2.5455074310302734, ""dY"": -1.5015729665756226, ""dZ"": 2.0492169857025146, ""timestamp"": ""2022-05-15T18:43:51.529153""}"
-2022-05-15T16:05:21.865960,vrc/fcm/attitude/euler,"{""roll"": 0.3597148656845093, ""pitch"": -1.1968730688095093, ""yaw"": -115.29061126708984, ""timestamp"": ""2022-05-15T18:43:51.533150""}"
-2022-05-15T16:05:21.867091,vrc/fcm/location/global,"{""lat"": 32.8085261, ""lon"": -97.1563602, ""alt"": -0.1720000058412552, ""hdg"": -6245.665443087664, ""timestamp"": ""2022-05-15T18:43:51.534187""}"
-2022-05-15T16:05:21.867533,vrc/fcm/velocity,"{""vX"": 0.009999999776482582, ""vY"": 0.0, ""vZ"": -0.009999999776482582, ""timestamp"": ""2022-05-15T18:43:51.535720""}"
-2022-05-15T16:05:21.886569,vrc/fusion/hil_gps,"{""time_usec"": 1652640231557357, ""fix_type"": 3, ""lat"": 328085260, ""lon"": -971563603, ""alt"": 165206, ""eph"": 20, ""epv"": 5, ""vel"": 0, ""vn"": 0, ""ve"": 0, ""vd"": 0, ""cog"": 24600, ""satellites_visible"": 13, ""heading"": 24638}"
-2022-05-15T16:05:21.890844,vrc/fcm/location/global,"{""lat"": 32.8085261, ""lon"": -97.1563602, ""alt"": -0.1720000058412552, ""hdg"": -6245.528183606103, ""timestamp"": ""2022-05-15T18:43:51.557302""}"
-2022-05-15T16:05:21.891264,vrc/fcm/velocity,"{""vX"": 0.009999999776482582, ""vY"": 0.0, ""vZ"": -0.009999999776482582, ""timestamp"": ""2022-05-15T18:43:51.560023""}"
-2022-05-15T16:05:21.901353,vrc/fcm/location/local,"{""dX"": -2.5456197261810303, ""dY"": -1.5016621351242065, ""dZ"": 2.049142837524414, ""timestamp"": ""2022-05-15T18:43:51.571278""}"
-2022-05-15T16:05:21.909915,vrc/vio/position/ned,"{""n"": -254.60606976676002, ""e"": -143.7991712686676, ""d"": -370.6543833582757}"
-2022-05-15T16:05:21.913765,vrc/vio/orientation/eul,"{""psi"": -2.870100228693062, ""theta"": 0.7509557925331154, ""phi"": -1.982899257543946}"
-2022-05-15T16:05:21.914391,vrc/fusion/position/ned,"{""n"": -254.60606976676002, ""e"": -143.7991712686676, ""d"": -370.6543833582757}"
-2022-05-15T16:05:21.914799,vrc/vio/heading,"{""degrees"": 246.38824134310744}"
-2022-05-15T16:05:21.915277,vrc/vio/velocity/ned,"{""n"": 0.006583199572207324, ""e"": -0.020817144593196127, ""d"": 0.02579902535054221}"
-2022-05-15T16:05:21.915846,vrc/vio/confidence,"{""tracker"": 41}"
+2022-05-15T16:05:21.861220,avr/fcm/location/local,"{""dX"": -2.5455074310302734, ""dY"": -1.5015729665756226, ""dZ"": 2.0492169857025146, ""timestamp"": ""2022-05-15T18:43:51.529153""}"
+2022-05-15T16:05:21.865960,avr/fcm/attitude/euler,"{""roll"": 0.3597148656845093, ""pitch"": -1.1968730688095093, ""yaw"": -115.29061126708984, ""timestamp"": ""2022-05-15T18:43:51.533150""}"
+2022-05-15T16:05:21.867091,avr/fcm/location/global,"{""lat"": 32.8085261, ""lon"": -97.1563602, ""alt"": -0.1720000058412552, ""hdg"": -6245.665443087664, ""timestamp"": ""2022-05-15T18:43:51.534187""}"
+2022-05-15T16:05:21.867533,avr/fcm/velocity,"{""vX"": 0.009999999776482582, ""vY"": 0.0, ""vZ"": -0.009999999776482582, ""timestamp"": ""2022-05-15T18:43:51.535720""}"
+2022-05-15T16:05:21.886569,avr/fusion/hil_gps,"{""time_usec"": 1652640231557357, ""fix_type"": 3, ""lat"": 328085260, ""lon"": -971563603, ""alt"": 165206, ""eph"": 20, ""epv"": 5, ""vel"": 0, ""vn"": 0, ""ve"": 0, ""vd"": 0, ""cog"": 24600, ""satellites_visible"": 13, ""heading"": 24638}"
+2022-05-15T16:05:21.890844,avr/fcm/location/global,"{""lat"": 32.8085261, ""lon"": -97.1563602, ""alt"": -0.1720000058412552, ""hdg"": -6245.528183606103, ""timestamp"": ""2022-05-15T18:43:51.557302""}"
+2022-05-15T16:05:21.891264,avr/fcm/velocity,"{""vX"": 0.009999999776482582, ""vY"": 0.0, ""vZ"": -0.009999999776482582, ""timestamp"": ""2022-05-15T18:43:51.560023""}"
+2022-05-15T16:05:21.901353,avr/fcm/location/local,"{""dX"": -2.5456197261810303, ""dY"": -1.5016621351242065, ""dZ"": 2.049142837524414, ""timestamp"": ""2022-05-15T18:43:51.571278""}"
+2022-05-15T16:05:21.909915,avr/vio/position/ned,"{""n"": -254.60606976676002, ""e"": -143.7991712686676, ""d"": -370.6543833582757}"
+2022-05-15T16:05:21.913765,avr/vio/orientation/eul,"{""psi"": -2.870100228693062, ""theta"": 0.7509557925331154, ""phi"": -1.982899257543946}"
+2022-05-15T16:05:21.914391,avr/fusion/position/ned,"{""n"": -254.60606976676002, ""e"": -143.7991712686676, ""d"": -370.6543833582757}"
+2022-05-15T16:05:21.914799,avr/vio/heading,"{""degrees"": 246.38824134310744}"
+2022-05-15T16:05:21.915277,avr/vio/velocity/ned,"{""n"": 0.006583199572207324, ""e"": -0.020817144593196127, ""d"": 0.02579902535054221}"
+2022-05-15T16:05:21.915846,avr/vio/confidence,"{""tracker"": 41}"
 ```
 
 To stop recording, click the "Stop recording" button. This will stop writing to the
@@ -235,8 +235,8 @@ import pandas as pd
 df = pd.read_csv("MQTTLog_2022-05-10_17-08-27.csv")
 # parse the JSON data into the Pandas dataframe
 df = df.join(df["Payload"].apply(json.loads).apply(pd.Series))
-# filter to only data from the vrc/fcm/location/global topic
-px4_data = df[df["Topic"] == "vrc/fcm/location/global"]
+# filter to only data from the avr/fcm/location/global topic
+px4_data = df[df["Topic"] == "avr/fcm/location/global"]
 
 fig = plt.figure()
 ax = plt.axes(projection='3d')
@@ -271,8 +271,8 @@ with open(filename, "r") as fp:
     # create a DictReader to read the CSV file
     reader = csv.DictReader(fp)
     for row in reader:
-        # only get data from the vrc/fcm/battery topic
-        if row["Topic"] == "vrc/fcm/battery":
+        # only get data from the avr/fcm/battery topic
+        if row["Topic"] == "avr/fcm/battery":
             # parse the JSON data
             payload = json.loads(row["Message"])
 

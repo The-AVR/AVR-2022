@@ -8,7 +8,7 @@ The **Sensors** screen lists most of the sensors that are available to
 the FC (internal or external). It allows you to start the calibration process
 for the listed sensors. This step is very important for stable flights.
 It is required to do the calibration at least once and should be repeated whenever
-adding new components to the VRC drone or if flight becomes less stable.
+adding new components to the AVR drone or if flight becomes less stable.
 
 {{% alert title="Note" color="note" %}}
 Given advanced assembly of your drone will require additional autonomy components
@@ -22,26 +22,26 @@ through the calibration process for each sensor.
 
 ## Compass
 
-The compass is important for your VRC drone to maintain proper orientation.
+The compass is important for your AVR drone to maintain proper orientation.
 Click on the **Compass** button and you will be asked to begin the calibration process.
-This process requires you to position the VRC drone in a number of set orientations
+This process requires you to position the AVR drone in a number of set orientations
 and rotate the vehicle about the specified axis.
 
 ![Default compass sensor screen before calibration begins.](qgc_sensor_compass.png)
 
 Click **Ok** to proceed with the compass calibration.
-QGC will automatically recognize the orientation of the VRC drone and
+QGC will automatically recognize the orientation of the AVR drone and
 provide a yellow highlight as shown in the image below.
 
 {{% alert title="Note" color="note" %}}
 Don't be thrown off by the images of an airplane in the QGC
-compass calibration process. This still applies to the VRC drone.
+compass calibration process. This still applies to the AVR drone.
 {{% /alert %}}
 
-![Begin the process of rotating the VRC drone around the highlighted axis.](qgc_compass_progress.png)
+![Begin the process of rotating the AVR drone around the highlighted axis.](qgc_compass_progress.png)
 
 {{% alert title="Tip" color="tip" %}}
-You may find it difficult to rotate the VRC drone with USB connected.
+You may find it difficult to rotate the AVR drone with USB connected.
 It is helpful to have someone keep the cable out of the way while another
 rotates the drone around its designated axis.
 {{% /alert %}}
@@ -61,9 +61,9 @@ but for now we will move on to calibrating the **Gyroscope**.
 ## Gyroscope
 
 The gyroscope is an important sensor that will be used to keep your
-VRC drone level when hovering. Now that the compass calibration is complete
+AVR drone level when hovering. Now that the compass calibration is complete
 you will click on Gyroscope to being the process. This will be much easier
-than compass calibration! Make sure your VRC drone is on a level surface
+than compass calibration! Make sure your AVR drone is on a level surface
 and click Ok.
 
 ![](qgc_gyro_setup.png)
@@ -75,7 +75,7 @@ After a few seconds, the gyroscope calibration will be complete.
 ## Accelerometer
 
 The accelerometer works in conjunction with the gyroscope to keep your
-VRC drone level along each axis. Click on **Accelerometer** and then
+AVR drone level along each axis. Click on **Accelerometer** and then
 **Ok** to begin the calibration process.
 
 This process is fairly similar to compass calibration but does
@@ -85,7 +85,7 @@ the orientation, which is denoted by the yellow border.
 
 ![Accelerometer calibration in progress](accelerometer_in_progress.png)
 
-Hold your VRC drone steady in each orientation for approximately 5-10 seconds.
+Hold your AVR drone steady in each orientation for approximately 5-10 seconds.
 As you complete each axis the border will turn green in QGC.
 
 ![Accelerometer calibration complete](accelerometer_complete.png)
@@ -103,7 +103,7 @@ then **Ok**. This process will take more than a couple of seconds to complete.
 Given we have mounted the FC in its default orientation
 (facing up and forward) this calibration is unnecessary.
 
-Nice work! You have calibrated the necessary sensors for your VRC drone
+Nice work! You have calibrated the necessary sensors for your AVR drone
 to be able to know its orientation and keep level during flight.
 The following Summary screen shows the successful steps completed in green.
 Now we will move onto setting up the **Radio** (aka Transmitter).

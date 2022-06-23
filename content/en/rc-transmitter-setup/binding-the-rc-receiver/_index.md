@@ -11,7 +11,7 @@ the FC side as shown in the photo below.
 
 Aside from the physical connection we also need to establish a wireless connection
 between the transmitter and the receiver. This wireless connection happens through a
-process known as **binding**. Binding is what will allow us to control the VRC drone
+process known as **binding**. Binding is what will allow us to control the AVR drone
 with the transmitter and change flight modes, which will become important in
 the competition.
 

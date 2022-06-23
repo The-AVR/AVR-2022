@@ -4,14 +4,14 @@ weight: 3
 ---
 
 As discussed in the [Flight Test]({{< relref "../flight-test" >}})
-video always be sure to power down your VRC drone and run a voltage
+video always be sure to power down your AVR drone and run a voltage
 check on your battery. Always refer back to the
 [battery documentation]({{< relref "../../battery/charging#charging-the-battery" >}})
 if you have any questions regarding
 charging, maintaining, and storing your battery.
 
 **Congrats on
-[building your VRC drone]({{< relref "../../basic-vrc-drone-assembly" >}}),
+[building your AVR drone]({{< relref "../../basic-drone-assembly" >}}),
 [configuring it]({{< relref "../../flight-controller-setup-and-calibration" >}}),
 and performing your first flight test!**
 

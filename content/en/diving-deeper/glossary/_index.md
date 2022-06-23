@@ -28,7 +28,7 @@ More info on how they work [here](https://howtomechatronics.com/how-it-works/how
 The Flight Controller can go by many names, but in practical terms, it just a
 small computer that has sensors for determining the position and orientation of
 the drone, along with circuitry for controlling motors based on input from a pilot
-or autopilot. The flight controller used for the VRC
+or autopilot. The flight controller used for the AVR
 ([NXP RDDRONE-FMUK66](https://www.nxp.com/design/designs/px4-robotic-drone-flight-management-unit-fmu-rddrone-fmuk66:RDDRONE-FMUK66))
 is running the PX4 flight stack, which provides basic functionality you'd expect
 from a hobby drone, and even some autonomy functions.
@@ -101,7 +101,7 @@ The Vehicle Management Computer is the companion computer that performs various
 tasks and communicates with the Flight Controller. This is where your custom software
 will be run to complete the challenges for the competiton.
 
-## Vertical Robotics Competition (VRC)
+## Vertical Robotics Competition (AVR)
 
 The Vertical Robotics Competition is a robotics competition put on by Bell Flight
 to challenge high school students to develop STEM skills outside of the classroom

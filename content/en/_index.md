@@ -1,5 +1,5 @@
 ---
-title: "Bell VRC"
+title: "Bell AVR"
 
 cascade:
   - type: "docs"
@@ -20,7 +20,7 @@ order. The navigation on the left provides a sequential ordering of steps.
 
 ## Requirements
 
-To be able to successfully compete in VRC, you must have the following
+To be able to successfully compete in AVR, you must have the following
 available to you:
 
 - A 3D printer (8.5" cubed) with 1 roll of ABS filament
@@ -36,7 +36,7 @@ available to you:
 
 ## Prerequisites
 
-For VRC, you'll need to 3D print some parts for your drone.
+For AVR, you'll need to 3D print some parts for your drone.
 While not needed immediately, these are good to get started with:
 
 - [Landing gear](https://github.com/bellflight/VRC-2022/blob/main/3DPrints/Misc/Drone_Landing_Spike.STL) (x4)
