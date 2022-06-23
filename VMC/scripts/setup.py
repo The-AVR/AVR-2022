@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import argparse
+import contextlib
 import json
 import os
 import shutil
@@ -121,27 +122,29 @@ def main(development):
     print("Fetching latest code")
     subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(AVR_DIR, '.git')}", f"--work-tree={AVR_DIR}", "fetch"]), cwd=AVR_DIR)
 
-    # check if we're on the main branch
-    if not development:
-        print("Making sure we're on the main branch")
-        current_branch = subprocess.check_output(["git", "rev-parse", "--abbrev-ref", "HEAD"], cwd=AVR_DIR).decode("utf-8").strip()
-        if current_branch != "main":
-            print(f"{LIGHTRED}WARNING:{NC} Not currently on the main branch, run 'git checkout main && git pull' then re-run this script")
+    # ignore git errors, they're usually due to a missing HEAD file
+    # because of weird situations
+    with contextlib.suppress(subprocess.CalledProcessError):
+        # check if we're on the main branch
+        if not development:
+            print("Making sure we're on the main branch")
+            current_branch = subprocess.check_output(original_user_cmd(orig_username, ["git", "rev-parse", "--abbrev-ref", "HEAD"]), cwd=AVR_DIR).decode("utf-8").strip()
+            if current_branch != "main":
+                print(f"{LIGHTRED}WARNING:{NC} Not currently on the main branch, run 'git checkout main && git pull' then re-run this script")
+                sys.exit(1)
+
+        # check if we're on the latest commit
+        print("Making sure we have the latest code")
+        local_commit = subprocess.check_output(original_user_cmd(orig_username, ["git", "rev-parse", "HEAD"]), cwd=AVR_DIR).decode("utf-8").strip()
+        upstream_commit = subprocess.check_output(original_user_cmd(orig_username, ["git", "rev-parse", "@{u}"]), cwd=AVR_DIR).decode("utf-8").strip()
+
+        if local_commit != upstream_commit:
+            print(f"{LIGHTRED}WARNING:{NC} Remote changes exist that are not present locally. Run 'git pull' then re-run this script")
             sys.exit(1)
-
-    # check if we're on the latest commit
-    print("Making sure we have the latest code")
-    local_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=AVR_DIR).decode("utf-8").strip()
-    upstream_commit = subprocess.check_output(["git", "rev-parse", "@{u}"], cwd=AVR_DIR).decode("utf-8").strip()
-
-    if local_commit != upstream_commit:
-        print(f"{LIGHTRED}WARNING:{NC} Remote changes exist that are not present locally. Run 'git pull' then re-run this script")
-        sys.exit(1)
 
     print("Making sure submodules are up-to-date")
     # https://stackoverflow.com/a/64621032
     subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(AVR_DIR, '.git')}", "--work-tree=.", "-C", AVR_DIR, "submodule", "update", "--init", "--recursive"]), cwd=AVR_DIR)
-
     print_bar()
 
 
