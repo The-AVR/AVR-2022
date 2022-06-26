@@ -6,7 +6,7 @@ descrription: "This pages goes over different methods you can use to login to yo
 
 You'll need to login to your Jetson many times to setup and run software.
 Out of the box, your Jetson will have a default user account called
-`vrc` with a password of `bellvrc22`.
+`avr` with a password of `bellavr22`.
 
 Here are 3 possible methods you can use.
 
