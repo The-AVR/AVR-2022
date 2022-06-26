@@ -1,10 +1,10 @@
 import argparse
-import multiprocessing
 import os
 import platform
 import shutil
 import subprocess
 import sys
+from typing import List
 
 # warning, v1.10.2 does not appear to build anymore
 PX4_VERSION = "v1.12.3"
@@ -12,54 +12,67 @@ PX4_VERSION = "v1.12.3"
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 DIST_DIR = os.path.join(THIS_DIR, "dist")
 
+PX4_DIR = os.path.join(THIS_DIR, "build", "PX4-Autopilot")
+
+if PX4_VERSION < "v1.13.0":
+    PYMAVLINK_DIR = os.path.join(THIS_DIR, "build", "pymavlink")
+else:
+    PYMAVLINK_DIR = os.path.join(
+        PX4_DIR,
+        "src",
+        "modules",
+        "mavlink",
+        "mavlink",
+        "pymavlink",
+    )
+
 
 def print2(msg: str) -> None:
     print(f"--- {msg}", flush=True)
 
 
-def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
-    # code that runs inside the container
-    px4_dir = os.path.join(THIS_DIR, "build", "PX4-Autopilot")
-    pymavlink_dir = os.path.join(THIS_DIR, "build", "pymavlink")
+def clean_directory(directory: str, line_endings: List[str]) -> None:
+    # cancel if the directory is not already there
+    if not os.path.isdir(directory):
+        return
 
-    if os.path.isdir(pymavlink_dir):
+    for filename in os.listdir(directory):
+        if any(filename.endswith(e) for e in line_endings):
+            os.remove(os.path.join(directory, filename))
+
+
+def clone_pymavlink() -> None:
+    if os.path.isdir(PYMAVLINK_DIR):
+        # update the checkout if we already have it
         print2("Updating pymavlink")
-        subprocess.check_call(["git", "pull"], cwd=pymavlink_dir)
+        subprocess.check_call(["git", "pull"], cwd=PYMAVLINK_DIR)
+
     else:
+        # clone fresh
         print2("Cloning pymavlink")
         subprocess.check_call(
-            ["git", "clone", "https://github.com/ardupilot/pymavlink", pymavlink_dir]
+            ["git", "clone", "https://github.com/ardupilot/pymavlink", PYMAVLINK_DIR]
         )
 
-    print2("Installing Python dependencies")
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", "--upgrade", "pip", "wheel"]
-    )
-    subprocess.check_call(
-        [
-            sys.executable,
-            "-m",
-            "pip",
-            "install",
-            "-r",
-            os.path.join(pymavlink_dir, "requirements.txt"),
-        ]
-    )
 
-    if os.path.isdir(px4_dir):
+def clone_px4() -> None:
+    if os.path.isdir(PX4_DIR):
+        # reset checkout if we already have it
+        # this will fail on PX4 version changes
         print2("Resetting PX4 checkout")
-        subprocess.check_call(["git", "fetch", "origin"], cwd=px4_dir)
-        subprocess.check_call(["git", "checkout", PX4_VERSION], cwd=px4_dir)
-        subprocess.check_call(["git", "reset", "--hard", PX4_VERSION], cwd=px4_dir)
-        subprocess.check_call(["git", "pull", "--recurse-submodules"], cwd=px4_dir)
+        subprocess.check_call(["git", "fetch", "origin"], cwd=PX4_DIR)
+        subprocess.check_call(["git", "checkout", PX4_VERSION], cwd=PX4_DIR)
+        subprocess.check_call(["git", "reset", "--hard", PX4_VERSION], cwd=PX4_DIR)
+        subprocess.check_call(["git", "pull", "--recurse-submodules"], cwd=PX4_DIR)
     else:
+        # clone fresh
         print2("Cloning PX4")
         subprocess.check_call(
             [
                 "git",
                 "clone",
                 "https://github.com/PX4/PX4-Autopilot",
-                px4_dir,
+                PX4_DIR,
                 "--depth",
                 "1",
                 "--branch",
@@ -77,52 +90,84 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
             "--ignore-whitespace",
             os.path.join(THIS_DIR, "patches", f"hil_gps_heading_{PX4_VERSION}.patch"),
         ],
-        cwd=px4_dir,
+        cwd=PX4_DIR,
     )
 
-    print2("Injecting Bell MAVLink message")
-    shutil.copyfile(
-        os.path.join(THIS_DIR, "bell.xml"),
-        os.path.join(
-            px4_dir,
-            "mavlink",
-            "include",
-            "mavlink",
-            "v2.0",
-            "message_definitions",
-            "bell.xml",
-        ),
+
+def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
+    # code that runs inside the container
+    if PX4_VERSION < "v1.13.0":
+        clone_pymavlink()
+
+    clone_px4()
+
+    print2("Installing Python dependencies")
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "--upgrade", "pip", "wheel"]
     )
     subprocess.check_call(
         [
             sys.executable,
             "-m",
-            "pymavlink.tools.mavgen",
-            "--lang=C",
-            "--wire-protocol=2.0",
-            f"--output={os.path.join(px4_dir, 'mavlink', 'include', 'mavlink', 'v2.0')}",
-            os.path.join(
-                px4_dir,
-                "mavlink",
-                "include",
-                "mavlink",
-                "v2.0",
-                "message_definitions",
-                "bell.xml",
-            ),
-        ],
-        cwd=os.path.join(pymavlink_dir, ".."),
+            "pip",
+            "install",
+            "-r",
+            os.path.join(PYMAVLINK_DIR, "requirements.txt"),
+        ]
     )
+
+    # build directory paths
+    if PX4_VERSION < "v1.13.0":
+        message_definitions_dir = os.path.join(
+            PX4_DIR,
+            "mavlink",
+            "include",
+            "mavlink",
+            "v2.0",
+            "message_definitions",
+        )
+        generated_message_dir = os.path.join(message_definitions_dir, "..")
+    else:
+        message_definitions_dir = os.path.join(
+            PX4_DIR,
+            "src",
+            "modules",
+            "mavlink",
+            "mavlink",
+            "message_definitions",
+            "v1.0",
+        )
+        generated_message_dir = os.path.join(message_definitions_dir, "..", "..", "..")
+
+    bell_xml_def = os.path.join(message_definitions_dir, "bell.xml")
+
+    print2("Injecting Bell MAVLink message")
+    shutil.copyfile(os.path.join(THIS_DIR, "bell.xml"), bell_xml_def)
+
+    # generate the mavlink C code
+    if PX4_VERSION < "v1.13.0":
+        subprocess.check_call(
+            [
+                sys.executable,
+                "-m",
+                "pymavlink.tools.mavgen",
+                "--lang=C",
+                "--wire-protocol=2.0",
+                f"--output={generated_message_dir}",
+                bell_xml_def,
+            ],
+            cwd=os.path.join(PYMAVLINK_DIR, ".."),
+        )
 
     # changes need to be committed to build
     # git config does not matter, just need *something* to commit
     subprocess.check_call(
-        ["git", "config", "user.email", "github-bot@bellflight.com"], cwd=px4_dir
+        ["git", "config", "user.email", "github-bot@bellflight.com"], cwd=PX4_DIR
     )
-    subprocess.check_call(["git", "config", "user.name", "Github Actions"], cwd=px4_dir)
-    subprocess.check_call(["git", "add", "."], cwd=px4_dir)
+    subprocess.check_call(["git", "config", "user.name", "Github Actions"], cwd=PX4_DIR)
+    subprocess.check_call(["git", "add", "."], cwd=PX4_DIR)
     subprocess.check_call(
-        ["git", "commit", "-m", "Local commit to facilitate build"], cwd=px4_dir
+        ["git", "commit", "-m", "Local commit to facilitate build"], cwd=PX4_DIR
     )
 
     if build_pymavlink:
@@ -130,35 +175,26 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
 
         # copy message definitions from px4 so we're using the exact same version
         shutil.rmtree(
-            os.path.join(pymavlink_dir, "message_definitions", "v1.0"),
+            os.path.join(PYMAVLINK_DIR, "message_definitions", "v1.0"),
             ignore_errors=True,
         )
         shutil.copytree(
-            os.path.join(
-                px4_dir, "mavlink", "include", "mavlink", "v2.0", "message_definitions"
-            ),
-            os.path.join(pymavlink_dir, "message_definitions", "v1.0"),
+            message_definitions_dir,
+            os.path.join(PYMAVLINK_DIR, "message_definitions", "v1.0"),
         )
 
-        pymavlink_dist_dir = os.path.join(pymavlink_dir, "dist")
+        pymavlink_dist_dir = os.path.join(PYMAVLINK_DIR, "dist")
 
-        # clean the pymavlink build dir
-        if os.path.isdir(pymavlink_dist_dir):
-            for filename in os.listdir(pymavlink_dist_dir):
-                if filename.endswith(".tar.gz") or filename.endswith(".whl"):
-                    os.remove(os.path.join(pymavlink_dist_dir, filename))
-
-        # clean the target build dir
-        for filename in os.listdir(DIST_DIR):
-            if filename.endswith(".tar.gz") or filename.endswith(".whl"):
-                os.remove(os.path.join(DIST_DIR, filename))
+        # clean the pymavlink build and target dirs
+        clean_directory(pymavlink_dist_dir, [".tar.gz", ".whl"])
+        clean_directory(DIST_DIR, [".tar.gz", ".whl"])
 
         # make a new environment with the mavlink dialect set
         new_env = os.environ.copy()
         new_env["MAVLINK_DIALECT"] = "bell"
         subprocess.check_call(
             [sys.executable, "setup.py", "sdist", "bdist_wheel"],
-            cwd=pymavlink_dir,
+            cwd=PYMAVLINK_DIR,
             env=new_env,
         )
 
@@ -179,56 +215,28 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
                 "--lang=WLua",
                 "--wire-protocol=2.0",
                 f"--output={os.path.join(DIST_DIR, 'bell.lua')}",
-                os.path.join(
-                    px4_dir,
-                    "mavlink",
-                    "include",
-                    "mavlink",
-                    "v2.0",
-                    "message_definitions",
-                    "bell.xml",
-                ),
+                bell_xml_def,
             ],
-            cwd=os.path.join(pymavlink_dir, ".."),
+            cwd=os.path.join(PYMAVLINK_DIR, ".."),
         )
 
     if build_px4:
         print2("Building PX4 firmware")
 
-        px4_build_dir = os.path.join(px4_dir, "build")
+        px4_build_dir = os.path.join(PX4_DIR, "build")
 
-        # clean the PX4 build dir
-        if os.path.isdir(px4_build_dir):
-            for filename in os.listdir(px4_build_dir):
-                if filename.endswith(".px4"):
-                    os.remove(os.path.join(px4_build_dir, filename))
+        # clean the PX4 build and target dir
+        clean_directory(px4_build_dir, [".px4"])
+        clean_directory(DIST_DIR, [".px4"])
 
-        # clean the target build dir
-        for filename in os.listdir(DIST_DIR):
-            if filename.endswith(".px4"):
-                os.remove(os.path.join(DIST_DIR, filename))
-
-        # pixhawk
-        v5x_target = "px4_fmu-v5x_default"
-        subprocess.check_call(
-            ["make", v5x_target, f"-j{multiprocessing.cpu_count()}"],
-            cwd=px4_dir,
-        )
-        shutil.copyfile(
-            os.path.join(px4_build_dir, v5x_target, f"{v5x_target}.px4"),
-            os.path.join(DIST_DIR, f"{v5x_target}.{PX4_VERSION}.{git_hash}.px4"),
-        )
-
-        # nxp
-        nxp_target = "nxp_fmuk66-v3_default"
-        subprocess.check_call(
-            ["make", nxp_target, f"-j{multiprocessing.cpu_count()}"],
-            cwd=px4_dir,
-        )
-        shutil.copyfile(
-            os.path.join(px4_build_dir, nxp_target, f"{nxp_target}.px4"),
-            os.path.join(DIST_DIR, f"{nxp_target}.{PX4_VERSION}.{git_hash}.px4"),
-        )
+        # pixhawk v5X and NXP
+        targets = ["px4_fmu-v5x_default", "nxp_fmuk66-v3_default"]
+        for target in targets:
+            subprocess.check_call(["make", target, "-j"], cwd=PX4_DIR)
+            shutil.copyfile(
+                os.path.join(px4_build_dir, target, f"{target}.px4"),
+                os.path.join(DIST_DIR, f"{target}.{PX4_VERSION}.{git_hash}.px4"),
+            )
 
 
 def host(build_pymavlink: bool, build_px4: bool) -> None:
@@ -281,9 +289,7 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
         fcm_dir = os.path.join(THIS_DIR, "..", "VMC", "fcm")
 
         # remove old files
-        for filename in os.listdir(fcm_dir):
-            if filename.endswith(".whl") or filename.endswith(".tar.gz"):
-                os.remove(os.path.join(fcm_dir, filename))
+        clean_directory(fcm_dir, [".whl", ".tar.gz"])
 
         # copy new files
         for filename in os.listdir(DIST_DIR):

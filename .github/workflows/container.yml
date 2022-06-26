@@ -39,9 +39,7 @@ jobs:
           key: px4-package-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
           restore-keys: |
             px4-package-${{ hashFiles('PX4/patches/**') }}
-            px4-package
             px4-firmware-${{ hashFiles('PX4/patches/**') }}
-            px4-firmware
 
       - name: Build Custom Pymavlink Package
         if: inputs.image == 'fcm'
