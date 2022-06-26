@@ -3,7 +3,7 @@ from typing import Optional, Tuple, TypedDict
 # Getting pyzed installed in a dev environment is very painful unless
 # you already have CUDA and the ZED SDK installed.
 import pyzed.sl as sl  # type: ignore
-from bell.vrc.utils.decorators import try_except
+from bell.avr.utils.decorators import try_except
 from loguru import logger
 
 

@@ -1,8 +1,8 @@
 import threading
 import time
 
-from bell.vrc.serial.client import SerialLoop
-from bell.vrc.serial.ports import list_serial_ports
+from bell.avr.serial.client import SerialLoop
+from bell.avr.serial.ports import list_serial_ports
 from lib.config import config
 from lib.enums import ConnectionState
 from lib.widgets import IntLineEdit

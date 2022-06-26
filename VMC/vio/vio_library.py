@@ -4,7 +4,7 @@ from typing import Tuple, TypedDict
 
 import numpy as np
 import transforms3d as t3d
-from bell.vrc.utils.decorators import try_except
+from bell.avr.utils.decorators import try_except
 from loguru import logger
 
 

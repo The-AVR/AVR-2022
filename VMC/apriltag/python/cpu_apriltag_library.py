@@ -3,7 +3,7 @@ import time
 from typing import List, Optional, Tuple
 
 import numpy as np
-from bell.vrc.utils.decorators import try_except
+from bell.avr.utils.decorators import try_except
 from capture_device import CaptureDevice
 from loguru import logger
 from pupil_apriltags import Detection, Detector

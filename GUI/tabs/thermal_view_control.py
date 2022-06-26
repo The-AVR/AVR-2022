@@ -8,10 +8,10 @@ from typing import List, Optional, Tuple
 import colour
 import numpy as np
 import scipy.interpolate
-from bell.vrc.mqtt.payloads import (
-    VrcPcmSetLaserOffPayload,
-    VrcPcmSetLaserOnPayload,
-    VrcPcmSetServoPctPayload,
+from bell.avr.mqtt.payloads import (
+    AvrPcmSetLaserOffPayload,
+    AvrPcmSetLaserOnPayload,
+    AvrPcmSetServoPctPayload,
 )
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -155,12 +155,12 @@ class JoystickWidget(BaseTabWidget):
 
     def move_gimbal(self, x_servo_percent: int, y_servo_percent: int) -> None:
         self.send_message(
-            "vrc/pcm/set_servo_pct",
-            VrcPcmSetServoPctPayload(servo=2, percent=x_servo_percent),
+            "avr/pcm/set_servo_pct",
+            AvrPcmSetServoPctPayload(servo=2, percent=x_servo_percent),
         )
         self.send_message(
-            "vrc/pcm/set_servo_pct",
-            VrcPcmSetServoPctPayload(servo=3, percent=y_servo_percent),
+            "avr/pcm/set_servo_pct",
+            AvrPcmSetServoPctPayload(servo=3, percent=y_servo_percent),
         )
 
     def update_servos(self) -> None:
@@ -319,11 +319,11 @@ class ThermalViewControlWidget(BaseTabWidget):
         joystick.emit_message.connect(self.emit_message.emit)
 
         set_laser_on_button.clicked.connect(  # type: ignore
-            lambda: self.send_message("vrc/pcm/set_laser_on", VrcPcmSetLaserOnPayload())
+            lambda: self.send_message("avr/pcm/set_laser_on", AvrPcmSetLaserOnPayload())
         )
         set_laser_off_button.clicked.connect(  # type: ignore
             lambda: self.send_message(
-                "vrc/pcm/set_laser_off", VrcPcmSetLaserOffPayload()
+                "avr/pcm/set_laser_off", AvrPcmSetLaserOffPayload()
             )
         )
 
@@ -335,7 +335,7 @@ class ThermalViewControlWidget(BaseTabWidget):
         Process an incoming message and update the appropriate component
         """
         # discard topics we don't recognize
-        if topic != "vrc/thermal/reading":
+        if topic != "avr/thermal/reading":
             return
 
         data = json.loads(payload)["data"]

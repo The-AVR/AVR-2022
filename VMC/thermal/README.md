@@ -8,6 +8,6 @@ Need to run in privileged mode:
     depends_on:
       - mqtt
     privileged: true
-    image: lance/vrc_thermal_module:latest
+    image: lance/avr_thermal_module:latest
     restart: on-failure
 ```

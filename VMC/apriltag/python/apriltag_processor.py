@@ -5,14 +5,14 @@ from typing import List, Optional, Tuple
 
 import numpy as np
 import transforms3d as t3d
-from bell.vrc.mqtt.client import MQTTModule
-from bell.vrc.mqtt.payloads import (
-    VrcApriltagsRawPayload,
-    VrcApriltagsRawTags,
-    VrcApriltagsSelectedPayload,
-    VrcApriltagsVisiblePayload,
-    VrcApriltagsVisibleTags,
-    VrcApriltagsVisibleTagsPosWorld,
+from bell.avr.mqtt.client import MQTTModule
+from bell.avr.mqtt.payloads import (
+    AvrApriltagsRawPayload,
+    AvrApriltagsRawTags,
+    AvrApriltagsSelectedPayload,
+    AvrApriltagsVisiblePayload,
+    AvrApriltagsVisibleTags,
+    AvrApriltagsVisibleTagsPosWorld,
 )
 
 warnings.simplefilter("ignore", np.RankWarning)
@@ -39,7 +39,7 @@ class AprilTagModule(MQTTModule):
         # setup transformation matrixes
         self.setup_transforms()
 
-        self.topic_map = {"vrc/apriltags/raw": self.on_apriltag_message}
+        self.topic_map = {"avr/apriltags/raw": self.on_apriltag_message}
 
     def setup_transforms(self) -> None:
         cam_rpy = self.config["cam"]["rpy"]
@@ -70,8 +70,8 @@ class AprilTagModule(MQTTModule):
             H_to_from = f"H_{name}_cam"
             self.tm[H_to_from] = np.eye(4)
 
-    def on_apriltag_message(self, payload: VrcApriltagsRawPayload) -> None:
-        tag_list: List[VrcApriltagsVisibleTags] = []
+    def on_apriltag_message(self, payload: AvrApriltagsRawPayload) -> None:
+        tag_list: List[AvrApriltagsVisibleTags] = []
 
         min_dist = 1000000
         closest_tag = None
@@ -91,7 +91,7 @@ class AprilTagModule(MQTTModule):
             if id_ is None:
                 continue
 
-            tag = VrcApriltagsVisibleTags(
+            tag = AvrApriltagsVisibleTags(
                 id=id_,
                 horizontal_dist=horizontal_distance,
                 vertical_dist=vertical_distance,
@@ -111,7 +111,7 @@ class AprilTagModule(MQTTModule):
 
             # add some more info if we had the truth data for the tag
             if pos_world is not None and pos_world.any():
-                tag["pos_world"] = VrcApriltagsVisibleTagsPosWorld(
+                tag["pos_world"] = AvrApriltagsVisibleTagsPosWorld(
                     x=pos_world[0],
                     y=pos_world[1],
                     z=pos_world[2],
@@ -123,7 +123,7 @@ class AprilTagModule(MQTTModule):
             tag_list.append(tag)
 
         self.send_message(
-            "vrc/apriltags/visible", VrcApriltagsVisiblePayload(tags=tag_list)
+            "avr/apriltags/visible", AvrApriltagsVisiblePayload(tags=tag_list)
         )
 
         if closest_tag is not None:
@@ -134,7 +134,7 @@ class AprilTagModule(MQTTModule):
             assert pos_world["y"] is not None
             assert pos_world["z"] is not None
 
-            apriltag_position = VrcApriltagsSelectedPayload(
+            apriltag_position = AvrApriltagsSelectedPayload(
                 tag_id=tag_list[closest_tag]["id"],
                 pos={
                     "n": pos_world["x"],
@@ -144,7 +144,7 @@ class AprilTagModule(MQTTModule):
                 heading=tag_list[closest_tag]["heading"],
             )
 
-            self.send_message("vrc/apriltags/selected", apriltag_position)
+            self.send_message("avr/apriltags/selected", apriltag_position)
 
     def angle_to_tag(self, pos: Tuple[float, float, float]) -> float:
         deg = math.degrees(
@@ -199,7 +199,7 @@ class AprilTagModule(MQTTModule):
         return H_rot.dot(H_tran)
 
     def handle_tag(
-        self, tag: VrcApriltagsRawTags
+        self, tag: AvrApriltagsRawTags
     ) -> Tuple[
         int,
         float,
@@ -277,7 +277,7 @@ class AprilTagModule(MQTTModule):
             )
 
     def run(self) -> None:
-        subprocess.Popen("/app/c/build/vrcapriltags")
+        subprocess.Popen("/app/c/build/avrapriltags")
         super().run()
 
 
