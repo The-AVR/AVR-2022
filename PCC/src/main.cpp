@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "serial_lib.hpp"
-#include "vrc_led.hpp"
-#include "vrc_servo.hpp"
+#include "avr_led.hpp"
+#include "avr_servo.hpp"
 
 //////////////// S E R I A L  I N T E R F A C E ///////////////
 uint16_t queue_len = 10;
@@ -9,7 +9,7 @@ uint16_t entry_size = sizeof(packet_t);
 
 cppQueue q(entry_size, queue_len, FIFO);
 
-VRCSerialParser serial(Serial, q);
+AVRSerialParser serial(Serial, q);
 ///////////////////////////////////////////////////////////////
 
 ///////////////// N E O - P I X E L S /////////////////////////
@@ -19,12 +19,12 @@ VRCSerialParser serial(Serial, q);
 
 #define NUM_PIXELS 30
 
-VRCLED strip(NEO_PIN, NUM_PIXELS, NEO_GRB);
-VRCLED onboard(8, 2, NEO_GRB);
+AVRLED strip(NEO_PIN, NUM_PIXELS, NEO_GRB);
+AVRLED onboard(8, 2, NEO_GRB);
 ///////////////////////////////////////////////////////////////
 
 /////////////// S E R V O S ///////////////////////////////////
-VRCServo servos = VRCServo();
+AVRServo servos = AVRServo();
 ///////////////////////////////////////////////////////////////
 
 void setup()
@@ -128,7 +128,7 @@ void loop()
       servos.set_servo_percent(which_servo, percent);
     }
     break;
-    case RESET_VRC_PERIPH:
+    case RESET_AVR_PERIPH:
     {
       //digitalWrite(RST_PIN,LOW);
     }

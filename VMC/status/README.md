@@ -3,8 +3,8 @@
 ## Color Schema
 
 Module:     Message:        LED:    Color:
-VIO:        "vrc/vio"       1       PURPLE
-PCM:        "vrc/pcm"       2       AQUA
-Thermal:    "vrc/thermal"   3       BLUE
-FCC:        "vrc/fcm"       4       ORANGE
-AprilTag:   "vrc/apriltags" 5       YELLOW
+VIO:        "avr/vio"       1       PURPLE
+PCM:        "avr/pcm"       2       AQUA
+Thermal:    "avr/thermal"   3       BLUE
+FCC:        "avr/fcm"       4       ORANGE
+AprilTag:   "avr/apriltags" 5       YELLOW

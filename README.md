@@ -1,21 +1,22 @@
-# VRC-2022
+# AVR-2022
 
 ## Project Management
 
-For Bell employees and partners, work items are tracked on [Trello](https://trello.com/bellvrc).
+For Bell employees and partners, work items are tracked on [Trello](https://trello.com/bellavr).
 
 ## Structure
 
 - `.github`: GitHub Actions files
 - `.vscode`: VS Code settings
 - `3DPrints`: 3D printing files and source CAD files
-- `docs`: Documentation site
 - `GUI`: All-in-one GUI
 - `PCC`: PCC firmware
 - `PX4`: PX4 and MAVLink files
 - `RVR`: RVR files
 - `scripts`: Development scripts
 - `VMC`: VMC flight software
+
+Documentation is located on the `docs` branch.
 
 ## Developer Setup
 
@@ -45,8 +46,8 @@ Refer to individual module README files for specific instructions.
 Clone the repository with submodules:
 
 ```bash
-git clone --recurse-submodules https://github.com/bellflight/VRC-2022
-cd VRC-2022
+git clone --recurse-submodules https://github.com/bellflight/AVR-2022
+cd AVR-2022
 ```
 
 If you already have the repo cloned, run

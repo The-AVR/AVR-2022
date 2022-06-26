@@ -3,7 +3,7 @@
 # inside of another computer. Unlike what some of you may be familiar with,
 # and "virtual machines", containers are extremely fast to start up,
 # and make it easy to share an application packaged with all the components
-# needed for it to run. For VRC, we are going to set up containers for
+# needed for it to run. For AVR, we are going to set up containers for
 # each module to make it easier to run them all seperately and simultaneously.
 
 # This begins the process of building our container off the standard Python

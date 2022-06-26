@@ -2,11 +2,11 @@ from __future__ import annotations
 
 from typing import Literal, Tuple
 
-from bell.vrc.mqtt.payloads import (
-    VrcAutonomousPayload,
-    VrcPcmResetPayload,
-    VrcPcmSetBaseColorPayload,
-    VrcPcmSetServoOpenClosePayload,
+from bell.avr.mqtt.payloads import (
+    AvrAutonomousPayload,
+    AvrPcmResetPayload,
+    AvrPcmSetBaseColorPayload,
+    AvrPcmSetServoOpenClosePayload,
 )
 from PySide6 import QtWidgets
 
@@ -155,9 +155,9 @@ class VMCControlWidget(BaseTabWidget):
         reset_layout = QtWidgets.QVBoxLayout()
         reset_groupbox.setLayout(reset_layout)
 
-        reset_button = QtWidgets.QPushButton("Reset Peripheals")
+        reset_button = QtWidgets.QPushButton("Reset PCC")
         reset_button.setStyleSheet("background-color: yellow")
-        reset_button.clicked.connect(lambda: self.send_message("vrc/pcm/reset", VrcPcmResetPayload()))  # type: ignore
+        reset_button.clicked.connect(lambda: self.send_message("avr/pcm/reset", AvrPcmResetPayload()))  # type: ignore
         reset_layout.addWidget(reset_button)
 
         layout.addWidget(reset_groupbox, 3, 3, 1, 1)
@@ -167,8 +167,8 @@ class VMCControlWidget(BaseTabWidget):
         Set a servo state
         """
         self.send_message(
-            "vrc/pcm/set_servo_open_close",
-            VrcPcmSetServoOpenClosePayload(servo=number, action=action),
+            "avr/pcm/set_servo_open_close",
+            AvrPcmSetServoOpenClosePayload(servo=number, action=action),
         )
 
     def set_servo_all(self, action: Literal["open", "close"]) -> None:
@@ -183,11 +183,11 @@ class VMCControlWidget(BaseTabWidget):
         Set LED color
         """
         self.send_message(
-            "vrc/pcm/set_base_color", VrcPcmSetBaseColorPayload(wrgb=color)
+            "avr/pcm/set_base_color", AvrPcmSetBaseColorPayload(wrgb=color)
         )
 
     def set_autonomous(self, state: bool) -> None:
         """
         Set autonomous mode
         """
-        self.send_message("vrc/autonomous", VrcAutonomousPayload(enable=state))
+        self.send_message("avr/autonomous", AvrAutonomousPayload(enable=state))

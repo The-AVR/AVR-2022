@@ -30,9 +30,7 @@ jobs:
           key: px4-firmware-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
           restore-keys: |
             px4-firmware-${{ hashFiles('PX4/patches/**') }}
-            px4-firmware
             px4-package-${{ hashFiles('PX4/patches/**') }}
-            px4-package
 
       - name: Build PX4 Firmware
         run: python3 PX4/build.py --px4

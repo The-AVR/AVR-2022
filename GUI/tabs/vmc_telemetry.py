@@ -3,13 +3,13 @@ from __future__ import annotations
 import json
 from typing import Dict
 
-from bell.vrc.mqtt.payloads import (
-    VrcFcmAttitudeEulerPayload,
-    VrcFcmBatteryPayload,
-    VrcFcmGpsInfoPayload,
-    VrcFcmLocationGlobalPayload,
-    VrcFcmLocationLocalPayload,
-    VrcFcmStatusPayload,
+from bell.avr.mqtt.payloads import (
+    AvrFcmAttitudeEulerPayload,
+    AvrFcmBatteryPayload,
+    AvrFcmGpsInfoPayload,
+    AvrFcmLocationGlobalPayload,
+    AvrFcmLocationLocalPayload,
+    AvrFcmStatusPayload,
 )
 from lib.widgets import DisplayLineEdit, StatusLabel
 from PySide6 import QtCore, QtWidgets
@@ -173,23 +173,23 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.topic_timer: Dict[str, QtCore.QTimer] = {}
 
         fcc_status = StatusLabel("FCM")
-        self.topic_status_map["vrc/fcm"] = fcc_status
+        self.topic_status_map["avr/fcm"] = fcc_status
         module_status_layout.addWidget(fcc_status)
 
         # pcc_status = StatusLabel("PCM")
-        # self.topic_status_map["vrc/pcm"] = pcc_status
+        # self.topic_status_map["avr/pcm"] = pcc_status
         # status_layout.addWidget(pcc_status)
 
         vio_status = StatusLabel("VIO")
-        self.topic_status_map["vrc/vio"] = vio_status
+        self.topic_status_map["avr/vio"] = vio_status
         module_status_layout.addWidget(vio_status)
 
         at_status = StatusLabel("AT")
-        self.topic_status_map["vrc/apriltag"] = at_status
+        self.topic_status_map["avr/apriltag"] = at_status
         module_status_layout.addWidget(at_status)
 
         fus_status = StatusLabel("FUS")
-        self.topic_status_map["vrc/fusion"] = fus_status
+        self.topic_status_map["avr/fusion"] = fus_status
         module_status_layout.addWidget(fus_status)
 
         layout.addWidget(module_status_groupbox)
@@ -215,7 +215,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.att_p_line_edit.setText("")
         self.att_y_line_edit.setText("")
 
-    def update_satellites(self, payload: VrcFcmGpsInfoPayload) -> None:
+    def update_satellites(self, payload: AvrFcmGpsInfoPayload) -> None:
         """
         Update satellites information
         """
@@ -223,7 +223,7 @@ class VMCTelemetryWidget(BaseTabWidget):
             f"{payload['num_satellites']} visible, {payload['fix_type']}"
         )
 
-    def update_battery(self, payload: VrcFcmBatteryPayload) -> None:
+    def update_battery(self, payload: AvrFcmBatteryPayload) -> None:
         """
         Update battery information
         """
@@ -258,7 +258,7 @@ class VMCTelemetryWidget(BaseTabWidget):
 
         self.battery_percent_bar.setStyleSheet(stylesheet)
 
-    def update_status(self, payload: VrcFcmStatusPayload) -> None:
+    def update_status(self, payload: AvrFcmStatusPayload) -> None:
         """
         Update status information
         """
@@ -272,7 +272,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.armed_label.setText(f"<span style='color:{color};'>{text}</span>")
         self.flight_mode_label.setText(payload["mode"])
 
-    def update_local_location(self, payload: VrcFcmLocationLocalPayload) -> None:
+    def update_local_location(self, payload: AvrFcmLocationLocalPayload) -> None:
         """
         Update local location information
         """
@@ -280,7 +280,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.loc_y_line_edit.setText(str(payload["dY"]))
         self.loc_z_line_edit.setText(str(payload["dZ"]))
 
-    def update_global_location(self, payload: VrcFcmLocationGlobalPayload) -> None:
+    def update_global_location(self, payload: AvrFcmLocationGlobalPayload) -> None:
         """
         Update global location information
         """
@@ -288,7 +288,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.loc_lon_line_edit.setText(str(payload["lon"]))
         self.loc_alt_line_edit.setText(str(payload["alt"]))
 
-    def update_euler_attitude(self, payload: VrcFcmAttitudeEulerPayload) -> None:
+    def update_euler_attitude(self, payload: AvrFcmAttitudeEulerPayload) -> None:
         """
         Update euler attitude information
         """
@@ -296,7 +296,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.att_p_line_edit.setText(str(payload["pitch"]))
         self.att_y_line_edit.setText(str(payload["yaw"]))
 
-    # def update_auaternion_attitude(self, payload: VrcFcmAttitudeQuaternionMessage) -> None:
+    # def update_auaternion_attitude(self, payload: AvrFcmAttitudeQuaternionMessage) -> None:
     #     """
     #     Update euler attitude information
     #     """
@@ -310,12 +310,12 @@ class VMCTelemetryWidget(BaseTabWidget):
         Process an incoming message and update the appropriate component
         """
         topic_map = {
-            "vrc/fcm/gps_info": self.update_satellites,
-            "vrc/fcm/battery": self.update_battery,
-            "vrc/fcm/status": self.update_status,
-            "vrc/fcm/location/local": self.update_local_location,
-            "vrc/fcm/location/global": self.update_global_location,
-            "vrc/fcm/attitude/euler": self.update_euler_attitude,
+            "avr/fcm/gps_info": self.update_satellites,
+            "avr/fcm/battery": self.update_battery,
+            "avr/fcm/status": self.update_status,
+            "avr/fcm/location/local": self.update_local_location,
+            "avr/fcm/location/global": self.update_global_location,
+            "avr/fcm/attitude/euler": self.update_euler_attitude,
         }
 
         # discard topics we don't recognize

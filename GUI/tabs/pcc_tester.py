@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import List, Literal
 
-from bell.vrc.serial.pcc import PeripheralControlComputer
+from bell.avr.serial.pcc import PeripheralControlComputer
 from PySide6 import QtCore, QtWidgets
 
 from .base import BaseTabWidget

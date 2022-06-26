@@ -2,8 +2,8 @@
 # code related to connecting to the MQTT server and sending/receiving messages.
 # It also helps us make sure that our code is sending the proper payload on a topic
 # and is receiving the proper payload as well.
-from bell.vrc.mqtt.client import MQTTModule
-from bell.vrc.mqtt.payloads import VrcFcmVelocityPayload
+from bell.avr.mqtt.client import MQTTModule
+from bell.avr.mqtt.payloads import AvrFcmVelocityPayload
 
 # This imports the third-party Loguru library which helps make logging way easier
 # and more useful.
@@ -28,13 +28,13 @@ class Sandbox(MQTTModule):
         # find the associated capital. However, this does not work in reverse. So here,
         # we're creating a dictionary of MQTT topics, and the methods we want to run
         # whenever a message arrives on that topic.
-        self.topic_map = {"vrc/fcm/velocity": self.show_velocity}
+        self.topic_map = {"avr/fcm/velocity": self.show_velocity}
 
     # Here's an example of a custom message handler here.
-    # This is what executes whenever a message is received on the "vrc/fcm/velocity"
+    # This is what executes whenever a message is received on the "avr/fcm/velocity"
     # topic. The content of the message is passed to the `payload` argument.
-    # The `VrcFcmVelocityMessage` class here is beyond the scope of VRC.
-    def show_velocity(self, payload: VrcFcmVelocityPayload) -> None:
+    # The `AvrFcmVelocityMessage` class here is beyond the scope of AVR.
+    def show_velocity(self, payload: AvrFcmVelocityPayload) -> None:
         vx = payload["vX"]
         vy = payload["vY"]
         vz = payload["vZ"]
@@ -57,7 +57,7 @@ class Sandbox(MQTTModule):
         # VS Code preferences, you'll get a red underline if your payload doesn't
         # match the expected format for the topic.
         self.send_message(
-            "vrc/pcm/set_servo_open_close",
+            "avr/pcm/set_servo_open_close",
             {"servo": 0, "action": "open"},
         )
 
