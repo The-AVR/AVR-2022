@@ -5,7 +5,7 @@ weight: 2
 
 For teams that want to write their own code to run on their drone,
 we recommend doing so through the "sandbox" in the GitHub repository:
-[https://github.com/bellflight/VRC-2022/tree/main/VMC/sandbox](https://github.com/bellflight/VRC-2022/tree/main/VMC/sandbox).
+[https://github.com/bellflight/AVR-2022/tree/main/VMC/sandbox](https://github.com/bellflight/AVR-2022/tree/main/VMC/sandbox).
 This has already been configured to be very simple to get started with.
 
 1. Edit the contents of `VMC/sandbox/sandbox.py` with your desired code.

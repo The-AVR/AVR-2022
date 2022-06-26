@@ -27,9 +27,9 @@ Check out more about this challenge at the link below:
 ## How do we perform the coding challenges?
 
 In the
-[GitHub repository](https://github.com/bellflight/VRC-2022/tree/main/VMC/README.md)
+[GitHub repository](https://github.com/bellflight/AVR-2022/tree/main/VMC/README.md)
 we've provided an area for you to write
-Python in order to accomplish your goals. The software stack for VRC is
+Python in order to accomplish your goals. The software stack for AVR is
 made up of a series of modules, which are actually independent
 [Docker Containers](https://www.docker.com/resources/what-container).
 

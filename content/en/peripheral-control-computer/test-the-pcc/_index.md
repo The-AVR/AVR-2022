@@ -33,7 +33,7 @@ Now it's time to download the AVR GUI program.
 ### Windows
 
 Go to the latest
-[AVR software release](https://github.com/bellflight/VRC-2022/releases/tag/stable)
+[AVR software release](https://github.com/bellflight/AVR-2022/releases/tag/stable)
 and download the `AVRGUI.<hash>.exe` file. Like QGroundControl,
 you may need to bypass some warnings about being an untrusted file.
 

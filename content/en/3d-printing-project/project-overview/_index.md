@@ -28,15 +28,15 @@ as optional starting points for their designs:
 
 1. Propeller guard mount that connects to the motor mount.
    Teams can use this as a possible connecting point to the airframe.
-   Link: [Prop_Guard_Motor_Mount_Base.STL](https://github.com/bellflight/VRC-2022/blob/main/3DPrints/Misc/Prop_Guard_Motor_Mount_Base.STL)
+   Link: [Prop_Guard_Motor_Mount_Base.STL](https://github.com/bellflight/AVR-2022/blob/main/3DPrints/Misc/Prop_Guard_Motor_Mount_Base.STL)
 2. Vehicle Management Computer (VMC) mount. Teams can use the VMC mount as a
    possible connecting mount for the LED Halo or to be designed around.
-   Link: [Jetson_Mount.STL](https://github.com/bellflight/VRC-2022/blob/main/3DPrints/JetsonNano/Jetson_Mount.STL)
+   Link: [Jetson_Mount.STL](https://github.com/bellflight/AVR-2022/blob/main/3DPrints/JetsonNano/Jetson_Mount.STL)
 
 ![Picture of VMC Mount attached to top plate](IMG_5541.jpg)
 
 All of the 3D files are
-[available in the GitHub repository](https://github.com/bellflight/VRC-2022/tree/main/3DPrints/).
+[available in the GitHub repository](https://github.com/bellflight/AVR-2022/tree/main/3DPrints/).
 
 Although 3D printing is a great manufacturing capability,
 _the components do not have to be 3D printed_.
@@ -51,8 +51,8 @@ Design Requirements and Objectives:
 3. Designs for Prop Guard and LED Halo must not encroach the given keep-out zone
    shown in blue below, which is defined by space occupied by the VMC mount assembly,
    whose parts are located
-   [here](https://github.com/bellflight/VRC-2022/blob/main/3DPrints/JetsonNano/Jetson_Mount.STL)
-   and [here](https://github.com/bellflight/VRC-2022/blob/main/3DPrints/JetsonNano/Jetson_Blocks.STL).
+   [here](https://github.com/bellflight/AVR-2022/blob/main/3DPrints/JetsonNano/Jetson_Mount.STL)
+   and [here](https://github.com/bellflight/AVR-2022/blob/main/3DPrints/JetsonNano/Jetson_Blocks.STL).
    The idea here is not so much of a design
    criteria, but just trying to make sure you don't design something that
    becomes an obstruction for Phase II.

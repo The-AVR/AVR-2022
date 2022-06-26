@@ -25,10 +25,10 @@ from humans during the match.
 {{% /alert %}}
 
 If you take a look at the README for the repo over on
-[GitHub](https://github.com/bellflight/VRC-2022/tree/main/VMC/FlightSoftware/README.md)
+[GitHub](https://github.com/bellflight/AVR-2022/tree/main/VMC/FlightSoftware/README.md)
 you'll see a list of all the topics and formats that are published over the MQTT broker.
 For this challenge, you will want to find the topics for apriltags published by the
-[apriltag module](https://github.com/bellflight/VRC-2022/tree/main/VMC/FlightSoftware/apriltag)
+[apriltag module](https://github.com/bellflight/AVR-2022/tree/main/VMC/FlightSoftware/apriltag)
 and the topics used to control the LED halo attached
 to the PCC.
 

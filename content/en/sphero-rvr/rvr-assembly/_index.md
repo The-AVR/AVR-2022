@@ -25,7 +25,7 @@ To assemble this, you will need to gather the following:
   - 9 wires
 - micro:bit
 - Sphero RVR
-- 3D printed RVR topper (STL's for printing available [here](https://github.com/bellflight/VRC-2022/tree/main/3DPrints/RVRTopper). Please note, these files were exported in inches, not millimeters)
+- 3D printed RVR topper (STL's for printing available [here](https://github.com/bellflight/AVR-2022/tree/main/3DPrints/RVRTopper). Please note, these files were exported in inches, not millimeters)
 - zip ties
 - tape
 - drill (optional)
@@ -39,7 +39,7 @@ bits into the RVR topper, then connect the wires between them.
 
 Obviously the first thing you need to do is print the RVR topper!
 Again, the files can be found on GitHub
-[here](https://github.com/bellflight/VRC-2022/tree/main/3DPrints/RVRTopper).
+[here](https://github.com/bellflight/AVR-2022/tree/main/3DPrints/RVRTopper).
 The file is modeled in inches,
 so make sure it's the correct size when you print it. For reference, the overall
 length is ~11 inches. Be careful when removing the support as you don't want to
@@ -50,7 +50,7 @@ n that case, you should print the three individual sections
 (front, mid, and rear) and glue them together (super glue typically works well!)
 In addition, if you'd like to split the file differently for printing,
 the .stp file is also available
-[here](https://github.com/bellflight/VRC-2022/tree/main/3DPrints/RVRTopper/RVR_Topper.stp)
+[here](https://github.com/bellflight/AVR-2022/tree/main/3DPrints/RVRTopper/RVR_Topper.stp)
 so you can split it as needed.
 
 ![RVR Topper with Mounting Tabs Called Out](RVR-Topper-Mounting-Tabs.jpg)

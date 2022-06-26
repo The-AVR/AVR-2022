@@ -62,7 +62,7 @@ Here's the block code of the program:
 ![REV A Block Code](WallFollowingBlockCodeREVA.jpg)
 
 This program is available
-[here](https://github.com/bellflight/VRC-2022/tree/main/RVR/microbit-VRC-Wall-Following-Test-REV-A.hex).
+[here](https://github.com/bellflight/AVR-2022/tree/main/RVR/microbit-AVR-Wall-Following-Test-REV-A.hex).
 Simply download the .hex file, then plug the micro:bit into your computer and
 copy/paste the .hex file onto the micro:bit. It will automatically install.
 

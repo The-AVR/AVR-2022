@@ -36,7 +36,7 @@ make -j
 
 After getting BOSSA installed, you need to also download the PCC firmware that you'll
 be loading. Go to the
-[AVR release page](https://github.com/bellflight/VRC-2022/releases/tag/stable)
+[AVR release page](https://github.com/bellflight/AVR-2022/releases/tag/stable)
 and download the `pcc_firmware.<version>.bin` file.
 
 ![Download this firmware file](2022-05-12-07-14-49.png)

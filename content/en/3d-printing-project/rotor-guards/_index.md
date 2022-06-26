@@ -11,7 +11,7 @@ with a few extra parts not shipped with your AVR Kit.
 ![Assembled Guard](top.jpg)
 
 The STL files can be found
-[here](https://github.com/bellflight/VRC-2022/tree/main/3DPrints/PropGuards).
+[here](https://github.com/bellflight/AVR-2022/tree/main/3DPrints/PropGuards).
 
 In addition to the 3D prints, you'll need some extra hardware that can be
 found on Amazon:

@@ -9,7 +9,7 @@ These settings configure how the flight controller processes sensor input,
 and we need to tell it to unconditionally trust the data the AVR software feeds it.
 
 First, download this parameter file from GitHub:
-[https://github.com/bellflight/VRC-2022/blob/main/PX4/AVRParameters.params](https://github.com/bellflight/VRC-2022/blob/main/PX4/AVRParameters.params)
+[https://github.com/bellflight/AVR-2022/blob/main/PX4/AVRParameters.params](https://github.com/bellflight/AVR-2022/blob/main/PX4/AVRParameters.params)
 
 The easiest way to download the file is to click the "Raw" button,
 then right-click the page, and select "Save page as".

@@ -1,7 +1,7 @@
 # This tells Hugo what the root path of the site is.
 # This should be something like:
 # - "/"
-# - "/VRC-2022"
+# - "/AVR-2022"
 # - "/public"
 # etc. You don't need a trailing slash.
 # GitHub private pages puts this on a base domain, while the public page
@@ -57,10 +57,10 @@ pygmentsStyle = "monokai"
 
     # A link to latest version of the docs. Used in the "version-banner" partial to
     # point people to the main doc site.
-    url_latest_version = "https://bellflight.github.io/VRC-2022"
+    url_latest_version = "https://bellflight.github.io/AVR-2022"
 
     # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
-    github_repo = "https://github.com/bellflight/VRC-2022"
+    github_repo = "https://github.com/bellflight/AVR-2022"
 
     # Specify a value here if your content directory is not in your repo's root directory
     # github_subdir = ""
@@ -120,10 +120,10 @@ pygmentsStyle = "monokai"
     name   = "GitHub"
     weight = 50
     pre    = "<i class='fab fa-github'></i>"
-    url    = "https://github.com/bellflight/VRC-2022/"
+    url    = "https://github.com/bellflight/AVR-2022/"
 
 [[menu.main]]
     name   = "Forums"
     weight = 100
     pre    = "<i class='fa fa-users'></i>"
-    url    = "https://github.com/bellflight/VRC-2022/discussions"
+    url    = "https://github.com/bellflight/AVR-2022/discussions"

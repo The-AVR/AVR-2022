@@ -233,7 +233,7 @@ connection to the internet, or your network is blocking a site it tried
 to download content from. Try running the script again.
 
 If that still does not work, look at the VMC software README at
-[https://github.com/bellflight/VRC-2022/tree/main/VMC/README.md](https://github.com/bellflight/VRC-2022/tree/main/VMC/README.md)
+[https://github.com/bellflight/AVR-2022/tree/main/VMC/README.md](https://github.com/bellflight/AVR-2022/tree/main/VMC/README.md)
 and the provided list of domain names that the setup script connects to.
 Either see if your network administrator can allow these domain names,
 or use a personal hotspot or internet connection.

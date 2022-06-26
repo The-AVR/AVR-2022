@@ -37,7 +37,7 @@ Here is a description of the modules in AVR and what they all do.
 
 ### AprilTag
 
-[Source Code](https://github.com/bellflight/VRC-2022/tree/main/VMC/apriltag)
+[Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/apriltag)
 
 The AprilTag module is responsible for using the images pulled from the CSI
 camera to scan for visible [AprilTags](https://april.eecs.umich.edu/software/apriltag).
@@ -58,7 +58,7 @@ This is the only module with C++ code, for performance reasons.
 
 ### Flight Control
 
-[Source Code](https://github.com/bellflight/VRC-2022/tree/main/VMC/fcm)
+[Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/fcm)
 
 The Flight Control module (FCM) is responsible for communicating with the
 FCC over MAVLink. This module takes telemetry data from the FCC and publishes
@@ -71,7 +71,7 @@ knowledge of where it is in global coordinates.
 
 ### Fusion
 
-[Source Code](https://github.com/bellflight/VRC-2022/tree/main/VMC/fusion)
+[Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/fusion)
 
 The Fusion module is responsible for fusing multiple data sources
 to produce the final fake GPS data that is fed to the FCC. Currently, this only takes
@@ -82,7 +82,7 @@ This is the only module which is pure Python and has no hardware component.
 
 ### Mavp2p
 
-[Source Code](https://github.com/bellflight/VRC-2022/tree/main/VMC/mavp2p)
+[Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/mavp2p)
 
 The Mavp2p module is responsible for bridging multiple MAVLink connections
 together. This is just a Docker container for the amazing open-source project
@@ -90,7 +90,7 @@ together. This is just a Docker container for the amazing open-source project
 
 ### MQTT
 
-[Source Code](https://github.com/bellflight/VRC-2022/tree/main/VMC/mqtt)
+[Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/mqtt)
 
 The MQTT module is responsible for running the MQTT broker. This is
 a thin wrapper around the
@@ -102,14 +102,14 @@ outside of the normal operating system privledged port range.
 
 ### Peripheral Control
 
-[Source Code](https://github.com/bellflight/VRC-2022/tree/main/VMC/pcm)
+[Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/pcm)
 
 The Peripheral Control module is responsible for communicating with the
 PCC over serial. This is a thin MQTT to serial bridge.
 
 ### Status
 
-[Source Code](https://github.com/bellflight/VRC-2022/tree/main/VMC/status)
+[Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/status)
 
 The Status module is responsible for consuming status information from the various
 other modules and updating the status LEDs connected to the VMC. This also
@@ -117,14 +117,14 @@ communicates some with the host Jetson as well to check if it's being power-limi
 
 ### Thermal
 
-[Source Code](https://github.com/bellflight/VRC-2022/tree/main/VMC/thermal)
+[Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/thermal)
 
 The Thermal module is responsible for capturing thermal images from the thermal camera
 and publishing them over MQTT.
 
 ### Visual Inertial Orientation
 
-[Source Code](https://github.com/bellflight/VRC-2022/tree/main/VMC/vio)
+[Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/vio)
 
 The Visual Inertial Orientation (VIO) module is responsible for
 capturing data from the steroscopic tracking camera, and converting it into
@@ -136,5 +136,5 @@ then uses a hardcoded latitude and longitude to convert the data into
 global coordinates. They're not true global coordinates, however,
 as they're still relative to where it was started.
 
-This module is the core of the VRC "secret sauce" to enable GPS-denied stabilized
+This module is the core of the AVR "secret sauce" to enable GPS-denied stabilized
 flight.
