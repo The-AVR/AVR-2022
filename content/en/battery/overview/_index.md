@@ -11,31 +11,31 @@ included with the Venom battery as well as the manual for the Venom Pro 2 Charge
 
 These documents can be viewed at:
 
--   [Venom 15027 4S 5000mAh 35C Battery]({{< static "/files/VenomLiPoManual.pdf" >}})
--   [Venom Pro 2 Charger]({{< static "/files/VenomPro2ChargerManual.pdf" >}})
+- [Venom 15027 4S 5000mAh 35C Battery]({{< static "/files/VenomLiPoManual.pdf" >}})
+- [Venom Pro 2 Charger]({{< static "/files/VenomPro2ChargerManual.pdf" >}})
 
 ### Key Safety Points
 
--   Always charge batteries using the proper settings.
-    Improper charge settings may result in a catastrophic failure of the battery.
--   Never charge batteries unattended. If, during a charge, you need to leave for
-    any reason, stop the charge and disconnect the battery from the charger.
-    You can restart charging when you return.
--   If a battery ever becomes warm/hot during charge, or starts to swell, it
-    should be removed from the charger and taken outside where it cannot cause
-    damage if it fails. If a battery fails as a result of damage or misuse it
-    may result in fire.
--   Never leave a battery connected to your device or charger when not in active use.
-    This may cause a parasitic draw on the battery which may lead it
-    to become over-discharged.
+- Always charge batteries using the proper settings.
+  Improper charge settings may result in a catastrophic failure of the battery.
+- Never charge batteries unattended. If, during a charge, you need to leave for
+  any reason, stop the charge and disconnect the battery from the charger.
+  You can restart charging when you return.
+- If a battery ever becomes warm/hot during charge, or starts to swell, it
+  should be removed from the charger and taken outside where it cannot cause
+  damage if it fails. If a battery fails as a result of damage or misuse it
+  may result in fire.
+- Never leave a battery connected to your device or charger when not in active use.
+  This may cause a parasitic draw on the battery which may lead it
+  to become over-discharged.
 
 ### LiPO Battery Voltage Range
 
--   4.20V per cell represents a fully charged cell.
--   3.00V per cell is the very lowest the battery can go without sustaining damage.
--   3.70V per cell is the "Nominal Voltage" which is the "named" voltage of the cell.
-    This voltage is used as a standard to identify the cell/battery type.
--   3.5-3.7V per cell is the voltage we would recommend landing at.
+- 4.20V per cell represents a fully charged cell.
+- 3.00V per cell is the very lowest the battery can go without sustaining damage.
+- 3.70V per cell is the "Nominal Voltage" which is the "named" voltage of the cell.
+  This voltage is used as a standard to identify the cell/battery type.
+- 3.5-3.7V per cell is the voltage we would recommend landing at.
 
 ![Venom 15027 Battery and Connectors](image3.jpg)
 
@@ -43,18 +43,18 @@ The battery you will be using is a Venom 14.8V 5000mAh 35C Battery.
 
 ### Definitions
 
--   **Battery**: A battery is a device consisting of one or more electrochemical
-    cells with external connections for powering electrical devices.
--   **mAh**: is an abbreviation for milliamp hour and is a unit that measures
-    (electric) power over time. It is commonly used to measure the energy capacity
-    of a battery. In general, the more mAh and the longer the battery capacity or
-    battery "run time."
--   **C-Rating**: is a shorthand representation of how many amps the cells can
-    supply on a continuous basis without failing.
--   **Cell Count:** How many cells are in series to make the overall voltage of
-    the pack. In this case, 4 cells are in series to make 14.8V nominal, or 16.8V
-    when fully charged. Sometimes referred to as a 4S battery, the "S" refers to
-    "series" to tell us how many cells are comprising the battery pack.
+- **Battery**: A battery is a device consisting of one or more electrochemical
+  cells with external connections for powering electrical devices.
+- **mAh**: is an abbreviation for milliamp hour and is a unit that measures
+  (electric) power over time. It is commonly used to measure the energy capacity
+  of a battery. In general, the more mAh and the longer the battery capacity or
+  battery "run time."
+- **C-Rating**: is a shorthand representation of how many amps the cells can
+  supply on a continuous basis without failing.
+- **Cell Count:** How many cells are in series to make the overall voltage of
+  the pack. In this case, 4 cells are in series to make 14.8V nominal, or 16.8V
+  when fully charged. Sometimes referred to as a 4S battery, the "S" refers to
+  "series" to tell us how many cells are comprising the battery pack.
 
 ### The Charger: Venom 0677 (Pro 2)
 
