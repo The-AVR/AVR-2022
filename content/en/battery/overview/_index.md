@@ -93,9 +93,9 @@ and the plug towards the left side of the checker.
 
 ## What to Do in Case of Fire
 
-If you you follow the directions and safety guidelines provided above, you
+If you follow the safety guidelines provided, you
 should be perfectly safe. However, in the event that something has gone wrong,
-and you have a LiPo fire, here's what you should do in order of priority:
+and there is a battery (LiPo) fire, take the appropriate steps:
 
 {{% alert title="Warning" color="warning" %}}
 _Please_ read this section, this has happend before!
@@ -103,10 +103,10 @@ _Please_ read this section, this has happend before!
 ![2021 battery fire](2022-06-26-18-36-42.png)
 {{% /alert %}}
 
-1. **_First, get yourself and those around you to safety_**. Things are replaceable,
-   while you (and your lungs) are not. Battery fires produce very toxic smoke, and
-   you do NOT want to breathe it in.
-2. Get help. This depends on your specific situation, but this may be to pull a nearby
+1. **First, get yourself and those around you to safety**.
+   Drones, computers, etc. are replaceable, while you (and your lungs) are not.
+   Battery fires produce very toxic smoke, and you do NOT want to breathe it in.
+2. **Get help**. This depends on your specific situation, but this may be to pull a nearby
    fire alarm, call 911, or call your security department.
 
 After doing the above two steps, and _only if you're comfortable with it_ and does
@@ -117,19 +117,14 @@ being bright yellow.
 
 ![Example class D Copper powder fire extinguisher](2022-06-26-18-15-35.png)
 
-**_A normal, red, class ABC fire extinguisher does very little to put out a battery fire._**
-Don't waste your time unless you have nothing else to smother the flames with.
-
-![A class ABC fire extinguisher is **not** effective for a battery fire](2022-06-26-18-19-39.png)
-
 However, class D fire extinguishers tend to be uncommon.
-_If_ a class D fire extinguisher **is** available, pull the safety pin, aim the nozzle,
+If a class D fire extinguisher **is** available, pull the safety pin, aim the nozzle,
 and squeeze the handle. These tend to be quite heavy, so you may need an additional
 person to assist.
 
-If a class D fire extinguisher is **not** available, your next best bet is to throw
-a fire blanket over the fire to smother it as much as possible. This won't put it out,
-but it will supress the flames. Most labs have a fire blanket,
+If a class D fire extinguisher **is not** available, your next best bet is to throw
+a fire blanket over the fire to smother it as much as possible. This won't put it out
+but it will supress the flames. Most labs have a fire blanket.
 
 ![Example fire blanket](2022-06-26-18-28-26.png)
 
@@ -138,3 +133,8 @@ This is generally what we have on hand at competition events for safety and acts
 similarly to a fire blanket.
 
 ![Low-tech solutions can be effective](2022-06-26-18-36-03.png)
+
+**_A normal, red, class ABC fire extinguisher does very little to put out a battery fire._**
+Don't waste your time unless you have absolutely nothing else to smother the flames with.
+
+![A class ABC fire extinguisher is **not** effective for a battery fire](2022-06-26-18-19-39.png)
