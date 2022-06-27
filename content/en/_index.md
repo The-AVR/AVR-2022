@@ -7,7 +7,7 @@ cascade:
 
 ## Introduction
 
-Welcome to the documentation for the Bell Vertical Robotics Competition!
+Welcome to the documentation for the Bell Advanced Vertical Robotics competition!
 Be sure to pay attention to the navigation links on the left and please keep in mind
 that this documentation is a **living document** that will be constantly updated over time.
 There will be new sections added, typos fixed, and bugs squashed throughout

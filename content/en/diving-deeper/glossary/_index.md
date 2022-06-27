@@ -101,9 +101,9 @@ The Vehicle Management Computer is the companion computer that performs various
 tasks and communicates with the Flight Controller. This is where your custom software
 will be run to complete the challenges for the competiton.
 
-## Vertical Robotics Competition (AVR)
+## Advanced Vertical Robotics (AVR)
 
-The Vertical Robotics Competition is a robotics competition put on by Bell Flight
+The Advanced Vertical Robotics competition is a robotics competition put on by Bell Flight
 to challenge high school students to develop STEM skills outside of the classroom
 and work together to solve engineering challenges in a fun robotics competition
 in the vertical dimension.
