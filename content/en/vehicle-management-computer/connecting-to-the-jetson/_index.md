@@ -140,3 +140,43 @@ and then click the "Open" button.
 You'll need to accept that you trust a key the first time.
 
 ![Accept the key](2022-06-15-19-54-20.png)
+
+### Troubleshooting
+
+#### Connection closed/reset
+
+If you try to SSH into your Jetson, and you immediately get a connection
+timed out error, here's how to fix it.
+
+First, login to your Jetson via serial. Run the command
+
+```bash
+tail /var/log/auth.log
+```
+
+and see that you're getting errors about invalid formats:
+
+```text
+Jun 28 18:42:26 drone sshd[8547]: error: key_load_private: invalid format
+Jun 28 18:42:26 drone sshd[8547]: error: key_load_public: invalid format
+Jun 28 18:42:26 drone sshd[8547]: error: Could not load host key: /etc/ssh/ssh_host_ecdsa_key
+Jun 28 18:42:26 drone sshd[8547]: error: key_load_private: invalid format
+Jun 28 18:42:26 drone sshd[8547]: error: key_load_public: invalid format
+Jun 28 18:42:26 drone sshd[8547]: error: Could not load host key: /etc/ssh/ssh_host_ed25519_key
+Jun 28 18:42:26 drone sshd[8547]: fatal: No supported key exchange algorithms [preauth]
+```
+
+If so, run the command
+
+```bash
+sudo /usr/bin/ssh-keygen -A
+```
+
+to generate a new host key.
+
+{{% alert title="Note" color="note" %}}
+You may need to delete or edit your ~/.ssh/known_hosts file after you do this.
+
+![Host key verification failed](2022-06-28-18-49-22.png)
+
+{{% /alert %}}
