@@ -4,7 +4,7 @@ from PySide6 import QtGui, QtWidgets
 
 from .config import DATA_DIR
 
-IMG_DIR = os.path.join(DATA_DIR, "lib", "img")
+IMG_DIR = os.path.join(DATA_DIR, "assets", "img")
 
 
 def set_icon(widget: QtWidgets.QWidget) -> None:

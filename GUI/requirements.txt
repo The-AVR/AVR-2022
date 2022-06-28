@@ -1,8 +1,12 @@
-paho-mqtt==1.6.1
 PySide6-Essentials==6.3.0
+paho-mqtt==1.6.1
 loguru==0.6.0
 pyinstaller==5.1
 colour==0.1.5
 scipy==1.8.1
 numpy==1.22.4
 bell-avr-libraries[mqtt,serial]==0.1.2
+
+pyopengl
+pyqtgraph
+numpy-stl

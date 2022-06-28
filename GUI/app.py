@@ -9,6 +9,7 @@ from tabs.mqtt_debug import MQTTDebugWidget
 from tabs.mqtt_logger import MQTTLoggerWidget
 from tabs.pcc_tester import PCCTesterWidget
 from tabs.thermal_view_control import ThermalViewControlWidget
+from tabs.three_d_viewer import ThreeDViewerWidget
 from tabs.vmc_control import VMCControlWidget
 from tabs.vmc_telemetry import VMCTelemetryWidget
 
@@ -196,6 +197,17 @@ class MainWindow(QtWidgets.QWidget):
 
         self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
             self.mqtt_logger_widget.process_message
+        )
+
+        # 3D viewer widget
+
+        self.three_d_viewer_widget = ThreeDViewerWidget(self)
+        self.three_d_viewer_widget.build()
+        self.three_d_viewer_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.three_d_viewer_widget, self.three_d_viewer_widget.windowTitle())
+
+        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+            self.three_d_viewer_widget.process_message
         )
 
         # pcc tester widget
