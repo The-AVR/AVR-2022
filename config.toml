@@ -112,7 +112,7 @@ pygmentsStyle = "monokai"
     desc = "Welcome to the Future of Flight"
 
 [[params.links.user]]
-    name = "Job Opportunities"
+    name = "Careers"
     url  = "https://textron.taleo.net/careersection/bell/jobsearch.ftl?lang=en"
     icon = "fa fa-briefcase"
 
@@ -126,4 +126,4 @@ pygmentsStyle = "monokai"
     name   = "Forums"
     weight = 100
     pre    = "<i class='fa fa-users'></i>"
-    url    = "https://github.com/bellflight/AVR-2022/discussions"
+    url    = "https://bellavrforum.org/"
