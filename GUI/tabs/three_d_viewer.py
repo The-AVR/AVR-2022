@@ -7,11 +7,53 @@ from bell.avr.mqtt.payloads import (
     AvrFcmAttitudeEulerPayload,
     AvrFcmLocationLocalPayload,
 )
+from lib.config import DATA_DIR
 from pyqtgraph.opengl import GLGridItem, GLMeshItem, GLViewWidget, MeshData
-from PySide6 import QtGui, QtWidgets
+from PySide6 import QtGui, QtWidgets, Qt3DRender
 
-from ..lib.config import DATA_DIR
 from .base import BaseTabWidget
+
+
+class AbsoluteGLMeshItem(GLMeshItem):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.origin = (0,0,0)
+
+        self._current_x = 0
+        self._current_y = 0
+        self._current_z = 0
+
+        self._current_r = 0
+        self._current_p = 0
+        self._current_yaw = 0
+
+    def set_position(self, x, y, z):
+        self.translate(x - self._current_x, y - self._current_y, z - self._current_z)
+        self._current_x = x
+        self._current_y = y
+        self._current_z = z
+
+    def set_rotation(self, r, p, y):
+        # record current position
+        x_before = self._current_x
+        y_before = self._current_y
+        z_before = self._current_z
+
+        # move to 0,0,0 so we can rotate around the origin
+        self.set_position(*self.origin)
+
+        # rotate all three axes
+        self.rotate(r - self._current_r, 1, 0, 0)
+        self.rotate(p - self._current_p, 0, 1, 0)
+        self.rotate(y - self._current_yaw, 0, 0, 1)
+
+        # reset position to previous position
+        self.set_position(x_before, y_before, z_before)
+
+        self._current_r = r
+        self._current_p = p
+        self._current_yaw = y
 
 
 class ThreeDViewerWidget(BaseTabWidget):
@@ -28,36 +70,42 @@ class ThreeDViewerWidget(BaseTabWidget):
         layout.addWidget(self.view_widget)
 
         # build the drone model
-        stl_mesh = stl.mesh.Mesh.from_file(os.path.join(DATA_DIR, "assets", "stl", "cube.stl"))
+        stl_mesh = stl.mesh.Mesh.from_file(
+            os.path.join(DATA_DIR, "assets", "stl", "arrow.stl")
+        )
         points = stl_mesh.points.reshape(-1, 3)
         faces = np.arange(points.shape[0]).reshape(-1, 3)
 
         drone_mesh_data = MeshData(vertexes=points, faces=faces)
-        self.drone_mesh = GLMeshItem(
+        self.drone_mesh = AbsoluteGLMeshItem(
             meshdata=drone_mesh_data,
             smooth=True,
             drawFaces=True,
-            drawEdges=False,
-            edgeColor=(0, 1, 0, 1),
+            drawEdges=True,
+            edgeColor=(0, 0, 0, 1),
         )
+        self.drone_mesh.origin = (0, 0, 0.5)
+        self.drone_mesh.scale(0.1, 0.1, 0.1)
         self.view_widget.addItem(self.drone_mesh)
 
         # build the infinite floor
-        self.view_widget.addItem(GLGridItem(QtGui.QVector3D(1000, 1000, 1)))
+        grid = GLGridItem(QtGui.QVector3D(1000, 1000, 1))
+        grid.setSpacing(10, 10, 1)
+        self.view_widget.addItem(grid)
 
     def update_local_location(self, payload: AvrFcmLocationLocalPayload) -> None:
         """
         Update local location information
         """
-        self.drone_mesh.translate(payload["dX"], payload["dY"], payload["dZ"])
+        # drone XYZ is NED
+        # https://learnopengl.com/Getting-started/Coordinate-Systems
+        self.drone_mesh.set_position(payload["dY"], payload["dX"], -payload["dZ"])
 
     def update_euler_attitude(self, payload: AvrFcmAttitudeEulerPayload) -> None:
         """
         Update euler attitude information
         """
-        self.drone_mesh.rotate(payload["roll"], 1, 0, 0)
-        self.drone_mesh.rotate(payload["pitch"], 0, 1, 0)
-        self.drone_mesh.rotate(payload["yaw"], 0, 0, 1)
+        self.drone_mesh.set_rotation(payload["pitch"], payload["roll"], -payload["yaw"])
 
     def process_message(self, topic: str, payload: str) -> None:
         """
