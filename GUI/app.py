@@ -12,7 +12,7 @@ from tabs.pcc_tester import PCCTesterWidget
 from tabs.thermal_view_control import ThermalViewControlWidget
 from tabs.vmc_control import VMCControlWidget
 from tabs.vmc_telemetry import VMCTelemetryWidget
-
+from tabs.three_d_viewer import ThreeDViewerWidget
 
 class TabBar(QtWidgets.QTabBar):
     """
@@ -30,7 +30,7 @@ class TabBar(QtWidgets.QTabBar):
     def contextMenuEvent(self, event: QtGui.QContextMenuEvent) -> None:
         menu = QtWidgets.QMenu(self)
 
-        # needs to be done before the menu is poped up, otherwise the QEvent will expire
+        # needs to be done before the menu is popped up, otherwise the QEvent will expire
         selected_item = self.tabAt(event.pos())
 
         pop_out_action = QtGui.QAction("Pop Out", self)
@@ -145,6 +145,28 @@ class MainWindow(QtWidgets.QWidget):
             self.vmc_telemetry_widget.process_message
         )
 
+        # 3D viewer widget
+
+        # self.three_d_viewer_widget = ThreeDViewerWidget(self)
+        # self.three_d_viewer_widget.build()
+        # self.three_d_viewer_widget.pop_in.connect(self.tabs.pop_in)
+        # self.tabs.addTab(self.three_d_viewer_widget, self.three_d_viewer_widget.windowTitle())
+
+        # self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+        #     self.three_d_viewer_widget.process_message
+        # )
+
+        # moving map widget
+
+        self.moving_map_widget = MovingMapWidget(self)
+        self.moving_map_widget.build()
+        self.moving_map_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.moving_map_widget, self.moving_map_widget.windowTitle())
+
+        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+            self.moving_map_widget.process_message
+        )
+
         # vmc control widget
 
         self.vmc_control_widget = VMCControlWidget(self)
@@ -199,27 +221,6 @@ class MainWindow(QtWidgets.QWidget):
             self.mqtt_logger_widget.process_message
         )
 
-        # 3D viewer widget
-
-        # self.three_d_viewer_widget = ThreeDViewerWidget(self)
-        # self.three_d_viewer_widget.build()
-        # self.three_d_viewer_widget.pop_in.connect(self.tabs.pop_in)
-        # self.tabs.addTab(self.three_d_viewer_widget, self.three_d_viewer_widget.windowTitle())
-
-        # self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
-        #     self.three_d_viewer_widget.process_message
-        # )
-
-        self.moving_map_widget = MovingMapWidget(self)
-        self.moving_map_widget.build()
-        self.moving_map_widget.pop_in.connect(self.tabs.pop_in)
-        self.tabs.addTab(self.moving_map_widget, self.moving_map_widget.windowTitle())
-
-        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
-            self.moving_map_widget.process_message
-        )
-
-
         # pcc tester widget
 
         self.pcc_tester_widget = PCCTesterWidget(
@@ -255,7 +256,7 @@ class MainWindow(QtWidgets.QWidget):
             else:
                 self.tabs.setTabToolTip(idx, "")
 
-        # telemetry stuff is special case
+        # clear widgets to a starting state
         if not self.mqtt_connected:
             self.mqtt_debug_widget.clear()
             self.mqtt_logger_widget.clear()

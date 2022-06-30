@@ -13,6 +13,7 @@ from bell.avr.mqtt.payloads import (
     AvrPcmSetLaserOnPayload,
     AvrPcmSetServoPctPayload,
 )
+from lib.calc import constrain
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from .base import BaseTabWidget
@@ -22,11 +23,6 @@ def map_value(
     x: float, in_min: float, in_max: float, out_min: float, out_max: float
 ) -> float:
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-
-
-def constrain(val: int, min_val: int, max_val: int) -> int:
-    return min(max_val, max(min_val, val))
-
 
 class Direction(Enum):
     Left = auto()
@@ -113,7 +109,7 @@ class ThermalView(QtWidgets.QWidget):
             for jx, pixel in enumerate(row):
                 brush = QtGui.QBrush(
                     QtGui.QColor(
-                        *self.colors[constrain(int(pixel), 0, self.COLORDEPTH - 1)]
+                        *self.colors[int(constrain(pixel, 0, self.COLORDEPTH - 1))]
                     )
                 )
                 self.canvas.addRect(

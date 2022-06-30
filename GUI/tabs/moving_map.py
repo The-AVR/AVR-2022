@@ -7,170 +7,272 @@ from bell.avr.mqtt.payloads import (
     AvrFcmAttitudeEulerPayload,
     AvrFcmLocationLocalPayload,
 )
+from lib.calc import normalize_value
 from lib.color import smear_color
-from lib.config import DATA_DIR
+from lib.config import IMG_DIR
 from PySide6 import QtCore, QtGui, QtSvgWidgets, QtWidgets
 
 from .base import BaseTabWidget
 
 
-class ADI(QtWidgets.QGraphicsView):
+class AttitudeIndicator(QtWidgets.QGraphicsView):
     # adapted from https://github.com/UlusoyRobotic/PyQt---Stm32F4-Real-Time-Flight-Data-Pitch-and-Roll-Simulator/blob/6edc80de1f054a8a8bcddc984e3be0b3c73d29cd/qfi/qfi_ADI.py
 
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
-        self.m_roll = 0
-        self.m_pitch = 0
+        # maintain persistent values
+        self._roll = 0
+        self._pitch = 0
 
-        self.m_faceDeltaX_new = 0
-        self.m_faceDeltaX_old = 0
-        self.m_faceDeltaY_new = 0
-        self.m_faceDeltaY_old = 0
+        self._face_delta_x_new = 0
+        self._face_delta_x_old = 0
+        self._face_delta_y_new = 0
+        self._face_delta_y_old = 0
 
-        self.m_originalHeight = 240
-        self.m_originalWidth = 240
+        # constants
+        self._original_width = 240
+        self._original_height = 240
 
-        self.setFixedSize(self.m_originalWidth, self.m_originalHeight)
+        self._original_pizel_per_deg = 1.7
+        self._original_center = QtCore.QPointF(
+            self._original_width / 2, self._original_height / 2
+        )
 
-        self.m_originalPixPerDeg = 1.7
+        self._back_z = -30
+        self._face_z = -20
+        self._ring_z = -10
+        self._case_z = 10
 
-        self.m_originalAdiCtr = QtCore.QPointF(120, 120)
-
-        self.m_backZ = -30
-        self.m_faceZ = -20
-        self.m_ringZ = -10
-        self.m_caseZ = 10
-
+        # styling
+        self.setFixedSize(self._original_width, self._original_height)
         self.setStyleSheet("background: transparent; border: none")
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
-        self.setInteractive(False)
-        self.setEnabled(False)
+        # create a graphics scene to draw on
+        self._scene = QtWidgets.QGraphicsScene(self)
+        self.setScene(self._scene)
 
-        self.m_scene = QtWidgets.QGraphicsScene(self)
-
-        self.setScene(self.m_scene)
-
-        self.m_scaleX = self.width() / self.m_originalWidth
-        self.m_scaleY = self.height() / self.m_originalHeight
+        self._scale_x = self.width() / self._original_width
+        self._scale_y = self.height() / self._original_height
 
         # SVG files from https://github.com/marek-cel/QFlightinstruments
         # under MIT license
 
-        self.m_itemBack = QtSvgWidgets.QGraphicsSvgItem(
-            os.path.join(DATA_DIR, "assets", "img", "adi_back.svg")
+        self._item_back = QtSvgWidgets.QGraphicsSvgItem(
+            os.path.join(IMG_DIR, "attitude_indicator_back.svg")
         )
-        self.m_itemBack.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
-        self.m_itemBack.setZValue(self.m_backZ)
-        self.m_itemBack.setTransform(
-            QtGui.QTransform.fromScale(self.m_scaleX, self.m_scaleY), True
+        self._item_back.setZValue(self._back_z)
+        self._item_back.setTransform(
+            QtGui.QTransform.fromScale(self._scale_x, self._scale_y), True
         )
-        self.m_itemBack.setTransformOriginPoint(self.m_originalAdiCtr)
-        self.m_scene.addItem(self.m_itemBack)
+        self._item_back.setTransformOriginPoint(self._original_center)
+        self._scene.addItem(self._item_back)
 
-        self.m_itemFace = QtSvgWidgets.QGraphicsSvgItem(
-            os.path.join(DATA_DIR, "assets", "img", "adi_face.svg")
+        self._item_face = QtSvgWidgets.QGraphicsSvgItem(
+            os.path.join(IMG_DIR, "attitude_indicator_face.svg")
         )
-        self.m_itemFace.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
-        self.m_itemFace.setZValue(self.m_faceZ)
-        self.m_itemFace.setTransform(
-            QtGui.QTransform.fromScale(self.m_scaleX, self.m_scaleY), True
+        self._item_face.setZValue(self._face_z)
+        self._item_face.setTransform(
+            QtGui.QTransform.fromScale(self._scale_x, self._scale_y), True
         )
-        self.m_itemFace.setTransformOriginPoint(self.m_originalAdiCtr)
-        self.m_scene.addItem(self.m_itemFace)
+        self._item_face.setTransformOriginPoint(self._original_center)
+        self._scene.addItem(self._item_face)
 
-        self.m_itemRing = QtSvgWidgets.QGraphicsSvgItem(
-            os.path.join(DATA_DIR, "assets", "img", "adi_ring.svg")
+        self._item_ring = QtSvgWidgets.QGraphicsSvgItem(
+            os.path.join(IMG_DIR, "attitude_indicator_ring.svg")
         )
-        self.m_itemRing.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
-        self.m_itemRing.setZValue(self.m_ringZ)
-        self.m_itemRing.setTransform(
-            QtGui.QTransform.fromScale(self.m_scaleX, self.m_scaleY), True
+        self._item_ring.setZValue(self._ring_z)
+        self._item_ring.setTransform(
+            QtGui.QTransform.fromScale(self._scale_x, self._scale_y), True
         )
-        self.m_itemRing.setTransformOriginPoint(self.m_originalAdiCtr)
-        self.m_scene.addItem(self.m_itemRing)
+        self._item_ring.setTransformOriginPoint(self._original_center)
+        self._scene.addItem(self._item_ring)
 
-        self.m_itemCase = QtSvgWidgets.QGraphicsSvgItem(
-            os.path.join(DATA_DIR, "assets", "img", "adi_case.svg")
+        self._item_case = QtSvgWidgets.QGraphicsSvgItem(
+            os.path.join(IMG_DIR, "attitude_indicator_case.svg")
         )
-        self.m_itemCase.setCacheMode(QtWidgets.QGraphicsItem.NoCache)
-        self.m_itemCase.setZValue(self.m_caseZ)
-        self.m_itemCase.setTransform(
-            QtGui.QTransform.fromScale(self.m_scaleX, self.m_scaleY), True
+        self._item_case.setZValue(self._case_z)
+        self._item_case.setTransform(
+            QtGui.QTransform.fromScale(self._scale_x, self._scale_y), True
         )
-        self.m_itemCase.setTransformOriginPoint(self.m_originalAdiCtr)
-        self.m_scene.addItem(self.m_itemCase)
+        self._item_case.setTransformOriginPoint(self._original_center)
+        self._scene.addItem(self._item_case)
 
+        # center on the middle of the scene
         self.centerOn(self.width() / 2, self.height() / 2)
-
-        self.updateView()
+        self._update_view()
 
     def update(self) -> None:
-        self.updateView()
-        self.m_faceDeltaX_old = self.m_faceDeltaX_new
-        self.m_faceDeltaY_old = self.m_faceDeltaY_new
+        """
+        Trigger a re-draw of the indicator.
+        """
+        self._update_view()
+        self._face_delta_x_old = self._face_delta_x_new
+        self._face_delta_y_old = self._face_delta_y_new
 
-    def setRoll(self, roll: float) -> None:
-        self.m_roll = roll
-        self.m_roll = max(self.m_roll, -180)
-        self.m_roll = min(self.m_roll, 180)
+    def set_roll(self, roll: float) -> None:
+        """
+        Set the current roll value.
+        """
+        self._roll = roll
+        self._roll = max(self._roll, -180)
+        self._roll = min(self._roll, 180)
 
-    def setPitch(self, pitch: float) -> None:
-        self.m_pitch = pitch
-        self.m_pitch = max(self.m_pitch, -25)
-        self.m_pitch = min(self.m_pitch, 25)
+    def set_pitch(self, pitch: float) -> None:
+        """
+        Set the current pitch value.
+        """
+        self._pitch = pitch
+        self._pitch = max(self._pitch, -25)
+        self._pitch = min(self._pitch, 25)
 
     def reset(self) -> None:
-        self.setPitch(0)
-        self.setRoll(0)
+        """
+        Reset the indicator back to a 0 roll and 0 pitch.
+        """
+        self.set_pitch(0)
+        self.set_roll(0)
         self.update()
 
-    def updateView(self) -> None:
-        self.m_scaleX = self.width() / self.m_originalWidth
-        self.m_scaleY = self.height() / self.m_originalHeight
+    def _update_view(self) -> None:
+        """
+        Re-draw the indicator.
+        """
+        self._scale_x = self.width() / self._original_width
+        self._scale_y = self.height() / self._original_height
 
-        self.m_itemBack.setRotation(-self.m_roll)
-        self.m_itemRing.setRotation(-self.m_roll)
-        self.m_itemFace.setRotation(-self.m_roll)
+        self._item_back.setRotation(-self._roll)
+        self._item_ring.setRotation(-self._roll)
+        self._item_face.setRotation(-self._roll)
 
-        roll_rad = math.pi * self.m_roll / 180.0
-        delta = self.m_originalPixPerDeg * self.m_pitch
+        roll_rad = math.radians(self._roll)
+        delta = self._original_pizel_per_deg * self._pitch
 
-        self.m_faceDeltaX_new = self.m_scaleX * delta * math.sin(roll_rad)
-        self.m_faceDeltaY_new = self.m_scaleY * delta * math.cos(roll_rad)
+        self._face_delta_x_new = self._scale_x * delta * math.sin(roll_rad)
+        self._face_delta_y_new = self._scale_y * delta * math.cos(roll_rad)
 
-        self.m_itemFace.moveBy(
-            self.m_faceDeltaX_new - self.m_faceDeltaX_old,
-            self.m_faceDeltaY_new - self.m_faceDeltaY_old,
+        self._item_face.moveBy(
+            self._face_delta_x_new - self._face_delta_x_old,
+            self._face_delta_y_new - self._face_delta_y_old,
         )
 
-        self.m_scene.update()
+        self._scene.update()
 
 
-class MovingMapGraphicsView(QtWidgets.QGraphicsView):
+class DroneAltitudeWidget(QtWidgets.QWidget):
+
+    GROUND_WIDTH = 3
+
+    DRONE_ICON_WIDTH = 50
+    DRONE_ICON_HEIGHT = 50
+
+    CANVAS_HEIGHT = 240
+    CANVAS_WIDTH = 120
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
+        layout = QtWidgets.QHBoxLayout()
+        self.setLayout(layout)
+
+        self.canvas = QtWidgets.QGraphicsScene(self)
+        self.view = QtWidgets.QGraphicsView(self.canvas)
+        self.view.setSceneRect(
+            0, 0, self.CANVAS_WIDTH, self.CANVAS_HEIGHT + self.GROUND_WIDTH
+        )
+        self.view.setStyleSheet("border: 0px")
+
+        layout.addWidget(self.view)
+
+        # add drone icon
+        drone_pixmap = QtGui.QIcon(os.path.join(IMG_DIR, "drone_side_icon.png")).pixmap(
+            self.DRONE_ICON_WIDTH, self.DRONE_ICON_HEIGHT
+        )
+        self.drone_icon = self.canvas.addPixmap(drone_pixmap)
+
+        # add ground
+        ground_pen = QtGui.QPen(QtGui.QColor(120, 90, 8, 255))
+        ground_pen.setWidth(self.GROUND_WIDTH)
+        self.canvas.addLine(
+            0, self.CANVAS_HEIGHT, self.CANVAS_WIDTH, self.CANVAS_HEIGHT, ground_pen
+        )
+
+        sub_layout = QtWidgets.QVBoxLayout(self)
+        sub_layout.addStretch()
+
+        # add altimeter
+        self.altitude_number = QtWidgets.QLCDNumber(self)
+        self.altitude_number.setFixedHeight(30)
+        sub_layout.addWidget(self.altitude_number)
+
+        # add altimeter label
+        sub_layout.addWidget(QtWidgets.QLabel("Meters"))
+        sub_layout.addStretch()
+
+        layout.addLayout(sub_layout)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+
+        # put drone on the ground
+        self.set_altitude(0)
+
+    def set_altitude(self, altitude: float) -> None:
+        # flip because negative is up
+        altitude *= -1
+
+        # normalize value
+        norm_altitude = normalize_value(altitude, 0, 20)
+
+        self.drone_icon.setPos(
+            (self.CANVAS_WIDTH / 2) - (self.DRONE_ICON_WIDTH / 2),
+            (
+                (self.CANVAS_HEIGHT * (1 - norm_altitude))
+                - (self.GROUND_WIDTH / 2)
+                - self.DRONE_ICON_HEIGHT
+            ),
+        )
+        self.altitude_number.display(altitude)
+
+    def reset(self) -> None:
+        self.set_altitude(0)
+
+
+class MovingMapGraphicsView(QtWidgets.QGraphicsView):
     def wheelEvent(self, event: QtGui.QWheelEvent) -> None:
+        """
+        Override the default scroll event to allow zoom in and out
+        """
+        scroll_factor = 0.2
+
         if event.angleDelta().y() > 0:
-            self.scale(1.2, 1.2)
+            self.scale(1 + scroll_factor, 1 + scroll_factor)
         else:
-            self.scale(0.8, 0.8)
+            self.scale(1 - scroll_factor, 1 - scroll_factor)
 
     def enable_panning(self) -> None:
+        """
+        Enable panning within the view.
+        """
         self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
 
     def disable_panning(self) -> None:
+        """
+        Disable panning within the view, if the viewport is being
+        driven programmatically
+        """
         self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
         self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
 
 class InfiniteGridGraphicsScene(QtWidgets.QGraphicsScene):
+    """
+    A QGraphicsScene with an infinite grid background.
+    """
+
     # how many pixels per meter
     PIXELS_PER_METER = 50
     # how many meters per grid line
@@ -179,6 +281,9 @@ class InfiniteGridGraphicsScene(QtWidgets.QGraphicsScene):
     def drawBackground(
         self, painter: QtGui.QPainter, rect: Union[QtCore.QRectF, QtCore.QRect]
     ) -> None:
+        """
+        Draws a grid within the given viewport.
+        """
         grid_pen = QtGui.QPen(QtGui.QColor(0, 0, 0, 122))
         grid_pen.setWidth(1)
 
@@ -186,6 +291,8 @@ class InfiniteGridGraphicsScene(QtWidgets.QGraphicsScene):
         # grid_pen.setDashPattern([5.0, 5.0])
 
         painter.setPen(grid_pen)
+
+        # Qt thinks in a 0,0 is the top-left corner coordinate system
 
         # vertical lines
         for x in range(
@@ -203,10 +310,15 @@ class InfiniteGridGraphicsScene(QtWidgets.QGraphicsScene):
 
 
 class MovingMapGraphicsWidget(QtWidgets.QWidget):
+
+    HOME_ICON_WIDTH = 50
+    HOME_ICON_HEIGHT = 50
+
+    DRONE_ICON_WIDTH = 80
+    DRONE_ICON_HEIGHT = 80
+
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-
-        self._follow_drone = True
 
         # record all trails so they can be cleared
         self._tracks: List[QtWidgets.QGraphicsLineItem] = []
@@ -221,21 +333,34 @@ class MovingMapGraphicsWidget(QtWidgets.QWidget):
 
         layout.addWidget(self.view)
 
+        # add home icon
+        home_pixmap = QtGui.QIcon(os.path.join(IMG_DIR, "home_icon.png")).pixmap(
+            self.HOME_ICON_WIDTH, self.HOME_ICON_HEIGHT
+        )
+        self.home_icon = self.canvas.addPixmap(home_pixmap)
+        self.home_icon.setPos(
+            -self.HOME_ICON_WIDTH / 2,
+            -self.HOME_ICON_HEIGHT / 2,
+        )
+        self.home_icon.setZValue(-10)
+
         # add drone icon
-        drone_pixmap = QtGui.QIcon(
-            os.path.join(DATA_DIR, "assets", "img", "drone_icon.svg")
-        ).pixmap(50, 50)
+        drone_pixmap = QtGui.QIcon(os.path.join(IMG_DIR, "drone_top_icon.svg")).pixmap(
+            self.DRONE_ICON_WIDTH, self.DRONE_ICON_HEIGHT
+        )
         self.drone_icon = self.canvas.addPixmap(drone_pixmap)
         self.drone_icon.setTransformOriginPoint(
-            self.drone_icon.pixmap().width() / 2, self.drone_icon.pixmap().height() / 2
+            self.DRONE_ICON_WIDTH / 2, self.DRONE_ICON_HEIGHT / 2
         )
 
         # center it
         self.drone_icon.setPos(
-            -self.drone_icon.pixmap().width() / 2,
-            -self.drone_icon.pixmap().height() / 2,
+            -self.DRONE_ICON_WIDTH / 2,
+            -self.DRONE_ICON_HEIGHT / 2,
         )
         self.drone_icon.setZValue(999)
+
+        self.follow_drone(True)
 
     def clear_tracks(self) -> None:
         """
@@ -251,42 +376,47 @@ class MovingMapGraphicsWidget(QtWidgets.QWidget):
         Enable or disable following the drone.
         """
         self._follow_drone = follow
+
         if self._follow_drone:
             self.view.disable_panning()
+            self.view.centerOn(self.drone_icon)
         else:
             self.view.enable_panning()
 
-    def update_drone_location(self, payload: AvrFcmLocationLocalPayload) -> None:
+    def update_drone_location(self, x: float, y: float, z: float) -> None:
         """
         Update local location information.
         """
         # drone XYZ is NED
         # Qt however consider top left 0, 0
 
+        # current top-left corner of the drone icon
         current_drone_corner_x = self.drone_icon.x()
         current_drone_corner_y = self.drone_icon.y()
 
-        current_drone_center_x = current_drone_corner_x + (
-            self.drone_icon.pixmap().width() / 2
-        )
-        current_drone_center_y = current_drone_corner_y + (
-            self.drone_icon.pixmap().height() / 2
-        )
+        # current center of the drone icon
+        current_drone_center_x = current_drone_corner_x + (self.DRONE_ICON_WIDTH / 2)
+        current_drone_center_y = current_drone_corner_y + (self.DRONE_ICON_HEIGHT / 2)
 
-        new_drone_center_x = payload["dY"] * self.canvas.PIXELS_PER_METER
-        new_drone_center_y = -payload["dX"] * self.canvas.PIXELS_PER_METER
+        # new center of the drone icon
+        new_drone_center_x = y * self.canvas.PIXELS_PER_METER
+        new_drone_center_y = -x * self.canvas.PIXELS_PER_METER
 
-        new_drone_corner_x = new_drone_center_x - (self.drone_icon.pixmap().width() / 2)
-        new_drone_corner_y = new_drone_center_y - (
-            self.drone_icon.pixmap().height() / 2
-        )
+        # new top-left corner of the drone icon
+        new_drone_corner_x = new_drone_center_x - (self.DRONE_ICON_WIDTH / 2)
+        new_drone_corner_y = new_drone_center_y - (self.DRONE_ICON_HEIGHT / 2)
 
+        # go from brown to blue as the altitude increases
         color = smear_color(
-            (11, 135, 0), (135, 0, 16), value=-payload["dZ"], min_value=0, max_value=20
+            (120, 90, 8),
+            (73, 205, 235),
+            value=-z,
+            min_value=0,
+            max_value=20,
         )
 
         # draw track
-        track_pen = QtGui.QPen(QtGui.QColor(color[0], color[1], color[2], 122))
+        track_pen = QtGui.QPen(QtGui.QColor(color[0], color[1], color[2], 200))
         track_pen.setWidth(3)
         self._tracks.append(
             self.canvas.addLine(
@@ -298,26 +428,36 @@ class MovingMapGraphicsWidget(QtWidgets.QWidget):
             )
         )
 
+        # set limit on the number of tracks that are drawn
+        if len(self._tracks) > 10000:
+            self.canvas.removeItem(self._tracks.pop(0))
+
         # move icon
         self.drone_icon.setPos(new_drone_corner_x, new_drone_corner_y)
 
         if self._follow_drone:
-            self.view.centerOn(new_drone_center_x, new_drone_center_y)
+            # needed to allow time for GraphicsScene to redraw
+            QtGui.QGuiApplication.processEvents()
+            self.view.centerOn(self.drone_icon)
 
-    def update_drone_attitude(self, payload: AvrFcmAttitudeEulerPayload) -> None:
+    def update_drone_attitude(self, yaw: float) -> None:
         """
         Update euler attitude information.
         """
-        self.drone_icon.setRotation(payload["yaw"])
+        self.drone_icon.setRotation(yaw)
 
     def reset(self) -> None:
+        """
+        Reset the drone icon's position and clear the tracks.
+        """
         self.drone_icon.setPos(
-            -self.drone_icon.pixmap().width() / 2,
-            -self.drone_icon.pixmap().height() / 2,
+            -self.DRONE_ICON_WIDTH / 2,
+            -self.DRONE_ICON_HEIGHT / 2,
         )
-
         self.drone_icon.setRotation(0)
+
         self.clear_tracks()
+
 
 class MovingMapWidget(BaseTabWidget):
     def __init__(self, parent: QtWidgets.QWidget) -> None:
@@ -350,8 +490,11 @@ class MovingMapWidget(BaseTabWidget):
         clear_tracks_button.setMinimumHeight(50)
         bottom_left_layout.addWidget(clear_tracks_button)
 
-        self.adi = ADI(self)
-        bottom_layout.addWidget(self.adi)
+        self.attitude_indicator = AttitudeIndicator(self)
+        bottom_layout.addWidget(self.attitude_indicator)
+
+        self.altitude_indicator = DroneAltitudeWidget(self)
+        bottom_layout.addWidget(self.altitude_indicator)
 
         clear_tracks_button.clicked.connect(self.moving_map_widget.clear_tracks)  # type: ignore
         self.follow_drone_button.clicked.connect(self.toggle_follow_drone)  # type: ignore
@@ -373,18 +516,27 @@ class MovingMapWidget(BaseTabWidget):
         """
         Update euler attitude information.
         """
-        self.moving_map_widget.update_drone_attitude(payload)
+        self.moving_map_widget.update_drone_attitude(payload["yaw"])
 
-        self.adi.setRoll(payload["roll"])
-        self.adi.setPitch(payload["pitch"])
-        self.adi.update()
+        self.attitude_indicator.set_roll(payload["roll"])
+        self.attitude_indicator.set_pitch(payload["pitch"])
+        self.attitude_indicator.update()
+
+    def update_location_local(self, payload: AvrFcmLocationLocalPayload) -> None:
+        """
+        Update euler attitude information.
+        """
+        self.moving_map_widget.update_drone_location(
+            payload["dX"], payload["dY"], payload["dZ"]
+        )
+        self.altitude_indicator.set_altitude(payload["dZ"])
 
     def process_message(self, topic: str, payload: str) -> None:
         """
         Process an incoming message and update the appropriate component
         """
         topic_map = {
-            "avr/fcm/location/local": self.moving_map_widget.update_drone_location,
+            "avr/fcm/location/local": self.update_location_local,
             "avr/fcm/attitude/euler": self.update_euler_attitude,
         }
 
@@ -394,5 +546,9 @@ class MovingMapWidget(BaseTabWidget):
             topic_map[topic](data)
 
     def clear(self) -> None:
-        self.adi.reset()
+        """
+        Reset the widget to a starting state.
+        """
+        self.attitude_indicator.reset()
         self.moving_map_widget.reset()
+        self.altitude_indicator.reset()
