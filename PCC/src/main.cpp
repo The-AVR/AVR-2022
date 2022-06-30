@@ -23,7 +23,7 @@ AVRSerialParser serial(Serial, q);
 #define PWR_PIN 10
 #define LASER_PIN A4
 
-#define MAX_LASER_ON_SECONDS 10
+#define MAX_LASER_ON_SECONDS 0.25
 #define LASER_NEXT_ALLOW_SECONDS 0.5
 
 #define NUM_PIXELS 30
