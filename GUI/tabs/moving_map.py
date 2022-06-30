@@ -199,7 +199,7 @@ class DroneAltitudeWidget(QtWidgets.QWidget):
             0, self.CANVAS_HEIGHT, self.CANVAS_WIDTH, self.CANVAS_HEIGHT, ground_pen
         )
 
-        sub_layout = QtWidgets.QVBoxLayout(self)
+        sub_layout = QtWidgets.QVBoxLayout()
         sub_layout.addStretch()
 
         # add altimeter
@@ -429,7 +429,8 @@ class MovingMapGraphicsWidget(QtWidgets.QWidget):
         )
 
         # set limit on the number of tracks that are drawn
-        if len(self._tracks) > 10000:
+        # too high of a limit will cause track removal to slow noticably
+        if len(self._tracks) > 5000:
             self.canvas.removeItem(self._tracks.pop(0))
 
         # move icon
