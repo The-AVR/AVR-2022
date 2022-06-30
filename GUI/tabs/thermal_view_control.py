@@ -304,8 +304,8 @@ class ThermalViewControlWidget(BaseTabWidget):
         sub_joystick_layout = QtWidgets.QHBoxLayout()
         joystick_layout.addLayout(sub_joystick_layout)
 
-        joystick = JoystickWidget(self)
-        sub_joystick_layout.addWidget(joystick)
+        self.joystick = JoystickWidget(self)
+        sub_joystick_layout.addWidget(self.joystick)
 
         set_laser_on_button = QtWidgets.QPushButton("Laser On")
         joystick_layout.addWidget(set_laser_on_button)
@@ -316,7 +316,7 @@ class ThermalViewControlWidget(BaseTabWidget):
         layout.addWidget(joystick_groupbox)
 
         # connect signals
-        joystick.emit_message.connect(self.emit_message.emit)
+        self.joystick.emit_message.connect(self.emit_message.emit)
 
         set_laser_on_button.clicked.connect(  # type: ignore
             lambda: self.send_message("avr/pcm/set_laser_on", AvrPcmSetLaserOnPayload())
@@ -348,3 +348,6 @@ class ThermalViewControlWidget(BaseTabWidget):
         # update the canvase
         # pixel_ints = data
         self.viewer.update_canvas(pixel_ints)
+
+    def clear(self) -> None:
+        self.viewer.canvas.clear()

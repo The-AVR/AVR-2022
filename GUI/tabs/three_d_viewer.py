@@ -9,7 +9,7 @@ from bell.avr.mqtt.payloads import (
 )
 from lib.config import DATA_DIR
 from pyqtgraph.opengl import GLGridItem, GLMeshItem, GLViewWidget, MeshData
-from PySide6 import QtGui, QtWidgets, Qt3DRender
+from PySide6 import Qt3DRender, QtGui, QtWidgets
 
 from .base import BaseTabWidget
 

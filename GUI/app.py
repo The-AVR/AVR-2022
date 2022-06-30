@@ -5,12 +5,11 @@ from lib.qt_icon import set_icon
 from loguru import logger
 from PySide6 import QtCore, QtGui, QtWidgets
 from tabs.connection.main import MainConnectionWidget
+from tabs.moving_map import MovingMapWidget
 from tabs.mqtt_debug import MQTTDebugWidget
 from tabs.mqtt_logger import MQTTLoggerWidget
 from tabs.pcc_tester import PCCTesterWidget
 from tabs.thermal_view_control import ThermalViewControlWidget
-# from tabs.three_d_viewer import ThreeDViewerWidget
-from tabs.moving_map import MovingMapWidget
 from tabs.vmc_control import VMCControlWidget
 from tabs.vmc_telemetry import VMCTelemetryWidget
 
@@ -244,6 +243,7 @@ class MainWindow(QtWidgets.QWidget):
             self.vmc_control_widget,
             self.vmc_telemetry_widget,
             self.thermal_view_control_widget,
+            self.moving_map_widget
         ]
 
         # disable/enable widgets
@@ -260,6 +260,8 @@ class MainWindow(QtWidgets.QWidget):
             self.mqtt_debug_widget.clear()
             self.mqtt_logger_widget.clear()
             self.vmc_telemetry_widget.clear()
+            self.thermal_view_control_widget.clear()
+            self.moving_map_widget.clear()
 
     def set_serial_connected_state(self, connection_state: ConnectionState) -> None:
         self.serial_connected = connection_state == ConnectionState.connected
