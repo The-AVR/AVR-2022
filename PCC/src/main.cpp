@@ -2,6 +2,12 @@
 #include "serial_lib.hpp"
 #include "avr_led.hpp"
 #include "avr_servo.hpp"
+#include <chrono>
+
+using std::chrono::duration_cast;
+using std::chrono::milliseconds;
+using std::chrono::seconds;
+using std::chrono::system_clock;
 
 //////////////// S E R I A L  I N T E R F A C E ///////////////
 uint16_t queue_len = 10;
@@ -16,6 +22,9 @@ AVRSerialParser serial(Serial, q);
 #define NEO_PIN 5
 #define PWR_PIN 10
 #define LASER_PIN A4
+
+#define MAX_LASER_ON_SECONDS 10
+#define LASER_NEXT_ALLOW_SECONDS 0.5
 
 #define NUM_PIXELS 30
 
@@ -55,12 +64,15 @@ void setup()
   Serial.println("init");
 }
 
+double next_allow_laser = 0;
+double next_force_laser_off = 999999999999;
+long long int now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 unsigned long light_on = 0;
 
 void loop()
 {
   // put your main code here, to run repeatedly:
-
+  now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
   serial.poll();
 
   if (serial.available > 0)
@@ -142,12 +154,10 @@ void loop()
     break;
     case SET_LASER_ON:
     {
-      digitalWrite(LASER_PIN,HIGH);
-    }
-    break;
-    case SET_LASER_OFF:
-    {
-      digitalWrite(LASER_PIN,LOW);
+      if (next_allow_laser > now) {
+        digitalWrite(LASER_PIN,HIGH);
+        next_force_laser_off = now + MAX_LASER_ON_SECONDS * 1000;
+      }
     }
     break;
     }
@@ -157,6 +167,14 @@ void loop()
   {
     digitalWrite(LED_BUILTIN, LOW);
   }
+
+  if (now > next_force_laser_off)
+  {
+    digitalWrite(LASER_PIN,LOW);
+    next_force_laser_off = 999999999999;
+    next_allow_laser = now + LASER_NEXT_ALLOW_SECONDS * 1000;
+  }
+
   strip.run();
   onboard.run();
 }
