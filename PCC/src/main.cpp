@@ -2,12 +2,6 @@
 #include "serial_lib.hpp"
 #include "avr_led.hpp"
 #include "avr_servo.hpp"
-#include <chrono>
-
-using std::chrono::duration_cast;
-using std::chrono::milliseconds;
-using std::chrono::seconds;
-using std::chrono::system_clock;
 
 //////////////// S E R I A L  I N T E R F A C E ///////////////
 uint16_t queue_len = 10;
