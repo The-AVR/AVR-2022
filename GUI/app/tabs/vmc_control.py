@@ -4,7 +4,6 @@ from typing import Literal, Tuple
 
 from bell.avr.mqtt.payloads import (
     AvrAutonomousPayload,
-    AvrPcmResetPayload,
     AvrPcmSetBaseColorPayload,
     AvrPcmSetServoOpenClosePayload,
 )

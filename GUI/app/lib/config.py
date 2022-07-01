@@ -7,7 +7,7 @@ if getattr(sys, "frozen", False):
     DATA_DIR = sys._MEIPASS  # type: ignore
     ROOT_DIR = os.path.dirname(sys.executable)
 else:
-    DATA_DIR = os.path.join(os.path.dirname(__file__), "..")
+    DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..")
     ROOT_DIR = DATA_DIR
 
 # root dir is the directory of the main entrypoint

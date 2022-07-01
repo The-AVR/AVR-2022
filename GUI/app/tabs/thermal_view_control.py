@@ -8,14 +8,15 @@ from typing import List, Optional, Tuple
 import colour
 import numpy as np
 import scipy.interpolate
-from app.lib.calc import constrain
-from app.tabs.base import BaseTabWidget
 from bell.avr.mqtt.payloads import (
     AvrPcmSetLaserOffPayload,
     AvrPcmSetLaserOnPayload,
     AvrPcmSetServoPctPayload,
 )
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from ..lib.calc import constrain
+from .base import BaseTabWidget
 
 
 def map_value(

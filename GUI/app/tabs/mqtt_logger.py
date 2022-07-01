@@ -6,9 +6,10 @@ import os
 from io import TextIOWrapper
 from typing import Optional
 
-from app.lib.config import config
-from app.tabs.base import BaseTabWidget
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from ..lib.config import config
+from .base import BaseTabWidget
 
 
 class LogFileViewWidget(QtWidgets.QTreeView):

@@ -2,10 +2,11 @@ from __future__ import annotations
 
 from typing import List, Literal
 
-from app.tabs.base import BaseTabWidget
-from app.tabs.connection.serial import SerialClient
 from bell.avr.serial.pcc import PeripheralControlComputer
 from PySide6 import QtCore, QtWidgets
+
+from .base import BaseTabWidget
+from .connection.serial import SerialClient
 
 
 class PCCTesterWidget(BaseTabWidget):

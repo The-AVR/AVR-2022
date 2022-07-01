@@ -12,5 +12,4 @@ def normalize_value(value: float, min_value: float, max_value: float) -> float:
 
     value_range = max_value - min_value
     relative_value = value - min_value
-    norm_value = relative_value / value_range
-    return norm_value
+    return relative_value / value_range

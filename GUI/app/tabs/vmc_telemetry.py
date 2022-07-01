@@ -3,9 +3,6 @@ from __future__ import annotations
 import json
 from typing import Dict
 
-from app.lib.color import smear_color
-from app.lib.widgets import DisplayLineEdit, StatusLabel
-from app.tabs.base import BaseTabWidget
 from bell.avr.mqtt.payloads import (
     AvrFcmAttitudeEulerPayload,
     AvrFcmBatteryPayload,
@@ -15,6 +12,10 @@ from bell.avr.mqtt.payloads import (
     AvrFcmStatusPayload,
 )
 from PySide6 import QtCore, QtWidgets
+
+from ..lib.color import smear_color
+from ..lib.widgets import DisplayLineEdit, StatusLabel
+from .base import BaseTabWidget
 
 
 class VMCTelemetryWidget(BaseTabWidget):

@@ -3,8 +3,9 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from app.lib.qt_icon import set_icon
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from ..lib.qt_icon import set_icon
 
 
 class BaseTabWidget(QtWidgets.QWidget):
