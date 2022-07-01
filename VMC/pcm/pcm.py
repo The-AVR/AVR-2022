@@ -2,8 +2,7 @@ from bell.avr.mqtt.client import MQTTModule
 from bell.avr.mqtt.payloads import (
     AvrPcmResetPayload,
     AvrPcmSetBaseColorPayload,
-    AvrPcmSetLaserOffPayload,
-    AvrPcmSetLaserOnPayload,
+    AvrPcmFireLaserPayload,
     AvrPcmSetServoMaxPayload,
     AvrPcmSetServoMinPayload,
     AvrPcmSetServoOpenClosePayload,
@@ -71,7 +70,7 @@ class PeripheralControlModule(MQTTModule):
         percent = payload["percent"]
         self.pcc.set_servo_pct(servo, percent)
 
-    def fire_laser(self, payload: AvrPcmSetLaserOnPayload) -> None:
+    def fire_laser(self, payload: AvrPcmFireLaserPayload) -> None:
         self.pcc.fire_laser()
 
     def reset(self, payload: AvrPcmResetPayload) -> None:

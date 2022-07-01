@@ -9,8 +9,7 @@ import colour
 import numpy as np
 import scipy.interpolate
 from bell.avr.mqtt.payloads import (
-    AvrPcmSetLaserOffPayload,
-    AvrPcmSetLaserOnPayload,
+    AvrPcmFireLaserPayload,
     AvrPcmSetServoPctPayload,
 )
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -316,7 +315,7 @@ class ThermalViewControlWidget(BaseTabWidget):
         joystick.emit_message.connect(self.emit_message.emit)
 
         fire_laser_button.clicked.connect(  # type: ignore
-            lambda: self.send_message("avr/pcm/fire_laser", AvrPcmSetLaserOnPayload())
+            lambda: self.send_message("avr/pcm/fire_laser", AvrPcmFireLaserPayload())
         )
 
         # don't allow us to shrink below size hint
