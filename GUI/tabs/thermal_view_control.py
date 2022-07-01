@@ -310,9 +310,6 @@ class ThermalViewControlWidget(BaseTabWidget):
         fire_laser_button = QtWidgets.QPushButton("Laser On")
         joystick_layout.addWidget(fire_laser_button)
 
-        set_laser_off_button = QtWidgets.QPushButton("Laser Off")
-        joystick_layout.addWidget(set_laser_off_button)
-
         layout.addWidget(joystick_groupbox)
 
         # connect signals
@@ -320,11 +317,6 @@ class ThermalViewControlWidget(BaseTabWidget):
 
         fire_laser_button.clicked.connect(  # type: ignore
             lambda: self.send_message("avr/pcm/fire_laser", AvrPcmSetLaserOnPayload())
-        )
-        set_laser_off_button.clicked.connect(  # type: ignore
-            lambda: self.send_message(
-                "avr/pcm/set_laser_off", AvrPcmSetLaserOffPayload()
-            )
         )
 
         # don't allow us to shrink below size hint
