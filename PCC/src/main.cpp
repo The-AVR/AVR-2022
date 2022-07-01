@@ -23,8 +23,10 @@ AVRSerialParser serial(Serial, q);
 #define PWR_PIN 10
 #define LASER_PIN A4
 
-#define MAX_LASER_ON_SECONDS 0.25
-#define LASER_NEXT_ALLOW_SECONDS 0.5
+// Seconds the laser is allowed to be on for
+#define LASER_ON_SECONDS 0.25
+// Seconds before the laser can be activated again
+#define LASER_NEXT_ALLOW_SECONDS 0.75
 
 #define NUM_PIXELS 30
 
@@ -64,15 +66,13 @@ void setup()
   Serial.println("init");
 }
 
-double next_allow_laser = 0;
+double next_allow_laser = -1;
 double next_force_laser_off = 999999999999;
-long long int now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 unsigned long light_on = 0;
 
 void loop()
 {
   // put your main code here, to run repeatedly:
-  now = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
   serial.poll();
 
   if (serial.available > 0)
@@ -154,9 +154,10 @@ void loop()
     break;
     case SET_LASER_ON:
     {
-      if (next_allow_laser > now) {
+      if (millis() > next_allow_laser) {
         digitalWrite(LASER_PIN,HIGH);
-        next_force_laser_off = now + MAX_LASER_ON_SECONDS * 1000;
+        next_force_laser_off = millis() + MAX_LASER_ON_SECONDS * 1000;
+        next_allow_laser = next_force_laser_off + LASER_NEXT_ALLOW_SECONDS * 1000;
       }
     }
     break;
@@ -168,11 +169,10 @@ void loop()
     digitalWrite(LED_BUILTIN, LOW);
   }
 
-  if (now > next_force_laser_off)
+  if (millis() > next_force_laser_off)
   {
     digitalWrite(LASER_PIN,LOW);
     next_force_laser_off = 999999999999;
-    next_allow_laser = now + LASER_NEXT_ALLOW_SECONDS * 1000;
   }
 
   strip.run();
