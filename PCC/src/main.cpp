@@ -146,7 +146,7 @@ void loop()
       //Serial.printf("Res: %d\n",res);
     }
     break;
-    case SET_LASER_ON:
+    case FIRE_LASER:
     {
       if (millis() > next_allow_laser) {
         digitalWrite(LASER_PIN,HIGH);

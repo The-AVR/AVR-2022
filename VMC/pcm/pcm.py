@@ -33,7 +33,7 @@ class PeripheralControlModule(MQTTModule):
             "avr/pcm/set_servo_open_close": self.set_servo_open_close,
             "avr/pcm/set_servo_min": self.set_servo_min,
             "avr/pcm/set_servo_max": self.set_servo_max,
-            "avr/pcm/set_laser_on": self.set_laser_on,
+            "avr/pcm/fire_laser": self.fire_laser,
             "avr/pcm/set_laser_off": self.set_laser_off,
             "avr/pcm/set_servo_pct": self.set_servo_pct,
             "avr/pcm/reset": self.reset,
@@ -72,8 +72,8 @@ class PeripheralControlModule(MQTTModule):
         percent = payload["percent"]
         self.pcc.set_servo_pct(servo, percent)
 
-    def set_laser_on(self, payload: AvrPcmSetLaserOnPayload) -> None:
-        self.pcc.set_laser_on()
+    def fire_laser(self, payload: AvrPcmSetLaserOnPayload) -> None:
+        self.pcc.fire_laser()
 
     def set_laser_off(self, payload: AvrPcmSetLaserOffPayload) -> None:
         self.pcc.set_laser_off()
