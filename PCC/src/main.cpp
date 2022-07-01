@@ -151,7 +151,7 @@ void loop()
       if (millis() > next_allow_laser) {
         digitalWrite(LASER_PIN,HIGH);
         next_force_laser_off = millis() + LASER_ON_SECONDS * 1000;
-        next_allow_laser = next_force_laser_off + LASER_NEXT_ALLOW_SECONDS * 1000;
+        next_allow_laser = millis() + LASER_NEXT_ALLOW_SECONDS * 1000;
       }
     }
     break;
