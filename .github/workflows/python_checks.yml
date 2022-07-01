@@ -28,13 +28,13 @@ jobs:
 
       - name: Setup Python (No Caching)
         if: inputs.cache == false
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
       - name: Setup Python (Caching)
         if: inputs.cache == true
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
           cache-dependency-path: ${{ inputs.project }}
