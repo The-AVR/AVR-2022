@@ -1,9 +1,9 @@
 from typing import Any
 
 import paho.mqtt.client as mqtt
-from lib.config import config
-from lib.enums import ConnectionState
-from lib.widgets import IntLineEdit
+from app.lib.enums import ConnectionState
+from app.lib.widgets import IntLineEdit
+from app.lib.config import config
 from loguru import logger
 from PySide6 import QtCore, QtGui, QtWidgets
 

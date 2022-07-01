@@ -3,13 +3,13 @@ import math
 import os
 from typing import List, Union
 
+from app.lib.calc import normalize_value
+from app.lib.color import smear_color
+from app.lib.config import IMG_DIR
 from bell.avr.mqtt.payloads import (
     AvrFcmAttitudeEulerPayload,
     AvrFcmLocationLocalPayload,
 )
-from lib.calc import normalize_value
-from lib.color import smear_color
-from lib.config import IMG_DIR
 from PySide6 import QtCore, QtGui, QtSvgWidgets, QtWidgets
 
 from .base import BaseTabWidget

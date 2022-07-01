@@ -1,18 +1,19 @@
 import sys
 
-from lib.enums import ConnectionState
-from lib.qt_icon import set_icon
+from app.lib.enums import ConnectionState
+from app.lib.qt_icon import set_icon
+from app.tabs.connection.main import MainConnectionWidget
+from app.tabs.moving_map import MovingMapWidget
+from app.tabs.mqtt_debug import MQTTDebugWidget
+from app.tabs.mqtt_logger import MQTTLoggerWidget
+from app.tabs.pcc_tester import PCCTesterWidget
+from app.tabs.thermal_view_control import ThermalViewControlWidget
+from app.tabs.three_d_viewer import ThreeDViewerWidget
+from app.tabs.vmc_control import VMCControlWidget
+from app.tabs.vmc_telemetry import VMCTelemetryWidget
 from loguru import logger
 from PySide6 import QtCore, QtGui, QtWidgets
-from tabs.connection.main import MainConnectionWidget
-from tabs.moving_map import MovingMapWidget
-from tabs.mqtt_debug import MQTTDebugWidget
-from tabs.mqtt_logger import MQTTLoggerWidget
-from tabs.pcc_tester import PCCTesterWidget
-from tabs.thermal_view_control import ThermalViewControlWidget
-from tabs.vmc_control import VMCControlWidget
-from tabs.vmc_telemetry import VMCTelemetryWidget
-from tabs.three_d_viewer import ThreeDViewerWidget
+
 
 class TabBar(QtWidgets.QTabBar):
     """
@@ -244,7 +245,7 @@ class MainWindow(QtWidgets.QWidget):
             self.vmc_control_widget,
             self.vmc_telemetry_widget,
             self.thermal_view_control_widget,
-            self.moving_map_widget
+            self.moving_map_widget,
         ]
 
         # disable/enable widgets

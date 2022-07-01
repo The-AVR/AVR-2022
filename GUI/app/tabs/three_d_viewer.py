@@ -3,15 +3,14 @@ import os
 
 import numpy as np
 import stl
+from app.tabs.base import BaseTabWidget
 from bell.avr.mqtt.payloads import (
     AvrFcmAttitudeEulerPayload,
     AvrFcmLocationLocalPayload,
 )
-from lib.config import DATA_DIR
+from app.lib.config import DATA_DIR
 from pyqtgraph.opengl import GLGridItem, GLMeshItem, GLViewWidget, MeshData
 from PySide6 import Qt3DRender, QtGui, QtWidgets
-
-from .base import BaseTabWidget
 
 
 class AbsoluteGLMeshItem(GLMeshItem):

@@ -4,9 +4,8 @@ import contextlib
 import json
 from typing import Any, Dict, List, Optional, Tuple
 
+from app.tabs.base import BaseTabWidget
 from PySide6 import QtCore, QtGui, QtWidgets
-
-from .base import BaseTabWidget
 
 
 def _get_or_create_child(

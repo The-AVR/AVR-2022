@@ -1,11 +1,11 @@
 import threading
 import time
 
+from app.lib.config import config
+from app.lib.enums import ConnectionState
+from app.lib.widgets import IntLineEdit
 from bell.avr.serial.client import SerialLoop
 from bell.avr.serial.ports import list_serial_ports
-from lib.config import config
-from lib.enums import ConnectionState
-from lib.widgets import IntLineEdit
 from loguru import logger
 from PySide6 import QtCore, QtGui, QtWidgets
 
