@@ -8,10 +8,7 @@ from typing import List, Optional, Tuple
 import colour
 import numpy as np
 import scipy.interpolate
-from bell.avr.mqtt.payloads import (
-    AvrPcmFireLaserPayload,
-    AvrPcmSetServoPctPayload,
-)
+from bell.avr.mqtt.payloads import AvrPcmFireLaserPayload, AvrPcmSetServoPctPayload
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from .base import BaseTabWidget

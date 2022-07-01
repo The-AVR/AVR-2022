@@ -1,8 +1,8 @@
 from bell.avr.mqtt.client import MQTTModule
 from bell.avr.mqtt.payloads import (
+    AvrPcmFireLaserPayload,
     AvrPcmResetPayload,
     AvrPcmSetBaseColorPayload,
-    AvrPcmFireLaserPayload,
     AvrPcmSetServoMaxPayload,
     AvrPcmSetServoMinPayload,
     AvrPcmSetServoOpenClosePayload,
