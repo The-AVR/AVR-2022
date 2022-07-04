@@ -1,5 +1,11 @@
 # Documentation
 
+First off, I recommend cloning this `docs` branch into a seperate checkout entirely:
+
+```bash
+git clone --branch docs --recurse-submodules https://github.com/bellflight/AVR-2022 AVR-2022-Docs
+```
+
 ## Tooling
 
 The generate the static site, we use the [Hugo](https://gohugo.io/)
