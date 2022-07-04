@@ -53,7 +53,14 @@ you'll need to wrap it in quotes as shown above.
 
 ## Install
 
-Run the following commands in sequence:
+{{% pageinfo color="warning" %}}
+Your Jetson should already have the software installed for you.
+These instructions are provided in case you need to wipe your Jetson and start fresh.
+
+Please jump straight to the [updating](#updating) section as you will
+still need to update the software and run the setup script, in order
+to download settings for your Zed Mini camera.
+{{% /pageinfo %}}
 
 ```bash
 git clone --recurse-submodules https://github.com/bellflight/AVR-2022 ~/AVR-2022
@@ -70,8 +77,7 @@ and then executes the setup script.
 
 This setup script will automatically install and configure
 everything needed on your Jetson to get it ready for competition.
-This script does download approximately
-10GB worth of data the first time, so depending on your
+This script does do operating system updates, so depending on your
 internet connection, it may take a while to run.
 
 At the end of the setup script, it will perform a few self-tests
@@ -183,7 +189,8 @@ Obviously, make sure your ZED Mini camera is plugged in to the Jetson. If not,
 plug it in and re-run the setup script.
 
 However, if it is, this sometimes happens because of a finnicky USB detection.
-Try running the setup script once or twice more until it picks it up and works.
+Try running the setup script once or twice more, and unplug the camera and plug
+it back in until it picks it up and works.
 
 ### Connection Issues
 
