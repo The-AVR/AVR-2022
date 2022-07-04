@@ -27,7 +27,6 @@ py -3 --version
 
 If your installation was successful, the output window will show the version of Python you have installed.
 
-
 ## Setting Up a Project
 
 Let's set up a central location to store your future projects. Start by creating a "Projects" folder somewhere on your PC. Within this folder, make a "Hello World" folder. This is where we will create your first project.
@@ -39,7 +38,6 @@ In a blank VS Code window, open up this folder:
 In your new workspace, create a new file called "hello.py". The ".py" file format denotes a script written in python.
 
 In this file, type the following:
-
 
 ```python
 print("Hello World")
