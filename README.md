@@ -19,7 +19,7 @@ This is a `git` submodule, so make sure you've initialized this repo's submodule
 git submodule update --init --recursive
 ```
 
-To build or preview the site, make sure you have `npm` installed.
+To build or preview the site, make sure you have `npm` and `node` version 16+ installed.
 To install all the dependencies, simply run:
 
 ```bash

@@ -38,14 +38,30 @@ and download and install the `putty-64bit-<version>-installer.msi` file.
 
 ### MacOS
 
-TODO
+Rather than using PuTTy, it's much easier to open a terminal and simply run:
+
+```bash
+screen ttyACM0 115200
+```
 
 ### Linux
 
+You can follow the same steps as on MacOS
+(after installing `screen` with `sudo apt install screen`),
+but if you like a GUI, you can
+install PuTTy with:
+
 ```bash
 sudo apt install putty
+```
+
+and launch PuTTy with:
+
+```bash
 sudo putty
 ```
+
+### Connecting
 
 Now, if you want to power the Jetson via USB (if the Jetson is not connected to
 a wall adapter or a battery) remove the jumper behind the barrel jack.
