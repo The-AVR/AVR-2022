@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import platform
 import shutil
@@ -6,13 +7,14 @@ import subprocess
 import sys
 from typing import List
 
-# warning, v1.10.2 does not appear to build anymore
-PX4_VERSION = "v1.13.0"
-
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 DIST_DIR = os.path.join(THIS_DIR, "dist")
 
 PX4_DIR = os.path.join(THIS_DIR, "build", "PX4-Autopilot")
+
+# warning, v1.10.2 does not appear to build anymore
+with open(os.path.join(THIS_DIR, "version.json"), "r") as fp:
+    PX4_VERSION = json.load(fp)
 
 if PX4_VERSION < "v1.13.0":
     PYMAVLINK_DIR = os.path.join(THIS_DIR, "build", "pymavlink")
@@ -60,7 +62,7 @@ def clone_px4() -> None:
         # reset checkout if we already have it
         # this will fail on PX4 version changes
         print2("Resetting PX4 checkout")
-        subprocess.check_call(["git", "fetch", "origin", "--tags"], cwd=PX4_DIR)
+        subprocess.check_call(["git", "fetch", "origin"], cwd=PX4_DIR)
         subprocess.check_call(["git", "checkout", PX4_VERSION], cwd=PX4_DIR)
         subprocess.check_call(["git", "reset", "--hard", PX4_VERSION], cwd=PX4_DIR)
         subprocess.check_call(["git", "pull", "--recurse-submodules"], cwd=PX4_DIR)

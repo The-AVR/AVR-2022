@@ -27,10 +27,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: PX4/build
-          key: px4-firmware-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
-          restore-keys: |
-            px4-firmware-${{ hashFiles('PX4/patches/**') }}
-            px4-package-${{ hashFiles('PX4/patches/**') }}
+          key: px4-${{ hashFiles('PX4/**') }}
 
       - name: Build PX4 Firmware
         run: python3 PX4/build.py --px4
