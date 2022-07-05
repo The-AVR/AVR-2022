@@ -229,8 +229,13 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
         clean_directory(px4_build_dir, [".px4"])
         clean_directory(DIST_DIR, [".px4"])
 
-        # pixhawk v5X and NXP
-        targets = ["px4_fmu-v5x_default", "nxp_fmuk66-v3_default"]
+        # pixhawk v5X, v6x, v6c and NXP
+        targets = [
+            "px4_fmu-v5x_default",
+            "px4_fmu-v6c_default",
+            "px4_fmu-v6x_default",
+            "nxp_fmuk66-v3_default",
+        ]
         for target in targets:
             subprocess.check_call(["make", target, "-j"], cwd=PX4_DIR)
             shutil.copyfile(
