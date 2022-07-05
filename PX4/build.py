@@ -60,7 +60,7 @@ def clone_px4() -> None:
         # reset checkout if we already have it
         # this will fail on PX4 version changes
         print2("Resetting PX4 checkout")
-        subprocess.check_call(["git", "fetch", "origin"], cwd=PX4_DIR)
+        subprocess.check_call(["git", "fetch", "origin", "--tags"], cwd=PX4_DIR)
         subprocess.check_call(["git", "checkout", PX4_VERSION], cwd=PX4_DIR)
         subprocess.check_call(["git", "reset", "--hard", PX4_VERSION], cwd=PX4_DIR)
         subprocess.check_call(["git", "pull", "--recurse-submodules"], cwd=PX4_DIR)
