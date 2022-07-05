@@ -27,7 +27,11 @@ jobs:
         uses: actions/cache@v3
         with:
           path: PX4/build
-          key: px4-${{ hashFiles('PX4/**') }}
+          key: px4-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+          # changing PX4 version requires a full re-checkout
+          restore-keys: |
+            px4-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}
+            px4-${{ hashFiles('PX4/version.json') }}
 
       - name: Build PX4 Firmware
         run: python3 PX4/build.py --px4
