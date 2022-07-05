@@ -36,11 +36,15 @@ jobs:
         uses: actions/cache@v3
         with:
           path: PX4/build
-          key: px4-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+          # can't run hashfiles on the build directory because the contents change
+          key: px4-pymavlink-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
           # changing PX4 version requires a full re-checkout
           restore-keys: |
-            px4-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}
-            px4-${{ hashFiles('PX4/version.json') }}
+            px4-pymavlink-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}
+            px4-pymavlink-${{ hashFiles('PX4/version.json') }}
+            px4-firmware-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+            px4-firmware-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}
+            px4-firmware-${{ hashFiles('PX4/version.json') }}
 
       - name: Build Custom Pymavlink Package
         if: inputs.image == 'fcm'
