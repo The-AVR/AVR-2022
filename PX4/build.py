@@ -7,7 +7,7 @@ import sys
 from typing import List
 
 # warning, v1.10.2 does not appear to build anymore
-PX4_VERSION = "v1.12.3"
+PX4_VERSION = "v1.13.0"
 
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 DIST_DIR = os.path.join(THIS_DIR, "dist")
