@@ -8,7 +8,6 @@ from app.tabs.mqtt_debug import MQTTDebugWidget
 from app.tabs.mqtt_logger import MQTTLoggerWidget
 from app.tabs.pcc_tester import PCCTesterWidget
 from app.tabs.thermal_view_control import ThermalViewControlWidget
-from app.tabs.three_d_viewer import ThreeDViewerWidget
 from app.tabs.vmc_control import VMCControlWidget
 from app.tabs.vmc_telemetry import VMCTelemetryWidget
 from loguru import logger
@@ -145,17 +144,6 @@ class MainWindow(QtWidgets.QWidget):
         self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
             self.vmc_telemetry_widget.process_message
         )
-
-        # 3D viewer widget
-
-        # self.three_d_viewer_widget = ThreeDViewerWidget(self)
-        # self.three_d_viewer_widget.build()
-        # self.three_d_viewer_widget.pop_in.connect(self.tabs.pop_in)
-        # self.tabs.addTab(self.three_d_viewer_widget, self.three_d_viewer_widget.windowTitle())
-
-        # self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
-        #     self.three_d_viewer_widget.process_message
-        # )
 
         # moving map widget
 

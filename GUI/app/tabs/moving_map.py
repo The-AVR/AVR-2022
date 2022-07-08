@@ -9,10 +9,45 @@ from bell.avr.mqtt.payloads import (
 )
 from PySide6 import QtCore, QtGui, QtSvgWidgets, QtWidgets
 
-from ..lib.calc import normalize_value
+from ..lib.calc import constrain, normalize_value
 from ..lib.color import smear_color
 from ..lib.config import IMG_DIR
 from .base import BaseTabWidget
+
+
+class ResizedQGraphicsSvgItem(QtSvgWidgets.QGraphicsSvgItem):
+    """
+    A QGraphicsSvgItem that is resized to the given width and height.
+    The aspect ratio is not changed, but rather the SVG is scaled to fit within
+    the given dimensions. Also automatically sets the transformOriginPoint
+    to the center.
+    """
+
+    def __init__(self, fileName: str, width: float, height: float):
+        super().__init__(fileName)
+
+        self._width = width
+        self._height = height
+
+        starting_width = self.boundingRect().width()
+        starting_height = self.boundingRect().height()
+
+        scale_x = width / starting_width
+        scale_y = height / starting_height
+
+        self.base_scale = min(scale_x, scale_y)
+        self.setScale(1)
+
+        self.setTransformOriginPoint(starting_width / 2, starting_height / 2)
+
+    def setScale(self, scale: float) -> None:
+        """
+        Override the setScale method to incorporate our faux scaling.
+        """
+        super().setScale(scale * self.base_scale)
+
+    def scale(self) -> float:
+        return super().scale() / self.base_scale
 
 
 class AttitudeIndicator(QtWidgets.QGraphicsView):
@@ -116,17 +151,13 @@ class AttitudeIndicator(QtWidgets.QGraphicsView):
         """
         Set the current roll value.
         """
-        self._roll = roll
-        self._roll = max(self._roll, -180)
-        self._roll = min(self._roll, 180)
+        self._roll = constrain(roll, -180, 180)
 
     def set_pitch(self, pitch: float) -> None:
         """
         Set the current pitch value.
         """
-        self._pitch = pitch
-        self._pitch = max(self._pitch, -25)
-        self._pitch = min(self._pitch, 25)
+        self._pitch = constrain(pitch, -25, 25)
 
     def reset(self) -> None:
         """
@@ -165,8 +196,9 @@ class DroneAltitudeWidget(QtWidgets.QWidget):
 
     GROUND_WIDTH = 3
 
-    DRONE_ICON_WIDTH = 50
+    DRONE_ICON_WIDTH = 80
     DRONE_ICON_HEIGHT = 50
+    DRONE_ICON_HEIGHT_FUDGE = 35
 
     CANVAS_HEIGHT = 240
     CANVAS_WIDTH = 120
@@ -187,10 +219,12 @@ class DroneAltitudeWidget(QtWidgets.QWidget):
         layout.addWidget(self.view)
 
         # add drone icon
-        drone_pixmap = QtGui.QIcon(os.path.join(IMG_DIR, "drone_side_icon.png")).pixmap(
-            self.DRONE_ICON_WIDTH, self.DRONE_ICON_HEIGHT
+        self.drone_icon = ResizedQGraphicsSvgItem(
+            os.path.join(IMG_DIR, "drone_side_icon.svg"),
+            self.DRONE_ICON_WIDTH,
+            self.DRONE_ICON_HEIGHT,
         )
-        self.drone_icon = self.canvas.addPixmap(drone_pixmap)
+        self.canvas.addItem(self.drone_icon)
 
         # add ground
         ground_pen = QtGui.QPen(QtGui.QColor(120, 90, 8, 255))
@@ -225,11 +259,18 @@ class DroneAltitudeWidget(QtWidgets.QWidget):
         norm_altitude = normalize_value(altitude, 0, 20)
 
         self.drone_icon.setPos(
-            (self.CANVAS_WIDTH / 2) - (self.DRONE_ICON_WIDTH / 2),
+            (self.CANVAS_WIDTH / 2) - (self.drone_icon.boundingRect().width() / 2),
             (
-                (self.CANVAS_HEIGHT * (1 - norm_altitude))
-                - (self.GROUND_WIDTH / 2)
-                - self.DRONE_ICON_HEIGHT
+                (self.CANVAS_HEIGHT * (1 - norm_altitude))  # distance along canvase
+                - (self.GROUND_WIDTH / 2)  # remove ground width
+                - self.drone_icon.boundingRect().height()  # remove icon height as y is at top
+                + (
+                    (
+                        self.drone_icon.boundingRect().width()
+                        - self.drone_icon.boundingRect().height()
+                    )
+                    * self.drone_icon.base_scale
+                )  # account for difference between icon width and height
             ),
         )
         self.altitude_number.display(altitude)
@@ -310,13 +351,6 @@ class InfiniteGridGraphicsScene(QtWidgets.QGraphicsScene):
 
 
 class MovingMapGraphicsWidget(QtWidgets.QWidget):
-
-    HOME_ICON_WIDTH = 50
-    HOME_ICON_HEIGHT = 50
-
-    DRONE_ICON_WIDTH = 80
-    DRONE_ICON_HEIGHT = 80
-
     def __init__(self, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
 
@@ -334,29 +368,24 @@ class MovingMapGraphicsWidget(QtWidgets.QWidget):
         layout.addWidget(self.view)
 
         # add home icon
-        home_pixmap = QtGui.QIcon(os.path.join(IMG_DIR, "home_icon.png")).pixmap(
-            self.HOME_ICON_WIDTH, self.HOME_ICON_HEIGHT
+        self.home_icon = ResizedQGraphicsSvgItem(
+            os.path.join(IMG_DIR, "home_icon.svg"), 50, 50
         )
-        self.home_icon = self.canvas.addPixmap(home_pixmap)
+        self.canvas.addItem(self.home_icon)
         self.home_icon.setPos(
-            -self.HOME_ICON_WIDTH / 2,
-            -self.HOME_ICON_HEIGHT / 2,
+            -self.home_icon.boundingRect().width() / 2,
+            -self.home_icon.boundingRect().height() / 2,
         )
         self.home_icon.setZValue(-10)
 
         # add drone icon
-        drone_pixmap = QtGui.QIcon(os.path.join(IMG_DIR, "drone_top_icon.svg")).pixmap(
-            self.DRONE_ICON_WIDTH, self.DRONE_ICON_HEIGHT
+        self.drone_icon = ResizedQGraphicsSvgItem(
+            os.path.join(IMG_DIR, "drone_top_icon.svg"), 80, 80
         )
-        self.drone_icon = self.canvas.addPixmap(drone_pixmap)
-        self.drone_icon.setTransformOriginPoint(
-            self.DRONE_ICON_WIDTH / 2, self.DRONE_ICON_HEIGHT / 2
-        )
-
-        # center it
+        self.canvas.addItem(self.drone_icon)
         self.drone_icon.setPos(
-            -self.DRONE_ICON_WIDTH / 2,
-            -self.DRONE_ICON_HEIGHT / 2,
+            -self.drone_icon.boundingRect().width() / 2,
+            -self.drone_icon.boundingRect().height() / 2,
         )
         self.drone_icon.setZValue(999)
 
@@ -395,21 +424,31 @@ class MovingMapGraphicsWidget(QtWidgets.QWidget):
         current_drone_corner_y = self.drone_icon.y()
 
         # current center of the drone icon
-        current_drone_center_x = current_drone_corner_x + (self.DRONE_ICON_WIDTH / 2)
-        current_drone_center_y = current_drone_corner_y + (self.DRONE_ICON_HEIGHT / 2)
+        current_drone_center_x = current_drone_corner_x + (
+            self.drone_icon.boundingRect().width() / 2
+        )
+        current_drone_center_y = current_drone_corner_y + (
+            self.drone_icon.boundingRect().height() / 2
+        )
 
         # new center of the drone icon
         new_drone_center_x = y * self.canvas.PIXELS_PER_METER
         new_drone_center_y = -x * self.canvas.PIXELS_PER_METER
 
         # new top-left corner of the drone icon
-        new_drone_corner_x = new_drone_center_x - (self.DRONE_ICON_WIDTH / 2)
-        new_drone_corner_y = new_drone_center_y - (self.DRONE_ICON_HEIGHT / 2)
+        new_drone_corner_x = new_drone_center_x - (
+            self.drone_icon.boundingRect().width() / 2
+        )
+        new_drone_corner_y = new_drone_center_y - (
+            self.drone_icon.boundingRect().height() / 2
+        )
 
-        # go from brown to blue as the altitude increases
+        # go from blue to red as the altitude increases
+        # initially was brown to light blue, but was pointed out that
+        # it was hard to distinguish for color blind individuals
         color = smear_color(
-            (120, 90, 8),
-            (73, 205, 235),
+            (14, 11, 191),
+            (191, 11, 14),
             value=-z,
             min_value=0,
             max_value=20,
@@ -452,8 +491,8 @@ class MovingMapGraphicsWidget(QtWidgets.QWidget):
         Reset the drone icon's position and clear the tracks.
         """
         self.drone_icon.setPos(
-            -self.DRONE_ICON_WIDTH / 2,
-            -self.DRONE_ICON_HEIGHT / 2,
+            -self.drone_icon.boundingRect().width() / 2,
+            -self.drone_icon.boundingRect().height() / 2,
         )
         self.drone_icon.setRotation(0)
 
