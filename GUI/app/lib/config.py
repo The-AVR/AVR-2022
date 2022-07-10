@@ -17,6 +17,7 @@ DATA_DIR = os.path.abspath(DATA_DIR)
 # directory that contains images
 IMG_DIR = os.path.join(DATA_DIR, "assets", "img")
 
+
 class _Config:
     config_file = os.path.join(ROOT_DIR, "settings.json")
 

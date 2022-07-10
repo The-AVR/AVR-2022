@@ -4,6 +4,7 @@ def constrain(value: float, min_value: float, max_value: float) -> float:
     """
     return min(max_value, max(min_value, value))
 
+
 def normalize_value(value: float, min_value: float, max_value: float) -> float:
     """
     Bound and normalize a value within a given range

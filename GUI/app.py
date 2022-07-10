@@ -1,3 +1,4 @@
+import argparse
 import sys
 
 from app.lib.enums import ConnectionState
@@ -292,4 +293,15 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--test-bundle",
+        action="store_true",
+        help="Immediately exit the application with exit code 0, to test bundling",
+    )
+    args = parser.parse_args()
+
+    if args.test_bundle:
+        sys.exit(0)
+
     main()

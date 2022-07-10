@@ -14,6 +14,8 @@ cmd = [
     os.path.join(THIS_DIR, "assets", "img", "logo.ico"),
     "--add-data",
     f"{os.path.join(THIS_DIR, 'assets')}{os.pathsep}{os.path.join('assets')}",
+    "--hidden-import",
+    "PySide6.QtSvg",
 ]
 
 print(cmd)
