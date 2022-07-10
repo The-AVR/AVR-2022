@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import platform
 import shutil
@@ -6,13 +7,14 @@ import subprocess
 import sys
 from typing import List
 
-# warning, v1.10.2 does not appear to build anymore
-PX4_VERSION = "v1.12.3"
-
 THIS_DIR = os.path.abspath(os.path.dirname(__file__))
 DIST_DIR = os.path.join(THIS_DIR, "dist")
 
 PX4_DIR = os.path.join(THIS_DIR, "build", "PX4-Autopilot")
+
+# warning, v1.10.2 does not appear to build anymore
+with open(os.path.join(THIS_DIR, "version.json"), "r") as fp:
+    PX4_VERSION = json.load(fp)
 
 if PX4_VERSION < "v1.13.0":
     PYMAVLINK_DIR = os.path.join(THIS_DIR, "build", "pymavlink")
@@ -94,7 +96,9 @@ def clone_px4() -> None:
     )
 
 
-def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
+def container(
+    build_pymavlink: bool, build_px4: bool, git_hash: str, targets: List[str]
+) -> None:
     # code that runs inside the container
     if PX4_VERSION < "v1.13.0":
         clone_pymavlink()
@@ -229,8 +233,6 @@ def container(build_pymavlink: bool, build_px4: bool, git_hash: str) -> None:
         clean_directory(px4_build_dir, [".px4"])
         clean_directory(DIST_DIR, [".px4"])
 
-        # pixhawk v5X and NXP
-        targets = ["px4_fmu-v5x_default", "nxp_fmuk66-v3_default"]
         for target in targets:
             subprocess.check_call(["make", target, "-j"], cwd=PX4_DIR)
             shutil.copyfile(
@@ -307,6 +309,17 @@ if __name__ == "__main__":
         "--pymavlink", action="store_true", help="Build Pymavlink package"
     )
     parser.add_argument("--px4", action="store_true", help="Build PX4 firmware")
+    # pixhawk v5X, v6x, v6c and NXP
+    parser.add_argument(
+        "--targets",
+        nargs="+",
+        default=[
+            "px4_fmu-v5x_default",
+            "px4_fmu-v6c_default",
+            "px4_fmu-v6x_default",
+            "nxp_fmuk66-v3_default",
+        ],
+    )
 
     args = parser.parse_args()
 
@@ -314,6 +327,6 @@ if __name__ == "__main__":
         parser.error("Sorry, cannot build PX4 on ARM")
 
     if args.container:
-        container(args.pymavlink, args.px4, args.git_hash)
+        container(args.pymavlink, args.px4, args.git_hash, args.targets)
     else:
         host(args.pymavlink, args.px4)

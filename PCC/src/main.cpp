@@ -17,6 +17,11 @@ AVRSerialParser serial(Serial, q);
 #define PWR_PIN 10
 #define LASER_PIN A4
 
+// Seconds the laser is allowed to be on for
+#define LASER_ON_SECONDS 0.25
+// Seconds before the laser can be activated again
+#define LASER_NEXT_ALLOW_SECONDS 0.75
+
 #define NUM_PIXELS 30
 
 AVRLED strip(NEO_PIN, NUM_PIXELS, NEO_GRB);
@@ -55,12 +60,13 @@ void setup()
   Serial.println("init");
 }
 
+double next_allow_laser = -1;
+double next_force_laser_off = 999999999999;
 unsigned long light_on = 0;
 
 void loop()
 {
   // put your main code here, to run repeatedly:
-
   serial.poll();
 
   if (serial.available > 0)
@@ -140,14 +146,13 @@ void loop()
       //Serial.printf("Res: %d\n",res);
     }
     break;
-    case SET_LASER_ON:
+    case FIRE_LASER:
     {
-      digitalWrite(LASER_PIN,HIGH);
-    }
-    break;
-    case SET_LASER_OFF:
-    {
-      digitalWrite(LASER_PIN,LOW);
+      if (millis() > next_allow_laser) {
+        digitalWrite(LASER_PIN,HIGH);
+        next_force_laser_off = millis() + LASER_ON_SECONDS * 1000;
+        next_allow_laser = millis() + LASER_NEXT_ALLOW_SECONDS * 1000;
+      }
     }
     break;
     }
@@ -157,6 +162,13 @@ void loop()
   {
     digitalWrite(LED_BUILTIN, LOW);
   }
+
+  if (millis() > next_force_laser_off)
+  {
+    digitalWrite(LASER_PIN,LOW);
+    next_force_laser_off = 999999999999;
+  }
+
   strip.run();
   onboard.run();
 }
