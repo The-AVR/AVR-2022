@@ -2,7 +2,7 @@ import itertools
 import signal
 import subprocess
 import time
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Tuple
 
 import board
 import neopixel_spi as neopixel
