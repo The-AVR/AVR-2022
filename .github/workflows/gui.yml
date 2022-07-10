@@ -37,7 +37,8 @@ jobs:
         run: python GUI/build.py
 
       - name: Test GUI
-        run: GUI/dist/AVRGUI.*.exe --test-bundle
+        shell: pwsh
+        run: ./GUI/dist/AVRGUI.*.exe --test-bundle
 
       - name: Get Latest Release
         if: github.event_name != 'pull_request'
