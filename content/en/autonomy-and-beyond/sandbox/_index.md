@@ -5,9 +5,6 @@ weight: 6
 
 Your team will need to create a sandbox environment to develop from.
 
-
-
-
 In the
 [GitHub repository](https://github.com/bellflight/AVR-2022/tree/main/VMC/README.md)
 we've provided an area for you to write
@@ -46,10 +43,7 @@ Below is a non-exhaustive list of the kinds of data some of the modules publish:
 - Fusion Module
   - Coordinate Transformed Drone Position
 
-
-
 You can read more about these modules [here.]({{< relref "diving-deeper/architecture" >}})
-
 
 Your task here will be to subscribe to the
 necessary topics above and write your own logic to produce the
