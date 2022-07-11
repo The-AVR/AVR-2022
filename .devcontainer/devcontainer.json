@@ -6,9 +6,9 @@
         "Tyriar.luna-paint",
         "DavidAnson.vscode-markdownlint",
         "esbenp.prettier-vscode",
-        "eg2.vscode-npm-script",
         "tamasfe.even-better-toml",
-        "mushan.vscode-paste-image"
+        "mushan.vscode-paste-image",
+        "kaellarkin.hugo-shortcode-syntax"
     ],
     "postCreateCommand": "npm install && git config --global core.autocrlf input",
     "forwardPorts": [

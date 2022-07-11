@@ -15,36 +15,53 @@ For reference, this is the latest "Jetson Nano Developer Kit SD Card Image" from
 [Nvidia's website](https://developer.nvidia.com/embedded/downloads).
 This is a large file, so it will take a while.
 
-After the `.zip` file finishes downloading, extract this file.
+After the `.zip` file finishes downloading, extract this file, and plug in your
+microSD card.
 
 ## Windows
 
-To flash the SD card, you need to download a tool called Rufus.
+To flash the SD card on Windows, we recommend a tool called Rufus.
 Go to [this page](https://github.com/pbatard/rufus/releases/latest) and download
 the `rufus-<version>.exe` file.
 
 ![Download this installer file](2022-05-20-09-16-54.png)
 
-Once you have the file extracted, go ahead and launch Rufus.
+Go ahead and launch Rufus.
 When you launch the application, it should look something like this:
 
 ![Rufus main window](2022-05-20-09-36-05.png)
 
-1. Make sure the correct device is selected. If your SD card is not blank,
+1. Make sure the correct device is selected. If your microSD card is not blank,
    it will probably have a different label.
 2. Select the `.img` file in the folder you extracted.
 
 ![sd-blob-b01.img](2022-05-20-09-38-54.png)
 
 You will now be able to click the "START" button in Rufus. Go ahead and click this.
-You will get a number of warnings that you're about to format and wipe this SD card.
+You will get a number of warnings that you're about to format and wipe this
+microSD card.
 
 ![Rufus warnings](2022-05-20-09-40-33.png)
 
 Go ahead and click through all of these, you know what you're doing.
-Rufus will begin flashing the SD card and at the end will let you know
+Rufus will begin flashing the microSD card and at the end will let you know
 when it's finished.
 
 ## MacOS/Linux
 
-TODO
+To flash the SD card on MacOS or Linux, we recommend using Balena Etcher.
+Go to [their website](https://www.balena.io/etcher/) and follow
+the instructions to download and install Balena Etcher.
+
+Go ahead and launch Balena Etcher.
+Select the `.img` file in the folder you extracted, and select your microSD card.
+
+![Options selected in Balena Etcher](2022-07-04-15-39-42.png)
+
+Once you hit "Flash", you may be prompted to enter your password
+for super user privileges.
+
+![Enter your account credentials](2022-07-04-15-42-23.png)
+
+Balena Etcher will begin flashing the microSD card and at the end will let you know
+when it's finished.
