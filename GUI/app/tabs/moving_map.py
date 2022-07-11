@@ -258,21 +258,28 @@ class DroneAltitudeWidget(QtWidgets.QWidget):
         # normalize value
         norm_altitude = normalize_value(altitude, 0, 20)
 
-        self.drone_icon.setPos(
-            (self.CANVAS_WIDTH / 2) - (self.drone_icon.boundingRect().width() / 2),
-            (
-                (self.CANVAS_HEIGHT * (1 - norm_altitude))  # distance along canvase
-                - (self.GROUND_WIDTH / 2)  # remove ground width
-                - self.drone_icon.boundingRect().height()  # remove icon height as y is at top
-                + (
-                    (
-                        self.drone_icon.boundingRect().width()
-                        - self.drone_icon.boundingRect().height()
-                    )
-                    * self.drone_icon.base_scale
-                )  # account for difference between icon width and height
-            ),
+        x = (self.CANVAS_WIDTH / 2) - (self.drone_icon.boundingRect().width() / 2)
+
+        # half the width of the ground line, as half is drawn off-screen
+        half_ground_width = self.GROUND_WIDTH / 2
+        # usable canvas area taking out the vertical height occupied by the ground
+        usable_canvas_height = self.CANVAS_HEIGHT - half_ground_width
+        # how tall the drone icon is visually. Qt still positions based on the bounding
+        # rectangle, even if it's being scaled
+        drone_visual_height = (
+            self.drone_icon.boundingRect().height() * self.drone_icon.base_scale
         )
+
+        y = (
+            usable_canvas_height
+            - (norm_altitude * usable_canvas_height)  # distance off the ground
+            - drone_visual_height  # visible height of the icon
+            - (
+                (self.drone_icon.boundingRect().height() - drone_visual_height) / 2
+            )  # difference between actual height and visual height
+        )
+
+        self.drone_icon.setPos(x, y)
         self.altitude_number.display(altitude)
 
     def reset(self) -> None:
