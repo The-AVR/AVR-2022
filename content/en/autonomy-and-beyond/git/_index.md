@@ -5,6 +5,8 @@ weight: 3
 
 In writing software for your drone, you will both need to interact with the sandbox environment as well as collaborate with your peers working on code from different machines. "Git" is built for tracking and managing changes between files. It is a staple of modern code management.
 
+## Windows Install
+
 To install Git, simply select the standalone installer from the [git-scm website](https://git-scm.com/download/win)
 
 Run through the installation process. Once the install is completed, you will need to setup a username and email address for your machine.
@@ -20,3 +22,12 @@ git config --global user.email "email@youremail.com"
 ```
 
 Remember this email, because you will need to add it to your GitHub account later.
+
+## Jetson Install
+
+Git should already be installed on your Jetson. Configure a username and password with the following commands:
+
+```bash
+git config --global user.name Username
+git config --global user.email example@email.com
+```
