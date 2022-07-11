@@ -1,6 +1,5 @@
 import asyncio
 import contextlib
-import datetime
 import json
 import math
 import queue
@@ -36,16 +35,14 @@ class FCMMQTTModule(MQTTModule):
     def __init__(self) -> None:
         super().__init__()
 
-    def _timestamp(self) -> str:
-        return datetime.datetime.now().isoformat()
-
     @try_except()
     def _publish_event(self, name: str, payload: str = "") -> None:
         """
         Create and publish state machine event.
         """
         event = AvrFcmEventsPayload(
-            name=name, payload=payload, timestamp=self._timestamp()
+            name=name,
+            payload=payload,
         )
         self.send_message("avr/fcm/events", event)
 
@@ -265,7 +262,6 @@ class FlightControlComputer(FCMMQTTModule):
             update = AvrFcmBatteryPayload(
                 voltage=battery.voltage_v,
                 soc=battery.remaining_percent * 100.0,
-                timestamp=self._timestamp(),
             )
 
             self.send_message("avr/fcm/battery", update)
@@ -300,7 +296,6 @@ class FlightControlComputer(FCMMQTTModule):
             update = AvrFcmStatusPayload(
                 armed=armed,
                 mode=str(self.fcc_mode),
-                timestamp=self._timestamp(),
             )
 
             self.send_message("avr/fcm/status", update)
@@ -361,7 +356,6 @@ class FlightControlComputer(FCMMQTTModule):
             update = AvrFcmStatusPayload(
                 mode=str(mode),
                 armed=self.is_armed,
-                timestamp=self._timestamp(),
             )
 
             self.send_message("avr/fcm/status", update)
@@ -387,9 +381,7 @@ class FlightControlComputer(FCMMQTTModule):
             e = position.position.east_m
             d = position.position.down_m
 
-            update = AvrFcmLocationLocalPayload(
-                dX=n, dY=e, dZ=d, timestamp=self._timestamp()
-            )
+            update = AvrFcmLocationLocalPayload(dX=n, dY=e, dZ=d)
 
             self.send_message("avr/fcm/location/local", update)
 
@@ -405,7 +397,6 @@ class FlightControlComputer(FCMMQTTModule):
                 lon=position.longitude_deg,
                 alt=position.relative_altitude_m,
                 hdg=self.heading,
-                timestamp=self._timestamp(),
             )
 
             self.send_message("avr/fcm/location/global", update)
@@ -421,7 +412,6 @@ class FlightControlComputer(FCMMQTTModule):
                 lat=home_position.latitude_deg,
                 lon=home_position.longitude_deg,
                 alt=home_position.relative_altitude_m,
-                timestamp=self._timestamp(),
             )
 
             self.send_message("avr/fcm/location/home", update)
@@ -438,14 +428,11 @@ class FlightControlComputer(FCMMQTTModule):
             theta = attitude.pitch_deg
             phi = attitude.yaw_deg
 
-            # TODO data validation?
-
             # do any necessary wrapping here
             update = AvrFcmAttitudeEulerPayload(
                 roll=psi,
                 pitch=theta,
                 yaw=phi,
-                timestamp=self._timestamp(),
             )
 
             heading = (2 * math.pi) + phi if phi < 0 else phi
@@ -471,7 +458,6 @@ class FlightControlComputer(FCMMQTTModule):
                 vX=velocity.north_m_s,
                 vY=velocity.east_m_s,
                 vZ=velocity.down_m_s,
-                timestamp=self._timestamp(),
             )
 
             self.send_message("avr/fcm/velocity", update)
@@ -486,7 +472,6 @@ class FlightControlComputer(FCMMQTTModule):
             update = AvrFcmGpsInfoPayload(
                 num_satellites=gps_info.num_satellites,
                 fix_type=str(gps_info.fix_type),
-                timestamp=self._timestamp(),
             )
 
             self.send_message("avr/fcm/gps_info", update)
@@ -522,7 +507,6 @@ class FlightControlComputer(FCMMQTTModule):
         while True:
             action = {}
             try:
-                # TODO - Casey, 6/27 start here and make action into a dict instead of proto
                 action = self.action_queue.get_nowait()
 
                 if action["payload"] == "":
