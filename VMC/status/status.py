@@ -2,7 +2,7 @@ import itertools
 import signal
 import subprocess
 import time
-from typing import Any, Dict, Optional, Tuple
+from typing import Any, Dict, Tuple
 
 import board
 import neopixel_spi as neopixel
@@ -65,13 +65,9 @@ class StatusModule(MQTTModule):
         super().on_message(client, userdata, msg)
 
     def on_connect(
-        self,
-        client: mqtt.Client,
-        userdata: Any,
-        rc: Any,
-        properties: Optional[mqtt.Properties] = None,
+        self, client: mqtt.Client, userdata: Any, flags: dict, rc: int
     ) -> None:
-        super().on_connect(client, userdata, rc, properties)
+        super().on_connect(client, userdata, flags, rc)
         # additionally subscribe to all topics
         client.subscribe("avr/#")
 
