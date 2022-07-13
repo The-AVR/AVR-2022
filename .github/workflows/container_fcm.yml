@@ -1,0 +1,21 @@
+name: Build Container FCM
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "VMC/fcm/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "VMC/fcm/**"
+
+jobs:
+  fcm:
+    uses: ./.github/workflows/container.yml
+    with:
+      image: "fcm"

@@ -1,0 +1,14 @@
+# https://github.com/DavidAnson/markdownlint/blob/main/schema/.markdownlint.yaml
+
+# line length
+MD013:
+    # bump upd default line length
+    line_length: 88
+    # ignore code blocks with long lines
+    code_blocks: false
+
+# inline HTML
+MD033:
+    # Allowed elements
+    allowed_elements:
+        - "kbd"

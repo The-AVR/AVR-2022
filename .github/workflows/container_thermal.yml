@@ -1,0 +1,21 @@
+name: Build Container Thermal
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "VMC/thermal/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "VMC/thermal/**"
+
+jobs:
+  thermal:
+    uses: ./.github/workflows/container.yml
+    with:
+      image: "thermal"

@@ -1,0 +1,63 @@
+name: Build PX4
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "PX4/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "PX4/**"
+
+jobs:
+  px4-build:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Cache PX4
+        uses: actions/cache@v3
+        with:
+          path: PX4/build
+          key: px4-firmware-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+          restore-keys: |
+            px4-firmware-${{ hashFiles('PX4/patches/**') }}
+            px4-firmware
+            px4-package-${{ hashFiles('PX4/patches/**') }}
+            px4-package
+
+      - name: Build PX4 Firmware
+        run: python3 PX4/build.py --px4
+
+      - name: Get Latest Release
+        if: github.event_name != 'pull_request'
+        id: latest_release
+        uses: gregziegan/fetch-latest-release@v2.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete Existing Firmware
+        if: github.event_name != 'pull_request'
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ steps.latest_release.outputs.tag_name }}
+          assets: '*.px4'
+
+      - name: Upload Firmware to Release
+        if: github.event_name != 'pull_request'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: PX4/dist/*.px4
+          file_glob: true
+          tag: ${{ steps.latest_release.outputs.tag_name }}
+          overwrite: true

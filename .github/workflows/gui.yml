@@ -1,0 +1,62 @@
+name: Build GUI
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "GUI/**"
+  push:
+    branches:
+      - main
+    paths:
+      - "GUI/**"
+
+jobs:
+  gui-build:
+    runs-on: windows-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.9"
+          cache: pip
+          cache-dependency-path: GUI
+
+      - name: Install Packages
+        run: python scripts/install_requirements.py --directory GUI --strict
+
+      - name: Build GUI
+        run: python GUI/build.py
+
+      - name: Get Latest Release
+        if: github.event_name != 'pull_request'
+        id: latest_release
+        uses: gregziegan/fetch-latest-release@v2.0.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Delete Existing GUI
+        if: github.event_name != 'pull_request'
+        uses: mknejp/delete-release-assets@v1
+        with:
+          token: ${{ github.token }}
+          tag: ${{ steps.latest_release.outputs.tag_name }}
+          assets: '*.exe'
+
+      - name: Upload GUI to Release
+        if: github.event_name != 'pull_request'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: GUI/dist/*.exe
+          file_glob: true
+          tag: ${{ steps.latest_release.outputs.tag_name }}
+          overwrite: true

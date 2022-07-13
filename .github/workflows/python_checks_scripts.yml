@@ -1,0 +1,19 @@
+name: Python Checks scripts
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - develop
+    paths:
+      - "scripts/**"
+      - "requirements.txt"
+      - "package-lock.json"
+
+jobs:
+  scripts:
+    uses: ./.github/workflows/python_checks.yml
+    with:
+      project: "scripts"
+      cache: false

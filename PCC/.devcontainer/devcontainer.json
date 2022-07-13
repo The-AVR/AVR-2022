@@ -1,0 +1,7 @@
+{
+    "image": "docker.io/library/python:3.9-buster",
+    "extensions": [
+        "platformio.platformio-ide"
+    ],
+    "postCreateCommand": "python setup.py && git config --global core.autocrlf input"
+}

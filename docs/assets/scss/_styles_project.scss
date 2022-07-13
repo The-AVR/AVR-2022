@@ -1,0 +1,20 @@
+// hide add child page button
+.td-page-meta--child {
+    display: none !important;
+}
+
+// give alerts a background color
+.alert {
+    background-color: #ebebeb;
+}
+
+// disable transitions on sidebar
+nav.foldable-nav *::before {
+    transition: none !important;
+}
+
+// fix logo sizing
+.td-navbar .navbar-brand svg {
+    height: 35px;
+    width: 30px;
+}

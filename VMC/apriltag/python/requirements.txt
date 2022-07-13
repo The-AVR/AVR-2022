@@ -1,0 +1,4 @@
+loguru==0.6.0
+numpy==1.22.4
+bell-vrc-libraries[mqtt]==0.1.2
+transforms3d==0.3.1
