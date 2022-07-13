@@ -1,6 +1,6 @@
 ---
 title: "Docker"
-weight: 99
+weight: 8
 ---
 
 Something about Docker here.
