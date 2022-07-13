@@ -1,4 +1,0 @@
-loguru==0.6.0
-bell-vrc-libraries[mqtt]==0.1.2
-adafruit-circuitpython-amg88xx==1.2.13
-Jetson.GPIO==2.0.18; sys_platform == 'linux' # implict dependency of adafruit modules

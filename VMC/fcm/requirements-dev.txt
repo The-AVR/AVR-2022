@@ -1,2 +1,0 @@
-# only for typing
-pymavlink

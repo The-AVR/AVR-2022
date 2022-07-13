@@ -1,2 +1,0 @@
-loguru==0.6.0
-bell-vrc-libraries[mqtt,serial]==0.1.2
