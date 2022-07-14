@@ -1,11 +1,12 @@
 from typing import Any
 
 import paho.mqtt.client as mqtt
-from lib.config import config
-from lib.enums import ConnectionState
-from lib.widgets import IntLineEdit
 from loguru import logger
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from ...lib.config import config
+from ...lib.enums import ConnectionState
+from ...lib.widgets import IntLineEdit
 
 
 class MQTTClient(QtCore.QObject):

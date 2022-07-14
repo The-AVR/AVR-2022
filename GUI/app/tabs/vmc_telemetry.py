@@ -11,9 +11,10 @@ from bell.avr.mqtt.payloads import (
     AvrFcmLocationLocalPayload,
     AvrFcmStatusPayload,
 )
-from lib.widgets import DisplayLineEdit, StatusLabel
 from PySide6 import QtCore, QtWidgets
 
+from ..lib.color import smear_color
+from ..lib.widgets import DisplayLineEdit, StatusLabel
 from .base import BaseTabWidget
 
 
@@ -237,12 +238,9 @@ class VMCTelemetryWidget(BaseTabWidget):
         self.battery_voltage_label.setText(f"{round(payload['voltage'], 4)} Volts")
 
         # this is required to change the progress bar color as the value changes
-        empty_rgb = (135, 0, 16)
-        full_rgb = (11, 135, 0)
-
-        diff = [f - e for f, e in zip(full_rgb, empty_rgb)]
-        smear = [int(d * soc / 100) for d in diff]
-        color = tuple(e + s for e, s in zip(empty_rgb, smear))
+        color = smear_color(
+            (135, 0, 16), (11, 135, 0), value=soc, min_value=0, max_value=100
+        )
 
         stylesheet = f"""
             QProgressBar {{

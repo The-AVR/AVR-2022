@@ -11,6 +11,7 @@ import scipy.interpolate
 from bell.avr.mqtt.payloads import AvrPcmFireLaserPayload, AvrPcmSetServoPctPayload
 from PySide6 import QtCore, QtGui, QtWidgets
 
+from ..lib.calc import constrain
 from .base import BaseTabWidget
 
 
@@ -18,10 +19,6 @@ def map_value(
     x: float, in_min: float, in_max: float, out_min: float, out_max: float
 ) -> float:
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-
-
-def constrain(val: int, min_val: int, max_val: int) -> int:
-    return min(max_val, max(min_val, val))
 
 
 class Direction(Enum):
@@ -109,7 +106,7 @@ class ThermalView(QtWidgets.QWidget):
             for jx, pixel in enumerate(row):
                 brush = QtGui.QBrush(
                     QtGui.QColor(
-                        *self.colors[constrain(int(pixel), 0, self.COLORDEPTH - 1)]
+                        *self.colors[int(constrain(pixel, 0, self.COLORDEPTH - 1))]
                     )
                 )
                 self.canvas.addRect(
@@ -300,8 +297,8 @@ class ThermalViewControlWidget(BaseTabWidget):
         sub_joystick_layout = QtWidgets.QHBoxLayout()
         joystick_layout.addLayout(sub_joystick_layout)
 
-        joystick = JoystickWidget(self)
-        sub_joystick_layout.addWidget(joystick)
+        self.joystick = JoystickWidget(self)
+        sub_joystick_layout.addWidget(self.joystick)
 
         fire_laser_button = QtWidgets.QPushButton("Laser On")
         joystick_layout.addWidget(fire_laser_button)
@@ -309,7 +306,7 @@ class ThermalViewControlWidget(BaseTabWidget):
         layout.addWidget(joystick_groupbox)
 
         # connect signals
-        joystick.emit_message.connect(self.emit_message.emit)
+        self.joystick.emit_message.connect(self.emit_message.emit)
 
         fire_laser_button.clicked.connect(  # type: ignore
             lambda: self.send_message("avr/pcm/fire_laser", AvrPcmFireLaserPayload())
@@ -336,3 +333,6 @@ class ThermalViewControlWidget(BaseTabWidget):
         # update the canvase
         # pixel_ints = data
         self.viewer.update_canvas(pixel_ints)
+
+    def clear(self) -> None:
+        self.viewer.canvas.clear()

@@ -4,7 +4,6 @@ from typing import Literal, Tuple
 
 from bell.avr.mqtt.payloads import (
     AvrAutonomousPayload,
-    AvrPcmResetPayload,
     AvrPcmSetBaseColorPayload,
     AvrPcmSetServoOpenClosePayload,
 )
@@ -55,7 +54,7 @@ class VMCControlWidget(BaseTabWidget):
         clear_led_button.clicked.connect(lambda: self.set_led((0, 0, 0, 0)))  # type: ignore
         led_layout.addWidget(clear_led_button)
 
-        layout.addWidget(led_groupbox, 0, 0, 3, 1)
+        layout.addWidget(led_groupbox, 0, 0, 2, 1)
 
         # ==========================
         # Servos
@@ -136,7 +135,7 @@ class VMCControlWidget(BaseTabWidget):
         # ==========================
         # Autonomous mode
         autonomous_groupbox = QtWidgets.QGroupBox("Autonomous")
-        autonomous_layout = QtWidgets.QHBoxLayout()
+        autonomous_layout = QtWidgets.QVBoxLayout()
         autonomous_groupbox.setLayout(autonomous_layout)
 
         autonomous_enable_button = QtWidgets.QPushButton("Enable")
@@ -147,20 +146,20 @@ class VMCControlWidget(BaseTabWidget):
         autonomous_disable_button.clicked.connect(lambda: self.set_autonomous(False))  # type: ignore
         autonomous_layout.addWidget(autonomous_disable_button)
 
-        layout.addWidget(autonomous_groupbox, 3, 0, 1, 3)
+        layout.addWidget(autonomous_groupbox, 2, 0, 1, 1)
 
-        # ==========================
-        # PCC Reset
-        reset_groupbox = QtWidgets.QGroupBox("Reset")
-        reset_layout = QtWidgets.QVBoxLayout()
-        reset_groupbox.setLayout(reset_layout)
+        # # ==========================
+        # # PCC Reset
+        # reset_groupbox = QtWidgets.QGroupBox("Reset")
+        # reset_layout = QtWidgets.QVBoxLayout()
+        # reset_groupbox.setLayout(reset_layout)
 
-        reset_button = QtWidgets.QPushButton("Reset PCC")
-        reset_button.setStyleSheet("background-color: yellow")
-        reset_button.clicked.connect(lambda: self.send_message("avr/pcm/reset", AvrPcmResetPayload()))  # type: ignore
-        reset_layout.addWidget(reset_button)
+        # reset_button = QtWidgets.QPushButton("Reset PCC")
+        # reset_button.setStyleSheet("background-color: yellow")
+        # reset_button.clicked.connect(lambda: self.send_message("avr/pcm/reset", AvrPcmResetPayload()))  # type: ignore
+        # reset_layout.addWidget(reset_button)
 
-        layout.addWidget(reset_groupbox, 3, 3, 1, 1)
+        # layout.addWidget(reset_groupbox, 3, 3, 1, 1)
 
     def set_servo(self, number: int, action: Literal["open", "close"]) -> None:
         """
