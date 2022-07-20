@@ -10,6 +10,8 @@ import numpy as np
 import scipy.interpolate
 from bell.avr.mqtt.payloads import AvrPcmFireLaserPayload, AvrPcmSetServoPctPayload
 from PySide6 import QtCore, QtGui, QtWidgets
+from ..lib.widgets import IntLineEdit
+from ..lib.widgets import DoubleLineEdit
 
 from ..lib.calc import constrain
 from .base import BaseTabWidget
@@ -88,6 +90,10 @@ class ThermalView(QtWidgets.QWidget):
 
         # need a bit of padding for the edges of the canvas
         self.setFixedSize(self.width_ + 50, self.height_ + 50)
+
+    def set_temp_range(self, mintemp: float, maxtemp: float) -> None:
+        self.MINTEMP = mintemp;
+        self.MAXTEMP = maxtemp;
 
     def update_canvas(self, pixels: List[int]) -> None:
         float_pixels = [
@@ -286,6 +292,26 @@ class ThermalViewControlWidget(BaseTabWidget):
 
         self.viewer = ThermalView(self)
         viewer_layout.addWidget(self.viewer)
+
+        # set temp range
+
+        # lay out the host l        abel and line edit
+        temp_range_layout = QtWidgets.QFormLayout()
+
+        self.temp_min_line_edit = DoubleLineEdit()
+        temp_range_layout.addRow(QtWidgets.QLabel("Min Temp:"), self.temp_min_line_edit)
+        self.temp_min_line_edit.setPlaceholderText(str(self.viewer.MINTEMP))
+        self.temp_max_line_edit = DoubleLineEdit()
+        temp_range_layout.addRow(QtWidgets.QLabel("Max Temp:"), self.temp_max_line_edit)
+        self.temp_max_line_edit.setPlaceholderText(str(self.viewer.MAXTEMP))
+        set_temp_range_button = QtWidgets.QPushButton("Set Temp Range")
+        temp_range_layout   .addWidget(set_temp_range_button)
+
+        viewer_layout.addLayout(temp_range_layout)
+
+        set_temp_range_button.clicked.connect(
+            lambda: self.viewer.set_temp_range(float(self.temp_min_line_edit.text()), float(self.temp_max_line_edit.text()))
+        )
 
         layout.addWidget(viewer_groupbox)
 
