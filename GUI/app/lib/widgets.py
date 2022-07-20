@@ -13,6 +13,12 @@ class IntLineEdit(QtWidgets.QLineEdit):
         self.setValidator(QtGui.QIntValidator(0, 1000000, self))
 
 
+class DoubleLineEdit(QtWidgets.QLineEdit):
+    def __init__(self, *args, **kwargs) -> None:
+        super().__init__(*args, **kwargs)
+        self.setValidator(QtGui.QDoubleValidator(0.0, 100.0, 2, self))
+
+
 class DisplayLineEdit(QtWidgets.QLineEdit):
     def __init__(self, *args, round_digits: Optional[int] = 4, **kwargs) -> None:
         super().__init__(*args, **kwargs)
