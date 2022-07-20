@@ -8,6 +8,9 @@ if __name__ == "__main__":
     queue_dir = os.path.join(THIS_DIR, "libraries", "Queue")
 
     # apply patch
+    subprocess.check_call(
+        ["git", "submodule", "update", "--init", "--recursive", queue_dir]
+    )
     subprocess.check_call(["git", "reset", "--hard"], cwd=queue_dir)
     subprocess.check_call(
         [
