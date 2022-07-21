@@ -29,6 +29,33 @@ else:
     )
 
 
+def check_sudo() -> None:
+    # skip these checks on Windows
+    if sys.platform == "win32":
+        return
+
+    # Check if Docker requires sudo
+    result = subprocess.run(
+        ["docker", "info"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
+    if result.returncode == 0:
+        # either we have permission to run docker as non-root
+        # or we have sudo
+        return
+
+    # re run ourselves with sudo
+    print("Needing sudo privledges to run docker, re-lauching")
+
+    try:
+        sys.exit(
+            subprocess.run(["sudo", sys.executable, __file__] + sys.argv[1:]).returncode
+        )
+    except PermissionError:
+        sys.exit(0)
+    except KeyboardInterrupt:
+        sys.exit(1)
+
+
 def print2(msg: str) -> None:
     print(f"--- {msg}", flush=True)
 
@@ -302,6 +329,8 @@ def host(build_pymavlink: bool, build_px4: bool) -> None:
 
 
 if __name__ == "__main__":
+    check_sudo()
+
     parser = argparse.ArgumentParser(description="Generate a PX4/Pymavlink build")
     parser.add_argument("--container", action="store_true", help=argparse.SUPPRESS)
     parser.add_argument("--git-hash", type=str, help=argparse.SUPPRESS)
