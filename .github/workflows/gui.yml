@@ -40,6 +40,13 @@ jobs:
         shell: pwsh
         run: ./GUI/dist/AVRGUI.*.exe --test-bundle
 
+      - name: Upload GUI to Pipeline
+        if: github.event_name != 'push'
+        uses: actions/upload-artifact@v3
+        with:
+          name: GUI
+          path: GUI/dist/*.exe
+
       - name: Get Latest Release
         if: github.event_name != 'pull_request'
         id: latest_release
