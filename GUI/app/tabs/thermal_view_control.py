@@ -12,7 +12,7 @@ from bell.avr.mqtt.payloads import AvrPcmFireLaserPayload, AvrPcmSetServoPctPayl
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from ..lib.calc import constrain
-from ..lib.widgets import DoubleLineEdit, IntLineEdit
+from ..lib.widgets import DoubleLineEdit
 from .base import BaseTabWidget
 
 
