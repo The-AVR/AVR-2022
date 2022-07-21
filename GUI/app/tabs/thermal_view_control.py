@@ -8,7 +8,12 @@ from typing import List, Optional, Tuple
 import colour
 import numpy as np
 import scipy.interpolate
-from bell.avr.mqtt.payloads import AvrPcmFireLaserPayload, AvrPcmSetServoPctPayload
+from bell.avr.mqtt.payloads import (
+    AvrPcmFireLaserPayload,
+    AvrPcmSetLaserOffPayload,
+    AvrPcmSetLaserOnPayload,
+    AvrPcmSetServoPctPayload,
+)
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from ..lib.calc import constrain
@@ -330,8 +335,14 @@ class ThermalViewControlWidget(BaseTabWidget):
         self.joystick = JoystickWidget(self)
         sub_joystick_layout.addWidget(self.joystick)
 
-        fire_laser_button = QtWidgets.QPushButton("Laser On")
+        fire_laser_button = QtWidgets.QPushButton("Laser Fire")
         joystick_layout.addWidget(fire_laser_button)
+
+        laser_on_button = QtWidgets.QPushButton("Laser On")
+        joystick_layout.addWidget(laser_on_button)
+
+        laser_off_button = QtWidgets.QPushButton("Laser Off")
+        joystick_layout.addWidget(laser_off_button)
 
         layout.addWidget(joystick_groupbox)
 
@@ -340,6 +351,16 @@ class ThermalViewControlWidget(BaseTabWidget):
 
         fire_laser_button.clicked.connect(  # type: ignore
             lambda: self.send_message("avr/pcm/fire_laser", AvrPcmFireLaserPayload())
+        )
+
+        laser_on_button.clicked.connect(  # type: ignore
+            lambda: self.send_message("avr/pcm/set_laser_on", AvrPcmSetLaserOnPayload())
+        )
+
+        laser_off_button.clicked.connect(  # type: ignore
+            lambda: self.send_message(
+                "avr/pcm/set_laser_off", AvrPcmSetLaserOffPayload()
+            )
         )
 
         # don't allow us to shrink below size hint
