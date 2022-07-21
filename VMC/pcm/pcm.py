@@ -2,6 +2,8 @@ from bell.avr.mqtt.client import MQTTModule
 from bell.avr.mqtt.payloads import (
     AvrPcmFireLaserPayload,
     AvrPcmSetBaseColorPayload,
+    AvrPcmSetLaserOffPayload,
+    AvrPcmSetLaserOnPayload,
     AvrPcmSetServoMaxPayload,
     AvrPcmSetServoMinPayload,
     AvrPcmSetServoOpenClosePayload,
@@ -32,6 +34,8 @@ class PeripheralControlModule(MQTTModule):
             "avr/pcm/set_servo_min": self.set_servo_min,
             "avr/pcm/set_servo_max": self.set_servo_max,
             "avr/pcm/fire_laser": self.fire_laser,
+            "avr/pcm/set_laser_on": self.set_laser_on,
+            "avr/pcm/set_laser_off": self.set_laser_off,
             "avr/pcm/set_servo_pct": self.set_servo_pct,
         }
 
@@ -70,6 +74,12 @@ class PeripheralControlModule(MQTTModule):
 
     def fire_laser(self, payload: AvrPcmFireLaserPayload) -> None:
         self.pcc.fire_laser()
+
+    def set_laser_on(self, payload: AvrPcmSetLaserOnPayload) -> None:
+        self.pcc.set_laser_on()
+
+    def set_laser_off(self, payload: AvrPcmSetLaserOffPayload) -> None:
+        self.pcc.set_laser_off()
 
 
 if __name__ == "__main__":

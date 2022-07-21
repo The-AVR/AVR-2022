@@ -22,6 +22,9 @@ AVRSerialParser serial(Serial, q);
 // Seconds before the laser can be activated again
 #define LASER_NEXT_ALLOW_SECONDS 0.75
 
+#define LASER_BLIP_SECONDS 0.1
+#define LASER_NEXT_BLIP_SECONDS 0.5
+
 #define NUM_PIXELS 30
 
 AVRLED strip(NEO_PIN, NUM_PIXELS, NEO_GRB);
@@ -62,7 +65,12 @@ void setup()
 
 double next_allow_laser = -1;
 double next_force_laser_off = 999999999999;
+double next_force_laser_on = 0;
 unsigned long light_on = 0;
+unsigned long laser_on = 0;
+
+
+
 
 void loop()
 {
@@ -146,6 +154,20 @@ void loop()
       //Serial.printf("Res: %d\n",res);
     }
     break;
+    case SET_LASER_OFF:
+    {
+        laser_on = 0;
+        digitalWrite(LED_BUILTIN, LOW);
+    }
+    break;
+    case SET_LASER_ON:
+    {
+        laser_on = 1;
+        digitalWrite(LASER_PIN,HIGH);
+        next_force_laser_off = millis() + LASER_BLIP_SECONDS * 1000;
+        next_force_laser_on = millis() + LASER_NEXT_BLIP_SECONDS * 1000;
+    }
+    break;
     case FIRE_LASER:
     {
       if (millis() > next_allow_laser) {
@@ -167,6 +189,15 @@ void loop()
   {
     digitalWrite(LASER_PIN,LOW);
     next_force_laser_off = 999999999999;
+  }
+
+  if (millis() > next_force_laser_on)
+  {
+    if (laser_on) {
+        digitalWrite(LASER_PIN,HIGH);
+    }
+    next_force_laser_off = millis() + LASER_BLIP_SECONDS * 1000;
+    next_force_laser_on = millis() + LASER_NEXT_BLIP_SECONDS * 1000;
   }
 
   strip.run();
