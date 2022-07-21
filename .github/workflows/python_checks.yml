@@ -48,47 +48,47 @@ jobs:
       - name: Check Formatting
         run: python scripts/step_summary.py
         env:
-          RUN_CMD: python -m black ${{ inputs.project }} --check
+          RUN_CMD: python scripts/python_checks.py ${{ inputs.project }} black
           CMD_FAILURE_TEXT: |
             ## Formatting Failure :x:
 
             Run the following command locally and commit the changes:
 
             ```bash
-            python -m black ${{ inputs.project }}
+            python scripts/python_format.py ${{ inputs.project }}
             ````
 
       - name: Check Import Order
         run: python scripts/step_summary.py
         env:
-          RUN_CMD: python -m isort ${{ inputs.project }} --check
+          RUN_CMD: python scripts/python_checks.py ${{ inputs.project }} isort
           CMD_FAILURE_TEXT: |
             ## Formatting Failure :x:
 
             Run the following command locally and commit the changes:
 
             ```bash
-            python -m isort ${{ inputs.project }}
+            python scripts/python_format.py ${{ inputs.project }}
             ````
 
       - name: Check for Unused Imports
         run: python scripts/step_summary.py
         env:
-          RUN_CMD: python -m autoflake --recursive ${{ inputs.project }} --check
+          RUN_CMD: python scripts/python_checks.py ${{ inputs.project }} autoflake
           CMD_FAILURE_TEXT: |
             ## Unused Import(s) Detected :x:
 
             Run the following command locally and commit the changes:
 
             ```bash
-            python -m autoflake --recursive --in-place --remove-all-unused-imports ${{ inputs.project }}
+            python scripts/python_format.py ${{ inputs.project }}
             ````
 
       - name: Check Type Hints
-        run: python -m pyleft ${{ inputs.project }} --verbose
+        run: python scripts/python_checks.py ${{ inputs.project }} pyleft
 
       - name: Check Typing
-        run: npx pyright ${{ inputs.project }} --verbose
+        run: python scripts/python_checks.py ${{ inputs.project }} pyright
 
       - name: Linting
-        run: python -m pflake8 ${{ inputs.project }}
+        run: python scripts/python_checks.py ${{ inputs.project }} pflake8
