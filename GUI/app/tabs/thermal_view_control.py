@@ -92,8 +92,8 @@ class ThermalView(QtWidgets.QWidget):
         self.setFixedSize(self.width_ + 50, self.height_ + 50)
 
     def set_temp_range(self, mintemp: float, maxtemp: float) -> None:
-        self.MINTEMP = mintemp;
-        self.MAXTEMP = maxtemp;
+        self.MINTEMP = mintemp
+        self.MAXTEMP = maxtemp
 
     def update_canvas(self, pixels: List[int]) -> None:
         float_pixels = [
