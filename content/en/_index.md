@@ -26,8 +26,8 @@ available to you:
 - A 3D printer (8.5" cubed) with 1 roll of ABS filament
 - A laptop with one of the following:
   - Windows 10/11 with admin privileges
-  - MacOS TODO
-  - Debian-based Linux (Ubuntu, Pop!\_OS, Mint, etc) with `sudo` privileges
+  - x86 MacOS (M1 chips are not supported yet for AVR)
+  - Ubuntu 20.04+-based Linux (Pop!\_OS, Mint, etc) with `sudo` privileges
 - Basic shop tools and supplies:
   - Zip ties
   - Soldering iron
