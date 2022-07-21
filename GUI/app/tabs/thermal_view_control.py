@@ -312,7 +312,10 @@ class ThermalViewControlWidget(BaseTabWidget):
         viewer_layout.addLayout(temp_range_layout)
 
         set_temp_range_button.clicked.connect(
-            lambda: self.viewer.set_temp_range(float(self.temp_min_line_edit.text()), float(self.temp_max_line_edit.text()))
+            lambda: self.viewer.set_temp_range(
+                float(self.temp_min_line_edit.text()),
+                float(self.temp_max_line_edit.text()),
+            )
         )
 
         layout.addWidget(viewer_groupbox)
