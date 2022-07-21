@@ -295,17 +295,19 @@ class ThermalViewControlWidget(BaseTabWidget):
 
         # set temp range
 
-        # lay out the host l        abel and line edit
+        # lay out the host label and line edit
         temp_range_layout = QtWidgets.QFormLayout()
 
         self.temp_min_line_edit = DoubleLineEdit()
         temp_range_layout.addRow(QtWidgets.QLabel("Min Temp:"), self.temp_min_line_edit)
-        self.temp_min_line_edit.setPlaceholderText(str(self.viewer.MINTEMP))
+        self.temp_min_line_edit.setText(str(self.viewer.MINTEMP))
+
         self.temp_max_line_edit = DoubleLineEdit()
         temp_range_layout.addRow(QtWidgets.QLabel("Max Temp:"), self.temp_max_line_edit)
-        self.temp_max_line_edit.setPlaceholderText(str(self.viewer.MAXTEMP))
+        self.temp_max_line_edit.setText(str(self.viewer.MAXTEMP))
+
         set_temp_range_button = QtWidgets.QPushButton("Set Temp Range")
-        temp_range_layout   .addWidget(set_temp_range_button)
+        temp_range_layout.addWidget(set_temp_range_button)
 
         viewer_layout.addLayout(temp_range_layout)
 
