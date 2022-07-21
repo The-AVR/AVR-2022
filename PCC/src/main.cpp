@@ -189,7 +189,7 @@ void loop()
   {
     digitalWrite(LASER_PIN,LOW);
     next_force_laser_off = 999999999999;
-  }	
+  }
 
   if (millis() > next_force_laser_on)
   {
@@ -199,8 +199,6 @@ void loop()
     next_force_laser_off = millis() + LASER_BLIP_SECONDS * 1000;
     next_force_laser_on = millis() + LASER_NEXT_BLIP_SECONDS * 1000;
   }
-
-  
 
   strip.run();
   onboard.run();
