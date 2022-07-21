@@ -10,10 +10,9 @@ import numpy as np
 import scipy.interpolate
 from bell.avr.mqtt.payloads import AvrPcmFireLaserPayload, AvrPcmSetServoPctPayload
 from PySide6 import QtCore, QtGui, QtWidgets
-from ..lib.widgets import IntLineEdit
-from ..lib.widgets import DoubleLineEdit
 
 from ..lib.calc import constrain
+from ..lib.widgets import DoubleLineEdit, IntLineEdit
 from .base import BaseTabWidget
 
 
