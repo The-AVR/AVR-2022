@@ -53,6 +53,13 @@ jobs:
         run: python build.py
         working-directory: PCC
 
+      - name: Upload Firmware to Pipeline
+        if: github.event_name != 'push'
+        uses: actions/upload-artifact@v3
+        with:
+          name: PCC Firmware
+          path: PCC/.pio/build/adafruit_feather_m4/*.bin
+
       - name: Get Latest Release
         if: github.event_name != 'pull_request'
         id: latest_release

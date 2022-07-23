@@ -52,6 +52,13 @@ jobs:
       - name: Build PX4 Firmware
         run: python3 PX4/build.py --px4 --targets ${{ matrix.px4_target }}
 
+      - name: Upload Firmware to Pipeline
+        if: github.event_name != 'push'
+        uses: actions/upload-artifact@v3
+        with:
+          name: PX4 ${{ matrix.px4_target }} Firmware
+          path: PX4/dist/*.px4
+
       - name: Get Latest Release
         if: github.event_name != 'pull_request'
         id: latest_release
