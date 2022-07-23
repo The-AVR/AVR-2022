@@ -320,7 +320,9 @@ class ThermalViewControlWidget(BaseTabWidget):
         set_temp_range_button = QtWidgets.QPushButton("Set Temp Range")
         temp_range_layout.addWidget(set_temp_range_button)
 
-        set_temp_range_calibrate_button = QtWidgets.QPushButton("Auto Calibrate Temp Range")
+        set_temp_range_calibrate_button = QtWidgets.QPushButton(
+            "Auto Calibrate Temp Range"
+        )
         temp_range_layout.addWidget(set_temp_range_calibrate_button)
 
         viewer_layout.addLayout(temp_range_layout)
@@ -380,11 +382,10 @@ class ThermalViewControlWidget(BaseTabWidget):
         # don't allow us to shrink below size hint
         self.setMinimumSize(self.sizeHint())
 
-    def calibrate_temp(self):
+    def calibrate_temp(self) -> None:
         self.viewer.set_calibrted_temp_range()
         self.temp_min_line_edit.setText(str(self.viewer.MINTEMP))
         self.temp_max_line_edit.setText(str(self.viewer.MAXTEMP))
-
 
     def process_message(self, topic: str, payload: str) -> None:
         """
@@ -401,12 +402,12 @@ class ThermalViewControlWidget(BaseTabWidget):
         asbytes = base64.b64decode(base64Decoded)
         pixel_ints = list(bytearray(asbytes))
 
-        #find lowest temp
-        lowest = 999.0;
-        for pint in pixel_ints :
-            if pint<lowest:
-                lowest=pint
-        self.viewer.last_lowest_temp = lowest;
+        # find lowest temp
+        lowest = 999.0
+        for pint in pixel_ints:
+            if pint < lowest:
+                lowest = pint
+        self.viewer.last_lowest_temp = lowest
 
         # update the canvase
         # pixel_ints = data
