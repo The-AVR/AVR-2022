@@ -7,7 +7,7 @@ Teams are encouraged to learn and practice programming with their drone. While i
 
 This section will help you with:
 
-- Installing and using VS code to manage your project
+- Installing and using VS Code to manage your project
 - Installing and using Python
 - Installing and working with git
 - Using the Bell AVR sandbox environment
