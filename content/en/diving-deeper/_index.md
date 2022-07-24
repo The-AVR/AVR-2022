@@ -1,4 +1,4 @@
 ---
 title: "Diving Deeper"
-weight: 100
+weight: 16
 ---

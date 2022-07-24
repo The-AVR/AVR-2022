@@ -1,6 +1,6 @@
 ---
 title: "Autonomy and Beyond"
-weight: 16
+weight: 15
 ---
 
 Teams are encouraged to learn and practice programming with their drone. While it is **not mandatory**, programming the drone to perform tasks autonomously will give you an edge in the competition.
