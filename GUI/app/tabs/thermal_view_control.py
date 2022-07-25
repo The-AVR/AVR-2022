@@ -55,6 +55,9 @@ class ThermalView(QtWidgets.QWidget):
         # high range of the sensor (this will be red on the screen)
         self.MAXTEMP = 32.0
 
+        # last lowest temp from camera
+        self.last_lowest_temp = 999.0
+
         # how many color values we can have
         self.COLORDEPTH = 1024
 
@@ -98,6 +101,10 @@ class ThermalView(QtWidgets.QWidget):
     def set_temp_range(self, mintemp: float, maxtemp: float) -> None:
         self.MINTEMP = mintemp
         self.MAXTEMP = maxtemp
+
+    def set_calibrted_temp_range(self) -> None:
+        self.MINTEMP = self.last_lowest_temp + 0.0
+        self.MAXTEMP = self.last_lowest_temp + 15.0
 
     def update_canvas(self, pixels: List[int]) -> None:
         float_pixels = [
@@ -313,6 +320,11 @@ class ThermalViewControlWidget(BaseTabWidget):
         set_temp_range_button = QtWidgets.QPushButton("Set Temp Range")
         temp_range_layout.addWidget(set_temp_range_button)
 
+        set_temp_range_calibrate_button = QtWidgets.QPushButton(
+            "Auto Calibrate Temp Range"
+        )
+        temp_range_layout.addWidget(set_temp_range_calibrate_button)
+
         viewer_layout.addLayout(temp_range_layout)
 
         set_temp_range_button.clicked.connect(  # type: ignore
@@ -320,6 +332,10 @@ class ThermalViewControlWidget(BaseTabWidget):
                 float(self.temp_min_line_edit.text()),
                 float(self.temp_max_line_edit.text()),
             )
+        )
+
+        set_temp_range_calibrate_button.clicked.connect(  # type: ignore
+            lambda: self.calibrate_temp()
         )
 
         layout.addWidget(viewer_groupbox)
@@ -366,6 +382,11 @@ class ThermalViewControlWidget(BaseTabWidget):
         # don't allow us to shrink below size hint
         self.setMinimumSize(self.sizeHint())
 
+    def calibrate_temp(self) -> None:
+        self.viewer.set_calibrted_temp_range()
+        self.temp_min_line_edit.setText(str(self.viewer.MINTEMP))
+        self.temp_max_line_edit.setText(str(self.viewer.MAXTEMP))
+
     def process_message(self, topic: str, payload: str) -> None:
         """
         Process an incoming message and update the appropriate component
@@ -380,6 +401,13 @@ class ThermalViewControlWidget(BaseTabWidget):
         base64Decoded = data.encode("utf-8")
         asbytes = base64.b64decode(base64Decoded)
         pixel_ints = list(bytearray(asbytes))
+
+        # find lowest temp
+        lowest = 999.0
+        for pint in pixel_ints:
+            if pint < lowest:
+                lowest = pint
+        self.viewer.last_lowest_temp = lowest
 
         # update the canvase
         # pixel_ints = data
