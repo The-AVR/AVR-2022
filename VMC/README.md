@@ -84,8 +84,8 @@ git pull
 ./setup.py
 ```
 
-When setting wifi be sure to run as python python3.9 not just python. Since you are using sudo, it defaults to the system python path, not the venv, so you you need to declare version.
+When setting wifi be sure to run as python python3 not just python. Since you are using sudo, it defaults to the system python path, not the venv, so you you need to declare version.
 
 ```bash
-sudo python3.9 scripts/wifi.py [create, connect, disconnect, status]
+sudo python3 scripts/wifi.py [create, connect, disconnect, status]
 ```
