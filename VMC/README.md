@@ -70,7 +70,7 @@ To stop the AVR software hit <kbd>Ctrl</kbd>+<kbd>C</kbd>.
 Additionally, you can specify specific containers by declaring them as folows:
 
 ```bash
-python start.py run thermal status -m
+./start.py run thermal status -m
 ```
 
 this will run all of the minimum modules required for flight (-m = [fcm, fusion, mavp2p, mqtt, vio]) in addition to the thermal & status modules
@@ -89,3 +89,5 @@ When setting wifi be sure to run as python python3 not just python. Since you ar
 ```bash
 sudo python3 scripts/wifi.py [create, connect, disconnect, status]
 ```
+
+or just use the './scripts/wifi.py' format which is the perferred method.
