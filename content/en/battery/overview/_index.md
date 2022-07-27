@@ -6,13 +6,13 @@ description: "Battery safety and care is very important. Please read through the
 
 ## Safety Overview
 
-**Please ensure all team members have read the LiPO instruction sheet that was
-included with the Venom battery as well as the manual for the Venom Pro 2 Charger.**
+**Please ensure all team members have read the LiPO guidelines were
+included with the SMC battery as well as the manual for the Hitec charger.**
 
-These documents can be viewed at:
+You can learn more about these products at the links below:
 
-- [Venom 15027 4S 5000mAh 35C Battery]({{< static "/files/VenomLiPoManual.pdf" >}})
-- [Venom Pro 2 Charger]({{< static "/files/VenomPro2ChargerManual.pdf" >}})
+- [SMC True Spec DV Extreme 14.8V 5200mAh 135C Battery](https://www.smc-racing.com/index.php?route=product/product&path=67_171&product_id=642)
+- [Hitect RDX1 Pro charger](https://hitecrcd.com/products/chargers/acdc-chargers/rdx1-pro-/product)
 
 ### Key Safety Points
 
@@ -37,9 +37,9 @@ These documents can be viewed at:
   This voltage is used as a standard to identify the cell/battery type.
 - 3.5-3.7V per cell is the voltage we would recommend landing at.
 
-![Venom 15027 Battery and Connectors](image3.jpg)
+![SMC Battery](smc_battery.jpg)
 
-The battery you will be using is a Venom 14.8V 5000mAh 35C Battery.
+The battery you will be using is a SMC 14.8V 5200mAh 135C Battery.
 
 ### Definitions
 
@@ -56,40 +56,25 @@ The battery you will be using is a Venom 14.8V 5000mAh 35C Battery.
   when fully charged. Sometimes referred to as a 4S battery, the "S" refers to
   "series" to tell us how many cells are comprising the battery pack.
 
-### The Charger: Venom 0677 (Pro 2)
+### The Charger: Hitec RDX1 Pro
 
-The Venom Pro 2 is one of Venom’s most popular single-channel
-multi-chemistry battery chargers. It features an 80W Power supply
-as well as an integrated balancing port. The Pro 2 is capable of
+The RDX1 Pro is one of Hitec's most popular single-channel
+multi-chemistry battery chargers. It features a 100W Power supply
+as well as an integrated 6-cell balancer. The RDX1 Pro is capable of
 charging 1S-6S batteries.
 
-![Venom Pro 2 Charger](image4.jpg)
+![Hitec RDX1 Pro Charger](hitec_charger.jpg)
 
-![Venom battery pouch for charging and storage](image1.jpg)
+### Battery Storage Bag
+Your kit includes a battery storage bag that can be used for  storage, transport, and charging.
 
-We recommend you use this pouch as a charging mat,
+
+![Lipo storage bag](racers_edge_lipo_bag.jpg)
+
+We recommend you use this bag as a charging mat,
 this will give you an added layer of protection between the battery and
 the charging surface. Always remember to charge batteries on a
 non-combustible surface.
-
-![Venom pouch used as a charging mat](image5.jpg)
-
-### The Cell Checker: Venom 0644
-
-![](image6.jpg)
-
-This cell checker provides you with instant access to see the voltage of the
-individual cells of your battery. It doubles as a low voltage alarm, but you
-probably will not use it in that capacity. It will first show the overall pack
-voltage, and then cycle through showing the voltage of each individual cell.
-
-![Cell checker in action](image2.jpg)
-
-{{% alert title="Note" color="note" %}}
-When using the cell checker, you need to plug it in with the contacts
-(silver tabs) facing up and (black plastic arrows facing down)
-and the plug towards the left side of the checker.
-{{% /alert %}}
 
 ## What to Do in Case of Fire
 
