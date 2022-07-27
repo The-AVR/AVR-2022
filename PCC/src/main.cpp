@@ -148,7 +148,7 @@ void loop()
       uint8_t absolute_high = message.data[1];
       uint8_t absolute_low = message.data[2];
       uint16_t absolute = ((uint16_t)absolute_high << 8) | absolute_low;
-      servos.set_servo_percent(which_servo, absolute);
+      servos.set_servo_absolute(which_servo, absolute);
     }
     break;
     case RESET_AVR_PERIPH:
