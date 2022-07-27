@@ -67,6 +67,14 @@ To start the AVR software, just run:
 
 To stop the AVR software hit <kbd>Ctrl</kbd>+<kbd>C</kbd>.
 
+Additionally, you can specify specific containers by declaring them as folows:
+
+```bash
+python start.py run thermal status -m
+```
+
+this will run all of the minimum modules required for flight (-m = [fcm, fusion, mavp2p, mqtt, vio]) in addition to the thermal & status modules
+
 If you ever need to update the AVR software, run:
 
 ```bash
@@ -74,4 +82,10 @@ If you ever need to update the AVR software, run:
 git pull
 # Re-run the setup script
 ./setup.py
+```
+
+When setting wifi be sure to run as python python3.9 not just python. Since you are using sudo, it defaults to the system python path, not the venv, so you you need to declare version.
+
+```bash
+sudo python3.9 scripts/wifi.py [create, connect, disconnect, status]
 ```
