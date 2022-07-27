@@ -8,6 +8,7 @@ from bell.avr.mqtt.payloads import (
     AvrPcmSetServoMinPayload,
     AvrPcmSetServoOpenClosePayload,
     AvrPcmSetServoPctPayload,
+    AvrPcmSetServoAbsPayload,
     AvrPcmSetTempColorPayload,
 )
 from bell.avr.serial.client import SerialLoop
@@ -71,6 +72,11 @@ class PeripheralControlModule(MQTTModule):
         servo = payload["servo"]
         percent = payload["percent"]
         self.pcc.set_servo_pct(servo, percent)
+
+    def set_servo_abs(self, payload: AvrPcmSetServoAbsPayload) -> None:
+        servo = payload["servo"]
+        absolute = payload["absolute"]
+        self.pcc.set_servo_pct(servo, absolute)
 
     def fire_laser(self, payload: AvrPcmFireLaserPayload) -> None:
         self.pcc.fire_laser()

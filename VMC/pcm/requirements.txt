@@ -1,3 +1,2 @@
 loguru==0.6.0
 bell-avr-libraries[mqtt,serial]==0.1.7
-
