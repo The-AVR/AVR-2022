@@ -19,6 +19,7 @@ typedef enum
     SET_SERVO_MIN,
     SET_SERVO_MAX,
     SET_SERVO_PCT,
+    SET_SERVO_ABS,
     SET_BASE_COLOR,
     SET_TEMP_COLOR,
     FIRE_LASER,
