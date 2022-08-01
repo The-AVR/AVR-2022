@@ -6,7 +6,7 @@
 # etc. You don't need a trailing slash.
 # GitHub private pages puts this on a base domain, while the public page
 # will not unless you have a custom domain setup.
-baseURL = "/"
+baseURL = "/AVR-2022"
 
 title           = "Bell AVR Documentation"
 enableRobotsTXT = true
