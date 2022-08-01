@@ -66,8 +66,8 @@ charging 1S-6S batteries.
 ![Hitec RDX1 Pro Charger](hitec_charger.jpg)
 
 ### Battery Storage Bag
-Your kit includes a battery storage bag that can be used for  storage, transport, and charging.
 
+Your kit includes a battery storage bag that can be used for storage, transport, and charging.
 
 ![Lipo storage bag](racers_edge_lipo_bag.jpg)
 
