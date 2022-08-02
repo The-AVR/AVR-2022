@@ -44,6 +44,9 @@ pygmentsStyle = "monokai"
     home    = ["HTML", "print"]
     section = ["HTML", "print"]
 
+[privacy.YouTube]
+    PrivacyEnhanced = true
+
 [params]
     copyright      = "Bell Flight"
     privacy_policy = "https://www.bellflight.com/legal/privacy-policy"
@@ -58,7 +61,9 @@ pygmentsStyle = "monokai"
     # Repository configuration (URLs for in-page links to opening issues and suggesting changes)
     github_repo = "https://github.com/bellflight/AVR-2022"
     # Discourse base URL
-    discourse_forums = "https://www.bellavrforum.org"
+    discourse_forums          = "https://www.bellavrforum.org"
+    # Discourse category to pre-assign to issues
+    discourse_forums_category = "technical-support/documentation-feedback"
 
     # Specify a value here if your content directory is not in your repo's root directory
     # github_subdir = ""
