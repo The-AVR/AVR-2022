@@ -1,6 +1,7 @@
 ---
 title: "Storage"
 weight: 3
+description: "Battery storage is just as important as battery usage. Make sure to follow these steps to keep your battery safe and prolong its life."
 ---
 
 ## Battery Storage
