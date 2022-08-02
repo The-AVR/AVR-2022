@@ -1,11 +1,6 @@
 # This tells Hugo what the root path of the site is.
-# This should be something like:
-# - "/"
-# - "/AVR-2022"
-# - "/public"
-# etc. You don't need a trailing slash.
-# GitHub private pages puts this on a base domain, while the public page
-# will not unless you have a custom domain setup.
+# This is automatically determined via the GitHub Action.
+# For local development, a single / is usually desired.
 baseURL = "/"
 
 title           = "Bell AVR Documentation"
