@@ -2,6 +2,7 @@
   "dependencies": {
     "autoprefixer": "^10.4.8",
     "cheerio": "^1.0.0-rc.12",
+    "docsy": "github:google/docsy#v0.4.0",
     "glob": "^8.0.3",
     "hugo-extended": "^0.101.0",
     "postcss": "^8.4.14",
@@ -11,6 +12,7 @@
   },
   "devDependencies": {
     "markdownlint-cli": "^0.32.1",
+    "npm-check-updates": "^16.0.5",
     "open": "^8.4.0",
     "prettier": "^2.7.1"
   },
@@ -19,6 +21,7 @@
     "format": "prettier --write content/",
     "format:check": "prettier --check content/",
     "lint": "markdownlint content/",
-    "server": "node -e \"const open = require('open'); open('http://localhost:1313');\" && hugo server -p 1313"
+    "server": "node -e \"const open = require('open'); open('http://localhost:1313');\" && hugo server -p 1313",
+    "update": "ncu --upgrade && npm install"
   }
 }

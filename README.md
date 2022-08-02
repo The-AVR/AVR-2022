@@ -13,14 +13,8 @@ static site generator. While not strictly needed to write content for the site,
 it is very nice to have installed in order to preview the site.
 
 The site based on the [Docsy](https://docsy.dev) theme by Google.
-This is a `git` submodule, so make sure you've initialized this repo's submodules:
-
-```bash
-git submodule update --init --recursive
-```
-
 To build or preview the site, make sure you have `npm` and `node` version 16+ installed.
-To install all the dependencies, simply run:
+To install all the dependencies (including the Docsy theme), simply run:
 
 ```bash
 npm install
@@ -32,18 +26,8 @@ To preview the site, run:
 npm run server
 ```
 
-This will give you a URL like this to preview the site:
-
-```none
-Environment: "development"
-Serving pages from memory
-Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
-Web Server is available at //localhost:1313/ (bind address 127.0.0.1)
-Press Ctrl+C to stop
-```
-
-Go to [http://localhost:1313](http://localhost:1313) in your browser to see the site
-running on your machine.
+This will automatically open your default web browser to a live-reloading
+version of the site running on your machine.
 
 ## Structure
 
