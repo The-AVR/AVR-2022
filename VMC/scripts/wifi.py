@@ -90,7 +90,7 @@ def create():
     # create
     print(f"===== Creating network {ssid} with password {password} =====")
     subprocess.check_call(["nmcli", "device", "wifi", "hotspot", "ifname", "wlan0", "ssid", ssid, "password", password])
-    subprocess.check_call(["nmcli", "connection", "modify", "Hotspot", "connection.autoconnect", "true"])
+    subprocess.check_call(["nmcli", "connection", "modify", "Hotspot", "connection.autoconnect", "yes"])
 
 def status():
     """
