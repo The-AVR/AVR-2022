@@ -8,7 +8,7 @@ description: "Understand how to connect the battery, your charger settings, and 
 
 Please read the manual prior to beginning your first charge.
 The manual comes with your charger or you can find a
-[digital version here]({{< static "/files/456_RDX-1_Pro_Manual_V14.pdf" >}}).
+{{< static "digital version here." "456_RDX-1_Pro_Manual_V14.pdf" >}}
 
 Please watch the video below to understand the recommended LiPo charging process.
 

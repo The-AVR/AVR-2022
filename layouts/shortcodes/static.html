@@ -1,5 +1,13 @@
-{{- .Scratch.Set "path" (.Get 0) -}}
-{{- if hasPrefix (.Scratch.Get "path") "/" -}}
-  {{- .Scratch.Set "path" (slicestr (.Scratch.Get "path") 1) -}}
-{{- end -}}
-{{- .Scratch.Get "path" | absLangURL -}}
+{{ $text := .Get "title" | default (.Get 0) }}
+{{ $url := .Get "url" | default (.Get 1) }}
+{{ $title := (urls.Parse $url).Path }}
+
+{{ $url := printf "/files/%s" $url }}
+
+{{ if hasPrefix $url "/" }}
+  {{ $url := slicestr $url 1 -}}
+{{ end }}
+
+{{ $url := $url | absLangURL }}
+
+<a href="{{ $url }}" title="{{ $title }}" target="_blank">{{ $text }}</a>

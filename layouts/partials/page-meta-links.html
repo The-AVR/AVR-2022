@@ -33,11 +33,12 @@
   {{ end -}}
 
   {{ $discourse_forums := ($.Param "discourse_forums") -}}
+  {{ $discourse_forums_category := ($.Param "discourse_forums_category") -}}
 
   {{ $viewURL := printf "%s/tree/%s" $gh_repo $gh_repo_path -}}
   {{ $editURL := printf "%s/edit/%s" $gh_repo $gh_repo_path -}}
   {{/* https://meta.discourse.org/t/how-to-create-a-new-topic-link-with-pre-filled-information/28074 */}}
-  {{ $issuesURL := printf "%s/new-topic?title=%s+Page&category=documentation&body=Source: %s%s" $discourse_forums (urlquery $.Title ) (urlquery $.Permalink) "%0A%0A" -}}
+  {{ $issuesURL := printf "%s/new-topic?title=%s+Page&category=%s&body=Source: %s%s" $discourse_forums (urlquery $.Title ) $discourse_forums_category (urlquery $.Permalink) "%0A%0A" -}}
   {{ $newPageStub := resources.Get "stubs/new-page-template.md" -}}
   {{ $newPageQS := querify "value" $newPageStub.Content "filename" "change-me.md" | safeURL -}}
   {{ $newPageURL := printf "%s/new/%s?%s"  $gh_repo $gh_repo_path $newPageQS -}}
