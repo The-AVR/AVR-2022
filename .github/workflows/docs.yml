@@ -10,8 +10,7 @@ on:
       - docs
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: true
+  group: pages
 
 jobs:
   docs-build:
