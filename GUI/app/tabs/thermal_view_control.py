@@ -403,10 +403,7 @@ class ThermalViewControlWidget(BaseTabWidget):
         pixel_ints = list(bytearray(asbytes))
 
         # find lowest temp
-        lowest = 999.0
-        for pint in pixel_ints:
-            if pint < lowest:
-                lowest = pint
+        lowest = min(pixel_ints)
         self.viewer.last_lowest_temp = lowest
 
         # update the canvase

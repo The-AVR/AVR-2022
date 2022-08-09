@@ -67,6 +67,14 @@ To start the AVR software, just run:
 
 To stop the AVR software hit <kbd>Ctrl</kbd>+<kbd>C</kbd>.
 
+Additionally, you can specify specific containers by declaring them as folows:
+
+```bash
+./start.py run thermal status -m
+```
+
+this will run all of the minimum modules required for flight (-m = [fcm, fusion, mavp2p, mqtt, vio]) in addition to the thermal & status modules
+
 If you ever need to update the AVR software, run:
 
 ```bash
