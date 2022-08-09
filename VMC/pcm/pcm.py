@@ -4,11 +4,11 @@ from bell.avr.mqtt.payloads import (
     AvrPcmSetBaseColorPayload,
     AvrPcmSetLaserOffPayload,
     AvrPcmSetLaserOnPayload,
+    AvrPcmSetServoAbsPayload,
     AvrPcmSetServoMaxPayload,
     AvrPcmSetServoMinPayload,
     AvrPcmSetServoOpenClosePayload,
     AvrPcmSetServoPctPayload,
-    AvrPcmSetServoAbsPayload,
     AvrPcmSetTempColorPayload,
 )
 from bell.avr.serial.client import SerialLoop
@@ -39,7 +39,6 @@ class PeripheralControlModule(MQTTModule):
             "avr/pcm/set_laser_off": self.set_laser_off,
             "avr/pcm/set_servo_pct": self.set_servo_pct,
             "avr/pcm/set_servo_abs": self.set_servo_abs,
-
         }
 
     def run(self) -> None:
