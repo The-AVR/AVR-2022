@@ -9,7 +9,7 @@ As you read through this page please be sure to refer to the
 which contains definitions of many of the components on this page.
 The Bell AVR drone kit includes all of the components required to build your
 own autonomous quadcopter. The kit provides a frame, motors, electronic speed
-controllers, flight controller, and some additional peripherals.
+controllers, flight controller, and several additional peripherals.
 This section will cover a majority of the components included for basic
 assembly of the drone.
 
