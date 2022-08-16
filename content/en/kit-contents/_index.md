@@ -21,7 +21,7 @@ Each of the following sections will explain the major components of the AVR kit
 as well as provide photos for your reference. Be sure to lay out all of the
 components in your kit and verify with the photos below to make sure nothing is missing.
 
-![AVR kit components for manual flight](avr_kit1.jpg)
+![AVR kit components for manual flight](avr_phase1_kit.jpg)
 
 ## AVR Frame - Box 1
 
