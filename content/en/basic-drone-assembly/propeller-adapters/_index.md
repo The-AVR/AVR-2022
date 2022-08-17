@@ -1,6 +1,6 @@
 ---
 title: "Propeller Adapters"
-weight: 8
+weight: 18
 ---
 
 The propeller adapters are what we will use to attach the propellers to the motors.

@@ -1,6 +1,6 @@
 ---
 title: "Motors and Arms"
-weight: 1
+weight: 3
 description: "In this section we will walk through the process of mounting the drone motors to the arms of the frame"
 ---
 

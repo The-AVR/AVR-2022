@@ -1,6 +1,6 @@
 ---
 title: Landing Gear, PDB, and Rails
-weight: 2
+weight: 12
 description: "In this section we'll assemble the bottom part of the frame. This includes the power distribution board, landing gear, and the rails to which other components can be attached later."
 ---
 

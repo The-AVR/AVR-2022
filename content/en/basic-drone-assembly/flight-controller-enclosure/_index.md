@@ -1,6 +1,6 @@
 ---
 title: "Flight Controller Enclosure"
-weight: 4
+weight: 14
 description: "This page shows how the FC is installed in its 3D printed enclosure."
 ---
 

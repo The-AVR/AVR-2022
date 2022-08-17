@@ -1,6 +1,6 @@
 ---
 title: "Flight Controller and ESC Wiring"
-weight: 7
+weight: 17
 description: "This page covers the steps to make sure the FC is connected properly."
 ---
 

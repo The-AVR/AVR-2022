@@ -1,6 +1,6 @@
 ---
 title: "ESCs, FC Power Module, and Receiver"
-weight: 3
+weight: 13
 description: "This page will explain how to mount the ESCs, the FC power module and the RC receiver module."
 ---
 

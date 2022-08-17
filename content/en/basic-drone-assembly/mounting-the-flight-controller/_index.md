@@ -1,6 +1,6 @@
 ---
 title: "Mounting the Flight Controller"
-weight: 5
+weight: 15
 description: "Before we put the last parts of the frame together, we should install some components on the top plate."
 ---
 

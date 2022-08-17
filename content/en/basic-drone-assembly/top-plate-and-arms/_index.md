@@ -1,6 +1,6 @@
 ---
 title: "Top Plate and Arms"
-weight: 6
+weight: 16
 description: "This page explains how to assemble the top plate and arms, as well as plugging in the motor cables."
 ---
 
