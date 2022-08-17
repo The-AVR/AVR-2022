@@ -31,3 +31,17 @@ A tube of blue loctite is included in your AVR kit and is recommended throughout
 Repeat this process for all four of the motors and set your arms aside for now. We will be attaching them to the mid-section of the frame in an upcoming step.
 
 ![All four motor/arm assemblies complete](motor_arm_assembly_complete.jpg)
+
+## Attaching Arms to Midplate Assembly
+
+![](motor_arm_midplate_1.jpg)
+
+![](motor_arm_midplate_2.jpg)
+
+![](motor_arm_midplate_3.jpg)
+
+![](motor_arm_midplate_4.jpg)
+
+![](motor_arm_midplate_5.jpg)
+
+![](motor_arm_midplate_6.jpg)
