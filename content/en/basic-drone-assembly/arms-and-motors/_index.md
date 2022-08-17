@@ -45,3 +45,5 @@ Repeat this process for all four of the motors and set your arms aside for now. 
 ![](motor_arm_midplate_5.jpg)
 
 ![](motor_arm_midplate_6.jpg)
+
+![](motor_arm_midplate_7.jpg)
