@@ -32,6 +32,25 @@ json jsonify_tag(nvAprilTagsID_t detection)
     return j;
 }
 
+json jsonify_tag(nvAprilTagsID_t detection)
+{
+    // create an empty structure (null)
+    json j;
+
+    j["id"] = detection.id;
+
+    j["pos"]["x"] = detection.translation[0];
+    j["pos"]["y"] = detection.translation[1];
+    j["pos"]["z"] = detection.translation[2];
+
+    j["rotation"] = {{detection.orientation[0], detection.orientation[3], detection.orientation[6]},
+                     {detection.orientation[1], detection.orientation[4], detection.orientation[7]},
+                     {detection.orientation[2], detection.orientation[5], detection.orientation[8]}};
+
+    return j;
+}
+
+
 int main()
 {
     //############################################# SETUP MQTT ####################################################################################
@@ -39,6 +58,9 @@ int main()
     const std::string CLIENT_ID{"nvapriltags"};
     const std::string TAG_TOPIC{"avr/apriltags/raw"};
     const std::string FPS_TOPIC{"avr/apriltags/fps"};
+    const std::string STATUS_TOPIC{"avr/apriltags/status"};
+    const std::string STATE_TOPIC{"avr/apriltags/status/state"};
+
 
     const int QOS = 0;
     mqtt::client client(SERVER_ADDRESS, CLIENT_ID);
@@ -52,10 +74,23 @@ int main()
         std::cout << "\nConnecting..." << std::endl;
         client.connect(connOpts);
         std::cout << "...OK" << std::endl;
+        
+        json j; 
+        j["status"] = "init";
+        std::string status = j.dump();
+        const char *const_st_str =status.c_str();
+        client.publish(STATUS_TOPIC, const_st_str, strlen(const_st_str));
+
     }
+
     catch (const mqtt::exception &exc)
     {
         std::cerr << exc.what() << std::endl;
+        json j; 
+        j["status"] = "fail";
+        std::string status = j.dump();
+        const char *const_st_str =status.c_str();
+        client.publish(STATUS_TOPIC, const_st_str, strlen(const_st_str));
         return 1;
     }
 
@@ -130,6 +165,8 @@ int main()
             const char *const_fps_str = fps_str.c_str();
 
             client.publish(FPS_TOPIC, const_fps_str, strlen(const_fps_str));
+
+
         }
     }
     delete (impl_);
