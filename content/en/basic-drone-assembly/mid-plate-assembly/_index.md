@@ -1,6 +1,6 @@
 ---
 title: "Mid Plate Assembly"
-weight: 3
+weight: 2
 description: "The mid plate assembly is an essential part of the AVR frame. It holds the motor arms, ESCs, and Pixhawk FC."
 ---
 

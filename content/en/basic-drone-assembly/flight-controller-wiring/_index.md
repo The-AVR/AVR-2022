@@ -65,3 +65,12 @@ description: "We will walk through creating the FC cable and wiring"
 ![](rx_connection_1.jpg)
 
 ![](rx_connection_2.jpg)
+
+
+## Power Module
+
+![](power_connection_1.jpg)
+
+![](power_connection_2.jpg)
+
+![](power_connection_3.jpg)
