@@ -132,7 +132,6 @@ class VMCControlWidget(BaseTabWidget):
 
         layout.addWidget(servos_groupbox, 0, 1, 3, 3)
 
-
         # # ==========================
         # # PCC Reset
         # reset_groupbox = QtWidgets.QGroupBox("Reset")

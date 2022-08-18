@@ -223,7 +223,6 @@ class MainWindow(QtWidgets.QWidget):
             self.mqtt_logger_widget.process_message
         )
 
-
         # pcc tester widget
 
         self.pcc_tester_widget = PCCTesterWidget(
@@ -248,7 +247,7 @@ class MainWindow(QtWidgets.QWidget):
             self.vmc_telemetry_widget,
             self.thermal_view_control_widget,
             self.moving_map_widget,
-            self.autonomoy_widget
+            self.autonomoy_widget,
         ]
 
         # disable/enable widgets
