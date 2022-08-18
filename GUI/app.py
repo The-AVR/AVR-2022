@@ -187,6 +187,17 @@ class MainWindow(QtWidgets.QWidget):
             self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
         )
 
+        # autonomy widget
+
+        self.autonomoy_widget = AutonomyWidget(self)
+        self.autonomoy_widget.build()
+        self.mqtt_logger_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.autonomoy_widget, self.autonomoy_widget.windowTitle())
+
+        self.autonomoy_widget.emit_message.connect(
+            self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
+        )
+
         # mqtt debug widget
 
         self.mqtt_debug_widget = MQTTDebugWidget(self)
@@ -212,17 +223,6 @@ class MainWindow(QtWidgets.QWidget):
             self.mqtt_logger_widget.process_message
         )
 
-
-        # autonomy widget
-
-        self.autonomoy_widget = AutonomyWidget(self)
-        self.autonomoy_widget.build()
-        self.mqtt_logger_widget.pop_in.connect(self.tabs.pop_in)
-        self.tabs.addTab(self.autonomoy_widget, self.autonomoy_widget.windowTitle())
-
-        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
-            self.autonomoy_widget.process_message
-        )
 
         # pcc tester widget
 
