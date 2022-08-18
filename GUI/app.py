@@ -3,6 +3,7 @@ import sys
 
 from app.lib.enums import ConnectionState
 from app.lib.qt_icon import set_icon
+from app.tabs.autonomy import AutonomyWidget
 from app.tabs.connection.main import MainConnectionWidget
 from app.tabs.moving_map import MovingMapWidget
 from app.tabs.mqtt_debug import MQTTDebugWidget
@@ -211,6 +212,18 @@ class MainWindow(QtWidgets.QWidget):
             self.mqtt_logger_widget.process_message
         )
 
+
+        # autonomy widget
+
+        self.autonomoy_widget = AutonomyWidget(self)
+        self.autonomoy_widget.build()
+        self.mqtt_logger_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.autonomoy_widget, self.autonomoy_widget.windowTitle())
+
+        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+            self.autonomoy_widget.process_message
+        )
+
         # pcc tester widget
 
         self.pcc_tester_widget = PCCTesterWidget(
@@ -235,6 +248,7 @@ class MainWindow(QtWidgets.QWidget):
             self.vmc_telemetry_widget,
             self.thermal_view_control_widget,
             self.moving_map_widget,
+            self.autonomoy_widget
         ]
 
         # disable/enable widgets

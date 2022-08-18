@@ -54,7 +54,7 @@ class VMCControlWidget(BaseTabWidget):
         clear_led_button.clicked.connect(lambda: self.set_led((0, 0, 0, 0)))  # type: ignore
         led_layout.addWidget(clear_led_button)
 
-        layout.addWidget(led_groupbox, 0, 0, 2, 1)
+        layout.addWidget(led_groupbox, 0, 0, 3, 1)
 
         # ==========================
         # Servos
@@ -132,21 +132,6 @@ class VMCControlWidget(BaseTabWidget):
 
         layout.addWidget(servos_groupbox, 0, 1, 3, 3)
 
-        # ==========================
-        # Autonomous mode
-        autonomous_groupbox = QtWidgets.QGroupBox("Autonomous")
-        autonomous_layout = QtWidgets.QVBoxLayout()
-        autonomous_groupbox.setLayout(autonomous_layout)
-
-        autonomous_enable_button = QtWidgets.QPushButton("Enable")
-        autonomous_enable_button.clicked.connect(lambda: self.set_autonomous(True))  # type: ignore
-        autonomous_layout.addWidget(autonomous_enable_button)
-
-        autonomous_disable_button = QtWidgets.QPushButton("Disable")
-        autonomous_disable_button.clicked.connect(lambda: self.set_autonomous(False))  # type: ignore
-        autonomous_layout.addWidget(autonomous_disable_button)
-
-        layout.addWidget(autonomous_groupbox, 2, 0, 1, 1)
 
         # # ==========================
         # # PCC Reset
