@@ -13,6 +13,7 @@ from bell.avr.mqtt.payloads import (
     AvrPcmSetLaserOffPayload,
     AvrPcmSetLaserOnPayload,
     AvrPcmSetServoPctPayload,
+    AvrPcmSetServoAbsPayload,
 )
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -157,6 +158,10 @@ class JoystickWidget(BaseTabWidget):
         self.servoxmax = 99
         self.servoymax = 99
 
+        # servo declarations
+        self.SERVO_ABS_MAX = 1950
+        self.SERVO_ABS_MIN = 800
+
     def _center(self) -> QtCore.QPointF:
         """
         Return the center of the widget.
@@ -173,6 +178,16 @@ class JoystickWidget(BaseTabWidget):
             AvrPcmSetServoPctPayload(servo=3, percent=y_servo_percent),
         )
 
+    def move_gimbal_absolute(self, x_servo_abs: int, y_servo_abs: int) -> None:
+        self.send_message(
+            "avr/pcm/set_servo_abs",
+            AvrPcmSetServoAbsPayload(servo=2, absolute=x_servo_abs),
+        )
+        self.send_message(
+            "avr/pcm/set_servo_abs",
+            AvrPcmSetServoAbsPayload(servo=3, absolute=y_servo_abs),
+        )
+
     def update_servos(self) -> None:
         """
         Update the servos on joystick movement.
@@ -183,21 +198,29 @@ class JoystickWidget(BaseTabWidget):
             return
         self.lasttime = ms
 
-        y_reversed = 100 - self.current_y
+        # y_reversed = 100 - self.current_y
 
-        x_servo_percent = round(map_value(self.current_x, 0, 100, 10, 99))
-        y_servo_percent = round(map_value(y_reversed, 0, 100, 10, 99))
+        # x_servo_percent = round(map_value(self.current_x, 0, 100, 10, 99))
+        # y_servo_percent = round(map_value(y_reversed, 0, 100, 10, 99))
+        #
+        # if x_servo_percent < self.servoxmin:
+        #     return
+        # if y_servo_percent < self.servoymin:
+        #     return
+        # if x_servo_percent > self.servoxmax:
+        #     return
+        # if y_servo_percent > self.servoymax:
+        #     return
+        #
+        # self.move_gimbal(x_servo_percent, y_servo_percent)
 
-        if x_servo_percent < self.servoxmin:
-            return
-        if y_servo_percent < self.servoymin:
-            return
-        if x_servo_percent > self.servoxmax:
-            return
-        if y_servo_percent > self.servoymax:
-            return
+        y_reversed = 125 - self.current_y
+        # side to side  270 left, 360 right
 
-        self.move_gimbal(x_servo_percent, y_servo_percent)
+        x_servo_abs = round(map_value(self.current_x + 25, 25, 125, self.SERVO_ABS_MIN, self.SERVO_ABS_MAX))
+        y_servo_abs = round(map_value(y_reversed, 25, 125, self.SERVO_ABS_MIN, self.SERVO_ABS_MAX))
+
+        self.move_gimbal_absolute(x_servo_abs, y_servo_abs)
 
     def _centerEllipse(self) -> QtCore.QRectF:
         # sourcery skip: assign-if-exp
