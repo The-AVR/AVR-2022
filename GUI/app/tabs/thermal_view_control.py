@@ -12,8 +12,8 @@ from bell.avr.mqtt.payloads import (
     AvrPcmFireLaserPayload,
     AvrPcmSetLaserOffPayload,
     AvrPcmSetLaserOnPayload,
-    AvrPcmSetServoPctPayload,
     AvrPcmSetServoAbsPayload,
+    AvrPcmSetServoPctPayload,
 )
 from PySide6 import QtCore, QtGui, QtWidgets
 
@@ -217,8 +217,14 @@ class JoystickWidget(BaseTabWidget):
         y_reversed = 225 - self.current_y
         # side to side  270 left, 360 right
 
-        x_servo_abs = round(map_value(self.current_x + 25, 25, 225, self.SERVO_ABS_MIN, self.SERVO_ABS_MAX))
-        y_servo_abs = round(map_value(y_reversed, 25, 225, self.SERVO_ABS_MIN, self.SERVO_ABS_MAX))
+        x_servo_abs = round(
+            map_value(
+                self.current_x + 25, 25, 225, self.SERVO_ABS_MIN, self.SERVO_ABS_MAX
+            )
+        )
+        y_servo_abs = round(
+            map_value(y_reversed, 25, 225, self.SERVO_ABS_MIN, self.SERVO_ABS_MAX)
+        )
 
         self.move_gimbal_absolute(x_servo_abs, y_servo_abs)
 
