@@ -1,8 +1,15 @@
 from __future__ import annotations
 
-from bell.avr.mqtt.payloads import AvrAutonomousPayload, AvrGameBuildingStatePayload
-from PySide6 import QtWidgets
+import functools
+from typing import List
 
+from bell.avr.mqtt.payloads import (
+    AvrAutonomousBuildingDropPayload,
+    AvrAutonomousEnablePayload,
+)
+from PySide6 import QtCore, QtWidgets
+
+from ..lib.color import wrap_text
 from .base import BaseTabWidget
 
 
@@ -33,102 +40,96 @@ class AutonomyWidget(BaseTabWidget):
         autonomous_disable_button.clicked.connect(lambda: self.set_autonomous(False))  # type: ignore
         autonomous_layout.addWidget(autonomous_disable_button)
 
+        self.autonomous_label = QtWidgets.QLabel()
+        self.autonomous_label.setAlignment(
+            QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter
+        )
+        autonomous_layout.addWidget(self.autonomous_label)
+
         layout.addWidget(autonomous_groupbox, 0, 0, 1, 1)
 
         # ==========================
         # Buildings
-        buildings_groupbox = QtWidgets.QGroupBox("All Buildings")
+        self.number_of_buildings = 6
+        self.building_labels: List[QtWidgets.QLabel] = []
+
+        buildings_groupbox = QtWidgets.QGroupBox("Buildings")
         buildings_layout = QtWidgets.QVBoxLayout()
         buildings_groupbox.setLayout(buildings_layout)
 
         building_all_layout = QtWidgets.QHBoxLayout()
 
-        building_all_open_button = QtWidgets.QPushButton("All on fire")
-        building_all_open_button.clicked.connect(lambda: self.set_building_all(True))  # type: ignore
-        building_all_layout.addWidget(building_all_open_button)
+        building_all_enable_button = QtWidgets.QPushButton("Enable All Drops")
+        building_all_enable_button.clicked.connect(lambda: self.set_building_all(True))  # type: ignore
+        building_all_layout.addWidget(building_all_enable_button)
 
-        building_all_close_button = QtWidgets.QPushButton("All NOT on fire")
-        building_all_close_button.clicked.connect(lambda: self.set_building_all(False))  # type: ignore
-        building_all_layout.addWidget(building_all_close_button)
+        building_all_disable_button = QtWidgets.QPushButton("Disable All Drops")
+        building_all_disable_button.clicked.connect(lambda: self.set_building_all(False))  # type: ignore
+        building_all_layout.addWidget(building_all_disable_button)
 
         buildings_layout.addLayout(building_all_layout)
 
-        building_1_groupbox = QtWidgets.QGroupBox("Building 1")
-        building_1_layout = QtWidgets.QHBoxLayout()
-        building_1_groupbox.setLayout(building_1_layout)
+        for i in range(self.number_of_buildings):
+            building_groupbox = QtWidgets.QGroupBox(f"Building {i+1}")
+            building_layout = QtWidgets.QHBoxLayout()
+            building_groupbox.setLayout(building_layout)
 
-        building_1_open_button = QtWidgets.QPushButton("On fire")
-        building_1_open_button.clicked.connect(lambda: self.set_building(0, True))  # type: ignore
-        building_1_layout.addWidget(building_1_open_button)
+            building_enable_button = QtWidgets.QPushButton("Enable Drop")
+            building_enable_button.clicked.connect(functools.partial(self.set_building, i, True))  # type: ignore
+            building_layout.addWidget(building_enable_button)
 
-        building_1_close_button = QtWidgets.QPushButton("NOT on fire")
-        building_1_close_button.clicked.connect(lambda: self.set_building(0, False))  # type: ignore
-        building_1_layout.addWidget(building_1_close_button)
+            building_disable_button = QtWidgets.QPushButton("Disable Drop")
+            building_disable_button.clicked.connect(functools.partial(self.set_building, i, False))  # type: ignore
+            building_layout.addWidget(building_disable_button)
 
-        buildings_layout.addWidget(building_1_groupbox)
+            building_label = QtWidgets.QLabel()
+            building_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            building_layout.addWidget(building_label)
+            self.building_labels.append(building_label)
 
-        building_2_groupbox = QtWidgets.QGroupBox("Building 2")
-        building_2_layout = QtWidgets.QHBoxLayout()
-        building_2_groupbox.setLayout(building_2_layout)
-
-        building_2_open_button = QtWidgets.QPushButton("On fire")
-        building_2_open_button.clicked.connect(lambda: self.set_building(1, True))  # type: ignore
-        building_2_layout.addWidget(building_2_open_button)
-
-        building_2_close_button = QtWidgets.QPushButton("NOT on fire")
-        building_2_close_button.clicked.connect(lambda: self.set_building(1, False))  # type: ignore
-        building_2_layout.addWidget(building_2_close_button)
-
-        buildings_layout.addWidget(building_2_groupbox)
-
-        building_3_groupbox = QtWidgets.QGroupBox("Building 3")
-        building_3_layout = QtWidgets.QHBoxLayout()
-        building_3_groupbox.setLayout(building_3_layout)
-
-        building_3_open_button = QtWidgets.QPushButton("On fire")
-        building_3_open_button.clicked.connect(lambda: self.set_building(2, True))  # type: ignore
-        building_3_layout.addWidget(building_3_open_button)
-
-        building_3_close_button = QtWidgets.QPushButton("NOT on fire")
-        building_3_close_button.clicked.connect(lambda: self.set_building(2, False))  # type: ignore
-        building_3_layout.addWidget(building_3_close_button)
-
-        buildings_layout.addWidget(building_3_groupbox)
-
-        building_4_groupbox = QtWidgets.QGroupBox("Building 4")
-        building_4_layout = QtWidgets.QHBoxLayout()
-        building_4_groupbox.setLayout(building_4_layout)
-
-        building_4_open_button = QtWidgets.QPushButton("On fire")
-        building_4_open_button.clicked.connect(lambda: self.set_building(3, True))  # type: ignore
-        building_4_layout.addWidget(building_4_open_button)
-
-        building_4_close_button = QtWidgets.QPushButton("NOT on fire")
-        building_4_close_button.clicked.connect(lambda: self.set_building(3, False))  # type: ignore
-        building_4_layout.addWidget(building_4_close_button)
-
-        buildings_layout.addWidget(building_4_groupbox)
+            buildings_layout.addWidget(building_groupbox)
 
         layout.addWidget(buildings_groupbox, 1, 0, 4, 1)
 
-    def set_building(self, number: int, on_fire: bool) -> None:
+    def set_building(self, number: int, state: bool) -> None:
+        # sourcery skip: assign-if-exp
         """
         Set a building state
         """
         self.send_message(
-            "avr/game/building/state",
-            AvrGameBuildingStatePayload(id=number, on_fire=on_fire),
+            "avr/autonomous/building/drop",
+            AvrAutonomousBuildingDropPayload(id=number, enabled=state),
         )
 
-    def set_building_all(self, on_fire: bool) -> None:
+        if state:
+            text = "Drop Enabled"
+            color = "green"
+        else:
+            text = "Drop Disabled"
+            color = "red"
+
+        self.building_labels[number].setText(wrap_text(text, color))
+
+    def set_building_all(self, state: bool) -> None:
         """
         Set all building states at once
         """
-        for i in range(4):
-            self.set_building(i, on_fire)
+        for i in range(self.number_of_buildings):
+            self.set_building(i, state)
 
     def set_autonomous(self, state: bool) -> None:
         """
         Set autonomous mode
         """
-        self.send_message("avr/autonomous", AvrAutonomousPayload(enable=state))
+        self.send_message(
+            "avr/autonomous/enable", AvrAutonomousEnablePayload(enabled=state)
+        )
+
+        if state:
+            text = "Autonomous Enabled"
+            color = "green"
+        else:
+            text = "Autonomous Disabled"
+            color = "red"
+
+        self.autonomous_label.setText(wrap_text(text, color))

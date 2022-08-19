@@ -17,3 +17,10 @@ def smear_color(
     diff = [f - e for f, e in zip(max_color, min_color)]
     smear = [int(d * norm_value) for d in diff]
     return tuple(e + s for e, s in zip(min_color, smear))
+
+
+def wrap_text(text: str, color: str) -> str:
+    """
+    Take a color, and wrap the text with a `span` element for that color.
+    """
+    return f"<span style='color:{color};'>{text}</span>"
