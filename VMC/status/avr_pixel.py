@@ -46,7 +46,7 @@ class AVR_PIXEL(object):
     def rgb2int(self, color: List[int]) -> int:
         red = int(self.clamp(color[0], 0, 255)) << 16
         green = int(self.clamp(color[1], 0, 255)) << 8
-        blue = self.clamp(color[2], 0, 255)
+        blue = int(self.clamp(color[2], 0, 255))
 
         return int(red + green + blue)
 
