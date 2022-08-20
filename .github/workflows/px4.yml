@@ -70,6 +70,8 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: mknejp/delete-release-assets@v1
         with:
+          fail-if-no-assets: false
+          fail-if-no-release: false
           token: ${{ github.token }}
           tag: ${{ steps.latest_release.outputs.tag_name }}
           assets: "${{ matrix.px4_target }}.*.px4"
