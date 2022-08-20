@@ -8,7 +8,7 @@ class NVPModel(object):
     def __init__(self):
         self.initialized = False
 
-    def initialize(self):
+    def initialize(self) -> None:
         self.set_nvpmodel("0")
         self.initialized = True
 
