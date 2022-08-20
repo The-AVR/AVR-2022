@@ -1,6 +1,8 @@
 import subprocess
-from loguru import logger
 from typing import Union
+
+from loguru import logger
+
 
 class NVPModel(object):
     def __init__(self):

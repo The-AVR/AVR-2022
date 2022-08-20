@@ -1,8 +1,9 @@
-import board
-import neopixel_spi as neopixel
-from typing import List, Union, Any
 import itertools
 import time
+from typing import List, Union
+
+import board
+import neopixel_spi as neopixel
 
 NUM_PIXELS = 12
 PIXEL_ORDER = neopixel.GRB

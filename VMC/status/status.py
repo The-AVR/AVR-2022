@@ -1,15 +1,11 @@
-import itertools
 import signal
-import subprocess
 import time
-from typing import Any, Dict, Tuple, List
-
-import paho.mqtt.client as mqtt
-from bell.avr.mqtt.client import MQTTModule
-from loguru import logger
+from typing import Any, Dict, Tuple
 
 import avr_pixel
 import nvpmodel
+import paho.mqtt.client as mqtt
+from bell.avr.mqtt.client import MQTTModule
 
 CLR_PURPLE = 0x6A0DAD
 CLR_AQUA = 0x00FFFF
