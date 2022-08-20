@@ -32,22 +32,12 @@ json jsonify_tag(nvAprilTagsID_t detection)
     return j;
 }
 
-json jsonify_tag(nvAprilTagsID_t detection)
+bool publish_json(mqtt::client client, std::string topic, json message)
 {
-    // create an empty structure (null)
-    json j;
-
-    j["id"] = detection.id;
-
-    j["pos"]["x"] = detection.translation[0];
-    j["pos"]["y"] = detection.translation[1];
-    j["pos"]["z"] = detection.translation[2];
-
-    j["rotation"] = {{detection.orientation[0], detection.orientation[3], detection.orientation[6]},
-                     {detection.orientation[1], detection.orientation[4], detection.orientation[7]},
-                     {detection.orientation[2], detection.orientation[5], detection.orientation[8]}};
-
-    return j;
+    std::string text = message.dump();
+    const char *const_str = text.c_str();
+    const char *const_topic_str = topic.c_str()
+    client.publish(const_topic_str, const_str, strlen(const_str));
 }
 
 
@@ -58,8 +48,8 @@ int main()
     const std::string CLIENT_ID{"nvapriltags"};
     const std::string TAG_TOPIC{"avr/apriltags/raw"};
     const std::string FPS_TOPIC{"avr/apriltags/fps"};
-    const std::string STATUS_TOPIC{"avr/apriltags/status"};
-    const std::string STATE_TOPIC{"avr/apriltags/status/state"};
+    const std::string STATUS_TOPIC{"avr/apriltags/c/status"};
+    const std::string STATE_TOPIC{"avr/apriltags/c/state"};
 
 
     const int QOS = 0;
@@ -70,33 +60,32 @@ int main()
     connOpts.set_clean_session(true);
 
     try
+    //try to connect to MQTT
     {
         std::cout << "\nConnecting..." << std::endl;
         client.connect(connOpts);
-        std::cout << "...OK" << std::endl;
-        
-        json j; 
-        j["status"] = "init";
-        std::string status = j.dump();
-        const char *const_st_str =status.c_str();
-        client.publish(STATUS_TOPIC, const_st_str, strlen(const_st_str));
+        std::cout << "MQTT Connected" << std::endl;
+
+        json j;
+        j["state"] = "mqtt_connected";
+        publish_json(client, STATE_TOPIC, j);
 
     }
-
+    //if MQTT fails to connect, publish the stacktrace and exit the program
     catch (const mqtt::exception &exc)
     {
         std::cerr << exc.what() << std::endl;
-        json j; 
-        j["status"] = "fail";
-        std::string status = j.dump();
-        const char *const_st_str =status.c_str();
-        client.publish(STATUS_TOPIC, const_st_str, strlen(const_st_str));
         return 1;
     }
 
     //############################################# SETUP VIDEO CAPTURE ##################################################################################################
+
     cv::VideoCapture capture("nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720,format=NV12, framerate=15/1 ! nvvidconv ! video/x-raw,format=BGRx !  videoconvert ! videorate ! video/x-raw,format=BGR,framerate=5/1 ! appsink", cv::CAP_GSTREAMER);
-    std::cout << "made it past cap device" << std::endl;
+    std::cout << "Opened GStreamer Pipeline" << std::endl;
+
+    json j;
+    j["state"] = "gstreamer_complete";
+    publish_json(client, STATE_TOPIC, j);
 
     cv::Mat frame;
     cv::Mat img_rgba8;
@@ -106,6 +95,11 @@ int main()
     cv::cvtColor(frame, img_rgba8, cv::COLOR_BGR2RGBA);
     setup_vpi(img_rgba8);
 
+    json j;
+    j["state"] = "vpi_setup_complete";
+    publish_json(client, STATE_TOPIC, j);
+
+
     //create the apriltag handler
     auto *impl_ = new AprilTagsImpl();
     impl_->initialize(img_rgba8.cols, img_rgba8.rows,
@@ -113,6 +107,13 @@ int main()
                       fx, fy, ppx, ppy, //camera params
                       0.174,            //tag edge length
                       6);               //max number of tags
+
+    json j;
+    j["state"] = "apriltag_setup_complete";
+    publish_json(client, STATE_TOPIC, j);
+
+    int num_frames = 0;
+    auto last_status_update = std::chrono::system_clock::now();
 
     //################################################################### MAIN LOOP ##########################################################################################
     while (capture.isOpened())
@@ -132,6 +133,8 @@ int main()
 
             //send the frame to GPU memory and run the detections
             uint32_t num_detections = process_frame(img_rgba8, impl_);
+
+            num_frames++;
 
             std::string payload = "\"tags\":{[";
 
@@ -161,10 +164,20 @@ int main()
 
             int fps = int(1000 / (std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() + 1));
 
-            std::string fps_str = "{\"fps\": " + std::to_string(fps) + "}";
-            const char *const_fps_str = fps_str.c_str();
+            if ( std::chrono::system_clock::now() - last_status_update > 1 ):
+            {
+                json j;
+                j["fps"] = std::to_string(fps);
+                publish_json(client, FPS_TOPIC, j);
 
-            client.publish(FPS_TOPIC, const_fps_str, strlen(const_fps_str));
+                json j;
+                json j2;
+                j2["num_frames_processed"] = std::to_string(num_frames);
+                j2["last_update"] = std::to_string(std::chrono::system_clock::now());
+                j["status"] = j2.dump();
+                publish_json(client, STATUS_TOPIC, j);
+                last_status_update = std::chrono::system_clock::now();
+            }
 
 
         }

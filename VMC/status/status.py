@@ -2,19 +2,15 @@ import itertools
 import signal
 import subprocess
 import time
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, List
 
-import board
-import neopixel_spi as neopixel
 import paho.mqtt.client as mqtt
 from bell.avr.mqtt.client import MQTTModule
 from loguru import logger
 
-NUM_PIXELS = 12
-PIXEL_ORDER = neopixel.GRB
+import avr_pixel
+import nvpmodel
 
-# RGB
-COLORS = (0xFF0000, 0x00FF00, 0x0000FF)
 CLR_PURPLE = 0x6A0DAD
 CLR_AQUA = 0x00FFFF
 CLR_ORANGE = 0xF5A506
@@ -24,39 +20,17 @@ CLR_BLACK = 0x000000
 CLR_GREEN = 0xFF5733
 CLR_RED = 0xFF0000
 
+NVPMODEL_LED = 0
 VIO_LED = 1
 PCC_LED = 2
 THERMAL_LED = 3
 FCC_LED = 4
 APRIL_LED = 5
 
-DELAY = 0.1
-
 
 class StatusModule(MQTTModule):
     def __init__(self):
         super().__init__()
-
-        
-        self.module_map = module_map = {
-            "vio": {
-                "led": VIO_LED, 
-                "color": CLR_PURPLE},
-            "pcm":{
-                "led": PCC_LED, 
-                "color": CLR_AQUA}, 
-            "fcm":{
-                "led": FCC_LED, 
-                "color": CLR_ORANGE},
-            "thermal":{
-                "led": THERMAL_LED, 
-                "color": CLR_BLUE},
-            "apriltags": {
-                "led": APRIL_LED, 
-                "color": CLR_YELLOW},
-        }
-
-        self.initialized = False
 
         self.topic_map = {
             "avr/status/light/pcm": self.light_status,
@@ -64,27 +38,25 @@ class StatusModule(MQTTModule):
             "avr/status/light/apriltags": self.light_status,
             "avr/status/light/fcm": self.light_status,
             "avr/status/light/thermal": self.light_status,
-            "avr/status/apriltags" : self.apriltags_state,
+            "avr/apriltags/c/status": self.apriltags_state,
         }
 
-        self.spi = board.SPI()
-        self.pixels = neopixel.NeoPixel_SPI(
-            self.spi, NUM_PIXELS, pixel_order=PIXEL_ORDER, auto_write=False
-        )
-
+        self.nvpmodel = nvpmodel.NVPModel()
+        self.pixels = avr_pixel.AVR_PIXEL()
 
         # set up handling for turning off the lights on docker shutdown
-        self.run_status_check = True
+        self.enabled = True
         signal.signal(signal.SIGINT, self.exit_gracefully)
         signal.signal(signal.SIGTERM, self.exit_gracefully)
 
-        self.red_status_all()
+        # set all the LEDs to red
+        self.pixels.set_all_color(CLR_RED)
 
     def on_message(
         self, client: mqtt.Client, userdata: Any, msg: mqtt.MQTTMessage
     ) -> None:
         # run this function on every message recieved before processing topic map
-        self.check_status(msg.topic)
+        self.process_status_update(msg.topic)
         super().on_message(client, userdata, msg)
 
     def on_connect(
@@ -92,111 +64,53 @@ class StatusModule(MQTTModule):
     ) -> None:
         super().on_connect(client, userdata, flags, rc)
         # additionally subscribe to all topics
+        # TODO - its generally not a good idea to subscribe to everything
+        # TODO - create dedicated status topics and sub to those
         client.subscribe("avr/#")
 
-    def set_cpu_status(self) -> None:
-        # Initialize power mode status
-        cmd = ["/app/nvpmodel", "--verbose", "-f", "/app/nvpmodel.conf", "-m", "0"]
-        try:
-            subprocess.check_call(cmd, stderr=subprocess.STDOUT)
-        except subprocess.CalledProcessError as e:
-            logger.exception(
-                f"Command '{e.cmd}' return with error ({e.returncode}): {e.output}"
-            )
+    def apriltags_state(self, payload: dict):
+        # TODO - add state history so that the if statements can be compared to historical values to ensure the module is operating
+        if (int(payload["num_frames_processed"]) > 1) and (
+            float(payload["last_update_time"]) - time.time() < 5
+        ):
+            self.pixels.set_pixel_color(APRIL_LED, CLR_YELLOW)
+        else:
+            self.pixels.set_pixel_color(APRIL_LED, CLR_BLACK)
 
-    def check_status(self, topic: str) -> None:
+    def process_status_update(self, topic: str) -> None:
+        """
+        this function is run for every incoming message on the avr/# topic
+        the logic is such that if ANY message comes in that starts with the below topics
+        it will light up the associated pixel with its associated color
+        """
         lookup: Dict[str, Tuple[int, int]] = {
             "avr/vio": (VIO_LED, CLR_PURPLE),
             "avr/pcm": (PCC_LED, CLR_AQUA),
             "avr/fcm": (FCC_LED, CLR_ORANGE),
             "avr/thermal": (THERMAL_LED, CLR_BLUE),
-            "avr/apriltags": (APRIL_LED, CLR_YELLOW),
+            # "avr/apriltags": (APRIL_LED, CLR_YELLOW), #we are overriding this one with a special handler
         }
 
         for key, value in lookup.items():
             if topic.startswith(key):
-                self.light_up(*value)
+                self.pixels.set_pixel_color(value[0], value[1])
 
-    def red_status_all(self) -> None:
-        for i in range(NUM_PIXELS):
-            self.pixels[i] = COLORS[0]
-        self.pixels.show()
-
-    def all_off(self) -> None:
-        for i in range(NUM_PIXELS):
-            self.pixels[i] = CLR_BLACK
-        self.pixels.show()
-
-    def light_up(self, which_one: int, color: int) -> None:
-        self.pixels[which_one] = color
-        self.pixels.show()
-
-    def light_status(self, payload: Any) -> None:
-        for color, i in itertools.product(COLORS, range(NUM_PIXELS)):
-            self.pixels[i] = color
-            self.pixels.show()
-            time.sleep(DELAY)
-            self.pixels.fill(0)
-
-    def status_check(self) -> None:
-        if not self.initialized:
-            self.set_cpu_status()
-            self.initialized = True
-
-        cmd = ["/app/nvpmodel", "-f", "/app/nvpmodel.conf", "-q"]
-        try:
-            result = subprocess.check_output(cmd, stderr=subprocess.STDOUT).decode(
-                "utf-8"
-            )
-            self.pixels[0] = COLORS[1] if "MAXN" in result else COLORS[0]
-            self.pixels.show()
-        except subprocess.CalledProcessError as e:
-            logger.exception(
-                f"Command '{e.cmd}' return with error ({e.returncode}): {e.output}"
-            )
-
-    def apriltags_state(self, payload: str):
-        payload == "fail":
-
-        # if payload == "init":
-        #     self.blink_light(
-        #         self.module_map["apriltag"]["led"], 
-        #         self.module_map["apriltag"]["color"]
-        #         )
-        # elif payload == "connected_camera":
-        #     self.blink_light(
-        #         self.module_map["apriltag"]["led"], 
-        #         CLR_GREEN
-        #         )
-        #     self.light_up(
-        #         self.module_map["apriltag"]["led"], 
-        #         self.module_map["apriltag"]["color"]
-        #         )
-        # elif payload == "error":
-        #     self.light_up(
-        #         self.module_map["apriltag"]["led"], 
-        #         CLR_RED
-        #         )
-
-    def blink_light(which_one: int, color: int, num_blinks: int) -> None:
-        for i in range(num_blinks-1):
-            self.pixels[which_one] = color
-            self.pixels.show()
-            time.sleep(DELAY)
-            self.pixels.fill(0)
-            self.pixels.show()
-            time.sleep(DELAY)
+    def nvpmodel_status_check(self) -> None:
+        self.pixels.set_pixel_color(
+            NVPMODEL_LED, CLR_GREEN if self.nvpmodel.check_nvpmodel_maxn() else CLR_RED
+        )
 
     def run(self) -> None:
         self.run_non_blocking()
+        self.nvpmodel.initialize()
 
-        while self.run_status_check:
-            self.status_check()
+        while self.enable:
+            self.nvpmodel_status_check()
             time.sleep(1)
         self.all_off()
 
     def exit_gracefully(self, *args) -> None:
-        self.run_status_check = False
+        self.enabled = False
 
 
 if __name__ == "__main__":
