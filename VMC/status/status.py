@@ -91,6 +91,9 @@ class StatusModule(MQTTModule):
             if topic.startswith(key):
                 self.pixels.set_pixel_color(value[0], value[1])
 
+    def light_status(self, payload: dict) -> None:
+        self.pixels.light_show()
+
     def nvpmodel_status_check(self) -> None:
         self.pixels.set_pixel_color(
             NVPMODEL_LED, CLR_GREEN if self.nvpmodel.check_nvpmodel_maxn() else CLR_RED
