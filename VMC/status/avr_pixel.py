@@ -35,15 +35,20 @@ class AVR_PIXEL(object):
             self.spi, NUM_PIXELS, pixel_order=PIXEL_ORDER, auto_write=False
         )
 
-    def clamp(self, n, min_val, max_val):
+    def clamp(
+        self,
+        n: Union[float, int],
+        min_val: Union[float, int],
+        max_val: Union[float, int],
+    ) -> Union[float, int]:
         return max(min(max_val, n), min_val)
 
     def rgb2int(self, color: List[int]) -> int:
-        red = self.clamp(color[0], 0, 255) << 16
-        green = self.clamp(color[1], 0, 255) << 8
+        red = int(self.clamp(color[0], 0, 255)) << 16
+        green = int(self.clamp(color[1], 0, 255)) << 8
         blue = self.clamp(color[2], 0, 255)
 
-        return red + green + blue
+        return int(red + green + blue)
 
     def set_all_color(self, color: Union[List[int], int]) -> None:
         if isinstance(color, list):

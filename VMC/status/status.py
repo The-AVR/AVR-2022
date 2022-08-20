@@ -64,7 +64,7 @@ class StatusModule(MQTTModule):
         # TODO - create dedicated status topics and sub to those
         client.subscribe("avr/#")
 
-    def apriltags_state(self, payload: dict):
+    def apriltags_state(self, payload: dict) -> None:
         # TODO - add state history so that the if statements can be compared to historical values to ensure the module is operating
         if (int(payload["num_frames_processed"]) > 1) and (
             float(payload["last_update_time"]) - time.time() < 5
