@@ -46,7 +46,7 @@ Place your mid top and bottom plates side by side as shown in the photo below.
 
 ![Mid top and bottom plates ready to be secured](mid_plate_assembly_8.jpg)
 
-As we discussed in the previous section motor order is incredibly important for you to have a successful flight test. Look at the motor position diagram below. Lay out each of your ESC leads in this same order.
+As we discussed in the previous section, motor order is incredibly important for you to have a successful flight test. Look at the motor position diagram below. Lay out each of your ESC leads in this same order.
 
 ![Matching up ESCs with their motor position](mid_plate_assembly_9.jpg)
 
