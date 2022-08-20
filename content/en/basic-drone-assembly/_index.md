@@ -18,6 +18,8 @@ first flight test.
 
 ![AVR drone ready for first flight](avr_phase1_completed_build.jpg)
 
+![AVR drone right side view](avr_phase1_completed_build_right_view.jpg)
+
 A simple block diagram can be used to represent the components of the basic drone.
 As you move throughout this documentation keep these details in mind.
 It will help you gain a high-level understanding of what we're trying to accomplish.
