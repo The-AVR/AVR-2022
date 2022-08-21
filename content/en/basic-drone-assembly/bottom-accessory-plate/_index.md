@@ -1,6 +1,6 @@
 ---
 title: "Bottom Accessory Plate"
-weight: 5
+weight: 6
 description: "This page walks through mounting the battery tray and attaching the accessory plate to the AVR frame"
 ---
 

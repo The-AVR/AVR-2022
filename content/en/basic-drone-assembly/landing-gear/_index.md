@@ -1,6 +1,6 @@
 ---
 title: "Landing Gear"
-weight: 6
+weight: 7
 description: "This page will guide you through the process of drilling and installing your landing gear"
 ---
 
