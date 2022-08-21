@@ -15,7 +15,7 @@ covered earlier in the documentation.
 ![3D printed WiFi antenna mount](wifi_antenna_before_mounting.jpg)
 
 The antenna mount will slide onto the rails that we previously used to attach the
-[RC receiver]({{< relref "../../basic-drone-assembly/escs-fc-power-module-and-receiver#rc-receiver-module" >}}).
+RC receiver.
 The easiest way to attach the antennas to the mount
 is by placing one nut on top and one beneath the mount as shown below.
 Tighten the nuts with a small pair of pliers so they don't come loose.
