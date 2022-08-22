@@ -66,8 +66,8 @@ class StatusModule(MQTTModule):
 
     def apriltags_state(self, payload: dict) -> None:
         # TODO - add state history so that the if statements can be compared to historical values to ensure the module is operating
-        if (int(payload["num_frames_processed"]) > 1) and (
-            float(payload["last_update_time"]) - time.time() < 5
+        if (int(payload["status"]["num_frames_processed"]) > 1) and (
+            float(payload["status"]["last_update_time"]) - time.time() < 5
         ):
             self.pixels.set_pixel_color(APRIL_LED, CLR_YELLOW)
         else:
