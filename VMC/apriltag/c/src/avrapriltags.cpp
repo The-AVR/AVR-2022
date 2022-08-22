@@ -32,7 +32,7 @@ json jsonify_tag(nvAprilTagsID_t detection)
     return j;
 }
 
-bool publish_json(mqtt::client client, std::string topic, json message)
+bool publish_json(mqtt::client *client, std::string topic, json message)
 {
     std::string text = message.dump();
     const char *const_str = text.c_str();
@@ -67,6 +67,11 @@ int main()
         std::cout << "\nConnecting..." << std::endl;
         client.connect(connOpts);
         std::cout << "MQTT Connected" << std::endl;
+
+        j.clear();
+        j["state"] = "mqtt_connected";
+        publish_json(*client, STATE_TOPIC, j);
+
     }
     //if MQTT fails to connect, publish the stacktrace and exit the program
     catch (const mqtt::exception &exc)
@@ -74,10 +79,6 @@ int main()
         std::cerr << exc.what() << std::endl;
         return 1;
     }
-
-    j.clear();
-    j["state"] = "mqtt_connected";
-    publish_json(client, STATE_TOPIC, j);
 
     //############################################# SETUP VIDEO CAPTURE ##################################################################################################
 
