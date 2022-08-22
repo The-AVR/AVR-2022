@@ -176,7 +176,7 @@ int main()
                 j.clear();
                 json j2;
                 j2["num_frames_processed"] = std::to_string(num_frames);
-                j2["last_update"] = std::to_string(std::chrono::system_clock::now());
+                j2["last_update"] = format("%D %T %Z\n", floor<milliseconds>(std::chrono::system_clock::now()));
                 j["status"] = j2.dump();
                 publish_json(client, STATUS_TOPIC, j);
                 auto last_status_update = std::chrono::system_clock::now();
