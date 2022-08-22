@@ -166,7 +166,7 @@ int main()
 
             int fps = int(1000 / (std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() + 1));
 
-            auto time_since_last_update = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_status_update);
+            auto time_since_last_update = int(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_status_update));
             if (time_since_last_update > 1000)
             {
                 j.clear();
@@ -179,7 +179,7 @@ int main()
                 j2["last_update"] = std::to_string(std::chrono::system_clock::now());
                 j["status"] = j2.dump();
                 publish_json(client, STATUS_TOPIC, j);
-                last_status_update = std::chrono::system_clock::now();
+                auto last_status_update = std::chrono::system_clock::now();
             }
 
 
