@@ -51,6 +51,8 @@ int main()
     const std::string STATUS_TOPIC{"avr/apriltags/c/status"};
     const std::string STATE_TOPIC{"avr/apriltags/c/state"};
 
+    json j;
+
 
     const int QOS = 0;
     mqtt::client client(SERVER_ADDRESS, CLIENT_ID);
@@ -66,7 +68,7 @@ int main()
         client.connect(connOpts);
         std::cout << "MQTT Connected" << std::endl;
 
-        json j;
+        j.clear();
         j["state"] = "mqtt_connected";
         publish_json(client, STATE_TOPIC, j);
         delete j;
@@ -84,10 +86,9 @@ int main()
     cv::VideoCapture capture("nvarguscamerasrc ! video/x-raw(memory:NVMM), width=1280, height=720,format=NV12, framerate=15/1 ! nvvidconv ! video/x-raw,format=BGRx !  videoconvert ! videorate ! video/x-raw,format=BGR,framerate=5/1 ! appsink", cv::CAP_GSTREAMER);
     std::cout << "Opened GStreamer Pipeline" << std::endl;
 
-    json j;
+    j.clear();
     j["state"] = "gstreamer_complete";
     publish_json(client, STATE_TOPIC, j);
-    delete j;
 
     cv::Mat frame;
     cv::Mat img_rgba8;
@@ -97,10 +98,10 @@ int main()
     cv::cvtColor(frame, img_rgba8, cv::COLOR_BGR2RGBA);
     setup_vpi(img_rgba8);
 
-    json j;
+    j.clear();
     j["state"] = "vpi_setup_complete";
     publish_json(client, STATE_TOPIC, j);
-    delete j;
+
     //create the apriltag handler
     auto *impl_ = new AprilTagsImpl();
     impl_->initialize(img_rgba8.cols, img_rgba8.rows,
@@ -109,10 +110,9 @@ int main()
                       0.174,            //tag edge length
                       6);               //max number of tags
 
-    json j;
+    j.clear();
     j["state"] = "apriltag_setup_complete";
     publish_json(client, STATE_TOPIC, j);
-    delete j;
 
     int num_frames = 0;
     auto last_status_update = std::chrono::system_clock::now();
@@ -145,7 +145,8 @@ int main()
             {
                 const nvAprilTagsID_t &detection = impl_->tags[i];
 
-                json j = jsonify_tag(detection);
+                j.clear();
+                j = jsonify_tag(detection);
 
                 payload.append(j.dump());
                 if (i < num_detections - 1)
@@ -168,12 +169,11 @@ int main()
 
             if ( std::chrono::system_clock::now() - last_status_update > 1 )
             {
-                json j;
+                j.clear();
                 j["fps"] = std::to_string(fps);
                 publish_json(client, FPS_TOPIC, j);
-                delete j;
 
-                json j;
+                j.clear();
                 json j2;
                 j2["num_frames_processed"] = std::to_string(num_frames);
                 j2["last_update"] = std::to_string(std::chrono::system_clock::now());
