@@ -68,14 +68,31 @@ Once all four rods are mounted we will proceed to attaching the landing gear bra
 
 ## Landing Gear Brace Mounting
 
-![](landing_gear_brace_1.jpg)
+The landing brace provides additional support by securing the rod to the bottom accessory plate. Use two 8mm screws and lock nuts as shown in the photos below. Repeat this process for all four legs.
 
-![](landing_gear_brace_2.jpg)
+![8mm screws through landing brace and accessory plate](landing_gear_brace_1.jpg)
 
-![](landing_gear_brace_3.jpg)
+![Lock nuts securing landing brace](landing_gear_brace_2.jpg)
+
+![Landing brace installation complete](landing_gear_brace_3.jpg)
 
 ## Landing Gear Foot Mounting
 
-![](landing_gear_foot_1.jpg)
+There's a good chance that the feet of the landing gear will require press fitting onto the rod. You can use a 3/8" drill bit to shave some of the plastic from the foot.
 
-![](landing_gear_foot_2.jpg)
+{{% alert title="Note" color="note" %}}
+The foot has a slight angle to it. Be sure to rotate it so the bottom of the foot is flush with the floor.
+{{% /alert %}}
+
+If the foot is loose feel free to use a drop of hot glue to hold it in place.
+
+![Applying hot glue to landing gear foot](landing_gear_foot_1.jpg)
+
+Repeat the process for all four feet.
+
+![Landing gear feet installed](landing_gear_foot_2.jpg)
+
+{{% alert title="Congrats!" color="success" %}}
+You have completed the first part of the build process! Let's move to the next section to gain a solid understanding of battery management.
+{{% /alert %}}
+
