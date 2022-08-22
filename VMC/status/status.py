@@ -70,7 +70,7 @@ class StatusModule(MQTTModule):
         # TODO - add state history so that the if statements can be compared to historical values to ensure the module is operating
 
         if (int(payload["status"]["num_frames_processed"]) > 1) and (
-            float(payload["status"]["last_update_time"]) - time.time() < 5
+            float(payload["status"]["last_update"]) - time.time() < 5
         ):
             self.pixels.set_pixel_color(APRIL_LED, CLR_YELLOW)
         else:
