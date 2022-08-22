@@ -67,11 +67,6 @@ int main()
         std::cout << "\nConnecting..." << std::endl;
         client.connect(connOpts);
         std::cout << "MQTT Connected" << std::endl;
-
-        j.clear();
-        j["state"] = "mqtt_connected";
-        publish_json(client, STATE_TOPIC, j);
-
     }
     //if MQTT fails to connect, publish the stacktrace and exit the program
     catch (const mqtt::exception &exc)
@@ -79,6 +74,10 @@ int main()
         std::cerr << exc.what() << std::endl;
         return 1;
     }
+
+    j.clear();
+    j["state"] = "mqtt_connected";
+    publish_json(client, STATE_TOPIC, j);
 
     //############################################# SETUP VIDEO CAPTURE ##################################################################################################
 
