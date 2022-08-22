@@ -166,8 +166,8 @@ int main()
 
             int fps = int(1000 / (std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() + 1));
 
-            int time_since_last_update = int(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_status_update));
-            if (time_since_last_update > 1000)
+            float time_since_last_update = float(std::chrono::system_clock::now() - last_status_update);
+            if (time_since_last_update > 1.0)
             {
                 j.clear();
                 j["fps"] = std::to_string(fps);
