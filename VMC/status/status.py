@@ -68,7 +68,6 @@ class StatusModule(MQTTModule):
 
     def apriltags_state(self, payload: dict) -> None:
         # TODO - add state history so that the if statements can be compared to historical values to ensure the module is operating
-        payload = json.loads(payload)
         logger.debug(payload)
         # print(int(payload["status"]["num_frames_processed"]))
         # print(float(payload["status"]["last_update_time"]))

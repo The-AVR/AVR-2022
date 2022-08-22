@@ -185,7 +185,7 @@ int main()
                 json j2;
                 j2["num_frames_processed"] = std::to_string(num_frames);
                 j2["last_update"] = std::to_string(time());
-                j["status"] = j2.dump();
+                j["status"] = j2;
                 publish_json(client, STATUS_TOPIC, j);
                 last_status_update = time();
             }
