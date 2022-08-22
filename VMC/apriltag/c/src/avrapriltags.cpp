@@ -69,6 +69,7 @@ int main()
         json j;
         j["state"] = "mqtt_connected";
         publish_json(client, STATE_TOPIC, j);
+        delete j;
 
     }
     //if MQTT fails to connect, publish the stacktrace and exit the program
@@ -86,6 +87,7 @@ int main()
     json j;
     j["state"] = "gstreamer_complete";
     publish_json(client, STATE_TOPIC, j);
+    delete j;
 
     cv::Mat frame;
     cv::Mat img_rgba8;
@@ -98,8 +100,7 @@ int main()
     json j;
     j["state"] = "vpi_setup_complete";
     publish_json(client, STATE_TOPIC, j);
-
-
+    delete j;
     //create the apriltag handler
     auto *impl_ = new AprilTagsImpl();
     impl_->initialize(img_rgba8.cols, img_rgba8.rows,
@@ -111,6 +112,7 @@ int main()
     json j;
     j["state"] = "apriltag_setup_complete";
     publish_json(client, STATE_TOPIC, j);
+    delete j;
 
     int num_frames = 0;
     auto last_status_update = std::chrono::system_clock::now();
@@ -169,6 +171,7 @@ int main()
                 json j;
                 j["fps"] = std::to_string(fps);
                 publish_json(client, FPS_TOPIC, j);
+                delete j;
 
                 json j;
                 json j2;
