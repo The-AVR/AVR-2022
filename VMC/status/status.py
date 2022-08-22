@@ -29,11 +29,11 @@ class StatusModule(MQTTModule):
         super().__init__()
 
         self.topic_map = {
-            "avr/status/light/pcm": self.light_status,
-            "avr/status/light/vio": self.light_status,
-            "avr/status/light/apriltags": self.light_status,
-            "avr/status/light/fcm": self.light_status,
-            "avr/status/light/thermal": self.light_status,
+            # "avr/status/light/pcm": self.light_status,
+            # "avr/status/light/vio": self.light_status,
+            # "avr/status/light/apriltags": self.light_status,
+            # "avr/status/light/fcm": self.light_status,
+            # "avr/status/light/thermal": self.light_status,
             "avr/apriltags/c/status": self.apriltags_state,
         }
 
