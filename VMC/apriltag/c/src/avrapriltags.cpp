@@ -32,7 +32,7 @@ json jsonify_tag(nvAprilTagsID_t detection)
     return j;
 }
 
-bool publish_json(mqtt::client *client, std::string topic, json message)
+bool publish_json(mqtt::client &client, std::string topic, json message)
 {
     std::string text = message.dump();
     const char *const_str = text.c_str();
@@ -70,7 +70,7 @@ int main()
 
         j.clear();
         j["state"] = "mqtt_connected";
-        publish_json(*client, STATE_TOPIC, j);
+        publish_json(client, STATE_TOPIC, j);
 
     }
     //if MQTT fails to connect, publish the stacktrace and exit the program
