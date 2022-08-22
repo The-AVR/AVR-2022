@@ -166,7 +166,7 @@ int main()
 
             int fps = int(1000 / (std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() + 1));
 
-            if ( std::chrono::system_clock::now() - last_status_update > 1 ):
+            if ( std::chrono::system_clock::now() - last_status_update > 1 )
             {
                 json j;
                 j["fps"] = std::to_string(fps);
