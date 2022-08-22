@@ -18,5 +18,5 @@ Click **Apply** and the airframe setting will be saved.
 
 ![](qgc_airframe_apply.png)
 
-While the FC is rebooting you QGC will disconnect for a few
+While the FC is rebooting QGC will disconnect for a few
 moments and then automatically reconnect.
