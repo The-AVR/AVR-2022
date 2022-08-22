@@ -36,7 +36,7 @@ bool publish_json(mqtt::client client, std::string topic, json message)
 {
     std::string text = message.dump();
     const char *const_str = text.c_str();
-    const char *const_topic_str = topic.c_str()
+    const char *const_topic_str = topic.c_str();
     client.publish(const_topic_str, const_str, strlen(const_str));
 }
 
@@ -71,7 +71,6 @@ int main()
         j.clear();
         j["state"] = "mqtt_connected";
         publish_json(client, STATE_TOPIC, j);
-        delete j;
 
     }
     //if MQTT fails to connect, publish the stacktrace and exit the program
