@@ -6,6 +6,7 @@ import avr_pixel
 import nvpmodel
 import paho.mqtt.client as mqtt
 from bell.avr.mqtt.client import MQTTModule
+from loguru import logger
 
 CLR_PURPLE = 0x6A0DAD
 CLR_AQUA = 0x00FFFF
@@ -66,8 +67,8 @@ class StatusModule(MQTTModule):
 
     def apriltags_state(self, payload: dict) -> None:
         # TODO - add state history so that the if statements can be compared to historical values to ensure the module is operating
-        print(payload)
-        print(type(payload))
+        logger.debug(payload)
+        logger.debug(type(payload))
         # print(int(payload["status"]["num_frames_processed"]))
         # print(float(payload["status"]["last_update_time"]))
 
