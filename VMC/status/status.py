@@ -67,15 +67,16 @@ class StatusModule(MQTTModule):
     def apriltags_state(self, payload: dict) -> None:
         # TODO - add state history so that the if statements can be compared to historical values to ensure the module is operating
         print(payload)
-        print(int(payload["status"]["num_frames_processed"]))
-        print(float(payload["status"]["last_update_time"]))
+        print(type(payload))
+        # print(int(payload["status"]["num_frames_processed"]))
+        # print(float(payload["status"]["last_update_time"]))
 
-        if (int(payload["status"]["num_frames_processed"]) > 1) and (
-            float(payload["status"]["last_update_time"]) - time.time() < 5
-        ):
-            self.pixels.set_pixel_color(APRIL_LED, CLR_YELLOW)
-        else:
-            self.pixels.set_pixel_color(APRIL_LED, CLR_BLACK)
+        # if (int(payload["status"]["num_frames_processed"]) > 1) and (
+        #     float(payload["status"]["last_update_time"]) - time.time() < 5
+        # ):
+        #     self.pixels.set_pixel_color(APRIL_LED, CLR_YELLOW)
+        # else:
+        #     self.pixels.set_pixel_color(APRIL_LED, CLR_BLACK)
 
     def process_status_update(self, topic: str) -> None:
         """
