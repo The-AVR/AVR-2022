@@ -166,7 +166,7 @@ int main()
 
             int fps = int(1000 / (std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() + 1));
 
-            float time_since_last_update = float(std::chrono::system_clock::now() - last_status_update);
+            float time_since_last_update = float(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_status_update).count())/1000.0;
             if (time_since_last_update > 1.0)
             {
                 j.clear();
@@ -176,7 +176,7 @@ int main()
                 j.clear();
                 json j2;
                 j2["num_frames_processed"] = std::to_string(num_frames);
-                j2["last_update"] = std::to_string(float(std::chrono::system_clock::now()));
+                j2["last_update"] = std::to_string(std::chrono::system_clock::to_time_t(chrono::system_clock::now()));
                 j["status"] = j2.dump();
                 publish_json(client, STATUS_TOPIC, j);
                 last_status_update = std::chrono::system_clock::now();
