@@ -11,6 +11,14 @@
 
 #include "mqtt/client.h"
 
+double time()
+{
+    double seconds = std::chrono::duration_cast<std::chrono::duration<double>>(
+        std::chrono::system_clock::now().time_since_epoch()).count();
+
+    return seconds;
+}
+
 // for convenience
 using json = nlohmann::basic_json<std::map, std::vector, std::string, bool, std::int64_t, std::uint64_t, float>;
 
@@ -114,13 +122,13 @@ int main()
     publish_json(client, STATE_TOPIC, j);
 
     int num_frames = 0;
-    auto last_status_update = std::chrono::system_clock::now();
+    double last_status_update = time();
 
     //################################################################### MAIN LOOP ##########################################################################################
     while (capture.isOpened())
     {
 
-        auto start = std::chrono::system_clock::now();
+        double start = time();
 
         //capture a frame
         bool result = capture.read(frame);
@@ -156,7 +164,7 @@ int main()
 
             payload.append("]}");
 
-            auto end = std::chrono::system_clock::now();
+            double end = time();
 
             if (num_detections > 0)
             {
@@ -164,9 +172,9 @@ int main()
                 client.publish(TAG_TOPIC, const_payload, strlen(const_payload));
             }
 
-            int fps = int(1000 / (std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count() + 1));
+            int fps = int(1000 / ((end-start)*1000.0 + 1));
 
-            float time_since_last_update = float(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - last_status_update).count())/1000.0;
+            double time_since_last_update = time() - last_status_update;
             if (time_since_last_update > 1.0)
             {
                 j.clear();
@@ -176,10 +184,10 @@ int main()
                 j.clear();
                 json j2;
                 j2["num_frames_processed"] = std::to_string(num_frames);
-                j2["last_update"] = std::to_string(std::chrono::system_clock::to_time_t(chrono::system_clock::now()));
+                j2["last_update"] = std::to_string(time());
                 j["status"] = j2.dump();
                 publish_json(client, STATUS_TOPIC, j);
-                last_status_update = std::chrono::system_clock::now();
+                last_status_update = time();
             }
 
 
