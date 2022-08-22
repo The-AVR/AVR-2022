@@ -95,4 +95,3 @@ Repeat the process for all four feet.
 {{% alert title="Congrats!" color="success" %}}
 You have completed the first part of the build process! Let's move to the next section to gain a solid understanding of battery management.
 {{% /alert %}}
-
