@@ -103,7 +103,7 @@ class StatusModule(MQTTModule):
         self.run_non_blocking()
         self.nvpmodel.initialize()
 
-        while self.enable:
+        while self.enabled:
             self.nvpmodel_status_check()
             time.sleep(1)
         self.all_off()
