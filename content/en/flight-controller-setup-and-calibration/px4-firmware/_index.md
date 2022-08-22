@@ -10,7 +10,7 @@ on the AVR drone. It is an open-source flight stack containing all the
 software necessary to get your drone into the air.
 
 To facilitate some of the extra functionality required for our drone
-to fly in stabilized flight mode without a GPS, you need use a custom version of PX4
+to fly in stabilized flight mode without a GPS, you will need a custom version of PX4
 Bell engineers have developed. Go to the latest
 [AVR software release](https://github.com/bellflight/AVR-2022/releases/tag/stable)
 and download the `px4_fmu-v5x_default.<px4 version>.<hash>.px4` file.
