@@ -39,7 +39,10 @@ class AprilTagModule(MQTTModule):
         # setup transformation matrixes
         self.setup_transforms()
 
-        self.topic_map = {"avr/apriltags/raw": self.on_apriltag_message}
+        self.topic_map = {
+            "avr/apriltags/raw": self.on_apriltag_message,
+            "avr/apriltags/enable": self.enable_handler,
+        }
 
     def setup_transforms(self) -> None:
         cam_rpy = self.config["cam"]["rpy"]
@@ -280,6 +283,9 @@ class AprilTagModule(MQTTModule):
         subprocess.Popen("/app/c/build/avrapriltags")
         super().run()
 
+    def enable_handler(self, payload: dict):
+        if bool(payload["enable"]) == False:
+            quit()
 
 if __name__ == "__main__":
     atag = AprilTagModule()
