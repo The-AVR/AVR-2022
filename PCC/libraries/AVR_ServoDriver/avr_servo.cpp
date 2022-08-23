@@ -28,12 +28,7 @@ void AVRServo::set_servo_percent(uint8_t servo, uint8_t percent)
 
 void AVRServo::set_servo_absolute(uint8_t servo, uint16_t absolute)
 {
-    if (absolute > SERVOMAX)
-        absolute = SERVOMAX;
-    if (absolute < SERVOMIN)
-        absolute = SERVOMIN;
-
-    setPWM(servo, 0, absolute);
+    writeMicroseconds(servo, absolute);
 }
 
 uint8_t AVRServo::check_controller(void)

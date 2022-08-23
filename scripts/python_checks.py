@@ -11,6 +11,8 @@ ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 def main(directory: str, checks: List[str]) -> None:
     directory = os.path.abspath(directory)
 
+    exit_codes: List[int] = []
+
     for check in checks:
         cmd = None
 
@@ -40,7 +42,9 @@ def main(directory: str, checks: List[str]) -> None:
         cmd_combined = " ".join(cmd)
         print("=" * len(cmd_combined))
         print(cmd_combined)
-        subprocess.check_call(cmd, cwd=ROOT)
+        exit_codes.append(subprocess.run(cmd, cwd=ROOT).returncode)
+
+    sys.exit(int(any(exit_codes)))
 
 
 if __name__ == "__main__":

@@ -13,7 +13,7 @@ from bell.avr.mqtt.payloads import (
 )
 from PySide6 import QtCore, QtWidgets
 
-from ..lib.color import smear_color
+from ..lib.color import smear_color, wrap_text
 from ..lib.widgets import DisplayLineEdit, StatusLabel
 from .base import BaseTabWidget
 
@@ -267,7 +267,7 @@ class VMCTelemetryWidget(BaseTabWidget):
             color = "DarkGoldenRod"
             text = "Disarmed"
 
-        self.armed_label.setText(f"<span style='color:{color};'>{text}</span>")
+        self.armed_label.setText(wrap_text(text, color))
         self.flight_mode_label.setText(payload["mode"])
 
     def update_local_location(self, payload: AvrFcmLocationLocalPayload) -> None:
