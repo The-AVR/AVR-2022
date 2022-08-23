@@ -70,7 +70,7 @@ class AutonomyWidget(BaseTabWidget):
         buildings_layout.addLayout(building_all_layout)
 
         for i in range(self.number_of_buildings):
-            building_groupbox = QtWidgets.QGroupBox(f"Building {i+1}")
+            building_groupbox = QtWidgets.QGroupBox(f"Building {i}")
             building_layout = QtWidgets.QHBoxLayout()
             building_groupbox.setLayout(building_layout)
 
