@@ -5,4 +5,4 @@ pyinstaller==5.1
 colour==0.1.5
 scipy==1.9.0
 numpy==1.23.1
-bell-avr-libraries[mqtt,serial]==0.1.7
+bell-avr-libraries[mqtt,serial]==0.1.9

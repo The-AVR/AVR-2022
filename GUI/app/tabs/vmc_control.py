@@ -1,14 +1,15 @@
 from __future__ import annotations
 
-from typing import Literal, Tuple
+import functools
+from typing import List, Literal, Tuple
 
 from bell.avr.mqtt.payloads import (
-    AvrAutonomousPayload,
     AvrPcmSetBaseColorPayload,
     AvrPcmSetServoOpenClosePayload,
 )
-from PySide6 import QtWidgets
+from PySide6 import QtCore, QtWidgets
 
+from ..lib.color import wrap_text
 from .base import BaseTabWidget
 
 
@@ -54,10 +55,13 @@ class VMCControlWidget(BaseTabWidget):
         clear_led_button.clicked.connect(lambda: self.set_led((0, 0, 0, 0)))  # type: ignore
         led_layout.addWidget(clear_led_button)
 
-        layout.addWidget(led_groupbox, 0, 0, 2, 1)
+        layout.addWidget(led_groupbox, 0, 0, 3, 1)
 
         # ==========================
         # Servos
+        self.number_of_servos = 4
+        self.servo_labels: List[QtWidgets.QLabel] = []
+
         servos_groupbox = QtWidgets.QGroupBox("Servos")
         servos_layout = QtWidgets.QVBoxLayout()
         servos_groupbox.setLayout(servos_layout)
@@ -74,79 +78,27 @@ class VMCControlWidget(BaseTabWidget):
 
         servos_layout.addLayout(servo_all_layout)
 
-        servo_1_groupbox = QtWidgets.QGroupBox("Servo 1")
-        servo_1_layout = QtWidgets.QHBoxLayout()
-        servo_1_groupbox.setLayout(servo_1_layout)
+        for i in range(self.number_of_servos):
+            servo_groupbox = QtWidgets.QGroupBox(f"Servo {i+1}")
+            servo_layout = QtWidgets.QHBoxLayout()
+            servo_groupbox.setLayout(servo_layout)
 
-        servo_1_open_button = QtWidgets.QPushButton("Open")
-        servo_1_open_button.clicked.connect(lambda: self.set_servo(0, "open"))  # type: ignore
-        servo_1_layout.addWidget(servo_1_open_button)
+            servo_open_button = QtWidgets.QPushButton("Open")
+            servo_open_button.clicked.connect(functools.partial(self.set_servo, i, "open"))  # type: ignore
+            servo_layout.addWidget(servo_open_button)
 
-        servo_1_close_button = QtWidgets.QPushButton("Close")
-        servo_1_close_button.clicked.connect(lambda: self.set_servo(0, "close"))  # type: ignore
-        servo_1_layout.addWidget(servo_1_close_button)
+            servo_close_button = QtWidgets.QPushButton("Close")
+            servo_close_button.clicked.connect(functools.partial(self.set_servo, i, "close"))  # type: ignore
+            servo_layout.addWidget(servo_close_button)
 
-        servos_layout.addWidget(servo_1_groupbox)
+            servo_label = QtWidgets.QLabel()
+            servo_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            servo_layout.addWidget(servo_label)
+            self.servo_labels.append(servo_label)
 
-        servo_2_groupbox = QtWidgets.QGroupBox("Servo 2")
-        servo_2_layout = QtWidgets.QHBoxLayout()
-        servo_2_groupbox.setLayout(servo_2_layout)
-
-        servo_2_open_button = QtWidgets.QPushButton("Open")
-        servo_2_open_button.clicked.connect(lambda: self.set_servo(1, "open"))  # type: ignore
-        servo_2_layout.addWidget(servo_2_open_button)
-
-        servo_2_close_button = QtWidgets.QPushButton("Close")
-        servo_2_close_button.clicked.connect(lambda: self.set_servo(1, "close"))  # type: ignore
-        servo_2_layout.addWidget(servo_2_close_button)
-
-        servos_layout.addWidget(servo_2_groupbox)
-
-        servo_3_groupbox = QtWidgets.QGroupBox("Servo 3")
-        servo_3_layout = QtWidgets.QHBoxLayout()
-        servo_3_groupbox.setLayout(servo_3_layout)
-
-        servo_3_open_button = QtWidgets.QPushButton("Open")
-        servo_3_open_button.clicked.connect(lambda: self.set_servo(2, "open"))  # type: ignore
-        servo_3_layout.addWidget(servo_3_open_button)
-
-        servo_3_close_button = QtWidgets.QPushButton("Close")
-        servo_3_close_button.clicked.connect(lambda: self.set_servo(2, "close"))  # type: ignore
-        servo_3_layout.addWidget(servo_3_close_button)
-
-        servos_layout.addWidget(servo_3_groupbox)
-
-        servo_4_groupbox = QtWidgets.QGroupBox("Servo 4")
-        servo_4_layout = QtWidgets.QHBoxLayout()
-        servo_4_groupbox.setLayout(servo_4_layout)
-
-        servo_4_open_button = QtWidgets.QPushButton("Open")
-        servo_4_open_button.clicked.connect(lambda: self.set_servo(3, "open"))  # type: ignore
-        servo_4_layout.addWidget(servo_4_open_button)
-
-        servo_4_close_button = QtWidgets.QPushButton("Close")
-        servo_4_close_button.clicked.connect(lambda: self.set_servo(3, "close"))  # type: ignore
-        servo_4_layout.addWidget(servo_4_close_button)
-
-        servos_layout.addWidget(servo_4_groupbox)
+            servos_layout.addWidget(servo_groupbox)
 
         layout.addWidget(servos_groupbox, 0, 1, 3, 3)
-
-        # ==========================
-        # Autonomous mode
-        autonomous_groupbox = QtWidgets.QGroupBox("Autonomous")
-        autonomous_layout = QtWidgets.QVBoxLayout()
-        autonomous_groupbox.setLayout(autonomous_layout)
-
-        autonomous_enable_button = QtWidgets.QPushButton("Enable")
-        autonomous_enable_button.clicked.connect(lambda: self.set_autonomous(True))  # type: ignore
-        autonomous_layout.addWidget(autonomous_enable_button)
-
-        autonomous_disable_button = QtWidgets.QPushButton("Disable")
-        autonomous_disable_button.clicked.connect(lambda: self.set_autonomous(False))  # type: ignore
-        autonomous_layout.addWidget(autonomous_disable_button)
-
-        layout.addWidget(autonomous_groupbox, 2, 0, 1, 1)
 
         # # ==========================
         # # PCC Reset
@@ -170,11 +122,20 @@ class VMCControlWidget(BaseTabWidget):
             AvrPcmSetServoOpenClosePayload(servo=number, action=action),
         )
 
+        if action == "open":
+            text = "Opened"
+            color = "blue"
+        else:
+            text = "Closed"
+            color = "chocolate"
+
+        self.servo_labels[number].setText(wrap_text(text, color))
+
     def set_servo_all(self, action: Literal["open", "close"]) -> None:
         """
         Set all servos to the same state
         """
-        for i in range(4):
+        for i in range(self.number_of_servos):
             self.set_servo(i, action)
 
     def set_led(self, color: Tuple[int, int, int, int]) -> None:
@@ -184,9 +145,3 @@ class VMCControlWidget(BaseTabWidget):
         self.send_message(
             "avr/pcm/set_base_color", AvrPcmSetBaseColorPayload(wrgb=color)
         )
-
-    def set_autonomous(self, state: bool) -> None:
-        """
-        Set autonomous mode
-        """
-        self.send_message("avr/autonomous", AvrAutonomousPayload(enable=state))
