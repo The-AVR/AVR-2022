@@ -159,8 +159,8 @@ class JoystickWidget(BaseTabWidget):
         self.servoymax = 99
 
         # servo declarations
-        self.SERVO_ABS_MAX = 420
-        self.SERVO_ABS_MIN = 130
+        self.SERVO_ABS_MAX = 2200
+        self.SERVO_ABS_MIN = 700
 
     def _center(self) -> QtCore.QPointF:
         """
@@ -322,12 +322,12 @@ class ThermalViewControlWidget(BaseTabWidget):
         """
         Build the GUI layout
         """
-        layout = QtWidgets.QVBoxLayout(self)
+        layout = QtWidgets.QHBoxLayout(self)
         self.setLayout(layout)
 
         # viewer
         viewer_groupbox = QtWidgets.QGroupBox("Viewer")
-        viewer_layout = QtWidgets.QHBoxLayout()
+        viewer_layout = QtWidgets.QVBoxLayout()
         viewer_groupbox.setLayout(viewer_layout)
 
         self.viewer = ThermalView(self)
