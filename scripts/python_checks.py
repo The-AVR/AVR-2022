@@ -46,6 +46,7 @@ def main(directory: str, checks: List[str]) -> None:
 
     sys.exit(int(any(exit_codes)))
 
+
 if __name__ == "__main__":
     checks = ["black", "isort", "autoflake", "pyleft", "pyright", "pflake8"]
 
