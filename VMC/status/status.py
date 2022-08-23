@@ -21,8 +21,6 @@ CLR_ORANGE = 0xF5A506
 CLR_YELLOW = 0xC1E300
 CLR_BLUE = 0x001EE3
 CLR_BLACK = 0x000000
-CLR_GREEN = 0xFF5733
-CLR_RED = 0xFF0000
 
 VIO_LED = 1
 PCC_LED = 2
@@ -37,25 +35,6 @@ class StatusModule(MQTTModule):
     def __init__(self):
         super().__init__()
 
-        
-        self.module_map = module_map = {
-            "vio": {
-                "led": VIO_LED, 
-                "color": CLR_PURPLE},
-            "pcm":{
-                "led": PCC_LED, 
-                "color": CLR_AQUA}, 
-            "fcm":{
-                "led": FCC_LED, 
-                "color": CLR_ORANGE},
-            "thermal":{
-                "led": THERMAL_LED, 
-                "color": CLR_BLUE},
-            "apriltags": {
-                "led": APRIL_LED, 
-                "color": CLR_YELLOW},
-        }
-
         self.initialized = False
 
         self.topic_map = {
@@ -64,14 +43,12 @@ class StatusModule(MQTTModule):
             "avr/status/light/apriltags": self.light_status,
             "avr/status/light/fcm": self.light_status,
             "avr/status/light/thermal": self.light_status,
-            "avr/status/apriltags" : self.apriltags_state,
         }
 
         self.spi = board.SPI()
         self.pixels = neopixel.NeoPixel_SPI(
             self.spi, NUM_PIXELS, pixel_order=PIXEL_ORDER, auto_write=False
         )
-
 
         # set up handling for turning off the lights on docker shutdown
         self.run_status_check = True
@@ -154,38 +131,6 @@ class StatusModule(MQTTModule):
             logger.exception(
                 f"Command '{e.cmd}' return with error ({e.returncode}): {e.output}"
             )
-
-    def apriltags_state(self, payload: str):
-        payload == "fail":
-
-        # if payload == "init":
-        #     self.blink_light(
-        #         self.module_map["apriltag"]["led"], 
-        #         self.module_map["apriltag"]["color"]
-        #         )
-        # elif payload == "connected_camera":
-        #     self.blink_light(
-        #         self.module_map["apriltag"]["led"], 
-        #         CLR_GREEN
-        #         )
-        #     self.light_up(
-        #         self.module_map["apriltag"]["led"], 
-        #         self.module_map["apriltag"]["color"]
-        #         )
-        # elif payload == "error":
-        #     self.light_up(
-        #         self.module_map["apriltag"]["led"], 
-        #         CLR_RED
-        #         )
-
-    def blink_light(which_one: int, color: int, num_blinks: int) -> None:
-        for i in range(num_blinks-1):
-            self.pixels[which_one] = color
-            self.pixels.show()
-            time.sleep(DELAY)
-            self.pixels.fill(0)
-            self.pixels.show()
-            time.sleep(DELAY)
 
     def run(self) -> None:
         self.run_non_blocking()
