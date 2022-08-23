@@ -159,8 +159,8 @@ class JoystickWidget(BaseTabWidget):
         self.servoymax = 99
 
         # servo declarations
-        self.SERVO_ABS_MAX = 1950
-        self.SERVO_ABS_MIN = 800
+        self.SERVO_ABS_MAX = 420
+        self.SERVO_ABS_MIN = 130
 
     def _center(self) -> QtCore.QPointF:
         """
