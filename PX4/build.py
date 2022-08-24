@@ -220,6 +220,12 @@ def container(
         clean_directory(pymavlink_dist_dir, [".tar.gz", ".whl"])
         clean_directory(DIST_DIR, [".tar.gz", ".whl"])
 
+        pymavlink_dist_dir = os.path.join(PYMAVLINK_DIR, "dist")
+
+        # clean the pymavlink build and target dirs
+        clean_directory(pymavlink_dist_dir, [".tar.gz", ".whl"])
+        clean_directory(DIST_DIR, [".tar.gz", ".whl"])
+
         # make a new environment with the mavlink dialect set
         new_env = os.environ.copy()
         new_env["MAVLINK_DIALECT"] = "bell"
