@@ -1,9 +1,11 @@
 import signal
 import time
-from typing import Any, Dict, Tuple
+from typing import Any, Dict, Tuple, List
+from VMC.status.monitors.apriltag_module import ApriltagMonitor
+from VMC.status.monitors.monitor import Monitor
 
-import avr_pixel
-import nvpmodel
+import VMC.status.utilities.avr_pixel as avr_pixel
+import VMC.status.utilities.nvpmodel as nvpmodel
 import paho.mqtt.client as mqtt
 from bell.avr.mqtt.client import MQTTModule
 from loguru import logger
@@ -12,7 +14,7 @@ import json
 CLR_PURPLE = 0x6A0DAD
 CLR_AQUA = 0x00FFFF
 CLR_ORANGE = 0xF5A506
-CLR_YELLOW = 0xe3db00
+CLR_YELLOW = 0xE3DB00
 CLR_BLUE = 0x0000FF
 CLR_BLACK = 0x000000
 CLR_GREEN = 0x00FF00
@@ -28,16 +30,21 @@ APRIL_LED = 5
 
 class StatusModule(MQTTModule):
     def __init__(self):
-        super().__init__()
 
-        self.topic_map = {
-            # "avr/status/light/pcm": self.light_status,
-            # "avr/status/light/vio": self.light_status,
-            # "avr/status/light/apriltags": self.light_status,
-            # "avr/status/light/fcm": self.light_status,
-            # "avr/status/light/thermal": self.light_status,
-            "avr/apriltags/c/status": self.apriltags_state,
-        }
+        self.topic_map = {}
+
+        self.monitors: List[Monitor] = []
+
+        self.monitors.append(ApriltagMonitor(APRIL_LED, CLR_YELLOW))
+
+        for monitor in self.monitors:
+            # start the run thread for the monitor
+            monitor.initialize()
+            # add the callbacks for the monitor
+            if monitor.topic_map:
+                self.topic_map.update(monitor.topic_map)
+
+        super().__init__()
 
         self.nvpmodel = nvpmodel.NVPModel()
         self.pixels = avr_pixel.AVR_PIXEL()
@@ -66,16 +73,6 @@ class StatusModule(MQTTModule):
         # TODO - create dedicated status topics and sub to those
         client.subscribe("avr/#")
 
-    def apriltags_state(self, payload: dict) -> None:
-        # TODO - add state history so that the if statements can be compared to historical values to ensure the module is operating
-
-        if (int(payload["status"]["num_frames_processed"]) > 1) and (
-            float(payload["status"]["last_update"]) - time.time() < 5
-        ):
-            self.pixels.set_pixel_color(APRIL_LED, CLR_YELLOW)
-        else:
-            self.pixels.set_pixel_color(APRIL_LED, CLR_RED)
-
     def process_status_update(self, topic: str) -> None:
         """
         this function is run for every incoming message on the avr/# topic
@@ -94,9 +91,6 @@ class StatusModule(MQTTModule):
             if topic.startswith(key):
                 self.pixels.set_pixel_color(value[0], value[1])
 
-    def light_status(self, payload: dict) -> None:
-        self.pixels.light_show()
-
     def nvpmodel_status_check(self) -> None:
         self.pixels.set_pixel_color(
             NVPMODEL_LED, CLR_GREEN if self.nvpmodel.check_nvpmodel_maxn() else CLR_RED
@@ -108,7 +102,11 @@ class StatusModule(MQTTModule):
 
         while self.enabled:
             self.nvpmodel_status_check()
-            time.sleep(1)
+            for monitor in self.monitors:
+                self.pixels.set_pixel_color(
+                    monitor.led_manager.led_index, monitor.led_manager.current_color
+                )
+            time.sleep(0.01)
         self.all_off()
 
     def exit_gracefully(self, *args) -> None:
