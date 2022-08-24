@@ -1,6 +1,6 @@
 ---
 title: "Peripheral Control Computer (PCC)"
-weight: 7
+weight: 8
 description: "This guide covers the steps for assembling the Peripheral Control Computer, which will control LEDs and servos."
 ---
 

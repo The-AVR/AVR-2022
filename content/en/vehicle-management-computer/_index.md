@@ -1,6 +1,6 @@
 ---
 title: "Vehicle Management Computer (VMC)"
-weight: 8
+weight: 9
 ---
 
 ![](vmc_highlight.png)

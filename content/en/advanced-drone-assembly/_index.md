@@ -1,6 +1,6 @@
 ---
 title: "Advanced Drone Assembly"
-weight: 9
+weight: 10
 ---
 
 Please make sure you've successfully **built** and **flown** your basic AVR drone.

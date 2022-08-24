@@ -1,6 +1,6 @@
 ---
 title: "Flight Controller Setup and Calibration w/ QGC"
-weight: 5
+weight: 6
 description: "In this section we'll walk through the final steps of loading firmware and calibrating your drone before your first flight."
 ---
 

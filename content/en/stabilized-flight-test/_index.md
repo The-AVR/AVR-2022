@@ -1,6 +1,6 @@
 ---
 title: "Stabilized Flight Test"
-weight: 10
+weight: 11
 ---
 
 Please be sure to watch the video below to understand what to expect
