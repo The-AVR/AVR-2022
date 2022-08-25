@@ -8,4 +8,4 @@ weight: 4
 
 This bracket goes on the front of the Tello to prevent it from getting stuck in the AVR net.
 
-![Tello Cage Bracket](avr-tello-cage-print.jpg)
+![Tello Cage Bracket](avr_tello_cage_print.jpg)
