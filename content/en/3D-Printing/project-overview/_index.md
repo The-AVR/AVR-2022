@@ -1,6 +1,6 @@
 ---
 title: "Design Project Overview"
-weight: 4
+weight: 5
 ---
 
 As part of Phase 1 of the AVR, all members on the team will work together as a
