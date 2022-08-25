@@ -56,3 +56,5 @@ While not needed immediately, these are good to get started with:
   - AVR-GIMBAL-BASE (x1)
   - AVR-GIMBAL-PAN (x1)
   - AVR-GIMBAL-TILT (x1)
+- Tello
+  - AVR-TELLO-CAGE-BRACKET (x1)
