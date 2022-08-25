@@ -14,6 +14,6 @@ An infill of 15% should be sufficient for these parts.
 
 For best prints, it is advised that you rotate the part onto its back for printing.
 
-![Zed Mini Standard Orientation](zed-input-orientation.jpg)
+![Zed Mini Standard Orientation](zed_input_orientation.jpg)
 
-![Zed Mini Print Orientation](zed-fixed-orientation.jpg)
+![Zed Mini Print Orientation](zed_fixed_orientation.jpg)
