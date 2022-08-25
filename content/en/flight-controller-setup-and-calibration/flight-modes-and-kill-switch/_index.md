@@ -1,5 +1,5 @@
 ---
-title: "Flight Modes and Kill Switch"
+title: "Flight Modes, Arming, and Kill Switch"
 weight: 5
 ---
 
@@ -10,4 +10,4 @@ switch on SWD (2 position switch). This is **VERY IMPORTANT** in case the
 AVR drone needs to be shut down due to a fly-away or complete loss of control.
 The video below demonstrates this process.
 
-{{< youtube V3ds-4bb3h0 >}}
+{{< youtube a5caYemjKmk >}}
