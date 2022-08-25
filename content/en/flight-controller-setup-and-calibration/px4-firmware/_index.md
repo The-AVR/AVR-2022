@@ -1,6 +1,7 @@
 ---
 title: "PX4 Firmware"
 weight: 1
+description: "This section will cover downloading the PX4 firmware and uploading with QGC"
 ---
 
 ## Uploading PX4 firmware using QGC

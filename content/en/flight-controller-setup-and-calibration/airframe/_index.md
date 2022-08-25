@@ -1,6 +1,7 @@
 ---
 title: "Airframe"
 weight: 2
+description: "Test"
 ---
 
 The AVR drone is 500mm in size and is represented by the diagonal
