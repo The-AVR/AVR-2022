@@ -16,6 +16,10 @@ Place each half at the front and back of the Pixhawk FC.
 
 Center the FC over the top tray and press it firmly into place.
 
+{{% alert title="Warning" color="warning" %}}
+Double check that the arrow on your FC is pointed forward towards motors M1 and M3.
+{{% /alert %}}
+
 ![Pixhawk mounted to top tray](fc_mounting_3.jpg)
 
 ## PWM Module Mounting

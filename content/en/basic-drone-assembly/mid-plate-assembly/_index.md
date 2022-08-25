@@ -28,7 +28,9 @@ Before securing the mid top plate we will mount the Pixhawk Flight Controller (F
 
 ![FC tray, dampeners, and mid top plate](mid_plate_assembly_4.jpg)
 
-We have found that it is easiest to install the rubber dampeners into the top plate first. Use the same procedure as mounting the ESC dampeners. Pinch the dampener, push it into the hole, and use your 2mm hex driver to feed it through the plate. Do this for all four dampeners.
+The following steps show installing the dampeners in the top plate first, but some prefer installing them in the tray and then attaching the tray to the top plate. Choose whatever method makes the most sense to you.
+
+Use the same procedure as mounting the ESC dampeners. Pinch the dampener, push it into the hole, and use your 2mm hex driver to feed it through the plate. Do this for all four dampeners.
 
 ![Dampener installation with 2mm hex driver](mid_plate_assembly_5.jpg)
 
