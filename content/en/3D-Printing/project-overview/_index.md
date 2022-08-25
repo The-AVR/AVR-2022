@@ -8,9 +8,9 @@ group to conceptualize, design, fabricate, assemble, and test a
 solution to address two needs
 
 1. Create an “LED Halo” that will serve as a signaling device.
-    The LED Halo is a custom-built bracket that houses the LED Strip.
+   The LED Halo is a custom-built bracket that houses the LED Strip.
 2. Design a mechanism that the AVR drone will use to hold, drop, and reciever water to
-    the Open Roof Buildings.
+   the Open Roof Buildings.
 
 The designs should be lightweight to minimize the impact on the
 aircraft’s stability and endurance, yet strong enough to withstand
