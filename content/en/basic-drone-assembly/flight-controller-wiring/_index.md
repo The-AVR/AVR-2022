@@ -1,5 +1,5 @@
 ---
-title: "FC and ESC Wiring"
+title: "FC to ESC Wiring"
 weight: 4
 description: "We will walk through creating the FC and ESC cable"
 ---
@@ -26,7 +26,7 @@ Pull out four jumper cables from your AVR kit and to keep things simple make sur
 
 ![Laying out wires for soldering](fc_wiring_2.jpg)
 
-Remove the plastic female connector from one end of each jumper cable. This is easy to do once you understand how the connector works. There is a small tab that you can pry up and then slide the cable out. A hobby or X-ACTO knife is a great tool to assist with this step.
+Remove the plastic female connector from one end of each jumper cable. This is easy to do once you understand how the connector works. There is a small tab that you can pry up and then slide the cable out. A small flat head screwdriver or tweezers area great tools to assist with this step.
 
 ![Plastic connector with tab lifted up](fc_wiring_3.jpg)
 
