@@ -27,4 +27,4 @@ additions to your drone:
 - **Peripheral Control Computer (PCC)**
   - For LED and servo actuation
 
-![Block Diagram for the Advanced Drone](phaseI-II.drawio.png)
+![Block Diagram for the Advanced Drone](Drone_Block_Diagrams.png)
