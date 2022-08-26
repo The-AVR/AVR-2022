@@ -38,3 +38,12 @@ git remote set-url origin https://github.com/your-username-here/AVR-2022
 ```
 
 Your Jetson should now be configured for your forked Repo.
+
+## Syncing with the Bell Repository
+
+If the Bell team makes changes to the main code repository, you will want to update your code fork to include those new changes. Updating your forked repo is simple in Github. Navigate to the main page of your repo, and select this "sync" option:
+
+
+![Fork Refresh](ForkUpdate.png)
+
+This option will allow you to see if your repository is behind. If it needs an update, simply select "Update branch" and sync the repository with your Jetson.

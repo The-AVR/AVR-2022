@@ -47,9 +47,14 @@ You can read more about these modules [here.]({{< relref "diving-deeper/architec
 
 Your task here will be to subscribe to the
 necessary topics above and write your own logic to produce the
-desired output. The following sections will help you:
+desired output.
 
-- Create a github project for your team based on the current AVR codebase
-- Develop on the Jetson
-- Manage a project with Git
-- Containerize your code with Docker
+## Using MQTT
+
+You will be using the sandbox module to read from and interact with the other modules. By publishing messages to MQTT, you can create custom actions for your drone. The sandbox module has some example code to help you get started.
+
+![Example function that opens a servo](MQTT-Topic1.png)
+
+In the repository, VRC-2022/Libraries/MQTT will contain data.jsonc, which outlines the topics that you will be able to publish to.
+
+![Snippet from data.jsonc](MQTT-Topic2.png)
