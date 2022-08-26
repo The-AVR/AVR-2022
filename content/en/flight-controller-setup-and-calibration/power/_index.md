@@ -17,7 +17,12 @@ is idle on the ground, so you can determine whether it is still safe to take off
 and when you need to land. PX4 also has a fail-safe that prevents arming when the
 battery percentage is too low. The video below walks through the power setup.
 
-{{< youtube n6xkH3_Hxx0 >}}
+{{< youtube e8VeyTxQOcw >}}
+
+{{% alert title="Note" color="note" %}}
+If you would like to 3D print a few of the XT60 battery plug covers you can find them at the following link:
+<a href="https://www.thingiverse.com/thing:341517" target="_blank">https://www.thingiverse.com/thing:341517</a>
+{{% /alert %}}
 
 ## ESC Calibration
 
@@ -29,4 +34,4 @@ the on-screen prompts. The calibration process requires a USB connection since i
 involves steps where you have to disconnect and reconnect the battery.
 The video below covers this in detail.
 
-{{< youtube FhPOt3om-uI >}}
+{{< youtube 35fqT79MaAA >}}
