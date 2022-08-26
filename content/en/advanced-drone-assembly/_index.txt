@@ -1,0 +1,30 @@
+---
+title: "Advanced Drone Assembly"
+weight: 10
+---
+
+Please make sure you've successfully **built** and **flown** your basic AVR drone.
+You will be making some extensive modifications to your drone in
+preparation for advanced assembly.
+
+The modifications for advanced assembly will require some disassembly and the following
+additions to your drone:
+
+- **3D printed components**
+  - For mounting various cameras and peripherals
+- **Vehicle Management Computer (VMC)**
+  - Runs AVR code
+  - Interfaces with external sensors
+  - Provides wireless interface with PX4
+- **Camera Serial Interface (CSI)**
+  - Downward facing camera
+  - For April Tag detection
+- **ZED Mini Tracking Camera**
+  - For real-time mapping of the environment
+  - For position hold
+- **FPV Projection Camera**
+  - For a live feed of the game court
+- **Peripheral Control Computer (PCC)**
+  - For LED and servo actuation
+
+![Block Diagram for the Advanced Drone](Drone_Block_Diagrams.png)

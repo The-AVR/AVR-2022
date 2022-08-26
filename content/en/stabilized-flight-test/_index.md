@@ -1,10 +1,8 @@
 ---
-title: "Stabilized Flight Test"
+title: "Stabilized Flight Test (coming 9/1/2022)"
 weight: 11
 ---
 
-Please be sure to watch the video below to understand what to expect
-from the advanced flight test. This will be done in **stabilized**
-flight mode just like we did in the basic flight test.
-
-{{< youtube YOd--u4T2BQ >}}
+{{% alert title="Stay tuned!" color="success" %}}
+**Content this section will be released Thursday, 9/1/2022**
+{{% /alert %}}
