@@ -8,7 +8,7 @@ The following videos will talk through the process you should follow each
 time you fly. These are important checks to make sure your AVR drone operates
 correctly and keeps all team members safe.
 
-## Measuring Battery Voltage
+## Pre-flight Checks
 
 {{< youtube 6s3Z06fJGpY >}}
 
