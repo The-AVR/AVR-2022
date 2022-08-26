@@ -210,25 +210,30 @@ your alignment before doing the rest.
 
 ## Adding the Laser Trigger
 
-For the 2022 season, we are making use of a laser pointer. In order to be able to trigger the laser from the PCC we need to add some extra pins to the Tripler.
+For the 2022 season, we are making use of a laser pointer. In order to be able to
+trigger the laser from the PCC we need to add some extra pins to the Tripler.
 
-Start by placing the Tripler down, and lining up the M4 Express with the headers on the Tripler like shown below:
+Start by placing the Tripler down, and lining up the M4 Express with the headers on the
+Tripler like shown below:
 
 ![Tripler](locate-pins.png)
 
-I used a spare male dupont-connector wire to mark the pins of interest by plugging them into the desired spots on the header.
+I used a spare male dupont-connector wire to mark the pins of interest by plugging them
+into the desired spots on the header.
 
 Next, grab some of the spare header pins and break two single-pins off:
 
 ![Separated Pin](separate-pin-from-strip.png)
 
-Place them into the pins of interest and use something flat to place over the board and flip it over. I used an old PCB but you could use paper, cardboard, etc.
-Now solder the pins in place. 
+Place them into the pins of interest and use something flat to place over the board and
+flip it over. I used an old PCB but you could use paper, cardboard, etc.
+Now solder the pins in place.
 You should now have something like this:
 
 ![Soldered Pins](soldered-pins.jpg)
 
-Now place a female dupont-connector wire on the pins and bend them down to the right. They should fit perfectly between the header rows like such:
+Now place a female dupont-connector wire on the pins and bend them down to the right.
+They should fit perfectly between the header rows like such:
 
 ![Bent Pins](bent-pins.jpg)
 
