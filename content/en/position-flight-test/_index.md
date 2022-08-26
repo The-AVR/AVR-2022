@@ -4,5 +4,5 @@ weight: 13
 ---
 
 {{% alert title="Stay tuned!" color="success" %}}
-**Content this section will be released Thursday, 9/1/2022**
+**This section's content will be released Thursday, 9/1/2022**
 {{% /alert %}}
