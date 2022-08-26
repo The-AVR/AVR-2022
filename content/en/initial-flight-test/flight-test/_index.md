@@ -10,4 +10,4 @@ of the competition. Now it's time for our first flight test! Watch the video
 below to understand the basics of getting your AVR drone in the air and how
 to control it.
 
-{{< youtube wlEwJxmBvko >}}
+{{< youtube TW5_mHATgoI >}}

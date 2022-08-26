@@ -10,7 +10,7 @@ correctly and keeps all team members safe.
 
 ## Pre-flight Checks
 
-{{< youtube 6s3Z06fJGpY >}}
+{{< youtube tUU8Rz_-2gY >}}
 
 ## Installing Propellers
 
