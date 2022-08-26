@@ -211,7 +211,8 @@ your alignment before doing the rest.
 ## Adding the Laser Trigger
 
 For the 2022 season, we are making use of a laser pointer. In order to be able to
-trigger the laser from the PCC we need to add some extra pins to the Tripler.
+trigger the laser from the PCC we need to add some extra pins connected to GND and A4
+on the express to the Tripler.
 
 Start by placing the Tripler down, and lining up the M4 Express with the headers on the
 Tripler like shown below:
@@ -225,9 +226,10 @@ Next, grab some of the spare header pins and break two single-pins off:
 
 ![Separated Pin](separate-pin-from-strip.png)
 
-Place them into the pins of interest and use something flat to place over the board and
-flip it over. I used an old PCB but you could use paper, cardboard, etc.
-Now solder the pins in place.
+Place them into the holes on the tripler right next to the point of interest and use
+something flat to place over the board to hold the pins in place while you flip it
+over. I used an old PCB but you could use paper, cardboard, etc. Now solder the pins in
+place.
 You should now have something like this:
 
 ![Soldered Pins](soldered-pins.jpg)
@@ -243,6 +245,6 @@ Thats it! Move on to the next step!
 
 Now we can just pop the Featherwings into the tripler as shown below:
 
-![Completed PCC](assembled_pcc.jpg)
+![Completed PCC](completed-pcc.jpg)
 
 Now your PCC is assembled!
