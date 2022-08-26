@@ -1,6 +1,7 @@
 ---
 title: "T-265 Camera Mounting"
 weight: 7
+draft: true
 ---
 
 The Intel T-265 will be mounted to the front of your AVR drone and

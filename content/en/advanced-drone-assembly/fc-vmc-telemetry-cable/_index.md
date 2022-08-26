@@ -1,6 +1,7 @@
 ---
 title: "FC ⟷ VMC Telemetry Cable"
 weight: 3
+draft: true
 ---
 
 It's important that the FC and VMC can communicate with each other.

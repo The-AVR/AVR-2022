@@ -1,6 +1,7 @@
 ---
 title: "WiFi Antenna Mounting"
 weight: 5
+draft: true
 ---
 
 Before we covered how to

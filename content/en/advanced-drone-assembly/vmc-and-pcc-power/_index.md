@@ -1,6 +1,7 @@
 ---
 title: "VMC and PCC Power"
 weight: 1
+draft: true
 ---
 
 Two main components of your advanced build are the **Vehicle Management Computer**
