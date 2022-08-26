@@ -28,7 +28,7 @@ For example, the FCM module publishes telemetry data over MQTT, and feeds
 fake GPS data from MQTT to the FCC.
 
 This modular, open system makes it simple to add new modules or functionality
-to AVR. The [GUI]({{< relref "../../software/gui" >}}) for example,
+to AVR. The GUI for example,
 is 100% based on consuming MQTT data.
 
 ## Modules
