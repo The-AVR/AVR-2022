@@ -71,3 +71,5 @@ class Monitor(object):
         self.state = STATE.DEAD
         self.led_manager = LEDAnimator(led_index, nominal_color)
         self.topic_map: dict = {}
+    def initialize(self):
+        pass
