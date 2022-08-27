@@ -21,6 +21,10 @@ class Sandbox(MQTTModule):
     # argument that must be the first argument in any class method. This allows the code
     # inside the method to access class information.
     def __init__(self) -> None:
+        # This calls the original `__init__()` method of the MQTTModule class.
+        # This runs some setup code that we still want to occur, even though
+        # we're replacing the `__init__()` method.
+        super().__init__()
         # Here, we're creating a dictionary of MQTT topic names to method handles.
         # A dictionary is a data structure that allows use to
         # obtain values based on keys. Think of a dictionary of state names as keys

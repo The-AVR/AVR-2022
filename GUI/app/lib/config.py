@@ -7,13 +7,15 @@ if getattr(sys, "frozen", False):
     DATA_DIR = sys._MEIPASS  # type: ignore
     ROOT_DIR = os.path.dirname(sys.executable)
 else:
-    DATA_DIR = os.path.join(os.path.dirname(__file__), "..")
+    DATA_DIR = os.path.join(os.path.dirname(__file__), "..", "..")
     ROOT_DIR = DATA_DIR
 
 # root dir is the directory of the main entrypoint
 ROOT_DIR = os.path.abspath(ROOT_DIR)
 # data dir is the root directory within the application itself
 DATA_DIR = os.path.abspath(DATA_DIR)
+# directory that contains images
+IMG_DIR = os.path.join(DATA_DIR, "assets", "img")
 
 
 class _Config:

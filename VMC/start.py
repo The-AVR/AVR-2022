@@ -7,6 +7,7 @@ import signal
 import subprocess
 import sys
 import tempfile
+import warnings
 from typing import Any, List
 
 import yaml
@@ -40,6 +41,7 @@ def check_sudo() -> None:
         sys.exit(0)
     except KeyboardInterrupt:
         sys.exit(1)
+
 
 def apriltag_service(compose_services: dict) -> None:
     apriltag_data = {
@@ -136,6 +138,9 @@ def sandbox_service(compose_services: dict) -> None:
 
 
 def status_service(compose_services: dict, local: bool = False) -> None:
+    # don't create a volume for nvpmodel if it's not available
+    nvpmodel_source = shutil.which("nvpmodel")
+
     status_data = {
         "depends_on": ["mqtt"],
         "restart": "unless-stopped",
@@ -143,16 +148,22 @@ def status_service(compose_services: dict, local: bool = False) -> None:
         "volumes": [
             {
                 "type": "bind",
-                "source": shutil.which("nvpmodel"),
-                "target": "/app/nvpmodel",
-            },
-            {
-                "type": "bind",
                 "source": "/etc/nvpmodel.conf",
                 "target": "/app/nvpmodel.conf",
             },
         ],
     }
+
+    if nvpmodel_source:
+        status_data["volumes"].append(
+            {
+                "type": "bind",
+                "source": nvpmodel_source,
+                "target": "/app/nvpmodel",
+            }
+        )
+    else:
+        warnings.warn("nvpmodel is not found")
 
     if local:
         status_data["build"] = os.path.join(THIS_DIR, "status")
@@ -262,10 +273,10 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
     proc.wait()
 
     # cleanup
-    try:
-        os.remove(compose_file)
-    except PermissionError:
-        pass
+    # try:
+    #     os.remove(compose_file)
+    # except PermissionError:
+    #     pass
 
     sys.exit(proc.returncode)
 

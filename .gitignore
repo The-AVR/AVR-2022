@@ -14,3 +14,7 @@ node_modules/
 
 # macOS
 **/.DS_Store
+PCC/.vscode/c_cpp_properties.json
+
+#intellij - pycharm
+.idea

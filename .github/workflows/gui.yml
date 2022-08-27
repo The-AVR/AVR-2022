@@ -21,10 +21,10 @@ jobs:
 
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
           python-version: "3.9"
           cache: pip
@@ -35,6 +35,17 @@ jobs:
 
       - name: Build GUI
         run: python GUI/build.py
+
+      - name: Test GUI
+        shell: pwsh
+        run: ./GUI/dist/AVRGUI.*.exe --test-bundle
+
+      - name: Upload GUI to Pipeline
+        if: github.event_name != 'push'
+        uses: actions/upload-artifact@v3
+        with:
+          name: GUI
+          path: GUI/dist/*.exe
 
       - name: Get Latest Release
         if: github.event_name != 'pull_request'

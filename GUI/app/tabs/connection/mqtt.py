@@ -1,11 +1,13 @@
 from typing import Any
 
 import paho.mqtt.client as mqtt
-from lib.config import config
-from lib.enums import ConnectionState
-from lib.widgets import IntLineEdit
 from loguru import logger
 from PySide6 import QtCore, QtGui, QtWidgets
+
+from ...lib.color import wrap_text
+from ...lib.config import config
+from ...lib.enums import ConnectionState
+from ...lib.widgets import IntLineEdit
 
 
 class MQTTClient(QtCore.QObject):
@@ -190,7 +192,7 @@ class MQTTConnectionWidget(QtWidgets.QWidget):
         ]
 
         self.state_label.setText(
-            f"State: <span style='color:{color_lookup[connection_state]};'>{connection_state.name.title()}</span>"
+            f"State: {wrap_text(connection_state.name.title(), color_lookup[connection_state])}"
         )
 
         self.disconnect_button.setEnabled(connected)

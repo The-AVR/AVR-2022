@@ -11,9 +11,11 @@ cmd = [
     "--name",
     f"AVRGUI.{subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD'], text=True).strip()}",
     "--icon",
-    os.path.join(THIS_DIR, "lib", "img", "logo.ico"),
+    os.path.join(THIS_DIR, "assets", "img", "logo.ico"),
     "--add-data",
-    f"{os.path.join(THIS_DIR, 'lib', 'img')}{os.pathsep}{os.path.join('lib', 'img')}",
+    f"{os.path.join(THIS_DIR, 'assets')}{os.pathsep}{os.path.join('assets')}",
+    "--hidden-import",
+    "PySide6.QtSvg",
 ]
 
 print(cmd)

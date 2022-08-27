@@ -1,16 +1,19 @@
+import argparse
 import sys
 
-from lib.enums import ConnectionState
-from lib.qt_icon import set_icon
+from app.lib.enums import ConnectionState
+from app.lib.qt_icon import set_icon
+from app.tabs.autonomy import AutonomyWidget
+from app.tabs.connection.main import MainConnectionWidget
+from app.tabs.moving_map import MovingMapWidget
+from app.tabs.mqtt_debug import MQTTDebugWidget
+from app.tabs.mqtt_logger import MQTTLoggerWidget
+from app.tabs.pcc_tester import PCCTesterWidget
+from app.tabs.thermal_view_control import ThermalViewControlWidget
+from app.tabs.vmc_control import VMCControlWidget
+from app.tabs.vmc_telemetry import VMCTelemetryWidget
 from loguru import logger
 from PySide6 import QtCore, QtGui, QtWidgets
-from tabs.connection.main import MainConnectionWidget
-from tabs.mqtt_debug import MQTTDebugWidget
-from tabs.mqtt_logger import MQTTLoggerWidget
-from tabs.pcc_tester import PCCTesterWidget
-from tabs.thermal_view_control import ThermalViewControlWidget
-from tabs.vmc_control import VMCControlWidget
-from tabs.vmc_telemetry import VMCTelemetryWidget
 
 
 class TabBar(QtWidgets.QTabBar):
@@ -29,7 +32,7 @@ class TabBar(QtWidgets.QTabBar):
     def contextMenuEvent(self, event: QtGui.QContextMenuEvent) -> None:
         menu = QtWidgets.QMenu(self)
 
-        # needs to be done before the menu is poped up, otherwise the QEvent will expire
+        # needs to be done before the menu is popped up, otherwise the QEvent will expire
         selected_item = self.tabAt(event.pos())
 
         pop_out_action = QtGui.QAction("Pop Out", self)
@@ -144,6 +147,17 @@ class MainWindow(QtWidgets.QWidget):
             self.vmc_telemetry_widget.process_message
         )
 
+        # moving map widget
+
+        self.moving_map_widget = MovingMapWidget(self)
+        self.moving_map_widget.build()
+        self.moving_map_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.moving_map_widget, self.moving_map_widget.windowTitle())
+
+        self.main_connection_widget.mqtt_connection_widget.mqtt_client.message.connect(
+            self.moving_map_widget.process_message
+        )
+
         # vmc control widget
 
         self.vmc_control_widget = VMCControlWidget(self)
@@ -170,6 +184,17 @@ class MainWindow(QtWidgets.QWidget):
         )
 
         self.thermal_view_control_widget.emit_message.connect(
+            self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
+        )
+
+        # autonomy widget
+
+        self.autonomy_widget = AutonomyWidget(self)
+        self.autonomy_widget.build()
+        self.autonomy_widget.pop_in.connect(self.tabs.pop_in)
+        self.tabs.addTab(self.autonomy_widget, self.autonomy_widget.windowTitle())
+
+        self.autonomy_widget.emit_message.connect(
             self.main_connection_widget.mqtt_connection_widget.mqtt_client.publish
         )
 
@@ -221,6 +246,8 @@ class MainWindow(QtWidgets.QWidget):
             self.vmc_control_widget,
             self.vmc_telemetry_widget,
             self.thermal_view_control_widget,
+            self.moving_map_widget,
+            self.autonomy_widget,
         ]
 
         # disable/enable widgets
@@ -232,11 +259,13 @@ class MainWindow(QtWidgets.QWidget):
             else:
                 self.tabs.setTabToolTip(idx, "")
 
-        # telemetry stuff is special case
+        # clear widgets to a starting state
         if not self.mqtt_connected:
             self.mqtt_debug_widget.clear()
             self.mqtt_logger_widget.clear()
             self.vmc_telemetry_widget.clear()
+            self.thermal_view_control_widget.clear()
+            self.moving_map_widget.clear()
 
     def set_serial_connected_state(self, connection_state: ConnectionState) -> None:
         self.serial_connected = connection_state == ConnectionState.connected
@@ -277,4 +306,15 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--test-bundle",
+        action="store_true",
+        help="Immediately exit the application with exit code 0, to test bundling",
+    )
+    args = parser.parse_args()
+
+    if args.test_bundle:
+        sys.exit(0)
+
     main()

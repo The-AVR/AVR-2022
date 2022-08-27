@@ -9,12 +9,16 @@ import colour
 import numpy as np
 import scipy.interpolate
 from bell.avr.mqtt.payloads import (
+    AvrPcmFireLaserPayload,
     AvrPcmSetLaserOffPayload,
     AvrPcmSetLaserOnPayload,
+    AvrPcmSetServoAbsPayload,
     AvrPcmSetServoPctPayload,
 )
 from PySide6 import QtCore, QtGui, QtWidgets
 
+from ..lib.calc import constrain
+from ..lib.widgets import DoubleLineEdit
 from .base import BaseTabWidget
 
 
@@ -22,10 +26,6 @@ def map_value(
     x: float, in_min: float, in_max: float, out_min: float, out_max: float
 ) -> float:
     return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
-
-
-def constrain(val: int, min_val: int, max_val: int) -> int:
-    return min(max_val, max(min_val, val))
 
 
 class Direction(Enum):
@@ -55,6 +55,9 @@ class ThermalView(QtWidgets.QWidget):
 
         # high range of the sensor (this will be red on the screen)
         self.MAXTEMP = 32.0
+
+        # last lowest temp from camera
+        self.last_lowest_temp = 999.0
 
         # how many color values we can have
         self.COLORDEPTH = 1024
@@ -96,6 +99,14 @@ class ThermalView(QtWidgets.QWidget):
         # need a bit of padding for the edges of the canvas
         self.setFixedSize(self.width_ + 50, self.height_ + 50)
 
+    def set_temp_range(self, mintemp: float, maxtemp: float) -> None:
+        self.MINTEMP = mintemp
+        self.MAXTEMP = maxtemp
+
+    def set_calibrted_temp_range(self) -> None:
+        self.MINTEMP = self.last_lowest_temp + 0.0
+        self.MAXTEMP = self.last_lowest_temp + 15.0
+
     def update_canvas(self, pixels: List[int]) -> None:
         float_pixels = [
             map_value(p, self.MINTEMP, self.MAXTEMP, 0, self.COLORDEPTH - 1)
@@ -113,7 +124,7 @@ class ThermalView(QtWidgets.QWidget):
             for jx, pixel in enumerate(row):
                 brush = QtGui.QBrush(
                     QtGui.QColor(
-                        *self.colors[constrain(int(pixel), 0, self.COLORDEPTH - 1)]
+                        *self.colors[int(constrain(pixel, 0, self.COLORDEPTH - 1))]
                     )
                 )
                 self.canvas.addRect(
@@ -130,12 +141,12 @@ class JoystickWidget(BaseTabWidget):
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
 
-        self.setFixedSize(150, 150)
+        self.setFixedSize(300, 300)
 
         self.movingOffset = QtCore.QPointF(0, 0)
 
         self.grabCenter = False
-        self.__maxDistance = 50
+        self.__maxDistance = 100
 
         self.lasttime = 0
 
@@ -146,6 +157,10 @@ class JoystickWidget(BaseTabWidget):
         self.servoymin = 10
         self.servoxmax = 99
         self.servoymax = 99
+
+        # servo declarations
+        self.SERVO_ABS_MAX = 2200
+        self.SERVO_ABS_MIN = 700
 
     def _center(self) -> QtCore.QPointF:
         """
@@ -163,6 +178,16 @@ class JoystickWidget(BaseTabWidget):
             AvrPcmSetServoPctPayload(servo=3, percent=y_servo_percent),
         )
 
+    def move_gimbal_absolute(self, x_servo_abs: int, y_servo_abs: int) -> None:
+        self.send_message(
+            "avr/pcm/set_servo_abs",
+            AvrPcmSetServoAbsPayload(servo=2, absolute=x_servo_abs),
+        )
+        self.send_message(
+            "avr/pcm/set_servo_abs",
+            AvrPcmSetServoAbsPayload(servo=3, absolute=y_servo_abs),
+        )
+
     def update_servos(self) -> None:
         """
         Update the servos on joystick movement.
@@ -173,21 +198,35 @@ class JoystickWidget(BaseTabWidget):
             return
         self.lasttime = ms
 
-        y_reversed = 100 - self.current_y
+        # y_reversed = 100 - self.current_y
 
-        x_servo_percent = round(map_value(self.current_x, 0, 100, 10, 99))
-        y_servo_percent = round(map_value(y_reversed, 0, 100, 10, 99))
+        # x_servo_percent = round(map_value(self.current_x, 0, 100, 10, 99))
+        # y_servo_percent = round(map_value(y_reversed, 0, 100, 10, 99))
+        #
+        # if x_servo_percent < self.servoxmin:
+        #     return
+        # if y_servo_percent < self.servoymin:
+        #     return
+        # if x_servo_percent > self.servoxmax:
+        #     return
+        # if y_servo_percent > self.servoymax:
+        #     return
+        #
+        # self.move_gimbal(x_servo_percent, y_servo_percent)
 
-        if x_servo_percent < self.servoxmin:
-            return
-        if y_servo_percent < self.servoymin:
-            return
-        if x_servo_percent > self.servoxmax:
-            return
-        if y_servo_percent > self.servoymax:
-            return
+        y_reversed = 225 - self.current_y
+        # side to side  270 left, 360 right
 
-        self.move_gimbal(x_servo_percent, y_servo_percent)
+        x_servo_abs = round(
+            map_value(
+                self.current_x + 25, 25, 225, self.SERVO_ABS_MIN, self.SERVO_ABS_MAX
+            )
+        )
+        y_servo_abs = round(
+            map_value(y_reversed, 25, 225, self.SERVO_ABS_MIN, self.SERVO_ABS_MAX)
+        )
+
+        self.move_gimbal_absolute(x_servo_abs, y_servo_abs)
 
     def _centerEllipse(self) -> QtCore.QRectF:
         # sourcery skip: assign-if-exp
@@ -283,16 +322,50 @@ class ThermalViewControlWidget(BaseTabWidget):
         """
         Build the GUI layout
         """
-        layout = QtWidgets.QVBoxLayout(self)
+        layout = QtWidgets.QHBoxLayout(self)
         self.setLayout(layout)
 
         # viewer
         viewer_groupbox = QtWidgets.QGroupBox("Viewer")
-        viewer_layout = QtWidgets.QHBoxLayout()
+        viewer_layout = QtWidgets.QVBoxLayout()
         viewer_groupbox.setLayout(viewer_layout)
 
         self.viewer = ThermalView(self)
         viewer_layout.addWidget(self.viewer)
+
+        # set temp range
+
+        # lay out the host label and line edit
+        temp_range_layout = QtWidgets.QFormLayout()
+
+        self.temp_min_line_edit = DoubleLineEdit()
+        temp_range_layout.addRow(QtWidgets.QLabel("Min Temp:"), self.temp_min_line_edit)
+        self.temp_min_line_edit.setText(str(self.viewer.MINTEMP))
+
+        self.temp_max_line_edit = DoubleLineEdit()
+        temp_range_layout.addRow(QtWidgets.QLabel("Max Temp:"), self.temp_max_line_edit)
+        self.temp_max_line_edit.setText(str(self.viewer.MAXTEMP))
+
+        set_temp_range_button = QtWidgets.QPushButton("Set Temp Range")
+        temp_range_layout.addWidget(set_temp_range_button)
+
+        set_temp_range_calibrate_button = QtWidgets.QPushButton(
+            "Auto Calibrate Temp Range"
+        )
+        temp_range_layout.addWidget(set_temp_range_calibrate_button)
+
+        viewer_layout.addLayout(temp_range_layout)
+
+        set_temp_range_button.clicked.connect(  # type: ignore
+            lambda: self.viewer.set_temp_range(
+                float(self.temp_min_line_edit.text()),
+                float(self.temp_max_line_edit.text()),
+            )
+        )
+
+        set_temp_range_calibrate_button.clicked.connect(  # type: ignore
+            lambda: self.calibrate_temp()
+        )
 
         layout.addWidget(viewer_groupbox)
 
@@ -304,24 +377,32 @@ class ThermalViewControlWidget(BaseTabWidget):
         sub_joystick_layout = QtWidgets.QHBoxLayout()
         joystick_layout.addLayout(sub_joystick_layout)
 
-        joystick = JoystickWidget(self)
-        sub_joystick_layout.addWidget(joystick)
+        self.joystick = JoystickWidget(self)
+        sub_joystick_layout.addWidget(self.joystick)
 
-        set_laser_on_button = QtWidgets.QPushButton("Laser On")
-        joystick_layout.addWidget(set_laser_on_button)
+        fire_laser_button = QtWidgets.QPushButton("Laser Fire")
+        joystick_layout.addWidget(fire_laser_button)
 
-        set_laser_off_button = QtWidgets.QPushButton("Laser Off")
-        joystick_layout.addWidget(set_laser_off_button)
+        laser_on_button = QtWidgets.QPushButton("Laser On")
+        joystick_layout.addWidget(laser_on_button)
+
+        laser_off_button = QtWidgets.QPushButton("Laser Off")
+        joystick_layout.addWidget(laser_off_button)
 
         layout.addWidget(joystick_groupbox)
 
         # connect signals
-        joystick.emit_message.connect(self.emit_message.emit)
+        self.joystick.emit_message.connect(self.emit_message.emit)
 
-        set_laser_on_button.clicked.connect(  # type: ignore
+        fire_laser_button.clicked.connect(  # type: ignore
+            lambda: self.send_message("avr/pcm/fire_laser", AvrPcmFireLaserPayload())
+        )
+
+        laser_on_button.clicked.connect(  # type: ignore
             lambda: self.send_message("avr/pcm/set_laser_on", AvrPcmSetLaserOnPayload())
         )
-        set_laser_off_button.clicked.connect(  # type: ignore
+
+        laser_off_button.clicked.connect(  # type: ignore
             lambda: self.send_message(
                 "avr/pcm/set_laser_off", AvrPcmSetLaserOffPayload()
             )
@@ -329,6 +410,11 @@ class ThermalViewControlWidget(BaseTabWidget):
 
         # don't allow us to shrink below size hint
         self.setMinimumSize(self.sizeHint())
+
+    def calibrate_temp(self) -> None:
+        self.viewer.set_calibrted_temp_range()
+        self.temp_min_line_edit.setText(str(self.viewer.MINTEMP))
+        self.temp_max_line_edit.setText(str(self.viewer.MAXTEMP))
 
     def process_message(self, topic: str, payload: str) -> None:
         """
@@ -345,6 +431,13 @@ class ThermalViewControlWidget(BaseTabWidget):
         asbytes = base64.b64decode(base64Decoded)
         pixel_ints = list(bytearray(asbytes))
 
+        # find lowest temp
+        lowest = min(pixel_ints)
+        self.viewer.last_lowest_temp = lowest
+
         # update the canvase
         # pixel_ints = data
         self.viewer.update_canvas(pixel_ints)
+
+    def clear(self) -> None:
+        self.viewer.canvas.clear()

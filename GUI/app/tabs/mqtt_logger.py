@@ -6,9 +6,9 @@ import os
 from io import TextIOWrapper
 from typing import Optional
 
-from lib.config import config
 from PySide6 import QtCore, QtGui, QtWidgets
 
+from ..lib.config import config
 from .base import BaseTabWidget
 
 

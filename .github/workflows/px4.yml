@@ -19,6 +19,14 @@ jobs:
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci skip')"
 
+    strategy:
+      matrix:
+        px4_target:
+          - "px4_fmu-v5x_default" # pixhawk v5X
+          - "px4_fmu-v6c_default" # pixhawk v6c
+          - "px4_fmu-v6x_default" # pixhawk v6x
+          - "nxp_fmuk66-v3_default" # NXP
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -27,13 +35,29 @@ jobs:
         uses: actions/cache@v3
         with:
           path: PX4/build
-          key: px4-firmware-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+          # can't run hashfiles on the build directory because the contents change
+          key: px4-firmware-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}-${{ matrix.px4_target }}
+          # changing PX4 version requires a full re-checkout
+
+          # prefer cache from firmware because stuff is precompiled,
+          # but accept pymavlink since it at least has the git clone
           restore-keys: |
-            px4-firmware-${{ hashFiles('PX4/patches/**') }}
-            px4-package-${{ hashFiles('PX4/patches/**') }}
+            px4-firmware-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+            px4-firmware-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}
+            px4-firmware-${{ hashFiles('PX4/version.json') }}
+            px4-pymavlink-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+            px4-pymavlink-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}
+            px4-pymavlink-${{ hashFiles('PX4/version.json') }}
 
       - name: Build PX4 Firmware
-        run: python3 PX4/build.py --px4
+        run: python3 PX4/build.py --px4 --targets ${{ matrix.px4_target }}
+
+      - name: Upload Firmware to Pipeline
+        if: github.event_name != 'push'
+        uses: actions/upload-artifact@v3
+        with:
+          name: PX4 ${{ matrix.px4_target }} Firmware
+          path: PX4/dist/*.px4
 
       - name: Get Latest Release
         if: github.event_name != 'pull_request'
@@ -46,9 +70,11 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: mknejp/delete-release-assets@v1
         with:
+          fail-if-no-assets: false
+          fail-if-no-release: false
           token: ${{ github.token }}
           tag: ${{ steps.latest_release.outputs.tag_name }}
-          assets: '*.px4'
+          assets: "${{ matrix.px4_target }}.*.px4"
 
       - name: Upload Firmware to Release
         if: github.event_name != 'pull_request'
