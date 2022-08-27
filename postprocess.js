@@ -47,6 +47,12 @@ function local_tags(base_url, soup) {
 function main() {
     // read the toml config
     var config = toml.parse(fs.readFileSync("config.toml"), "utf8");
+    var base_url = config.baseURL;
+
+    if (process.env.HUGO_BASEURL) {
+        base_url = process.env.HUGO_BASEURL;
+        console.log(`Using HUGO_BASEURL: ${base_url}`)
+    }
 
     // iterate through each html file in the public folder
     glob.sync("public/**/*.html").forEach((html_file) => {
@@ -56,7 +62,7 @@ function main() {
         var html = fs.readFileSync(html_file, "utf8");
         var soup = cheerio.load(html);
 
-        local_tags(config.baseURL, soup);
+        local_tags(base_url, soup);
 
         // write the file back
         fs.writeFileSync(html_file, soup.root().html());
