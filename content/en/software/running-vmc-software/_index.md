@@ -1,6 +1,7 @@
 ---
 title: "Running VMC Software"
 weight: 4
+draft: true
 ---
 
 ## Networking

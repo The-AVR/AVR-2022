@@ -1,6 +1,7 @@
 ---
 title: "CSI Camera Mounting"
 weight: 6
+draft: true
 ---
 
 In this section you will attach the CSI camera to the bottom of the AVR drone

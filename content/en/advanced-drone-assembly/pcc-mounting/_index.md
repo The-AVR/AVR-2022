@@ -1,6 +1,7 @@
 ---
 title: "PCC Mounting"
 weight: 8
+draft: true
 ---
 
 You've learned how to
