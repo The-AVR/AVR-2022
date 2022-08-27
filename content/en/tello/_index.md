@@ -4,7 +4,7 @@ weight: 15
 ---
 
 Your Bell AVR Competition team registration includes complimentary access to the full
-Droneblocks curriculum suite. To receive your customized login information, please fill
+DroneBlocks curriculum suite. To receive your customized login information, please fill
 out the team kit inventory form at
 [Bell Advanced Vertical Robotics Competition - Kit of Part Inventory](http://bit.ly/BellAVRKit)
 or contact BellAVR@roboticseducation.org .
@@ -19,5 +19,5 @@ prior to operating the Tello:
 {{% alert title="Note" color="note" %}}
 Note that your Tello has been shipped with the firmware already updated to the latest
 version. So, you can skip that step any time it is mentioned, and jump straight into
-programming with the Droneblocks app!
+programming with the DroneBlocks app!
 {{% /alert %}}
