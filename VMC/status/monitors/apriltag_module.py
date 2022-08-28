@@ -46,7 +46,7 @@ class ApriltagMonitor(Monitor):
             # if block, so that the correct state is chosen
 
             # if we havent heard from the module in 5 seconds, we're dead
-            if time.time() - self.last_update > 5:
+            if time.time() - self.last_update > 3:
                 self.state = STATE.DEAD
 
             # if we got updates, but the module hasnt processed a frame in over a second, we're critical
