@@ -71,9 +71,12 @@ class LEDAnimator(object):
 
 
 class Monitor(object):
-    def __init__(self, led_index: int, nominal_color: Union[List[int], int]):
+    def __init__(self, name: str, led_index: int, nominal_color: Union[List[int], int]):
+        self.name = name
         self.state = STATE.DEAD
         self.led_manager = LEDAnimator(led_index, nominal_color)
         self.topic_map: dict = {}
     def initialize(self):
         pass
+    def get_telemetry(self):
+        return {}

@@ -10,7 +10,7 @@ from utilities.avr_pixel import clamp, rgb2int, int2rgb
 
 class ApriltagMonitor(Monitor):
     def __init__(self, led_index: int, nominal_color: Union[List[int], int]):
-        super().__init__(led_index, nominal_color)
+        super().__init__("apriltags", led_index, nominal_color)
 
         self.topic_map = {
             "avr/apriltags/c/status": self.apriltags_c_status_handler,
@@ -37,6 +37,15 @@ class ApriltagMonitor(Monitor):
     def apriltags_c_status_handler(self, payload: dict):
         self.current_frames_processed = int(payload["status"]["num_frames_processed"])
         self.last_update = float(payload["status"]["last_update"])
+
+    def get_telemetry(self):
+        data = {
+            "led_color": self.led_manager.current_color,
+            "state": self.state.name,
+            "last_comms": self.last_update,
+            "current_frames": self.current_frames_processed,
+            "previous_frames": self.previous_frames_processed
+        }
 
     def run(self):
         while True:
