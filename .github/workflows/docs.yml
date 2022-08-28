@@ -54,7 +54,8 @@ jobs:
 
   docs-deploy:
     runs-on: ubuntu-latest
-    if: "!contains(github.event.head_commit.message, 'ci skip') && github.event_name != 'pull_request'"
+    if: github.event_name != 'pull_request'
+    # this will not run if docs-build does not run first
     needs: docs-build
 
     environment:
