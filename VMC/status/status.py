@@ -67,7 +67,14 @@ class StatusModule(MQTTModule):
     def on_connect(
         self, client: mqtt.Client, userdata: Any, flags: dict, rc: int
     ) -> None:
-        super().on_connect(client, userdata, flags, rc)
+        """
+        On connection callback. Subscribes to MQTT topics in the topic map.
+        """
+        logger.debug(f"Connected with result {rc}")
+
+        for topic in self.topic_map.keys():
+            client.subscribe(topic)
+            logger.debug(f"Subscribed to: {topic}")
         # additionally subscribe to all topics
         # TODO - its generally not a good idea to subscribe to everything
         # TODO - create dedicated status topics and sub to those
