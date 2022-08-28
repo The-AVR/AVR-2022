@@ -100,14 +100,22 @@ class StatusModule(MQTTModule):
         self.run_non_blocking()
         self.nvpmodel.initialize()
 
+        last_publish_time = time.time()
+
         while self.enabled:
             self.nvpmodel_status_check()
             for monitor in self.monitors:
                 self.pixels.set_pixel_color(
                     monitor.led_manager.led_index, monitor.led_manager.current_color
                 )
+            if time.time() - last_publish_time > .25:
+                now = time.time()
+                self.send_message("avr/status/last_update", {"timestamp": now}) #type: ignore
+                last_publish_time = now
+                for monitor in self.monitors:
+                    self.send_message(f"avr/status/led/{monitor.led_manager.led_index}", {"current_color": monitor.led_manager.current_color} ) #type: ignore
             time.sleep(0.01)
-        self.all_off()
+        self.pixels.all_pixels_off()
 
     def exit_gracefully(self, *args) -> None:
         self.enabled = False
