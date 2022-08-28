@@ -201,7 +201,8 @@ def main(development):
     # gotten from `sudo /opt/nvidia/jetson-io/config-by-pin.py -l`
     # https://docs.nvidia.com/jetson/archives/r34.1/DeveloperGuide/text/HR/ConfiguringTheJetsonExpansionHeaders.html#config-by-function-configure-header-s-by-special-function
     print("Enabling SPI")
-    subprocess.check_call(["python3", "/opt/nvidia/jetson-io/config-by-function.py", "-o", "dtb", '1=spi1'])
+    # subprocess.check_call(["python3", "/opt/nvidia/jetson-io/config-by-function.py", "-o", "dtb", '1=spi1'])
+    subprocess.check_call(["sudo", "modprobe", "spidev"])
     print_bar()
 
 
