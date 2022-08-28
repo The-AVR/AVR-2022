@@ -117,7 +117,7 @@ class StatusModule(MQTTModule):
                 self.pixels.set_pixel_color(
                     monitor.led_manager.led_index, monitor.led_manager.current_color
                 )
-            if time.time() - last_publish_time > .25:
+            if time.time() - last_publish_time > 1:
                 now = time.time()
                 self.send_message("avr/status/last_update", {"timestamp": now}) #type: ignore
                 last_publish_time = now
