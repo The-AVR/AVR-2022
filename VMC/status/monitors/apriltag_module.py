@@ -1,10 +1,12 @@
-from ..monitors.monitor import LEDAnimator, Monitor, STATE
-from ..utilities.avr_pixel import clamp, rgb2int, int2rgb
 import time
 import threading
-
 from typing import Union, List
+from monitor import LEDAnimator, Monitor, STATE
 
+# TODO - dont like this import mech. find a better way
+import sys
+sys.path.append("..") # Adds higher directory to python modules path.
+from utilities.avr_pixel import clamp, rgb2int, int2rgb
 
 class ApriltagMonitor(Monitor):
     def __init__(self, led_index: int, nominal_color: Union[List[int], int]):
