@@ -113,7 +113,7 @@ class StatusModule(MQTTModule):
                 self.send_message("avr/status/last_update", {"timestamp": now}) #type: ignore
                 last_publish_time = now
                 for monitor in self.monitors:
-                    self.send_message(f"avr/status/led/{monitor.led_manager.led_index}", {"current_color": monitor.led_manager.current_color} ) #type: ignore
+                    self.send_message(f"avr/status/led/{monitor.led_manager.led_index}", {"current_color": monitor.led_manager.current_color, "state": monitor.state.name} ) #type: ignore
             time.sleep(0.01)
         self.pixels.all_pixels_off()
 
