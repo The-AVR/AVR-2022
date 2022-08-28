@@ -16,8 +16,7 @@ class ApriltagMonitor(Monitor):
             "avr/apriltags/c/status": self.apriltags_c_status_handler,
         }
 
-        self.current_last_update: float = 0.0
-        self.previous_last_update: float = 0.0
+        self.last_update: float = 0.0
 
         self._current_frames_processed: int = 0
         self._previous_frames_processed: int = 0

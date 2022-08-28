@@ -36,7 +36,7 @@ class AVR_PIXEL(object):
 
     def set_all_color(self, color: Union[List[int], int]) -> None:
         if isinstance(color, list):
-            color = self.rgb2int(color)
+            color = rgb2int(color)
         for i in range(self.num_pixels):
             self.pixels[i] = color
         self.pixels.show()
@@ -46,6 +46,6 @@ class AVR_PIXEL(object):
 
     def set_pixel_color(self, which_one: int, color: Union[List[int], int]) -> None:
         if isinstance(color, list):
-            color = self.rgb2int(color)
+            color = rgb2int(color)
         self.pixels[which_one] = color
         self.pixels.show()
