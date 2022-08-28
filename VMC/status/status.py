@@ -30,6 +30,7 @@ APRIL_LED = 5
 
 class StatusModule(MQTTModule):
     def __init__(self):
+        super().__init__()
 
         self.topic_map = {}
 
@@ -43,8 +44,9 @@ class StatusModule(MQTTModule):
             # add the callbacks for the monitor
             if monitor.topic_map:
                 self.topic_map.update(monitor.topic_map)
+            else:
+                logger.debug(f"Monitor {monitor.name} has no topic map")
 
-        super().__init__()
 
         self.nvpmodel = nvpmodel.NVPModel()
         self.pixels = avr_pixel.AVR_PIXEL()
