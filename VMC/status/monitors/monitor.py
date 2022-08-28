@@ -2,7 +2,7 @@ from enum import Enum
 from os import curdir
 from typing import List, Union
 import time
-from VMC.status.utilities.avr_pixel import int2rgb, rgb2int, clamp
+from ..utilities.avr_pixel import int2rgb, rgb2int, clamp
 
 
 class STATE(Enum):

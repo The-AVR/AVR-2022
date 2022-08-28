@@ -1,5 +1,5 @@
-from VMC.status.monitors.monitor import LEDAnimator, Monitor, STATE
-from VMC.status.utilities.avr_pixel import clamp, rgb2int, int2rgb
+from ..monitors.monitor import LEDAnimator, Monitor, STATE
+from ..utilities.avr_pixel import clamp, rgb2int, int2rgb
 import time
 import threading
 
