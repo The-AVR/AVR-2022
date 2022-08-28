@@ -1,11 +1,11 @@
 import signal
 import time
 from typing import Any, Dict, Tuple, List
-from VMC.status.monitors.apriltag_module import ApriltagMonitor
-from VMC.status.monitors.monitor import Monitor
+from monitors.apriltag_module import ApriltagMonitor
+from monitors.monitor import Monitor
 
-import VMC.status.utilities.avr_pixel as avr_pixel
-import VMC.status.utilities.nvpmodel as nvpmodel
+import utilities.avr_pixel as avr_pixel
+import utilities.nvpmodel as nvpmodel
 import paho.mqtt.client as mqtt
 from bell.avr.mqtt.client import MQTTModule
 from loguru import logger
