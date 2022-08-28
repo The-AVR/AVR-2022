@@ -46,6 +46,7 @@ class ApriltagMonitor(Monitor):
             "current_frames": self.current_frames_processed,
             "previous_frames": self.previous_frames_processed
         }
+        return data
 
     def run(self):
         while True:
