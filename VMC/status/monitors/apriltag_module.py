@@ -5,8 +5,10 @@ from .monitor import LEDAnimator, Monitor, STATE
 
 # TODO - dont like this import mech. find a better way
 import sys
-sys.path.append("..") # Adds higher directory to python modules path.
+
+sys.path.append("..")  # Adds higher directory to python modules path.
 from utilities.avr_pixel import clamp, rgb2int, int2rgb
+
 
 class ApriltagMonitor(Monitor):
     def __init__(self, led_index: int, nominal_color: Union[List[int], int]):
@@ -38,15 +40,14 @@ class ApriltagMonitor(Monitor):
         self.current_frames_processed = int(payload["status"]["num_frames_processed"])
         self.last_update = float(payload["status"]["last_update"])
 
-    def get_telemetry(self):
-        data = {
+    def get_telemetry(self) -> dict:
+        return {
             "led_color": self.led_manager.current_color,
             "state": self.state.name,
             "last_comms": self.last_update,
             "current_frames": self.current_frames_processed,
-            "previous_frames": self.previous_frames_processed
+            "previous_frames": self.previous_frames_processed,
         }
-        return data
 
     def run(self):
         while True:
@@ -56,7 +57,7 @@ class ApriltagMonitor(Monitor):
             # if block, so that the correct state is chosen
 
             # if we havent heard from the module in 5 seconds, we're dead
-            if time.time() - self.last_update > 3:
+            if time.time() - self.last_update > 5:
                 self.state = STATE.DEAD
 
             # if we got updates, but the module hasnt processed a frame in over a second, we're critical

@@ -3,9 +3,10 @@ from os import curdir
 from typing import List, Union
 import time
 
-#TODO - dont like this import mech. find a better way
+# TODO - dont like this import mech. find a better way
 import sys
-sys.path.append("..") # Adds higher directory to python modules path.
+
+sys.path.append("..")  # Adds higher directory to python modules path.
 from utilities.avr_pixel import int2rgb, rgb2int, clamp
 
 
@@ -76,7 +77,9 @@ class Monitor(object):
         self.state = STATE.DEAD
         self.led_manager = LEDAnimator(led_index, nominal_color)
         self.topic_map: dict = {}
-    def initialize(self):
+
+    def initialize(self) -> None:
         pass
-    def get_telemetry(self):
+
+    def get_telemetry(self) -> dict:
         return {}
