@@ -39,22 +39,3 @@ available to you:
 
 A good kit that contains most of the tools that you will need can be found here:
 [Tool Kit](https://www.amazon.com/Hobbypark-Professional-Screwdriver-Quadcopter-Helicopter/dp/B07MM2MZDK/)
-
-## Prerequisites
-
-For AVR, you'll need to 3D print some parts for your drone.
-While not needed immediately, these are good to get started with:
-
-- Landing Gear
-  - AVR-LANDING-GEAR-MOUNT (x4)
-  - AVR-LANDING-GEAR-BRACE (x4)
-  - AVR-LANDING-GEAR-FOOT (x4)
-- Mounts
-  - AVR-CAM-ZED-MINI-MOUNT (x1)
-  - AVR-BATTERY-STANDOFF-SMC (X1)
-- Gimbal
-  - AVR-GIMBAL-BASE (x1)
-  - AVR-GIMBAL-PAN (x1)
-  - AVR-GIMBAL-TILT (x1)
-- Tello
-  - AVR-TELLO-CAGE-BRACKET (x1)
