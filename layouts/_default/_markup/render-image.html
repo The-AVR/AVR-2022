@@ -3,9 +3,11 @@
 {{ if or ( hasPrefix .Destination "/" ) ( hasPrefix .Destination "http" ) }}
     {{ $image_url = .Destination | safeURL }}
 {{ else }}
-    {{ $image_url = printf "%s%s%s" ("/") (replace .Page.File.Dir "\\" "/") (.Destination | safeURL) }}
+    <!-- Hugo lower-cases page slugs. Modify file path to match. -->
+    {{ $image_url = printf "%s%s%s" ("/") (lower (replace .Page.File.Dir "\\" "/")) (.Destination | safeURL) }}
 {{ end }}
 
+<!-- If the site base URL is not blank or a single slash, prefix that -->
 {{ if and (ne site.BaseURL "/") (ne site.BaseURL "") }}
     {{ $image_url = printf "%s%s" (site.BaseURL) ($image_url) }}
 {{ end }}
