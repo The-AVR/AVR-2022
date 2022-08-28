@@ -1,7 +1,7 @@
 import time
 import threading
 from typing import Union, List
-from monitor import LEDAnimator, Monitor, STATE
+from .monitor import LEDAnimator, Monitor, STATE
 
 # TODO - dont like this import mech. find a better way
 import sys
