@@ -5,6 +5,8 @@ cascade:
   - type: "docs"
 ---
 
+![](BELL_Logo_AVR-Competition_RGB_081822-R00.png)
+
 ## Introduction
 
 Welcome to the documentation for the Bell Advanced Vertical Robotics competition!
@@ -40,21 +42,10 @@ available to you:
 A good kit that contains most of the tools that you will need can be found here:
 [Tool Kit](https://www.amazon.com/Hobbypark-Professional-Screwdriver-Quadcopter-Helicopter/dp/B07MM2MZDK/)
 
-## Prerequisites
+## Useful Links
 
-For AVR, you'll need to 3D print some parts for your drone.
-While not needed immediately, these are good to get started with:
-
-- Landing Gear
-  - AVR-LANDING-GEAR-MOUNT (x4)
-  - AVR-LANDING-GEAR-BRACE (x4)
-  - AVR-LANDING-GEAR-FOOT (x4)
-- Mounts
-  - AVR-CAM-ZED-MINI-MOUNT (x1)
-  - AVR-BATTERY-STANDOFF-SMC (X1)
-- Gimbal
-  - AVR-GIMBAL-BASE (x1)
-  - AVR-GIMBAL-PAN (x1)
-  - AVR-GIMBAL-TILT (x1)
-- Tello
-  - AVR-TELLO-CAGE-BRACKET (x1)
+- [RoboticsEducation.org](https://www.roboticseducation.org/teams/bell-advanced-vertical-robotics/)
+- [Game Manual](https://www.roboticseducation.org/documents/2022/08/emergency-firefighting-challenge-bell-avr-competition-game-manual.pdf/)
+- [Game Video](https://youtu.be/iJml75fcsLg)
+- [Bell AVR Forum](https://www.bellavrforum.org/)
+- [Software Source Code](https://github.com/bellflight/AVR-2022)
