@@ -1,6 +1,6 @@
 ---
 title: "Flash the PCC"
-weight: 3
+weight: 2
 ---
 
 ## Setup
