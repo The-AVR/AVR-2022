@@ -3,7 +3,8 @@ title: "Jetson Development"
 weight: 5
 ---
 
-You should now be able to set up VS Code in order to modify code on your Jetson. If you have not done this yet, familiarize yourself with using [SSH to remote into your Jetson.]({{< relref "vehicle-management-computer/connecting-to-the-jetson/" >}})
+You should now be able to set up VS Code in order to modify code on your Jetson.
+If you have not done this yet, familiarize yourself with using SSH to remote into your Jetson.
 
 Take note of the username of your Jetson, and the host IP address.
 

@@ -24,7 +24,3 @@ description: "Physically assemble the Jetson"
 - Replace screws
 
 ![](DSC02233.jpg)
-
-{{% alert title="Success" color="success" %}}
-Now you're ready to flash the SD Card!
-{{% /alert %}}

@@ -1,7 +1,8 @@
 ---
 title: "Connecting to the Jetson"
-weight: 3
+weight: 1
 descrription: "This pages goes over different methods you can use to login to your Jetson"
+draft: true
 ---
 
 You'll need to login to your Jetson many times to setup and run software.
