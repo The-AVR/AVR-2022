@@ -1,6 +1,6 @@
 ---
 title: "Installing VMC Software"
-weight: 3
+weight: 2
 draft: true
 ---
 

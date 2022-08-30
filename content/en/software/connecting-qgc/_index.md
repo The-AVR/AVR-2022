@@ -1,6 +1,6 @@
 ---
 title: "Connecting QGC"
-weight: 5
+weight: 4
 draft: true
 ---
 
