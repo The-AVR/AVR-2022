@@ -1,6 +1,6 @@
 ---
 title: "Software (coming 9/1/2022)"
-weight: 12
+weight: 11
 ---
 
 {{% alert title="Stay tuned!" color="success" %}}
