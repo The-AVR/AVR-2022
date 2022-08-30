@@ -13,8 +13,8 @@ calibrate sensors and much more. It also provides different ways of controlling
 the drone, such as an autonomous mission planner.
 
 QGC can be downloaded and installed on Windows, Mac, and Linux operating systems.
-You can find the necessary installer by going to the
-[downloads page](https://docs.qgroundcontrol.com/master/en/getting_started/download_and_install.html).
+You can find the necessary installer by going to
+[downloads page](https://docs.qgroundcontrol.com/master/en/releases/daily_builds.html).
 Follow the steps there for your operating system.
 Go ahead and install QGC before proceeding to the next section.
 
