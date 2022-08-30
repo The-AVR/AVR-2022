@@ -1,12 +1,7 @@
 ---
-title: "Installing VMC Software"
+title: "Updating VMC Software"
 weight: 2
-draft: true
 ---
-
-After
-[setting up your VMC]({{< relref "../../vehicle-management-computer/system-setup" >}})
-you're now ready to install the AVR software.
 
 ## Internet
 

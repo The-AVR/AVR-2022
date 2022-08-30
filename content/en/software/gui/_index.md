@@ -1,7 +1,6 @@
 ---
 title: "GUI"
 weight: 6
-draft: true
 ---
 
 ## Setup
