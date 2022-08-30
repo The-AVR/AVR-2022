@@ -1,7 +1,6 @@
 ---
 title: "Running VMC Software"
 weight: 3
-draft: true
 ---
 
 ## Networking
@@ -31,7 +30,8 @@ existing WiFi network.
 {{% /alert %}}
 
 After connecting to the WiFi network, your Jetson will _always_ have the IP address
-`10.42.0.1`, which you can use to [connect to via SSH]({{< relref "../../vehicle-management-computer/connecting-to-the-jetson/#ssh" >}}).
+`10.42.0.1`, which you can use to
+[connect to via SSH]({{< relref "../connecting-to-the-jetson/#ssh" >}}).
 
 ## Running
 
