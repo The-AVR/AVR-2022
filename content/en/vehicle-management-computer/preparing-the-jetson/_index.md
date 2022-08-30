@@ -34,8 +34,3 @@ Now that your Jetson assembly is complete, please be sure to insert the micro SD
 Make note of the orientation of the micro SD card in the photo below.
 
 ![Inserting the micro SD card into the Jetson](inserting_micro_sd_into_jetson.jpg)
-
-
-
-
-
