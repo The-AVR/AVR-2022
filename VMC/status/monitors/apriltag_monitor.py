@@ -38,7 +38,7 @@ class ApriltagMonitor(Monitor):
 
     def apriltags_c_status_handler(self, payload: dict):
         self.current_frames_processed = int(payload["status"]["num_frames_processed"])
-        self.last_update = float(payload["status"]["last_update"])
+        self.last_update = time.time()
 
     def get_telemetry(self) -> dict:
         return {
@@ -60,7 +60,7 @@ class ApriltagMonitor(Monitor):
             if time.time() - self.last_update > 5:
                 self.state = STATE.DEAD
 
-            # if we got updates, but the module hasnt processed a frame in over a second, we're critical
+            # if we got updates, but the module hasnt processed a frame in over a second, we're critical (camera loss)
             if (
                 self.current_frames_processed - self.previous_frames_processed < 1
                 and time.time() - self.last_update > 1

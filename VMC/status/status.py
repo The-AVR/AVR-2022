@@ -1,7 +1,8 @@
 import signal
 import time
 from typing import Any, Dict, Tuple, List
-from monitors.apriltag_module import ApriltagMonitor
+from monitors.apriltag_monitor import ApriltagMonitor
+from monitors.vio_monitor import VIOMonitor
 from monitors.monitor import Monitor
 
 import utilities.avr_pixel as avr_pixel
@@ -37,13 +38,14 @@ class StatusModule(MQTTModule):
         self.monitors: List[Monitor] = []
 
         self.monitors.append(ApriltagMonitor(APRIL_LED, CLR_YELLOW))
+        self.monitors.append(VIOMonitor(VIO_LED, CLR_PURPLE))
 
         for monitor in self.monitors:
             # start the run thread for the monitor
             monitor.initialize()
             # add the callbacks for the monitor
             if monitor.topic_map:
-                self.topic_map.update(monitor.topic_map)
+                self.topic_map.update(monitor.topic_map) #type: ignore
             else:
                 logger.debug(f"Monitor {monitor.name} has no topic map")
 
