@@ -4,6 +4,12 @@ weight: 1
 description: "This page will explain how to mount the 4-in-1 ESC to the midplate"
 ---
 
+{{% alert title="Warning" color="warning" %}}
+The team has discovered a firmware issues with the ESC's and are planning on sending you
+a new ESC with the correct firmware in your wave 2 kit. Please be aware that if you
+mount your ESC now, there may be additional rework prior to flight testing.
+{{% /alert %}}
+
 ## Mounting
 
 {{% alert title="Note" color="note" %}}
