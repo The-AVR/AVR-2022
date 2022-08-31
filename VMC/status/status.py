@@ -91,7 +91,6 @@ class StatusModule(MQTTModule):
         it will light up the associated pixel with its associated color
         """
         lookup: Dict[str, Tuple[int, int]] = {
-            "avr/vio": (VIO_LED, CLR_PURPLE),
             "avr/pcm": (PCC_LED, CLR_AQUA),
             "avr/fcm": (FCC_LED, CLR_ORANGE),
             "avr/thermal": (THERMAL_LED, CLR_BLUE),
