@@ -4,9 +4,38 @@ weight: 3
 description: "In this section we will walk through the process of mounting the drone motors to the arms of the frame"
 ---
 
+## Overview
+
+Motor position and rotation are incredibly important for any drone to fly properly. In your kit you will notice two motor boxes labeled **CW** (clockwise) and two **CCW** (counter clockwise). This represents the direction of rotation for each motor. Let's revisit motor position and rotation in the image below:
+
+![PX4 motor position and rotation](px4_motor_order.png)
+
+**Motor positions 1 and 2 require CCW rotating motors and motor positions 3 and 4 require CW rotating motors.**
+
+You may be wondering how to determine the rotation of each motor. There are two ways to determine this. The first, and less intuitive in our opinion, is to look at the motor can. The photo below shows the motor size (**2812**) and kV rating (**900**) printed in two different formats. The kV rating for the CCW rotating motor is printed before the motor size. The kV rating for the CW rotating motor is printed after the motor size.
+
+![CW (black cap) and CCW (silver cap) motors](cw_and_ccw_motors.jpg)
+
+With that out of the way let's cover a much more intutive (in our opinion) way to determine motor rotation. It requires using the propellers included in your kit. The **silver capped propeller** is a CCW rotating propeller and is threaded in a way that it will only screw onto the CCW motors. The **black capped propeller** is a CW rotating propeller. It is threaded in a way that it will only screw onto the CW rotating motors.
+
+The photo below shows an example of installing a CW rotating propeller. Hold the propeller in place and rotate the motor in a clockwise direction. If the thread pattern is correct the propeller will screw onto the motor shaft and lock into place.
+
+![CW propeller mounting](cw_prop_mounting.jpg)
+
+Repeat this process for each of the four motors and then use tape to label them, just like you did with your ESC leads. You will be glad you did later!
+
+![Label each of your four motors](motor_labeling.jpg)
+
+You should have the following:
+
+- Motor 1: CCW
+- Motor 2: CCW
+- Motor 3: CW
+- Motor 4: CW
+
 ## Attaching Motors to Arms
 
-Inside each motor box there is a small ziploc bag of 4 x 8mm screws and other components. You will only be using the screws from this bag. In your AVR kit you will also find a ziploc bag of M3 washers.
+Inside each motor box there is a small ziploc bag of 4 x 8mm screws. In your AVR kit you will also find a ziploc bag of M3 washers.
 
 {{% alert title="Warning" color="warning" %}}
 Please be sure to use the screws provided in the small ziploc bag inside the motor box. **Using longer screws from the kit can end up damaging the motor windings and ultimately prevent the motor from operating.**
@@ -22,11 +51,13 @@ A 2mm hex driver is necessary to secure each of the 8mm screws into the motor.
 Don't forget to use one M3 washer with each screw. This will help reduce stress on the carbon fiber arm.
 {{% /alert %}}
 
-![2mm hex driver for motor mounting](motor_arm_assembly_2.jpg)
+Place a small drop of blue Loctite on each screw as shown in the photo below.
 
-Make note of the blue loctite already applied to each of the screws in the photo below. Loctite is useful in helping secure your screws and prevents them from coming loose.
+![Blue Loctite on motor screw](motor_arm_assembly_2.jpg)
 
-![Blue loctite, screws, and washers](motor_arm_assembly_3.jpg)
+Loctite is useful in helping secure your screws and prevents them from coming loose.
+
+![Motor mounted and secured](motor_arm_assembly_3.jpg)
 
 Repeat this process for all four of the motors.
 
@@ -44,9 +75,13 @@ Locate the M3 22mm screws and lock nuts in your AVR kit. These will be necessary
 
 Each arm will require three 22mm screws and lock nuts. You will insert each of the screws through the top plate, arm, bottom plate, and landing gear mount. The lock nut will be secured from the bottom as shown in the photo below. A 5.5mm box driver is necessary for tightening the nut. Be sure to tighten each nut securely.
 
+{{% alert title="Tip" color="tip" %}}
+Save yourself some trouble and make sure that the motor arms are mounted in the right position. Make sure that the labeled ESC leads match with the motor labels. Refer back to the PX4 motor image above if necessary.
+{{% /alert %}}
+
 ![Securing lock nuts with 5.5mm driver](motor_arm_midplate_2.jpg)
 
-Repeat this process for each motor arm.
+Repeat the installation process for each motor arm.
 
 ![All four motor arms secured](motor_arm_midplate_3.jpg)
 

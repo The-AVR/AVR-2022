@@ -6,7 +6,7 @@ weight: 8
 One physical check that must be done to ensure your AVR drone hovers properly
 is to verify that the motor positions and rotations are correct. We previously covered ESC wiring which should ensure that the FC output is going to the right motor.
 
-We discussed motor rotation in the section on propeller adapters and learned that the rotation for each motor is important. You may recall the
+We discussed motor rotation when installing the frame arms and learned that the rotation for each motor is important. You may recall the
 image below and we will refer to it one more time before we run the motor test.
 
 ![Motor position and rotation diagram](px4_motor_order.png)
