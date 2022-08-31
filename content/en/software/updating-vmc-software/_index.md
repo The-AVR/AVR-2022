@@ -1,12 +1,7 @@
 ---
-title: "Installing VMC Software"
-weight: 3
-draft: true
+title: "Updating VMC Software"
+weight: 2
 ---
-
-After
-[setting up your VMC]({{< relref "../../vehicle-management-computer/system-setup" >}})
-you're now ready to install the AVR software.
 
 ## Internet
 
@@ -46,7 +41,7 @@ sudo nmcli device wifi connect <network name>
 such as:
 
 ```bash
-sudo nmcli device wifi connect "Keep my WiFi's name out of your mouth" password "smithslap"
+sudo nmcli device wifi connect "WI do drones FI" password "Flying_Is_Fun"
 ```
 
 If your network name or password has a space or other special characters,
