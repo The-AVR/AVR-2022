@@ -17,7 +17,7 @@ class VIOMonitor(Monitor):
         }
         self.last_vel_update = 0
 
-    def vio_vel_ned_handler(self):
+    def vio_vel_ned_handler(self, payload: dict):
         self.last_vel_update = time.time()
         self.last_update = time.time()
 
