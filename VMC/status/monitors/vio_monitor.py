@@ -12,10 +12,13 @@ from utilities.avr_pixel import clamp, rgb2int, int2rgb
 class VIOMonitor(Monitor):
     def __init__(self, led_index: int, nominal_color: Union[List[int], int]):
         super().__init__("vio", led_index, nominal_color)
+
         self.topic_map = {
             "avr/vio/velocity/ned": self.vio_vel_ned_handler
         }
+
         self.last_vel_update = 0
+        self.last_update = 0
 
     def vio_vel_ned_handler(self, payload: dict):
         self.last_vel_update = time.time()
@@ -38,7 +41,8 @@ class VIOMonitor(Monitor):
             # if we havent heard from the module in 5 seconds, we're dead
             if time.time() - self.last_update > 5:
                 self.state = STATE.DEAD
-            elif time.time() - self.last_vel_update < 1:
+
+            if time.time() - self.last_vel_update < 1:
                 self.state = STATE.NOMINAL
 
             # update the LED color

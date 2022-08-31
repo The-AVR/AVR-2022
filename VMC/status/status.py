@@ -94,7 +94,6 @@ class StatusModule(MQTTModule):
             "avr/pcm": (PCC_LED, CLR_AQUA),
             "avr/fcm": (FCC_LED, CLR_ORANGE),
             "avr/thermal": (THERMAL_LED, CLR_BLUE),
-            # "avr/apriltags": (APRIL_LED, CLR_YELLOW), #we are overriding this one with a special handler
         }
 
         for key, value in lookup.items():
