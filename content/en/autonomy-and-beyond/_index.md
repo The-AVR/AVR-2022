@@ -1,6 +1,6 @@
 ---
 title: "Autonomy and Beyond"
-weight: 16
+weight: 18
 ---
 
 Teams are encouraged to learn and practice programming with their drone. While it is

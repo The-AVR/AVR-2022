@@ -1,6 +1,6 @@
 ---
-title: "Position Flight Test (coming 9/1/2022)"
-weight: 13
+title: "Checkpoint 3: Position Flight Test (Coming Next Week)"
+weight: 14
 ---
 
 {{% alert title="Stay tuned!" color="success" %}}

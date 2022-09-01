@@ -1,6 +1,6 @@
 ---
 title: "Sphero RVR"
-weight: 14
+weight: 16
 ---
 
 Your Bell AVR Competition team registration includes complimentary access to the Sphero

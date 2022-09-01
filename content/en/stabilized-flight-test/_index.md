@@ -1,6 +1,6 @@
 ---
-title: "Stabilized Flight Test (coming 9/1/2022)"
-weight: 11
+title: "Checkpoint 2: Stabilized Flight Test (Coming Next Week)"
+weight: 12
 ---
 
 {{% alert title="Stay tuned!" color="success" %}}

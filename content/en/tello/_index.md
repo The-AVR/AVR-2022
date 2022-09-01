@@ -1,6 +1,6 @@
 ---
 title: "DroneBlocks & Tello"
-weight: 15
+weight: 17
 ---
 
 Your Bell AVR Competition team registration includes complimentary access to the full
