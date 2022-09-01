@@ -14,7 +14,7 @@ made up of a series of modules, which are actually independent
 
 Below is a graphic that shows the individual containers:
 
-![](phaseI-Page-2.drawio.png)
+![](mqtt-backbone.jpg)
 
 All of these modules communicate with each other over a message bus called
 [MQTT](http://www.steves-internet-guide.com/mqtt-works/).

@@ -47,50 +47,16 @@ sudo nmcli device wifi connect "WI do drones FI" password "Flying_Is_Fun"
 If your network name or password has a space or other special characters,
 you'll need to wrap it in quotes as shown above.
 
-## Install
-
-{{% pageinfo color="warning" %}}
-Your Jetson should already have the software installed for you.
-These instructions are provided in case you need to wipe your Jetson and start fresh.
-
-Please jump straight to the [updating](#updating) section as you will
-still need to update the software and run the setup script, in order
-to download settings for your Zed Mini camera.
-{{% /pageinfo %}}
-
-```bash
-git clone --recurse-submodules https://github.com/bellflight/AVR-2022 ~/AVR-2022
-cd ~/AVR-2022/VMC/scripts
-chmod +x setup.py
-./setup.py
-```
-
-This clones the software repo, changes directory into the repo you
-just cloned, makes the setup script executable,
-and then executes the setup script.
-
-![Setup script starting](2022-06-14-19-50-52.png)
-
-This setup script will automatically install and configure
-everything needed on your Jetson to get it ready for competition.
-This script does do operating system updates, so depending on your
-internet connection, it may take a while to run.
-
-At the end of the setup script, it will perform a few self-tests
-to make sure everything is configured properly.
-
-![Self-tests passing](2022-06-14-19-54-31.png)
-
-Once this is done, please restart your Jetson. Some system settings were changed
-that require a reboot to take effect.
-
-![Reboot prompt](2022-06-14-19-55-01.png)
-
 ## Updating
 
 Bell engineers are constantly working on improving the VMC software.
 If a new version is ever available, you just need to go into the
 directory the repo is cloned to, pull the latest code, and re-run the setup script:
+
+{{% pageinfo color="warning" %}}
+There have been a lot of changes since your Jetson was preloaded with software.
+Please ensure that you successfully run `git pull` in the following steps.
+{{% /pageinfo %}}D
 
 ```bash
 cd ~/AVR-2022/VMC/scripts
