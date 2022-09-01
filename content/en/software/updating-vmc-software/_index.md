@@ -3,7 +3,7 @@ title: "Updating VMC Software"
 weight: 2
 ---
 
-## Internet
+## Connecting to Internet
 
 In order to install the AVR software, your Jetson needs to have an internet connection.
 The easiest way by far is if you have ethernet available. If so, just plug

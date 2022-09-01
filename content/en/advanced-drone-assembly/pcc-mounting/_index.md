@@ -5,7 +5,7 @@ draft: true
 ---
 
 You've learned how to
-[assemble the PCC]({{< relref "../../peripheral-control-computer/physical-assembly" >}})
+[assemble the PCC]({{<  "../../peripheral-control-computer/physical-assembly" >}})
 and
 [interface with it over USB]({{< relref "../../peripheral-control-computer/test-the-pcc" >}})
 connected to a computer. Now you will take this a step further
