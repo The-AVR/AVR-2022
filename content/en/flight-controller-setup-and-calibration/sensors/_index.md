@@ -1,7 +1,6 @@
 ---
 title: "Sensors"
 weight: 3
-description: "Please follow the steps closely to perform the best sensor calibration possible."
 ---
 
 The **Sensors** screen lists most of the sensors that are available to

@@ -1,7 +1,6 @@
 ---
 title: "System Setup"
 weight: 2
-description: "After flashing the SD card, set up the first user account"
 ---
 
 {{% pageinfo color="warning" %}}
