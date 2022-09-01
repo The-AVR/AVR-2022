@@ -1,7 +1,6 @@
 ---
 title: "GUI"
 weight: 6
-draft: true
 ---
 
 ## Setup
@@ -31,7 +30,7 @@ After the application connects, all the VMC-related tabs will become enabled.
 The functionality of the application is broken up into multiple tabs. These
 tabs are automatically enabled/disabled based on the connectivity currently
 available. These tabs can be re-ordered as desired. Additionally,
-the tabs can be popped out into seperate windows to create a multi-pane
+the tabs can be popped out into separate windows to create a multi-pane
 view, either by double clicking the tab, or right-clicking and selecting "Pop out".
 
 ![You can also double-click to pop out a tab](popout.gif)
@@ -57,8 +56,8 @@ along with the current attitude of the drone in roll, pitch, yaw.
 
 Finally, at the bottom is a display of the status of the software modules
 required for stabilized flight and April Tag detection. These indicators will
-turn green once MQTT messages are recieved from a module, and will
-turn red if more than a second has elapsed since the last recieved message.
+turn green once MQTT messages are received from a module, and will
+turn red if more than a second has elapsed since the last received message.
 
 ![Module status indicators](2022-06-18-12-22-33.png)
 

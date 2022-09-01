@@ -1,6 +1,6 @@
 ---
 title: "System Setup"
-weight: 4
+weight: 2
 description: "After flashing the SD card, set up the first user account"
 ---
 

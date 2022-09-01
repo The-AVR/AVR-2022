@@ -32,16 +32,20 @@ Below is a non-exhaustive list of the kinds of data some of the modules publish:
   - Drone Battery Level
 - AprilTag Module
   - Visible AprilTag IDs
-  - Their relative Positions
+  - AprilTag relative Positions
 - VIO Module
-  - T265 Position
-  - T265 Velocity
-  - T265 Confidence
+  - Zed Mini Position
+  - Zed Mini Velocity
+  - Zed Mini Confidence
 - PCC Module
-  - Actuator States (Coming Soon)
-  - LED Halo States (Coming Soon)
+  - Laser States
+  - Gimbal Control
 - Fusion Module
   - Coordinate Transformed Drone Position
+- Thermal Module
+  - Infrared Camera Readings
+- Status Module
+  - Module States
 
 You can read more about these modules [here.]({{< relref "diving-deeper/architecture" >}})
 
