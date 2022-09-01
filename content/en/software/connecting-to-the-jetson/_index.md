@@ -60,7 +60,7 @@ and launch PuTTy with:
 sudo putty
 ```
 
-### Connecting to Serial Client
+### Connecting to Jetson via Serial Client
 
 Now, if you want to power the Jetson via USB (if the Jetson is not connected to
 a wall adapter or a battery) remove the jumper behind the barrel jack.

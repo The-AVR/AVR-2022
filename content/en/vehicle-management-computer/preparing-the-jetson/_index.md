@@ -26,7 +26,7 @@ description: "Physically assemble the Jetson"
 ![](DSC02233.jpg)
 
 {{% alert title="Success" color="success" %}}
-Now that your Jetson assembly is complete, please be sure to insert the micro SD card. The micro SD card contains Nvidia's operating sytem and the default VMC software already installed.
+Now that your Jetson assembly is complete, please be sure to insert the micro SD card. The micro SD card contains Ubuntu (Linux) and the default VMC software pre-installed.
 {{% /alert %}}
 
 ![Micro SD with software pre-installed](micro_sd_and_jetson.jpg)
