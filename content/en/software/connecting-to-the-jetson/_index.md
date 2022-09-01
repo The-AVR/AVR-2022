@@ -125,7 +125,12 @@ ifconfig wlan0
 
 if you've connected the Jetson to WiFi.
 
-![](2022-06-15-19-47-09.png)
+![](ifconfig-wlan0.png)
+
+If you have yet to connect your jetson to the WiFi you can follow instructions for
+[connecting to internet]({{<relref "../updating-vmc-software/#connecting-to-internet">}})
+prior to returning to connect through ssh.
+
 
 ### `ssh` Command
 
@@ -140,7 +145,7 @@ The first time you log in to your Jetson, you'll be prompted to accept
 the host's key. Enter `yes`. You'll thenbe prompted for your password,
 and then you'll be put into a terminal.
 
-![Command line SSH login](2022-06-15-19-51-39.png)
+![Command line SSH login](ssh-avr.png)
 
 ### PuTTy
 
@@ -148,9 +153,9 @@ If you're not comfortable with the command line, you can install PuTTy to connec
 over SSH. Select the "SSH" button in PuTTy, put in the hostname field `<user>@<ip>`
 and then click the "Open" button.
 
-![PuTTy SSH Login](2022-06-15-19-53-43.png)
+![PuTTy SSH Login](putty-ssh-avr.png)
 
-![Secondary popup window](2022-06-15-19-57-29.png)
+![Secondary popup window](putty-ssh-success-avr.png)
 
 You'll need to accept that you trust a key the first time.
 

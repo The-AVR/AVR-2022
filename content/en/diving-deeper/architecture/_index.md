@@ -35,6 +35,8 @@ is 100% based on consuming MQTT data.
 
 Here is a description of the modules in AVR and what they all do.
 
+![Module Flowchart](module-flow.jpg)
+
 ### AprilTag
 
 [Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/apriltag)
@@ -45,7 +47,7 @@ camera to scan for visible [AprilTags](https://april.eecs.umich.edu/software/apr
 A low-level C++ program captures the images and hands them off to the Jetson's GPU
 for processing and publishes the raw detections to the "avr/apriltags/raw" topic.
 
-From here, a second program, written in Python subscribes to this topic,
+From here, a second Python program inside the module subscribes to this topic,
 and upon new detections, uses linear algebra to perform a coordinate
 transformation in order to get several pieces of data.
 These detections include the tags ID, as well as the drone's absolute location
@@ -98,7 +100,7 @@ a thin wrapper around the
 container with a configuration baked in.
 
 The port 18330 is used instead of the normal 1883 port because it puts it
-outside of the normal operating system privledged port range.
+outside of the normal operating system privileged port range.
 
 ### Peripheral Control
 
@@ -127,7 +129,7 @@ and publishing them over MQTT.
 [Source Code](https://github.com/bellflight/AVR-2022/tree/main/VMC/vio)
 
 The Visual Inertial Orientation (VIO) module is responsible for
-capturing data from the steroscopic tracking camera, and converting it into
+capturing data from the stereoscopic tracking camera, and converting it into
 global-ish coordinates.
 
 This module considers wherever it is started as "0,0,0" and thus the drone's movements
