@@ -1,4 +1,4 @@
 ---
 title: "Battery Management"
-weight: 4
+weight: 5
 ---

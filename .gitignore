@@ -7,3 +7,4 @@ resources/_gen
 public/
 
 .vscode/settings.json
+.DS_Store

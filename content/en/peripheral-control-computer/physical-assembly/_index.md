@@ -1,7 +1,6 @@
 ---
 title: "Physical Assembly"
 weight: 1
-description: "How-To Guide for Assembling the Peripheral Control Computer"
 ---
 
 ![](pcc_combo.png)

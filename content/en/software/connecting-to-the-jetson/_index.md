@@ -1,7 +1,6 @@
 ---
 title: "Connecting to the Jetson"
-weight: 3
-descrription: "This pages goes over different methods you can use to login to your Jetson"
+weight: 1
 ---
 
 You'll need to login to your Jetson many times to setup and run software.
@@ -23,10 +22,10 @@ in the bottom left (the 9 squares) or with the keyboard shortcut
 
 ## Serial
 
-Another method of logging in to your Jetson is over a serial connection.
+If you do not have a monitor and keyboard, another method of logging in to your Jetson is over a serial connection.
 To do this, you'll need a serial client.
 
-### Windows
+### Installing Serial Client on Windows
 
 For Windows, we recommend PuTTy.
 Go to [this page](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
@@ -36,7 +35,7 @@ and download and install the `putty-64bit-<version>-installer.msi` file.
 
 ![Run through the setup wizard](2022-05-20-09-54-21.png)
 
-### MacOS
+### Installing Serial Client on MacOS
 
 Rather than using PuTTy, it's much easier to open a terminal and simply run:
 
@@ -44,7 +43,7 @@ Rather than using PuTTy, it's much easier to open a terminal and simply run:
 screen ttyACM0 115200
 ```
 
-### Linux
+### Installing Serial Client on Linux
 
 You can follow the same steps as on MacOS
 (after installing `screen` with `sudo apt install screen`),
@@ -61,7 +60,7 @@ and launch PuTTy with:
 sudo putty
 ```
 
-### Connecting
+### Connecting to Jetson via Serial Client
 
 Now, if you want to power the Jetson via USB (if the Jetson is not connected to
 a wall adapter or a battery) remove the jumper behind the barrel jack.
@@ -104,8 +103,8 @@ Jetson to connect to a network, but don't know what the IP address is.
 
 {{% alert title="Note" color="note" %}}
 This only works if you've already configured the operating system on the Jetson.
-If you're setting up your Jetson from scratch, you'll need to use
-a different method.
+If you're setting up your Jetson from scratch, you'll first need to start by
+using Monitor/Keyboard or Serial.
 {{% /alert %}}
 
 In the future, you'll want to use SSH to login to your Jetson,
@@ -126,7 +125,11 @@ ifconfig wlan0
 
 if you've connected the Jetson to WiFi.
 
-![](2022-06-15-19-47-09.png)
+![](ifconfig-wlan0.png)
+
+If you have yet to connect your jetson to the WiFi you can follow instructions for
+[connecting to internet]({{<relref "../updating-vmc-software/#connecting-to-internet">}})
+prior to returning to connect through ssh.
 
 ### `ssh` Command
 
@@ -141,23 +144,23 @@ The first time you log in to your Jetson, you'll be prompted to accept
 the host's key. Enter `yes`. You'll thenbe prompted for your password,
 and then you'll be put into a terminal.
 
-![Command line SSH login](2022-06-15-19-51-39.png)
+![Command line SSH login](ssh-avr.png)
 
 ### PuTTy
 
-If you're not comfortable with the command line, you can also use PuTTy to connect
+If you're not comfortable with the command line, you can install PuTTy to connect
 over SSH. Select the "SSH" button in PuTTy, put in the hostname field `<user>@<ip>`
 and then click the "Open" button.
 
-![PuTTy SSH Login](2022-06-15-19-53-43.png)
+![PuTTy SSH Login](putty-ssh-avr.png)
 
-![Secondary popup window](2022-06-15-19-57-29.png)
+![Secondary popup window](putty-ssh-success-avr.png)
 
 You'll need to accept that you trust a key the first time.
 
 ![Accept the key](2022-06-15-19-54-20.png)
 
-### Troubleshooting
+### SSH Troubleshooting
 
 #### Connection closed/reset
 

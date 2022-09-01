@@ -1,6 +1,6 @@
 ---
 title: "RC Transmitter Setup"
-weight: 5
+weight: 6
 description: "This section provides instructions on how to configure the FlySky FS-i6S RC transmitter that is included in the AVR drone kit."
 ---
 

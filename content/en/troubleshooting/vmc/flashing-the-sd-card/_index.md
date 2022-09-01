@@ -1,7 +1,6 @@
 ---
 title: "Flashing the SD Card"
-weight: 2
-description: "Flash the Jetson SD card with the operating system"
+weight: 1
 ---
 
 {{% pageinfo color="warning" %}}

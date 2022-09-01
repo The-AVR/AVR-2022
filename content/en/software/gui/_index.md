@@ -1,7 +1,6 @@
 ---
 title: "GUI"
 weight: 6
-draft: true
 ---
 
 ## Setup
@@ -31,7 +30,7 @@ After the application connects, all the VMC-related tabs will become enabled.
 The functionality of the application is broken up into multiple tabs. These
 tabs are automatically enabled/disabled based on the connectivity currently
 available. These tabs can be re-ordered as desired. Additionally,
-the tabs can be popped out into seperate windows to create a multi-pane
+the tabs can be popped out into separate windows to create a multi-pane
 view, either by double clicking the tab, or right-clicking and selecting "Pop out".
 
 ![You can also double-click to pop out a tab](popout.gif)
@@ -57,8 +56,8 @@ along with the current attitude of the drone in roll, pitch, yaw.
 
 Finally, at the bottom is a display of the status of the software modules
 required for stabilized flight and April Tag detection. These indicators will
-turn green once MQTT messages are recieved from a module, and will
-turn red if more than a second has elapsed since the last recieved message.
+turn green once MQTT messages are received from a module, and will
+turn red if more than a second has elapsed since the last received message.
 
 ![Module status indicators](2022-06-18-12-22-33.png)
 
@@ -66,7 +65,7 @@ If all 4 indicators are green, you are good to fly!
 
 ### VMC Control
 
-![VMC Control Tab](2022-06-18-12-21-50.png)
+![VMC Control Tab](vmc-control-2022-08-29.png)
 
 This tab allows you to control various aspects of the drone, including the
 LEDs, and servos connected to the PCC.
@@ -78,9 +77,13 @@ Click the color buttons to change the color of the LEDs
 to one of the presets (red, green, blue). The "clear" button at the bottom
 turns off the LEDs.
 
-#### Autonomous Mode
+### Autonomy Control
 
-As for the "Autonomous" buttons in the tab,
+![Autonomy Control Tab](autonomy-2022-08-29.png)
+
+#### Autonomous Enable
+
+The "Autonomous" buttons in the tab,
 this is purely optional for the teams that have chosen to write autonomous code.
 These buttons send a message to the MQTT topic `avr/autonomous` with a payload of:
 
@@ -122,15 +125,45 @@ class Sandbox(MQTTModule):
             do_stuff()
 ```
 
+#### Building Autonomous Enable Drop
+
+Additionally, buttons for enabling/disabling autonomous water drops are provided on this
+page.
+These buttons send a message to the MQTT topic `avr/autonomous/building/drop` with
+a payload of:
+
+```json
+{
+  "id": 0,
+  "enabled": true
+}
+```
+
+This message can be used to tell you drone what buildings are on fire and if you want to
+drop water on it or not. For a full list of which buildings have water drops please
+refer to the game manual. The activity of using the `avr/autonomous/building/drop`
+will be implemented by the students in the sadbox module.
+[Hint: the above example can also be used in this scenario]
+
 ### Thermal View/Control
 
-![Thermal view and control tab](2022-06-17-11-30-17.png)
+![Thermal view and control tab](thermal-gui-2022-08-29.png)
 
 This tab shows a view of the thermal camera, and provides a means of
 controlling the gimbal and turning the associated laser on and off.
 
+You can either calibrate your thermal cameras range manual by typing in a min and max
+value, or you can use the auto calibrate feature to get a dynamic range.
+
 To use the gimbal, click and drag the black dot and move it around within the box.
 The bounds of the box are the gimbal's limit.
+
+### Moving Map
+
+![Moving Map Tag](moving-map-2022-08-29.png)
+
+A map of your drones movements has been included for reference while flying.
+You can use this to reference your location, roll, pitch, yaw, or altitude.
 
 ### MQTT Debugger
 
