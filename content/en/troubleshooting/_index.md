@@ -1,6 +1,6 @@
 ---
 title: "Troubleshooting"
-weight: 18
+weight: 20
 description: "This section provides instructions on Troubleshooting different things of your drone"
 ---
 

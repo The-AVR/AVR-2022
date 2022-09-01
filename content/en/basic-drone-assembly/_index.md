@@ -1,6 +1,6 @@
 ---
 title: "Basic Drone Assembly"
-weight: 3
+weight: 4
 description: "This section guides you through the assembly of the drone kit"
 ---
 

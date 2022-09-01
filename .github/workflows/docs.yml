@@ -49,6 +49,23 @@ jobs:
         if: github.event_name != 'pull_request'
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages
-          publish_dir: public
+          path: public
+
+  docs-deploy:
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    # this will not run if docs-build does not run first
+    needs: docs-build
+    
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
