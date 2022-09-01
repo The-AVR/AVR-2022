@@ -43,7 +43,7 @@ Below is a non-exhaustive list of the kinds of data some of the modules publish:
 - Fusion Module
   - Coordinate Transformed Drone Position
 - Thermal Module
-  - Inferred Camera Readings
+  - Infrared Camera Readings
 - Status Module
   - Module States
 
