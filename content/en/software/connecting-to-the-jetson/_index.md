@@ -131,7 +131,6 @@ If you have yet to connect your jetson to the WiFi you can follow instructions f
 [connecting to internet]({{<relref "../updating-vmc-software/#connecting-to-internet">}})
 prior to returning to connect through ssh.
 
-
 ### `ssh` Command
 
 The quickest way to login to yor Jetson over SSH, is to use the builtin `ssh` command

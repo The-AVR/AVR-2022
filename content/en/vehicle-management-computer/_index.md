@@ -4,4 +4,3 @@ weight: 10
 ---
 
 ![](vmc_highlight.png)
-

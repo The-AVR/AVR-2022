@@ -134,14 +134,14 @@ a payload of:
 
 ```json
 {
-    "id": 0,
-    "enabled": true
+  "id": 0,
+  "enabled": true
 }
 ```
 
 This message can be used to tell you drone what buildings are on fire and if you want to
 drop water on it or not. For a full list of which buildings have water drops please
-refer to  the game manual. The activity of using the `avr/autonomous/building/drop`
+refer to the game manual. The activity of using the `avr/autonomous/building/drop`
 will be implemented by the students in the sadbox module.
 [Hint: the above example can also be used in this scenario]
 
