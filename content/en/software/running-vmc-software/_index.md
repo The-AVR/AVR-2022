@@ -1,7 +1,6 @@
 ---
 title: "Running VMC Software"
-weight: 4
-draft: true
+weight: 3
 ---
 
 ## Networking
@@ -31,7 +30,8 @@ existing WiFi network.
 {{% /alert %}}
 
 After connecting to the WiFi network, your Jetson will _always_ have the IP address
-`10.42.0.1`, which you can use to [connect to via SSH]({{< relref "../../vehicle-management-computer/connecting-to-the-jetson/#ssh" >}}).
+`10.42.0.1`, which you can use to
+[connect to via SSH]({{< relref "../connecting-to-the-jetson/#ssh" >}}).
 
 ## Running
 
@@ -153,7 +153,7 @@ Sometimes when starting the AVR software, things don't all start correctly.
 Example output:
 
 ```text
-Needing sudo privledges to run docker, re-lauching
+Needing sudo privileges to run docker, re-launching
 Running command: docker-compose --project-name AVR-2022 --file /tmp/docker-compose-v5eqlg13.yml up --remove-orphans --force-recreate pcm
 /usr/local/lib/python3.6/dist-packages/paramiko/transport.py:33: CryptographyDeprecationWarning: Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography and will be removed in a future release.
   from cryptography.hazmat.backends import default_backend
