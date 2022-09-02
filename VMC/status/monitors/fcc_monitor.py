@@ -1,6 +1,7 @@
 import time
 import threading
 from typing import Union, List
+from loguru import logger
 from .monitor import LEDAnimator, Monitor, STATE
 
 # TODO - dont like this import mech. find a better way
@@ -32,11 +33,14 @@ class FCCMonitor(Monitor):
         }
 
     def fcm_status_handler(self, payload: dict):
-        self.fcm_mode = payload["mode"]
-        self.fcm_armed = payload["armed"]
         self.last_status_update = time.time()
         self.last_update = time.time()
 
+        try:
+            self.fcm_mode = payload["mode"]
+            self.fcm_armed = payload["armed"]
+        except:
+            logger.warning("fcm status handler couldnt parse fcm status msg")
     def run(self):
         while True:
 
