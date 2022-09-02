@@ -1,7 +1,6 @@
 ---
 title: "VMC Mounting"
 weight: 4
-draft: true
 ---
 
 ## Mounting
