@@ -1,7 +1,6 @@
 ---
 title: "FPV Projection Camera Mounting"
 weight: 9
-draft: true
 ---
 
 The FPV projection camera will be instrumental in providing a live video feed

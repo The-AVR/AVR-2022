@@ -1,25 +1,120 @@
 ---
 title: "VMC and PCC Power"
 weight: 1
-draft: true
 ---
 
-Two main components of your advanced build are the **Vehicle Management Computer**
-(VMC), which runs the AVR software stack and the **Peripheral Control Computer** (PCC),
-which will allow teams to manually and programmatically control the LED ring
-and actuate up to four servos.
+Two main components of your advanced build are the **Vehicle Management Computer** (VMC), which runs the AVR software stack and the **Peripheral Control Computer** (PCC), which will allow teams to manually and programmatically control the LED ring, actuate up to four servos, and control the laser.
 
-This section will walk through the necessary steps for providing adequate
-power to both the VMC and PCC. This will be done with two separate buck
-converters, which are included in **Box 5** of your kit. The main battery of your
-AVR drone is 16.8V fully charged. The required input voltage for the VMC and PCC
-are 5V, therefore the buck converters will step the voltage down to a usable 5V.
+This section will walk through the necessary steps for providing adequate power to both the VMC and PCC.
+This will be done with two separate buck converters.
+The main battery of your AVR drone is 16.8V fully charged.
+The required input voltage for the VMC and PCC are 5V, therefore the buck converters will step the voltage down to a usable 5V.
+
+![Power Wiring Diagram](avr_power_wiring_diagram.jpg)
+
+This section will work its way from the battery out to the VMC & PCC.
+
+## Y-Cable
+
+The Y-cable is the cable that splits the battery power into two directions: one for the ESC, and one for the PDB.
+
+To create the wire cables use 3 of the 4 pre-soldered XT-60 cables from the kit, 2 females and one male.
+
+![XT-60 cables](y_cable_layout_1.jpg)
+
+# TODO: Add image
+
+i think it would be beneficial to add an image of a male vs female connectors for reference... I could see a team pretty easily doing it backwards.
+
+Firstly, cut each cable to approximately 1.5 inches and solder the ends so that they are ready to combine. The end result should look similar to the following.
+
+![XT-60 cables preparation](y_cable_layout_2.jpg)
+
+Next, place heat shrink large enough to slide over the 3 cable solder joint on the side with 1 male connector. Than, solder the 3 ground (black) cables together.
+Pull the heat shrink down over the end of the connection and apply heat.
+If you have access to a heat gun or a lighter this will work well.
+Alternatively, you can use the side of your soldering iron to apply heat and let the tubing shrink over your connectors.
+
+![Soldering XT-60 cables](y_cable_assy_1.jpg)
+
+Repeat for the voltage (red) cables.
+
+![Soldering XT-60 cables](y_cable_assy_2.jpg)
+
+# TODO: Add image
+
+Final product image?
+
+## PDB
+
+Before installing the buck converters, the Power Distribution Board (PDB) will need to be installed and wired correctly.
+This will allow us to split off power from the battery to the buck converters.
+
+![PDB, wires, and buck converters](power_overview.jpg)
+
+The first step is to solder on the battery leads to the PDB.
+To do this cut 1 male XT-60 cable to about 1.5 inches and pre-tin the ends as we did with the y-cable above.
+
+Cut the wires to make 4 \_**_8 or 6 or 4 inch_** wires; 2 black and 2 red. These will be used to connect the PDU to the ESC
+
+Next, pre-tin the battery pads on the PDB
+
+# TODO: Add image
+
+Images of soldering on battery leads?
+Possibly link to video?
+This Guy is very thorough and i watched him when i was building mine...
+I think he does say "fricken" at one point though, idk if that matters?
+or if there is time for you to make a video that would be awesome,
+but i know that is asking a lot.
+https://youtu.be/GoPT69y98pY
+
+Apply the soldering iron to the heat pad and start feeding the solder on to the ESC pad (do not the soldering iron itself, if the soldering pad is not heating up you can end up with cold soldering joints.)
+
+![Soldering the PDB](pdu_solder_pads_1.jpg)
+
+Once the pads are pre-tinned it should like the following.
+
+![Pre-tinned Solder Pads](pdu_solder_pads_2.jpg)
+
+Next, apply solder to the wires to pre-tin them.
+
+![Pre-tinned Wires](pdu_pretin.jpg)
+
+After pre-tinning everything, place the battery leads on the battery pad and push the soldering iron down on the top of the leads until it heats up the solder enough to start melting.
+When doing this be sure to leave the iron on long enough so that the solder on the pad starts to heat up.
+
+![Soldering wires to pads](pdu_solder_pads_3.jpg)
+
+Repeat for the both wires.
+
+After successfully soldering everything to the PDB, use a voltmeter to test and make ensure that there are no shorts between the positive and negative connections.
+
+![Checking connections](pdu_verification.jpg)
+
+Repeat for the second set of wires.
+
+You should now be at a place where you have all the parts as shown in the following image.
+
+![Power Distribution Layout](power_layout.jpg)
+
+Place the PDU on top of the ESC standoffs and secure using M2.5 nuts from your AVR kit.
+
+![Mounting the PDB](pdu_mounting.jpg)
+
+Next route the wires through the middle plate and back out to the front of the drone.
+This will keep wires tidy, out of the way of the battery once assembled, and ready for attachment to the buck converters.
 
 ## VMC Buck Converter
 
+# TODO: update following section
+
+Add images/instructions of PDB placement mounting/connection.
+
+I have left this in place for reference of flow for now.
+
 The following steps will be repeated for both buck converters and connected
-to the PDB of the AVR drone. Start off by locating the heat shrink tubing and
-male bullet connectors as seen below.
+to the PDB of the AVR drone.
 
 ![Heat shrink tubing, bullet connectors, and buck converter](bullet_connectors1.jpg)
 
@@ -56,7 +151,7 @@ in the photo below and apply heat. If you have access to a heat gun or
 a lighter this will work well. Alternatively, you can use the side of
 your soldering iron to apply heat and let the tubing shrink over your connectors.
 
-![Apply heat shrink with asoldering iron](heat_shrink_soldering_iron.jpg)
+![Apply heat shrink with a soldering iron](heat_shrink_soldering_iron.jpg)
 
 After applying heat shrink to the bullet connectors they should
 look similar to the photo below.
@@ -129,6 +224,8 @@ connectors to the red and black leads of the buck converter.
 
 For now we won't do anything with the PCC power leads (yellow/black) and
 will connect them to the PCC in a future step.
+
+# TODO: Delete the following sections
 
 ## Connecting Buck Converters to PDB
 

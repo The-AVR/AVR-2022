@@ -1,7 +1,6 @@
 ---
 title: "Assembly Review"
 weight: 10
-draft: true
 ---
 
 **Great job!** Please take a few minutes to watch the video below and
