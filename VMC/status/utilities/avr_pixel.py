@@ -26,7 +26,7 @@ def int2rgb(color: int) -> List[int]:
     return [red, green, blue]
 
 class AVR_PIXEL(object):
-    def __init__(self, num_pixels: int = 12):
+    def __init__(self, num_pixels: int = 6):
         self.spi = board.SPI()
         self.num_pixels = num_pixels
         self.pixel_order = neopixel.GRB

@@ -10,25 +10,32 @@ sys.path.append("..")  # Adds higher directory to python modules path.
 from utilities.avr_pixel import clamp, rgb2int, int2rgb
 
 
-class VIOMonitor(Monitor):
+class FCCMonitor(Monitor):
     def __init__(self, led_index: int, nominal_color: Union[List[int], int]):
-        super().__init__("vio", led_index, nominal_color)
+        super().__init__("fcc", led_index, nominal_color)
 
-        self.topic_map = {"avr/vio/velocity/ned": self.vio_vel_ned_handler}
+        self.topic_map = {
+            "avr/fcm/status": self.fcm_status_handler,
+        }
 
-        self.last_vel_update = 0
         self.last_update = 0
-
-    def vio_vel_ned_handler(self, payload: dict):
-        self.last_vel_update = time.time()
-        self.last_update = time.time()
+        self.last_status_update = 0
+        self.fcm_mode = "UNKNOWN"
+        self.fcm_armed = False
 
     def get_telemetry(self) -> dict:
         return {
             "led_color": self.led_manager.current_color,
             "state": self.state.name,
-            "last_vel_update": self.last_vel_update,
+            "mode": self.fcm_mode,
+            "armed": self.fcm_armed,
         }
+
+    def fcm_status_handler(self, payload: dict):
+        self.fcm_mode = payload["mode"]
+        self.fcm_armed = payload["armed"]
+        self.last_status_update = time.time()
+        self.last_update = time.time()
 
     def run(self):
         while True:
@@ -41,7 +48,7 @@ class VIOMonitor(Monitor):
             if time.time() - self.last_update > 5:
                 self.state = STATE.DEAD
 
-            if time.time() - self.last_vel_update < 1:
+            if time.time() - self.last_status_update < 1:
                 self.state = STATE.NOMINAL
 
             # update the LED color

@@ -1,8 +1,10 @@
 import signal
 import time
 from typing import Any, Dict, Tuple, List
+from monitors.fcc_monitor import FCCMonitor
 from monitors.apriltag_monitor import ApriltagMonitor
 from monitors.vio_monitor import VIOMonitor
+from monitors.thermal_monitor import ThermalMonitor
 from monitors.monitor import Monitor
 
 import utilities.avr_pixel as avr_pixel
@@ -39,6 +41,8 @@ class StatusModule(MQTTModule):
 
         self.monitors.append(ApriltagMonitor(APRIL_LED, CLR_YELLOW))
         self.monitors.append(VIOMonitor(VIO_LED, CLR_PURPLE))
+        self.monitors.append(FCCMonitor(FCC_LED, CLR_ORANGE))
+        self.monitors.append(ThermalMonitor(THERMAL_LED, CLR_BLUE))
 
         for monitor in self.monitors:
             # start the run thread for the monitor
@@ -91,9 +95,7 @@ class StatusModule(MQTTModule):
         it will light up the associated pixel with its associated color
         """
         lookup: Dict[str, Tuple[int, int]] = {
-            "avr/pcm": (PCC_LED, CLR_AQUA),
-            "avr/fcm": (FCC_LED, CLR_ORANGE),
-            "avr/thermal": (THERMAL_LED, CLR_BLUE),
+            "avr/pcm": (PCC_LED, CLR_AQUA)
         }
 
         for key, value in lookup.items():
