@@ -1,8 +1,27 @@
 ---
 title: "FC ⟷ VMC Telemetry Cable"
-weight: 3
-draft: true
+weight: 2
 ---
+
+![](telem_cable_1.jpg)
+
+![](telem_cable_2.jpg)
+
+![](telem_cable_3.jpg)
+
+![](telem_cable_4.jpg)
+
+![](telem_cable_5.jpg)
+
+![](telem_cable_6.jpg)
+
+![](telem_cable_7.jpg)
+
+![](telem_cable_8.jpg)
+
+![](telem_cable_9.jpg)
+
+![](telem_cable_10.jpg)
 
 It's important that the FC and VMC can communicate with each other.
 This bi-directional communication will allow us to receive telemetry
