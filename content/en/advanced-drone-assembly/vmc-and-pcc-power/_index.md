@@ -18,42 +18,53 @@ This section will work its way from the battery out to the VMC & PCC.
 
 The Y-cable is the cable that splits the battery power into two directions: one for the ESC, and one for the PDB.
 
-To create the wire cables use 3 of the 4 pre-soldered XT-60 cables from the kit, 2 females and one male.
+To create the wire cables use 3 of the 4 pre-soldered XT60 cables from the kit, 2 females and one male.
 
-![XT-60 cables](y_cable_layout_1.jpg)
+![XT60 cables](y_cable_layout_1.jpg)
 
-# TODO: Add image
-
-i think it would be beneficial to add an image of a male vs female connectors for reference... I could see a team pretty easily doing it backwards.
+![XT60 male (left) and female (right) connectors ](y_cable_male_female.jpg)
 
 Firstly, cut each cable to approximately 1.5 inches and solder the ends so that they are ready to combine. The end result should look similar to the following.
 
-![XT-60 cables preparation](y_cable_layout_2.jpg)
+![XT60 cables preparation](y_cable_layout_2.jpg)
 
-Next, place heat shrink large enough to slide over the 3 cable solder joint on the side with 1 male connector. Than, solder the 3 ground (black) cables together.
+Next, place heat shrink large enough to slide over the 3 cable solder joint on the side with 1 male connector. Then, solder the 3 ground (black) cables together.
 Pull the heat shrink down over the end of the connection and apply heat.
 If you have access to a heat gun or a lighter this will work well.
 Alternatively, you can use the side of your soldering iron to apply heat and let the tubing shrink over your connectors.
 
-![Soldering XT-60 cables](y_cable_assy_1.jpg)
+![Soldering XT60 cables](y_cable_assy_1.jpg)
 
 Repeat for the voltage (red) cables.
 
-![Soldering XT-60 cables](y_cable_assy_2.jpg)
+![Soldering XT60 cables](y_cable_assy_2.jpg)
 
-# TODO: Add image
+Your finished cable should look like the photo below.
 
-Final product image?
+![Y cable with 1 male and 2 female connectors](y_cable_complete.jpg)
 
-## PDB
+## Power Distribution Board (PDB)
 
-Before installing the buck converters, the Power Distribution Board (PDB) will need to be installed and wired correctly.
-This will allow us to split off power from the battery to the buck converters.
+Before installing the buck converters, the Power Distribution Board (PDB) will need to be soldered correctly. The PDB will allow us to split off power from the battery to each of the buck converters. The buck converters will step down the 16.8V from the battery to a usable 5V for both the VMC and PCC.
+
+{{% alert title="Warning" color="warning" %}}
+Soldering the larger pads on the PDB requires skill and patience. If possible, we recommend using a flat tip on your iron instead of the normal pointed tip. This will allow for much better heat transfer.
+{{% /alert %}}
+
+We recommend watching <a href="https://www.youtube.com/watch?v=GoPT69y98pY" target="_blank">this video that goes into great detail on soldering</a>. It's a lengthy video so at the very least you should scrub through it before attempting to solder your PDB.
+
+You do not want the PDB to slide around while soldering. One of our favorite tricks is to use <a href="https://www.amazon.com/Blu-Tack-S050Q-Reusable-Adhesive-75g/dp/B001FGLX72" target="_blank">Blu Tack</a> to hold components in place.
+
+Start the process by tinning the Batt +/- pads as shown in the photo below.
+
+![Tinning PDB batt +/- pads](pdb_input_soldering_1.jpg)
+
+![Pads tinned and ready for input wires](pdb_input_soldering_2.jpg)
 
 ![PDB, wires, and buck converters](power_overview.jpg)
 
 The first step is to solder on the battery leads to the PDB.
-To do this cut 1 male XT-60 cable to about 1.5 inches and pre-tin the ends as we did with the y-cable above.
+To do this cut 1 male XT60 cable to about 1.5 inches and pre-tin the ends as we did with the y-cable above.
 
 Cut the wires to make 4 \_**_8 or 6 or 4 inch_** wires; 2 black and 2 red. These will be used to connect the PDU to the ESC
 
