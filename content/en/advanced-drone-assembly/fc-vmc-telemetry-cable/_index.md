@@ -21,9 +21,9 @@ The cable we build in this section makes this all possible.
 
 Locate the following components in the photo below:
 
-* 6 pin cable from the Pixhawk box
-* 40 pin connector housing
-* 3 female to female wires (black, purple, and grey)
+- 6 pin cable from the Pixhawk box
+- 40 pin connector housing
+- 3 female to female wires (black, purple, and grey)
 
 ![Necessary components for telemetry cable](telem_cable_1.jpg)
 
@@ -31,9 +31,9 @@ Locate the following components in the photo below:
 
 Before we start building the telemetry cable let's take a quick look at the following wiring diagram. The middle area represents the 40 pin connector housing. Pay attention to the pinout from the connector housing to the **TELEM1** port on the Pixhawk FC. We will be using the following pins:
 
-* Pin 2 - TX - Grey
-* Pin 3 - RX - Purple
-* Pin 6 - GND - Black 
+- Pin 2 - TX - Grey
+- Pin 3 - RX - Purple
+- Pin 6 - GND - Black
 
 ![VMC pinout](jetson_pinout_diagram.png)
 
@@ -45,7 +45,7 @@ The photo below shows only the necessary pins remaining: pin 2, 3, and 6 from le
 
 ![Telemetry wires: TX, RX, and GND](telem_cable_3.jpg)
 
-Clip the connector from the other end of the Pixhawk cable. Cut all three of the individual female-female wires to approximately 2-3". Strip 1/2" of shielding away from all wires as shown in the photo below. 
+Clip the connector from the other end of the Pixhawk cable. Cut all three of the individual female-female wires to approximately 2-3". Strip 1/2" of shielding away from all wires as shown in the photo below.
 
 ![Wire prep for soldering](telem_cable_4.jpg)
 
