@@ -1,6 +1,6 @@
 ---
 title: "FC ⟷ VMC Telemetry Cable"
-weight: 2
+weight: 3
 ---
 
 ## Overview
