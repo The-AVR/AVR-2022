@@ -1,3 +1,7 @@
+[tool.autoflake]
+    recursive = true
+    in-place = true
+
 [tool.isort]
     profile = "black"
 
