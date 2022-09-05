@@ -38,4 +38,8 @@ Repeat this process for all eight standoffs. Flip your AVR frame over so that th
 
 Place the bottom accessory plate onto the standoffs and secure with 10mm screws.
 
-![Bottom accessory plate secured](bottom_accessory_7.jpg)
+{{% alert title="Warning" color="warning" %}}
+Make sure that the two holes denoted by the yellow circles below face the front of the drone. These holes will be essential when mounting the ZED Mini camera during advanced drone assembly.
+{{% /alert %}}
+
+![Bottom accessory plate secured and ZED Mini holes facing front of frame](bottom_accessory_7.jpg)
