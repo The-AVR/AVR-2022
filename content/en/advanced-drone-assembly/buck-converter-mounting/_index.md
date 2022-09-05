@@ -65,6 +65,10 @@ Connect the positive and negative leads to the output terminals on the VMC buck 
 
 Stick the PCC buck converter on the left side of the bottom mid-plate and the VMC buck converter on the right (as the front of the drone is facing you). Place each buck converter at a 45 degree angle with the output leads pointed towards each side of the frame. The photo below shows the PCC leads on the left side of the frame and the VMC barrel plug on the right.
 
+{{% alert title="Note" color="note" %}}
+Make note of the yellow circles in the photo below. These are the access holes for mounting the standoffs for the top accessory plate. Be sure not to cover these holes when mounting the buck converters.
+{{% /alert %}}
+
 ![Buck converters mounted at 45 degree angle](buck_converter_mounting_9.jpg)
 
 The photo below shows the right side of the frame and clearance for the battery to slide into the tray. The PCC will be mounted and powered from this side of the frame.
