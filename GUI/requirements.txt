@@ -1,7 +1,7 @@
 paho-mqtt==1.6.1
 PySide6-Essentials==6.3.1
 loguru==0.6.0
-pyinstaller==5.1
+pyinstaller==5.3
 colour==0.1.5
 scipy==1.9.0
 numpy==1.23.2
