@@ -45,7 +45,7 @@ Your finished cable should look like the photo below.
 
 ![Y cable with 1 male and 2 female connectors](y_cable_complete.jpg)
 
-## PDB Soldering
+## PDB Input Soldering
 
 Before installing the buck converters, the Power Distribution Board (PDB) will need to be soldered correctly. The PDB will allow us to split off power from the battery to each of the buck converters.
 
@@ -76,7 +76,7 @@ Repeat this process for the negative wire. Your completed PDB will look similar 
 
 ![PDB input soldering complete](pdb_completed.jpg)
 
-## Buck Converter Soldering
+## PDB Output Soldering
 
 In the photo below you will notice two identical buck converters, one for powering the VMC and the other for the PCC. This section will walk through the necessary wiring to supply power to the buck converters.
 
