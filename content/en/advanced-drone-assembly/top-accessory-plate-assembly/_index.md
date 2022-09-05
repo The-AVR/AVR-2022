@@ -1,70 +1,61 @@
 ---
 title: "Top Accessory Plate Assembly"
 weight: 4
-draft: true
 ---
 
+## Overview
 
+In this section we will cover mounting the VMC and PCC to the top accessory plate followed by attaching the plate over the FC. Locate the ziploc bag of 2.5mm nylon hardware. We will be using the 6mm nylon standoffs, bolts, and nuts. Make note of the four holes around the larger cutout on the left. This is where we will mount the VMC. In addition, make note of the four holes around the smaller cutout on the right. This is where we will mount the PCC.
+
+![VMC, PCC, top assembly plate, and nylon hardware](top_plate_assembly_1.jpg)
+
+Start by placing the 6mm standoffs facing down through the mounting holes in the top plate. Use a 2.5mm nut to secure each of the standoffs.
+
+![Installing 6mm standoffs](top_plate_assembly_2.jpg)
+
+The photo below shows the completed standoff installation.
+
+![6mm standoffs in place for VMC and PCC mounting](top_plate_assembly_3.jpg)
 
 ## VMC Mounting
 
-We will now mount the VMC using to the top assembly plate.
-The VMC is the "brains" behind your AVR drone build and will be responsible
-for running the Bell software stack during testing and on competition day.
+We will now mount the VMC to the top accessory plate. The VMC is the "brains" behind your AVR drone build and will be responsible for running the Bell software stack during testing and on competition day.
 
-![Top Accessory Plate, VMC and M2.5 Standoffs]()
+With the standoffs secured into the top accessory plate the next step is to attach the VMC. These standoffs will provide enough clearance for the VMC so that the solder joints beneath do not make contact with the carbon fiber plate. Carbon fiber is conductive, which means that it can cause your board to short out if two leads touch the plate.
 
-Screw your stand offs into the top assembly plate.
+Align all four of the VMC mounting holes over the 6mm standoffs and secure into place with the nylon bolts. The VMC will be mounted on the left of the top accessory plate with the USB ports facing out.
 
-![Standoffs installed]()
+![Securing nylon bolts for VMC mounting](top_plate_assembly_4.jpg)
 
-With the stand offs fasted into the top accessory plate the next step is to attach the
-VMC to the Standoffs.
-These standoffs will provide enough clearance for the VMC to top plate and not have the
-solder joint at the bottom rest on the carbon fiber plate.
-Carbon fiber is conductive, which means that it can cause your board to short out if
-two leads touch the plate.
-Be sure you have your VMC ports facing outboard from the drone so you are able to easily
-plug things in.
+The orientation of your top plate and VMC should look identical to the photo below.
 
-![VMC Orientation]()
+![VMC mounted to top accessory plate](top_plate_assembly_5.jpg)
 
-Once the VMC is placed, use the M2.5 nuts to secure your VMC in place.
-
-![Securing your VMC]()
-
-After attaching your VMC, your top assembly plate should look like the following photo.
-
-![Top Plate Assembly with VMC]()
-
-### Cooling Fan
+## VMC Cooling Fan
 
 During advanced testing you will be running the AVR software stack on your VMC.
 Since we make extensive use of the VMC's CPU and GPU it can heat up significantly.
 It's important to keep your VMC cool and in this section you will install a cooling
 fan onto the top of the VMC heat sink.
 
-# TODO: 2 nuts/bolts
+There are two nuts and bolts included in a small ziploc bag with your cooling fan. Place your cooling fan on top of the heat sink and insert two bolts, on opposite corners, through the fan and the heat sink.
 
-We are only using 2 nuts and bolts this year because due to supply chain issues... some of the images might have to be slightly reworked.
-
-![VMC cooling fan with mounting bolts and nuts](vmc_cooling_fan.jpg)
-
-Place your cooling fan on top of the heat sink and insert two bolts, on opposite corners,
-through the fan and the heat sink. Using needle nose pliers you can hold
-the nut into place and screw the bolt tight with a Phillips head screwdriver.
+![Cooling fan with bolts on opposite corners](cooling_fan_1.jpg)
 
 {{% alert title="Note" color="note" %}}
 The nuts provided with the cooling fan are not self-locking.
-It's a good idea to check them from time to time or use a small amount
-of thread locker to keep them secure.
+It's a good idea to use a small amount of Loctite to keep them secure.
 {{% /alert %}}
 
-![Mounting the cooling fan with needle nose pliers](vmc_cooling_needle_nose.jpg)
+![A small drop of Loctite applied to cooling fan nut](cooling_fan_2.jpg)
 
-After mounting the cooling fan plug the connector into your VMC as shown below.
+Use needle nose pliers to hold the nut in place and screw the bolt from the top using a Phillips head screwdriver.
 
-![Cooling fan connected to VMC](vmc_cooling_plugged_in.jpg)
+![Securing the cooling fan with screwdriver and pliers](cooling_fan_3.jpg)
+
+Repeat the process for the other nut and bolt. Attach the fan's power cable to the VMC as shown in the photo below.
+
+![Cooling fan connected to power port](cooling_fan_4.jpg)
 
 {{% alert title="Note" color="note" %}}
 The cooling fan automatically turns on to 100% when the VMC is powered on.
@@ -74,15 +65,26 @@ keep the VMC cool.
 
 ## PCC Mounting
 
+Let's proceed with mounting the PCC to the top accessory plate. Make note of the photo below and that the micro USB port is facing outward.
+
+![PCC USB port must face outward](top_plate_assembly_6.jpg)
+
+We will secure the PCC with four nylon bolts. The easiest way to do this is to remove the top and bottom PCC boards as shown in the photo below.
+
+![Securing PCC with four nylon bolts](top_plate_assembly_7.jpg)
+
+Replace the boards the boards back into the PCC and mounting is complete!
+
+![PCC mounting complete](top_plate_assembly_8.jpg)
+
 ## Top Accessory Plate Mounting
 
 ## Wiring
 
-Ensure you FCC->VMC wiring is complete from the 
+Ensure you FCC->VMC wiring is complete from the
 [previous section]({{relref "../ }})
 
 At this point you can go ahead and connect the 2x20 crimp housing
 and barrel plug into the VMC as shown in the photo below.
 
 ![VMC with telemetry cable and power connected](vmc_attached_with_telemetry_and_power.jpg)
-
