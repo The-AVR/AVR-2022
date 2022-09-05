@@ -38,7 +38,9 @@ Since we make extensive use of the VMC's CPU and GPU it can heat up significantl
 It's important to keep your VMC cool and in this section you will install a cooling
 fan onto the top of the VMC heat sink.
 
-There are two nuts and bolts included in a small ziploc bag with your cooling fan. Place your cooling fan on top of the heat sink and insert two bolts, on opposite corners, through the fan and the heat sink.
+There are two nuts and bolts included in a small ziploc bag with your cooling fan.
+Place your cooling fan on top of the heat sink and insert two bolts, on opposite corners,
+through the fan and the heat sink.
 
 ![Cooling fan with bolts on opposite corners](cooling_fan_1.jpg)
 
@@ -53,23 +55,26 @@ Use needle nose pliers to hold the nut in place and screw the bolt from the top 
 
 ![Securing the cooling fan with screwdriver and pliers](cooling_fan_3.jpg)
 
-Repeat the process for the other nut and bolt. Attach the fan's power cable to the VMC as shown in the photo below.
+Repeat the process for the other nut and bolt.
+Attach the fan's power cable to the VMC as shown in the photo below.
 
 ![Cooling fan connected to power port](cooling_fan_4.jpg)
 
 {{% alert title="Note" color="note" %}}
 The cooling fan automatically turns on to 100% when the VMC is powered on.
-This functionality was installed as part of the AVR software, and helps
-keep the VMC cool.
+This functionality was installed as part of the AVR software,
+and helps keep the VMC cool.
 {{% /alert %}}
 
 ## PCC Mounting
 
-Let's proceed with mounting the PCC to the top accessory plate. Make note of the photo below and that the micro USB port is facing outward.
+Let's proceed with mounting the PCC to the top accessory plate.
+Make note of the photo below and that the micro USB port is facing outward.
 
 ![PCC USB port must face outward](top_plate_assembly_6.jpg)
 
-We will secure the PCC with four nylon bolts. The easiest way to do this is to remove the top and bottom PCC boards as shown in the photo below.
+We will secure the PCC with four nylon bolts.
+The easiest way to do this is to remove the top and bottom PCC boards as shown in the photo below.
 
 ![Securing PCC with four nylon bolts](top_plate_assembly_7.jpg)
 
@@ -77,12 +82,32 @@ Replace the boards the boards back into the PCC and mounting is complete!
 
 ![PCC mounting complete](top_plate_assembly_8.jpg)
 
-## Top Accessory Plate Mounting
+## VMC Wifi Antennas
+
+Before we covered how to
+[attach the WiFi antennas to the VMC]({{< relref "../../vehicle-management-computer/preparing-the-jetson" >}}).
+These need to be mounted and secured so that during the competition you have a good
+wireless link (2.4 GHz) between the ground station and the VMC.
+This will allow for bidirectional communication between the ground station
+and AVR drone connected to the same network. The WiFi antennas will be attached to the
+top accessory plate with the 2 holes on the ethernet side of the VMC.
+
+![Antenna Installation Location](top_plate_assembly_9.jpg)
+
+Remove the screws from your nuts on the SMA connector.
+
+![SMA Connector and Washers/Nuts]()
+
+Route the Antenna cables under the VMC and to holes.
+Install the SMA connectors into the appropriate holes and screw washers on.
+To ensure a tight fit, use pliers to hold the bottom of the SMA connector while you secure the top.
+
+![SMA Connectos Installation]()
 
 ## Wiring
 
 Ensure you FCC->VMC wiring is complete from the
-[previous section]({{relref "../ }})
+[previous section]({{<relref "../fc-vmc-telemetry-cable">}})
 
 At this point you can go ahead and connect the 2x20 crimp housing
 and barrel plug into the VMC as shown in the photo below.

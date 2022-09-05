@@ -10,7 +10,8 @@ Two main components of your advanced build are the **Vehicle Management Computer
 This section will walk through the necessary steps for providing adequate power to both the VMC and PCC.
 This will be done with two separate buck converters.
 The main battery of your AVR drone is 16.8V fully charged.
-The required input voltage for the VMC and PCC are 5V, therefore the buck converters will step the voltage down to a usable 5V.
+The required input voltage for the VMC and PCC are 5V,
+therefore the buck converters will step the voltage down to a usable 5V.
 
 ![Power Wiring Diagram](avr_power_wiring_diagram.jpg)
 
@@ -62,29 +63,38 @@ We recommend watching <a href="https://www.youtube.com/watch?v=GoPT69y98pY" targ
 
 You do not want the PDB to slide around while soldering. One of our favorite tricks is to use <a href="https://www.amazon.com/Blu-Tack-S050Q-Reusable-Adhesive-75g/dp/B001FGLX72" target="_blank">Blu Tack</a> to hold components in place.
 
-Start the process by tinning the Batt +/- pads as shown in the photos below. A good temperature to aim for is between 750 and 800 degrees Fahrenheit.
+Start the process by tinning the Batt +/- pads as shown in the photos below.
+A good temperature to aim for is between 750 and 800 degrees Fahrenheit.
 
 ![Tinning PDB batt +/- pads](pdb_input_soldering_1.jpg)
 
 ![Pads tinned and ready for input wires](pdb_input_soldering_2.jpg)
 
-Place the positive wire onto the positive pad and set the tip of the iron on top. Do not apply too much pressure as you do not want the wire to spread out. The iron should heat both the wire and the pad to form a single solder joint.
+Place the positive wire onto the positive pad and set the tip of the iron on top.
+Do not apply too much pressure as you do not want the wire to spread out.
+The iron should heat both the wire and the pad to form a single solder joint.
 
 ![Animation of soldering wire to PDB pad](pdb_soldering.gif)
 
-Repeat this process for the negative wire. Your completed PDB will look similar to the one below.
+Repeat this process for the negative wire.
+Your completed PDB will look similar to the one below.
 
 ![PDB input soldering complete](pdb_completed.jpg)
 
 ## PDB Output Soldering
 
-In the photo below you will notice two identical buck converters, one for powering the VMC and the other for the PCC. This section will walk through the necessary wiring to supply power to the buck converters.
+In the photo below you will notice two identical buck converters,
+one for powering the VMC and the other for the PCC.
+This section will walk through the necessary wiring to supply power to the buck converters.
 
 ![PDB, wires, and buck converters](power_overview.jpg)
 
-Cut approximately 8" of wires; 2 black and 2 red. These will be used to connect each of the buck converters to the PDB. On the opposite end of the PDB there are two sets of pads that we'll tin for soldering.
+Cut approximately 8" of wires; 2 black and 2 red.
+These will be used to connect each of the buck converters to the PDB.
+On the opposite end of the PDB there are two sets of pads that we'll tin for soldering.
 
-Heat the pad using the tip of the soldering iron and feed the solder onto the pad as shown in the photo below.
+Heat the pad using the tip of the soldering iron and
+feed the solder onto the pad as shown in the photo below.
 
 ![Soldering the PDB](pdu_solder_pads_1.jpg)
 
@@ -96,11 +106,17 @@ Next, apply solder to the wires to pre-tin them.
 
 ![Pre-tinned Wires](pdu_pretin.jpg)
 
-After pre-tinning everything, place each lead on the corresponding pad and gently push the soldering iron down. Like we did with the XT60 connector we want to make sure to apply heat long enough for the solder on the pad and wire to join.
+After pre-tinning everything, place each lead on the corresponding pad and gently push
+the soldering iron down.
+Like we did with the XT60 connector we want to make sure to apply heat long enough for
+the solder on the pad and wire to join.
 
 ![Soldering wires to pads](pdu_solder_pads_3.jpg)
 
-Repeat this process for the other two wires. After successfully soldering the positive and negative wires to the PDB, use a multimeter to run a continuity test. This will ensure that there are no shorts between the positive and negative terminals.
+Repeat this process for the other two wires.
+After successfully soldering the positive and negative wires to the PDB,
+use a multimeter to run a continuity test.
+This will ensure that there are no shorts between the positive and negative terminals.
 
 ![Checking connections](pdu_verification.jpg)
 

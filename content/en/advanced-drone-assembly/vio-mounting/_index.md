@@ -1,6 +1,6 @@
 ---
 title: "Zed Mini Camera Mounting"
-weight: 7
+weight: 5
 ---
 
 The Zed Mini will be mounted to the front of your AVR drone and connected with a USB-C

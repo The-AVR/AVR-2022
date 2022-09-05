@@ -1,6 +1,6 @@
 ---
 title: "Assembly Review"
-weight: 10
+weight: 6
 draft: true
 ---
 
