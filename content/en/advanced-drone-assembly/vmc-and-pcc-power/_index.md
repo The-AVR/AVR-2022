@@ -3,6 +3,8 @@ title: "VMC and PCC Power"
 weight: 1
 ---
 
+## Overview
+
 Two main components of your advanced build are the **Vehicle Management Computer** (VMC), which runs the AVR software stack and the **Peripheral Control Computer** (PCC), which will allow teams to manually and programmatically control the LED ring, actuate up to four servos, and control the laser.
 
 This section will walk through the necessary steps for providing adequate power to both the VMC and PCC.
