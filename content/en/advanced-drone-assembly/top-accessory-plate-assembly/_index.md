@@ -38,9 +38,7 @@ Since we make extensive use of the VMC's CPU and GPU it can heat up significantl
 It's important to keep your VMC cool and in this section you will install a cooling
 fan onto the top of the VMC heat sink.
 
-There are two nuts and bolts included in a small ziploc bag with your cooling fan.
-Place your cooling fan on top of the heat sink and insert two bolts, on opposite corners,
-through the fan and the heat sink.
+There are two nuts and bolts included in a small ziploc bag with your cooling fan. Place your cooling fan on top of the heat sink and insert two bolts, on opposite corners, through the fan and the heat sink.
 
 ![Cooling fan with bolts on opposite corners](cooling_fan_1.jpg)
 
@@ -55,32 +53,87 @@ Use needle nose pliers to hold the nut in place and screw the bolt from the top 
 
 ![Securing the cooling fan with screwdriver and pliers](cooling_fan_3.jpg)
 
-Repeat the process for the other nut and bolt.
-Attach the fan's power cable to the VMC as shown in the photo below.
+Repeat the process for the other nut and bolt. Attach the fan's power cable to the VMC as shown in the photo below.
 
 ![Cooling fan connected to power port](cooling_fan_4.jpg)
 
 {{% alert title="Note" color="note" %}}
 The cooling fan automatically turns on to 100% when the VMC is powered on.
-This functionality was installed as part of the AVR software,
-and helps keep the VMC cool.
+This functionality was installed as part of the AVR software, and helps
+keep the VMC cool.
 {{% /alert %}}
 
 ## PCC Mounting
 
-Let's proceed with mounting the PCC to the top accessory plate.
-Make note of the photo below and that the micro USB port is facing outward.
+Let's proceed with mounting the PCC to the top accessory plate. Make note of the photo below and that the micro USB port is facing outward.
 
 ![PCC USB port must face outward](top_plate_assembly_6.jpg)
 
-We will secure the PCC with four nylon bolts.
-The easiest way to do this is to remove the top and bottom PCC boards as shown in the photo below.
+We will secure the PCC with four nylon bolts. The easiest way to do this is to remove the top and bottom PCC boards as shown in the photo below.
 
 ![Securing PCC with four nylon bolts](top_plate_assembly_7.jpg)
 
-Replace the boards the boards back into the PCC and mounting is complete!
+Replace the boards back into the PCC and mounting is complete!
 
 ![PCC mounting complete](top_plate_assembly_8.jpg)
+
+## Top Accessory Plate Mounting
+
+With the VMC and PCC attached to the top accessory plate let's proceed with mounting the plate over the FC using 40mm standoffs and 10mm M3 screws.
+
+![Hardware for accessory plate mounting](top_accessory_plate_mounting_1.jpg)
+
+Place blue Loctite on one of the 10mm screws.
+
+![10mm mounting screw with Loctite](top_accessory_plate_mounting_2.jpg)
+
+There are four access holes in each corner of the bottom mid-plate, close to where you mounted the 3D printed landing gear. Use a long hex driver to feed the screw up through the bottom accessory plate and through the mid-plate assembly.
+
+![Feeding screw through bottom mid-plate](top_accessory_plate_mounting_3.jpg)
+
+Another option is to use a short L-shaped hex key to feed the screw into the hole.
+
+![Using hex key to feed screw through bottom mid-plate](top_accessory_plate_mounting_12.jpg)
+
+Hand tighten the 40mm standoff onto the screw.
+
+![Placing 40mm onto 10mm screw](top_accessory_plate_mounting_4.jpg)
+
+Securely fasten the standoff and repeat the process for the other three standoffs.
+
+![Top accessory plate standoff securely fastened](top_accessory_plate_mounting_5.jpg)
+
+Before placing the top accessory plate onto the standoffs be sure to screw the antenna connectors into place. Run the VMC and PCC cables through the bottom of the plate as shown in the photo below.
+
+![Cable management for top accessory plate](top_accessory_plate_mounting_6.jpg)
+
+Connect the telemetry cable from the VMC to the **TELEM1** port on the FC.
+
+![Telemetry cable connected to TELEM1 on FC](top_accessory_plate_mounting_7.jpg)
+
+Use four 10mm screws to mount the top accessory plate onto the standoffs. Do not forget to use blue Loctite on each of the screws.
+
+![Securing top accessory plate on standoffs](top_accessory_plate_mounting_8.jpg)
+
+{{% alert title="Note" color="note" %}}
+Make sure the top accessory plate is mounted with the VMC on the left and PCC on the right as you're standing behind the AVR frame.
+{{% /alert %}}
+
+![Top accessory plate secured](top_accessory_plate_mounting_9.jpg)
+
+## Wiring
+
+Connect the barrel plug from the VMC buck converter to the VMC power input.
+
+{{% alert title="Note" color="note" %}}
+Make note of the jumper in the photo below. The jumper must be in place for the VMC to be powered using the barrel jack. If you need to revert to power over the micro USB port you can move the jumper so that it's only connected to a single pin.
+{{% /alert %}}
+
+![VMC ready to be powered with the barrel plug](top_accessory_plate_mounting_10.jpg)
+
+Finally, cut the positive and negative wires from the PCC buck converter to length. Trim 1/8" of shielding from the wires and connect them to the PCC power terminals as shown in the photo below.
+
+![PCC power leads connected](top_accessory_plate_mounting_11.jpg)
 
 ## VMC Wifi Antennas
 
@@ -103,13 +156,3 @@ Install the SMA connectors into the appropriate holes and screw washers on.
 To ensure a tight fit, use pliers to hold the bottom of the SMA connector while you secure the top.
 
 ![SMA Connectos Installation]()
-
-## Wiring
-
-Ensure you FCC->VMC wiring is complete from the
-[previous section]({{<relref "../fc-vmc-telemetry-cable">}})
-
-At this point you can go ahead and connect the 2x20 crimp housing
-and barrel plug into the VMC as shown in the photo below.
-
-![VMC with telemetry cable and power connected](vmc_attached_with_telemetry_and_power.jpg)
