@@ -30,7 +30,7 @@ You will notice there is a bit of play when you wiggle the camera back and forth
 
 ![ZED Mini snapped into mount](zed_mini_mounting_4.jpg)
 
-Locate the servo hardware and pull out two screws as shown in the photo below.
+Locate the large ziploc bag inside the **AVR Drone Peripherals** box. Inside this bag there are several screws floating around. You will need two of them that look like the ones in the photo below.
 
 ![Set screws for securing ZED Mini into the mount](zed_mini_mounting_5.jpg)
 
@@ -40,7 +40,7 @@ Use a Phillips head screwdriver to thread both screws into the 3D printed mount.
 The set screws will not go all the way in. Screw them until you make contact with the threaded hole in the ZED Mini. At this point you will feel a bit of resistance and can stop.
 {{% /alert %}}
 
-Wiggle the camera left and right to see if there is any play. If so, turn the set screws half a rotation. Repeat the process until the camera if fully secured.
+Wiggle the camera left and right to see if there is any play. If so, turn the set screws half a rotation. Repeat the process until the camera is fully secured.
 
 ![Set screws hold ZED Mini in place](zed_mini_mounting_6.jpg)
 
@@ -55,15 +55,8 @@ bottom-mid plate for cleanliness.
 
 ![ZED Mini plugged into  one of the VMC's USB ports](zed_mini_mounting_7.jpg)
 
-# TODO: Review the following callouts with Noel
-
-{{% alert title="Tip" color="tip" %}}
-If you feel that the Zed Mini is not secure in the 3D printed mount we recommend
-adding a zip tie around the center. This will keep the Zed Mini from coming free.
-{{% /alert %}}
-
 {{% alert title="Note" color="note" %}}
 As you're going through the build process make note of any cables that may
 obstruct the drone's propellers. The photos provided throughout this documentation
-show how we've mounted things and provide an sufficient amount of clearance.
+show how we've mounted things and provide a sufficient amount of clearance.
 {{% /alert %}}
