@@ -1,8 +1,10 @@
 ---
-title: "Checkpoint 2: Stabilized Flight Test (Coming Next Week)"
+title: "Checkpoint 2: Stabilized Flight Test"
 weight: 12
 ---
 
-{{% alert title="Stay tuned!" color="success" %}}
-**This section's content will be released next week**
-{{% /alert %}}
+Please be sure to watch the video below to understand what to expect
+from the advanced flight test. This will be done in **stabilized**
+flight mode just like we did in the basic flight test.
+
+{{< youtube c-8FmdxJJd4 >}}
