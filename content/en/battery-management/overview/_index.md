@@ -91,7 +91,8 @@ Just look up videos of LiPo fires to see for yourself.
    Drones, computers, etc. are replaceable, while you (and your lungs) are not.
    Battery fires produce very toxic smoke, and you do NOT want to breathe it in.
 2. **Get help**. This depends on your specific situation, but this may be to pull a nearby
-   fire alarm, call 911, or call your security department.
+   fire alarm (contrary to popular belief, pulling the alarm does not set off
+   sprinklers), call 911, or call your security department.
 
 After doing the above two steps, and _only if you're comfortable with it_ and does
 not pose any danger to you, you can attempt to fight the fire. Your most effective
