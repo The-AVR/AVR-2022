@@ -83,9 +83,8 @@ should be perfectly safe. However, in the event that something has gone wrong,
 and there is a battery (LiPo) fire, take the appropriate steps:
 
 {{% alert title="Warning" color="warning" %}}
-_Please_ read this section, this has happend before!
-
-![2021 battery fire](2022-06-26-18-36-42.png)
+_Please_ read this section, battery fires are serious.
+Just look up videos of LiPo fires to see for yourself.
 {{% /alert %}}
 
 1. **First, get yourself and those around you to safety**.
