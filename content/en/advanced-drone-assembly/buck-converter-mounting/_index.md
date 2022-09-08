@@ -25,7 +25,7 @@ We even encourage you to share a given solution in
 
 The PDB and ESC are both mounted near the right rear of the frame.
 The buck converters will be mounted near the front of the frame.
- This means we need to run the cables up through the mid-plate assembly and drop them down in the front of the frame.
+This means we need to run the cables up through the mid-plate assembly and drop them down in the front of the frame.
 
 Feed the wires into the mid-plate assembly and zip tie them to the mid-bottom plate as shown in the photo below.
 Securing these wires is important as you don't want them to interfere with battery mounting.

@@ -77,7 +77,6 @@ Replace the boards back into the PCC and mounting is complete!
 
 ![PCC mounting complete](top_plate_assembly_8.jpg)
 
-
 ## Top Accessory Plate Mounting
 
 Before we can place the top accessory plate onto the drone we must screw the antenna connectors into place.
