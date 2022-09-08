@@ -77,9 +77,16 @@ Replace the boards back into the PCC and mounting is complete!
 
 ![PCC mounting complete](top_plate_assembly_8.jpg)
 
+
 ## Top Accessory Plate Mounting
 
-With the VMC and PCC attached to the top accessory plate let's proceed with mounting the plate over the FC using 40mm standoffs and 10mm M3 screws.
+Before we can place the top accessory plate onto the drone we must screw the antenna connectors into place.
+Run the VMC and PCC cables through the bottom of the plate as shown in the photo below.
+
+![Cable management for top accessory plate](top_accessory_plate_mounting_6.jpg)
+
+With the VMC and PCC attached to the top accessory plate and wires routed let's proceed
+with mounting the plate over the FC using 40mm standoffs and 10mm M3 screws.
 
 ![Hardware for accessory plate mounting](top_accessory_plate_mounting_1.jpg)
 
@@ -87,7 +94,8 @@ Place blue Loctite on one of the 10mm screws.
 
 ![10mm mounting screw with Loctite](top_accessory_plate_mounting_2.jpg)
 
-There are four access holes in each corner of the bottom mid-plate, close to where you mounted the 3D printed landing gear. Use a long hex driver to feed the screw up through the bottom accessory plate and through the mid-plate assembly.
+There are four access holes in each corner of the bottom mid-plate, close to where you mounted the 3D printed landing gear.
+Use a long hex driver to feed the screw up through the bottom accessory plate and through the mid-plate assembly.
 
 ![Feeding screw through bottom mid-plate](top_accessory_plate_mounting_3.jpg)
 
@@ -102,10 +110,6 @@ Hand tighten the 40mm standoff onto the screw.
 Securely fasten the standoff and repeat the process for the other three standoffs.
 
 ![Top accessory plate standoff securely fastened](top_accessory_plate_mounting_5.jpg)
-
-Before placing the top accessory plate onto the standoffs be sure to screw the antenna connectors into place. Run the VMC and PCC cables through the bottom of the plate as shown in the photo below.
-
-![Cable management for top accessory plate](top_accessory_plate_mounting_6.jpg)
 
 Connect the telemetry cable from the VMC to the **TELEM1** port on the FC.
 
@@ -126,33 +130,14 @@ Make sure the top accessory plate is mounted with the VMC on the left and PCC on
 Connect the barrel plug from the VMC buck converter to the VMC power input.
 
 {{% alert title="Note" color="note" %}}
-Make note of the jumper in the photo below. The jumper must be in place for the VMC to be powered using the barrel jack. If you need to revert to power over the micro USB port you can move the jumper so that it's only connected to a single pin.
+Make note of the jumper in the photo below.
+The jumper must be in place for the VMC to be powered using the barrel jack.
+If you need to revert to power over the micro USB port you can move the jumper so that it's only connected to a single pin.
 {{% /alert %}}
 
 ![VMC ready to be powered with the barrel plug](top_accessory_plate_mounting_10.jpg)
 
-Finally, cut the positive and negative wires from the PCC buck converter to length. Trim 1/8" of shielding from the wires and connect them to the PCC power terminals as shown in the photo below.
+Finally, cut the positive and negative wires from the PCC buck converter to length.
+Trim 1/8" of shielding from the wires and connect them to the PCC power terminals as shown in the photo below.
 
 ![PCC power leads connected](top_accessory_plate_mounting_11.jpg)
-
-## VMC Wifi Antennas
-
-Before we covered how to
-[attach the WiFi antennas to the VMC]({{< relref "../../vehicle-management-computer/preparing-the-jetson" >}}).
-These need to be mounted and secured so that during the competition you have a good
-wireless link (2.4 GHz) between the ground station and the VMC.
-This will allow for bidirectional communication between the ground station
-and AVR drone connected to the same network. The WiFi antennas will be attached to the
-top accessory plate with the 2 holes on the ethernet side of the VMC.
-
-![Antenna Installation Location](top_plate_assembly_9.jpg)
-
-Remove the screws from your nuts on the SMA connector.
-
-![SMA Connector and Washers/Nuts]()
-
-Route the Antenna cables under the VMC and to holes.
-Install the SMA connectors into the appropriate holes and screw washers on.
-To ensure a tight fit, use pliers to hold the bottom of the SMA connector while you secure the top.
-
-![SMA Connectos Installation]()
