@@ -83,16 +83,16 @@ should be perfectly safe. However, in the event that something has gone wrong,
 and there is a battery (LiPo) fire, take the appropriate steps:
 
 {{% alert title="Warning" color="warning" %}}
-_Please_ read this section, this has happend before!
-
-![2021 battery fire](2022-06-26-18-36-42.png)
+_Please_ read this section, battery fires are serious.
+Just look up videos of LiPo fires to see for yourself.
 {{% /alert %}}
 
 1. **First, get yourself and those around you to safety**.
    Drones, computers, etc. are replaceable, while you (and your lungs) are not.
    Battery fires produce very toxic smoke, and you do NOT want to breathe it in.
 2. **Get help**. This depends on your specific situation, but this may be to pull a nearby
-   fire alarm, call 911, or call your security department.
+   fire alarm (contrary to popular belief, pulling the alarm does not set off
+   sprinklers), call 911, or call your security department.
 
 After doing the above two steps, and _only if you're comfortable with it_ and does
 not pose any danger to you, you can attempt to fight the fire. Your most effective

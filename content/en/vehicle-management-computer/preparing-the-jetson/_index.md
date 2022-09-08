@@ -4,6 +4,14 @@ weight: 1
 description: "Physically assemble the Jetson"
 ---
 
+{{% pageinfo color="primary" %}}
+The initial team kit included an incorrect variation of the
+[U.FL to SMA Wifi cable](https://m.media-amazon.com/images/W/WEBP_402378-T2/images/I/61uj0TTCQ5L._AC_SL1500_.jpg).
+Teams will be receiving a replacement set of cables in their Wave 2 kit shipments.
+See [this post](https://www.bellavrforum.org/t/team-update-9-1-2022/81)
+on the Bell AVR Forum for more information.
+{{% /pageinfo %}}
+
 ![](nano_combo.png)
 
 - Unbox your Jetson

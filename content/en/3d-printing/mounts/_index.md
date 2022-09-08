@@ -5,11 +5,11 @@ description: "3D prints for mounting the ZED Mini camera"
 ---
 
 - AVR-CAM-ZED-MINI-MOUNT (x1)
-  - STL file: [AVR-CAM-ZED-MINI-MOUNT.stl](https://cad.onshape.com/documents/3111e54b1b04514aeae7a864/w/143325ef8d6ebdd537b470ee/e/b22e3b7065b1cd4f7302c1af?renderMode=0&uiState=6306944891cbbe0c90ef6159)
-  - STEP file: [AVR-CAM-ZED-MINI-MOUNT.stp](https://cad.onshape.com/documents/275a94e0083da92079e53590)
+  - STL file: [AVR-CAM-ZED-MINI-MOUNT.stl](https://cad.onshape.com/documents/275a94e0083da92079e53590/w/e0e9c910fe8fe3d17c846072/e/a02e64b6117d28952632b5bb)
+  - STEP file: [AVR-CAM-ZED-MINI-MOUNT.stp](https://cad.onshape.com/documents/583faa803348f8994e357cc1)
 - AVR-BATTERY-STANDOFF-SMC (X1)
-  - STL file: [AVR-BATTERY-STANDOFF-SMC.stl](https://cad.onshape.com/documents/7e88ec918372d236e4c1704a)
-  - STEP file: [AVR-BATTERY-STANDOFF-SMC.stp](https://cad.onshape.com/documents/275a94e0083da92079e53590)
+  - STL file: [AVR-BATTERY-STANDOFF-SMC.stl](https://cad.onshape.com/documents/05fa168a306fc9b02dcde363)
+  - STEP file: [AVR-BATTERY-STANDOFF-SMC.stp](https://cad.onshape.com/documents/7e88ec918372d236e4c1704a)
 
 An infill of 15% should be sufficient for these parts.
 
