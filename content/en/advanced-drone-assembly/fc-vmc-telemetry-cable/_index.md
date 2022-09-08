@@ -1,8 +1,9 @@
 ---
 title: "FC ⟷ VMC Telemetry Cable"
 weight: 3
-draft: true
 ---
+
+## Overview
 
 It's important that the FC and VMC can communicate with each other.
 This bi-directional communication will allow us to receive telemetry
@@ -18,50 +19,58 @@ pilot to maintain position in **stabilized** flight mode. With the assistance
 of these cameras you will be able to hover in **position** mode with ease!
 The cable we build in this section makes this all possible.
 
-Locate the cable bundle in **Box 5** and find the cable with a 4 pin
-JST-GH connector as seen below. The colors of the wires should
-be red, black, blue, and white.
+Locate the following components in the photo below:
 
-![JST-GH 4 pin cable for telemetry](vmc_cable.jpg)
+- 6 pin cable from the Pixhawk box
+- 40 pin connector housing
+- 3 female to female wires (black, purple, and grey)
 
-Plug the JST-GH connector into the port labeled **IR/TLM2** as shown in the
-photo below. Later on in the configuration process we will load new parameters
-from QGC onto the FC, which will enable communication over this port.
+![Necessary components for telemetry cable](telem_cable_1.jpg)
 
-![Cable plugged into IR/TLM2 port](vmc_cable_plugged_into_fc.jpg)
+## Creating the Cable
 
-At the other end of the cable there are plastic connectors that will be removed.
-Each of the connectors has a small tab that can be lifted up using an X-Acto
-knife or small blade.
+Before we start building the telemetry cable let's take a quick look at the following wiring diagram. The middle area represents the 40 pin connector housing. Pay attention to the pinout from the connector housing to the **TELEM1** port on the Pixhawk FC. We will be using the following pins:
 
-![X-Acto knife used to lift the plastic tab](build_vmc_cable_1.jpg)
+- Pin 2 - TX - Grey
+- Pin 3 - RX - Purple
+- Pin 6 - GND - Black
 
-After lifting the plastic tab the connector should easily slide off the wire,
-exposing the metal leads. Remove the connectors for the black, blue, and white wires.
+![VMC pinout](jetson_pinout_diagram.png)
 
-![Connectors removed from black, blue, and white wires](build_vmc_cable_2.jpg)
+Using tweezers you will remove pins 1, 4, and 5 from the Pixhawk connector. This is done by prying the plastic tab for each pin as shown in the photo below.
 
-Each of these pins will be placed into a 2x20 crimp housing that can be seen below.
-There is a bag of several crimp housings located in **Box 5**.
-The wires should be placed in the housing so that the plastic tabs lock onto each
-of the metal leads as seen below. This will prevent the leads from accidentally
-being pulled out. Be sure to zoom in on the photo to see the proper orientation.
+![Removing pin 1 from the telemetry connector](telem_cable_2.jpg)
 
-![2x20 crimp housing](build_vmc_cable_3.jpg)
+The photo below shows only the necessary pins remaining: pin 2, 3, and 6 from left to right.
 
-It's very important to make sure your wire order matches the photo below.
-The blue and white cables are what handle the transmit/receive signals
-between the FC and VMC. The black wire goes to ground.
+![Telemetry wires: TX, RX, and GND](telem_cable_3.jpg)
 
-{{% alert title="Tip" color="tip" %}}
-It's a good idea to clip the red lead to keep your build nice and tidy.
-We recommend clipping this lead right where it comes out of the heat shrink.
-If you look closely at top left of the photo below, you will see where the
-red lead has been clipped.
-{{% /alert %}}
+Clip the connector from the other end of the Pixhawk cable. Cut all three of the individual female-female wires to approximately 2-3". Strip 1/2" of shielding away from all wires as shown in the photo below.
 
-![2x20 crimp housing wired up and ready for connection with the VMC](build_vmc_cable_4.jpg)
+![Wire prep for soldering](telem_cable_4.jpg)
 
-The crimp housing is now complete. This will plug into the header pins on
-the VMC in the next section, so don't worry about plugging it in just yet.
-It's much easier to mount the VMC and plug this housing in later.
+Prior to soldering make sure each colored wire matches the corresponding pin. The photo below shows one final check before soldering.
+
+![Confirming layout before soldering](telem_cable_5.jpg)
+
+Join the wires using the "Twisted Helix" method we covered in the [ESC wiring]({{< relref "../../basic-drone-assembly/flight-controller-wiring#esc-wiring" >}}) during basic assembly.
+
+![Joining wires prior to soldering](telem_cable_6.jpg)
+
+Solder all three wires and apply heat shrink.
+
+![Telemetry cable with all three wires soldered](telem_cable_7.jpg)
+
+Remove the plastic connectors from the grey, purple, and black wires.
+
+![Plastic connectors removed](telem_cable_8.jpg)
+
+Insert all three wires into the 40 pin connector housing as shown in the following photos. If you're uncertain where to insert the wires refer back to the diagram in the overview section.
+
+Make sure you hear each of the pins click into the connector housing. Inserting them properly into the housing will prevent them from accidentally getting pulled out.
+
+![Adding telemetry wires to 40 pin connector](telem_cable_9.jpg)
+
+Now that your telemetry cable is complete you can do a test fit. Pay attention to the orientation of the 40 pin connector as seen in the photo below.
+
+![Telemetry cable connected to VMC and Pixhawk TELEM1 port](telem_cable_10.jpg)

@@ -1,8 +1,6 @@
 ---
-title: "Checkpoint 3: Position Flight Test (Coming Next Week)"
+title: "Checkpoint 3: Position Flight Test"
 weight: 14
 ---
 
-{{% alert title="Stay tuned!" color="success" %}}
-**This section’s content will be released next week**
-{{% /alert %}}
+{{< youtube fcHW4fGp8h0 >}}

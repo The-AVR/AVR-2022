@@ -13,6 +13,10 @@
  {{$level.Set "level" 3}}
   {{$level.Set "sections" .Page.Parent.Sections}}
    {{$level.Set "weight" .Page.Weight}}
+   {{ else }}
+   {{$level.Set "level" 3}}
+   {{$level.Set "sections" .Page.Parent.Sections}}
+    {{$level.Set "weight" .Page.Weight}}
     {{ end }}
      {{ end }}
       {{ end }}
@@ -28,7 +32,7 @@
 
 <br>
 
-{{ if (eq $levelPerm 3) }}
+{{ if (eq $levelPerm 3)  }}
   {{$weightParent:= .Page.Parent.Weight}}
   {{ range $levelSections }}
       {{if (eq .Weight (add $levelWeight -1))}}
@@ -53,6 +57,23 @@
           {{ end }}
       {{ end }}
   {{ end }}
+
+  {{$weightParent := .Page.Parent.Weight}}
+  {{ range .Page.Sections }}
+      {{if (eq .Weight 1)}}
+          <a class="btn btn-primary" title = "Next" href="{{ .Permalink }}" style="float: right;">{{ T "ui_pager_next" }}<span class="ml-1">→</span></a>
+          {{$level.Set "success" 1}}
+      {{ end }}
+  {{ end }}
+  {{if (eq 0 ($level.Get "success"))}}
+      {{ range .Page.Parent.Sections }}
+      {{if (eq .Weight (add $levelWeight 1))}}
+          <a class="btn btn-primary" title = "Next" href="{{ .Permalink }}" style="float: right;">{{ T "ui_pager_next" }}<span class="ml-1">→</span></a>
+          {{$level.Set "success" 1}}
+      {{ end }}
+      {{ end }}
+      {{ end }}
+
 {{ end }}
 {{$level.Set "success" 0}}
 {{ if (eq $levelPerm 2) }}

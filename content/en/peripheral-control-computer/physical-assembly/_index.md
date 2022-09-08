@@ -225,7 +225,7 @@ Next, grab some of the spare header pins and break two single-pins off:
 
 ![Separated Pin](separate-pin-from-strip.png)
 
-Place them into the holes on the tripler right next to the point of interest and use
+Place them into the holes on the Tripler right next to the point of interest and use
 something flat to place over the board to hold the pins in place while you flip it
 over. I used an old PCB but you could use paper, cardboard, etc. Now solder the pins in
 place.
@@ -236,13 +236,18 @@ You should now have something like this:
 Now place a female dupont-connector wire on the pins and bend them down to the right.
 They should fit perfectly between the header rows like such:
 
+{{% alert title="Note" color="note" %}}
+Be sure to use your 12 inch female-to-female jumper wires as these will eventually need
+to run from the top mounted PCC to the bottom mounted laser.
+{{% /alert %}}
+
 ![Bent Pins](bent-pins.jpg)
 
 Thats it! Move on to the next step!
 
 ## Putting It All Together
 
-Now we can just pop the Featherwings into the tripler as shown below:
+Now we can just pop the Featherwings into the Tripler as shown below:
 
 ![Completed PCC](completed-pcc.jpg)
 

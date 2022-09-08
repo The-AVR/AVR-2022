@@ -1,8 +1,8 @@
 ---
-title: "Peripheral Drone Assembly (Coming in 2 Weeks)"
+title: "Peripheral Drone Assembly (Coming next Week)"
 weight: 15
 ---
 
 {{% alert title="Stay tuned!" color="success" %}}
-**This section's content will be released in 2 weeks**
+**This section's content will be released next week**
 {{% /alert %}}
