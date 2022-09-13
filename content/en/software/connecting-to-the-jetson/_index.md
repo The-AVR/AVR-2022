@@ -11,6 +11,8 @@ Here are 3 possible methods you can use.
 
 ## Monitor and Keyboard
 
+---
+
 Possibly the simplest way to connect to your Jetson is with
 a monitor and keyboard. You'll just need a monitor that has HDMI or DisplayPort
 that you can plug in to the Jetson.
@@ -22,10 +24,16 @@ in the bottom left (the 9 squares) or with the keyboard shortcut
 
 ## Serial
 
+---
+
 If you do not have a monitor and keyboard, another method of logging in to your Jetson is over a serial connection.
 To do this, you'll need a serial client.
 
-### Installing Serial Client on Windows
+### Installing Serial Client
+
+---
+
+#### Installing Serial Client on Windows
 
 For Windows, we recommend PuTTy.
 Go to [this page](https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html)
@@ -35,7 +43,7 @@ and download and install the `putty-64bit-<version>-installer.msi` file.
 
 ![Run through the setup wizard](2022-05-20-09-54-21.png)
 
-### Installing Serial Client on MacOS
+#### Installing Serial Client on MacOS
 
 Rather than using PuTTy, it's much easier to open a terminal and simply run:
 
@@ -43,7 +51,7 @@ Rather than using PuTTy, it's much easier to open a terminal and simply run:
 screen ttyACM0 115200
 ```
 
-### Installing Serial Client on Linux
+#### Installing Serial Client on Linux
 
 You can follow the same steps as on MacOS
 (after installing `screen` with `sudo apt install screen`),
@@ -61,6 +69,8 @@ sudo putty
 ```
 
 ### Connecting to Jetson via Serial Client
+
+---
 
 Now, if you want to power the Jetson via USB (if the Jetson is not connected to
 a wall adapter or a battery) remove the jumper behind the barrel jack.
@@ -100,6 +110,8 @@ Jetson to connect to a network, but don't know what the IP address is.
 {{% /alert %}}
 
 ## SSH
+
+---
 
 {{% alert title="Note" color="note" %}}
 This only works if you've already configured the operating system on the Jetson.

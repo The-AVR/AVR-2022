@@ -18,7 +18,7 @@ Now, enter a name for this connection, select type of "TCP", enter the
 IP address of your drone, and leave the port number to the default of 5760.
 Click "Ok" to add it.
 
-![](image1.png)
+![](qgc_comm_link.png)
 
 Now whenever you want to connect QGC to your done, go back to
 "Application Settings", "Comm Links", select your connection,
