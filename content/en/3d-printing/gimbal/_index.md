@@ -15,4 +15,3 @@ description: "3D prints for the thermal camera gimbal"
   - STEP file: [AVR-GIMBAL-TILT.stp](https://cad.onshape.com/documents/add04c066036cdd648ea66c9)
 
 An infill of 15% should be sufficient for these parts.
-
