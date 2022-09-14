@@ -44,7 +44,7 @@ def check_sudo() -> None:
         return
 
     # re run ourselves with sudo
-    print("Needing sudo privledges to run docker, re-lauching")
+    print("Needing sudo privileges to run docker, re-launching")
 
     try:
         sys.exit(
