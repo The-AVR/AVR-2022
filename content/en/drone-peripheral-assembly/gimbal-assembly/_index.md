@@ -1,0 +1,224 @@
+---
+title: "Gimbal Assembly"
+weight: 1
+---
+
+## Overview
+
+This section details how to assemble your gimbal.
+The gimbal allows the ground station operator to aim the FPV camera, thermal camera, and
+laser pointer at targets on the field independently of the drones position/orientation.
+The gimbal assembly will be used to detect hot spots on the field, put out fires using
+your water cannon, and perform reconnaissance with your FPV camera .
+
+The gimbal uses 2 servos (very similar to servos used previous years)
+to control the pan and tilt of the drone.
+
+Pan is the rotation about the z-axis meaning this controls left or right camera angle.
+Pan gets its name because it keeps an object in the picture or secures a panoramic effect.
+
+Tilt is the rotation abut the y-axis meaning it controls up and down camera angle.
+
+Obtain the
+[gimbal parts]({{< relref "../../3d-printing/gimbal" >}})
+from the 3D printing section, 2 servos and associated hardware, a mosfet,
+the thermal camera, laser module, FPV camera, long F-F dupont jumper wires, and your (18awg?) wires.
+
+{{% alert title="Note" color="note" %}}
+Be sure you have the latest 3D printed parts as there has been changes to the pan part
+to accommodate your specific servo horn.
+{{% /alert %}}
+
+![Gimbal Parts Overview](gimbal_layout.jpg)
+
+## Gimbal Base
+
+Start with the gimbal base.
+Pass your servo wire through the slot on the slide and slide servo into place.
+
+![Gimbal Base Servo Placement](gimbal_base1.jpg)
+
+Secure the servo into the gimbal base using the servo hardware screws as shown below.
+
+![Gimbal Base Servo Mounting](gimbal_base2.jpg)
+
+### Gimbal Pan
+
+Next you will attach the servo horn with 2 arms to the
+bottom of the gimbal pan part using the servo hardware.
+
+![Gimbal Pan Servo Horn Attachment](gimbal_pan_overview.jpg)
+
+Be sure the geared part of the servo horn is facing away from the connecting face.
+Align the center hole and the 2 holes (one hole away from the end of the servo arm) with
+the holes on the pan part. Screw through the part to attach your servo horn to the pan part.
+
+If done successfully your screws heads should sit flush with the bottom of the gimbal pan.
+
+![Gimbal Pan Servo Horn Attachment](gimbal_pan_horn1.jpg)
+
+Place a second servo in the gimbal pan part, this servo will be used to control the tilt of the gimbal. The gimbal gear and the tilt attachment arm should be on the same axis. Align the servo gear with the tilt attachment arm of the opposite side of the 3D printed part. Screw the tilt servo into the two holes on the side pan assembly; the final product of which should look like the following image.
+
+![Gimbal Pan Servo Horn Attachment](gimbal_pan_tilt_servo.jpg)
+
+## Gimbal Tilt
+
+Next we will be assembling the tilt assembly.
+This is where all of our sensors will be mounted.
+
+### Thermal Camera Mounting
+
+The thermal camera will be mounted in the center of our gimbal tilt part.
+Use 4 screws from the peripheral bag to attach the thermal camera to the drone.
+
+![Thermal Camera Mounting Overview](gimbal_thermal_overview.jpg)
+
+After screwing in, it should look like the following.
+
+![Mounted Thermal Camera](gimbal_thermal.jpg)
+
+We will wire and test this in following sections.
+
+### FPV mounting
+
+The FPV camera is mounted on the left side of the part (as shown in the picture).
+
+![FPV Mounting Overview](gimbal_fpv_overview.jpg)
+
+Cut a 3M double sided tape to the size of the base of the protruding area of the tilt part and place.
+
+![FPV Double Sided Tape Placement](gimbal_fpv1.jpg)
+
+Slide the camera into the slot and ensure that the camera is secured.
+You should be able turn turn the part upside down without the camera falling out.
+
+![FPV Mounted in Tilt Assembly](gimbal_fpv2.jpg)
+
+We will wire and test this in following sections.
+
+### Mount Servo Horn
+
+Next place your servo horn into the the recess on the tilt part.
+We find that using a small amount of super glue is helpful in holding the servo in place before we attach it.
+
+![Tilt Servo Horn Mounting](gimbal_tilt_servohorn_mount.jpg)
+
+The only remaining part of the gimbal assembly components is the laser,
+but we will come back to that after fully assembling the gimbal on the drone.
+
+## Gimbal Assembly
+
+Now that all of the assembly 3D parts have been assembled we can start mounting the gimbal to the drone.
+
+Dennis Note: this next part is an initial pass… it might be better to do the full wire routing for the servos and then add a video of how to “calibrate” gimbal.
+
+{{% alert title="Note" color="note" %}}
+Before performing this section, ensure you have connected to your drone with
+[the GUI]({{< relref "../../Software/GUI" >}})
+as we will need to use it in order to calibrate the Gimbal.
+{{% /alert %}}
+
+Attach a 12 in (might be less, decide at your discretion) servo extender to your servos.
+
+![Servos with extenders](image)
+
+First, mount the Gimbal base to the drone using 10mm 3M screws included in your kit.
+Use the 1st and 3rd slotted holes to mount the gimbal base to the drone.
+
+![Gimbal Base Mounted](gimbal_base_mount1.jpg)
+
+![Lock Screws](gimbal_base_mount2.jpg)
+
+Run your first servo wire through the slots and up to the top PCC and connect to the 3rd servo connector.
+
+![Connecting Pan Servo]()
+
+### Pan Calibration
+
+This is where we will need this is where we calibrate to ensure we have the desired range of motion.
+
+Next power your drone from battery (no propellers!).
+
+Connect to your drone through
+[the GUI]({{< relref "../../Software/GUI" >}}).
+
+Navigate to the Thermal Tab.
+
+Move your joy stick left to right and ensure that your servo moves.
+If not, make sure you are on the correct servo port.
+
+Attach the servo arm of the pan part to the base servo gear but don't screw down yet.
+
+Pan the GUI joystick from left to right and see if your initial attachment was accurate.
+When the joystick is centered the gimbal should be pointing forward.
+Readjust by removing your Gimbal tilt part rotating an amount and direction you think is appropriate and reattaching.
+Repeat until you are comfortable with your pan movement.
+
+Once you feel comfortable, screw down the center servo screw to lock it in place.
+
+![Locking Gimbal Pan part](image)
+
+### Tilt Calibration
+
+Next we are going to repeat a similar process with the tilt assembly.
+
+Route your servo connectors to the PCC and connect your wires to the 4th servo port.
+
+Test to make sure your servo moves.
+
+![Locking Gimbal Tilt part](image)
+
+Attach your gimbal tilt part to the drone starting with the 3D printed tilt arm on the right side.
+Next carefully align the tilt part over the servo gear.
+
+Next place the one armed servo horn on the servo gear. Don't lock into place.
+
+Repeat the process from above to ensure your gimbal tilts through the desired range.
+It should look slightly above parallel to ground and slightly past perpendicular with the ground (or parallel to the z axis).
+
+Screw in set screw
+
+## Laser Pointer Mounting
+
+Cut a small piece of your 3M double sided tape and place it on the end of your laser pointer being sure not to obstruct the view of the camera
+
+Before doing this take note of which pins are power and which are ground.
+
+## Powering Laser and the FPV
+
+Solder 2 PCC leads onto mosfet pins J1.
+
+Cut wires (black and red) approximate 4-6 inches (depends on where you mount your mosfet, just needs to be long enough)
+
+Screw wires into the PCC Buck converter output terminal and route through the plate.
+
+Cut ends of the fpv adapter that was provided in your kit at the connector. (could plug into FPV prior to cutting to ensure you cut the correct side.)
+
+Place both wire ends into the mosfet input terminals.
+
+Mount mosfet using 3M double sided tape. Be sure to pick a mounting location close enough to all the FPV camera to move freely through its complete range of motion (should be semi close to the gimbal base)
+
+Wire mosfet from PCC. Wire A4 will run to the PWM. the Ground pin will run to GND
+
+Cut one side and strip of a black and red Female-Female dupont jumper wire to approximately 4-6 inches length
+
+Screw the black into the negative Out. repeat with the red in the positive out terminal.
+
+Place the black wire on the ground of the laser pointer
+Place the red output wire onto the signal wire of the laser module.
+
+Thermal Camera
+
+Find the thermal camera connecting cable (STEMMA QT / Qwiic JST SH 4-pin to Premium Male Headers Cable) from your kit.
+
+Connect long female-female jumper wires of corresponding colors on to the ends. It may be beneficial to add a little bit of electrical tape to ensure they do not come undone.
+
+Remove your plastic pieces.
+
+[Thermal cameras](https://www.adafruit.com/product/4209)
+
+Once you have done this, you can choose to make a bundle with this by taping the wires together. (not needed but can add cleanliness.)
+
+Route the cables through the slots on the drone with the small jst connector on the bottom of the drone as this is what will connect to the thermal camera.)
+
+Place your top cables into the 20x2 connector housing on your jetson per the following wiring diagram.
