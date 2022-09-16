@@ -200,6 +200,7 @@ def main(development):
     # header 1 is the 40pin header
     # gotten from `sudo /opt/nvidia/jetson-io/config-by-pin.py -l`
     # https://docs.nvidia.com/jetson/archives/r34.1/DeveloperGuide/text/HR/ConfiguringTheJetsonExpansionHeaders.html#config-by-function-configure-header-s-by-special-function
+    # https://github.com/JetsonHacksNano/SPI-Playground
     print("Enabling SPI")
     subprocess.check_call("sudo find /opt/nvidia/jetson-io/ -mindepth 1 -maxdepth 1 -type d -exec touch {}/__init__.py \;", shell=True)
     subprocess.check_call(["sudo", "mkdir", "-p", "/boot/dtb"])
