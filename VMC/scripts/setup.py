@@ -201,9 +201,9 @@ def main(development):
     # gotten from `sudo /opt/nvidia/jetson-io/config-by-pin.py -l`
     # https://docs.nvidia.com/jetson/archives/r34.1/DeveloperGuide/text/HR/ConfiguringTheJetsonExpansionHeaders.html#config-by-function-configure-header-s-by-special-function
     print("Enabling SPI")
-    subprocess.check_call(["sudo", "find", "/opt/nvidia/jetson-io/", "-mindepth", "1", "-maxdepth", "1", "-type", "d", "-exec", r'touch {}/__init__.py \;'])
-    subprocess.check_call(["sudo", "mkdir", "/boot/dtb"])
-    subprocess.check_call(["sudo", "cp", "-v", "/boot/tegra210-p3448-0000-p3449-0000-[ab]0[02].dtb", "/boot/dtb/"])
+    subprocess.check_call("sudo find /opt/nvidia/jetson-io/ -mindepth 1 -maxdepth 1 -type d -exec touch {}/__init__.py \;", shell=True)
+    subprocess.check_call(["sudo", "mkdir", "-p", "/boot/dtb"])
+    subprocess.check_call("sudo cp -v /boot/tegra210-p3448-0000-p3449-0000-[ab]0[02].dtb /boot/dtb/", shell=True)
     subprocess.check_call(["python3", "/opt/nvidia/jetson-io/config-by-function.py", "-o", "dtb", '1=spi1'])
     print_bar()
 
