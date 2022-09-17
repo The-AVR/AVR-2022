@@ -418,7 +418,7 @@ class ThermalViewControlWidget(BaseTabWidget):
         # don't allow us to shrink below size hint
         self.setMinimumSize(self.sizeHint())
 
-    def inverted_checkbox_clicked(self):
+    def inverted_checkbox_clicked(self) -> None:
         """
         Callback when joystick inverted checkbox is clicked
         """
