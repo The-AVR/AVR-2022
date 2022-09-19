@@ -129,54 +129,11 @@ Use the 1st and 3rd slotted holes to mount the gimbal base to the drone.
 
 ![Lock Screws](gimbal_base_mount2.jpg)
 
-Run your first servo wire through the slots and up to the top PCC and connect to the 3rd servo connector.
+### Pan and Tilt Calibration
 
-![Connecting Pan Servo]()
+Please watch the video below to understand calibrating your gimbal's pan and tilt range of motion.
 
-### Pan Calibration
-
-This is where we will need this is where we calibrate to ensure we have the desired range of motion.
-
-Next power your drone from battery (no propellers!).
-
-Connect to your drone through
-[the GUI]({{< relref "../../Software/GUI" >}}).
-
-Navigate to the Thermal Tab.
-
-Move your joy stick left to right and ensure that your servo moves.
-If not, make sure you are on the correct servo port.
-
-Attach the servo arm of the pan part to the base servo gear but don't screw down yet.
-
-Pan the GUI joystick from left to right and see if your initial attachment was accurate.
-When the joystick is centered the gimbal should be pointing forward.
-Readjust by removing your Gimbal tilt part rotating an amount and direction you think is appropriate and reattaching.
-Repeat until you are comfortable with your pan movement.
-
-Once you feel comfortable, screw down the center servo screw to lock it in place.
-
-![Locking Gimbal Pan part](image)
-
-### Tilt Calibration
-
-Next we are going to repeat a similar process with the tilt assembly.
-
-Route your servo connectors to the PCC and connect your wires to the 4th servo port.
-
-Test to make sure your servo moves.
-
-![Locking Gimbal Tilt part](image)
-
-Attach your gimbal tilt part to the drone starting with the 3D printed tilt arm on the right side.
-Next carefully align the tilt part over the servo gear.
-
-Next place the one armed servo horn on the servo gear. Don't lock into place.
-
-Repeat the process from above to ensure your gimbal tilts through the desired range.
-It should look slightly above parallel to ground and slightly past perpendicular with the ground (or parallel to the z axis).
-
-Screw in set screw
+{{< youtube _mtDJYaxGYs >}}
 
 ## Laser Pointer Mounting
 
