@@ -15,7 +15,7 @@ def check_sudo():
 
     if os.geteuid() != 0:
         # re run ourselves with sudo
-        print("Needing sudo privledges, re-lauching")
+        print("Needing sudo privileges, re-launching")
 
         try:
             sys.exit(
