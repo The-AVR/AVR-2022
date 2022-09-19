@@ -68,6 +68,9 @@ class ThermalView(QtWidgets.QWidget):
             (math.floor(ix / self.camera_x), (ix % self.camera_y))
             for ix in range(self.camera_total)
         ]
+
+        self.points = self.rotate90Clockwise(self.points)
+
         # i'm not fully sure what this does
         self.grid_x, self.grid_y = np.mgrid[
             0 : self.camera_x - 1 : self.camera_total / 2j,
@@ -131,6 +134,15 @@ class ThermalView(QtWidgets.QWidget):
                     pen,
                     brush,
                 )
+    def rotate90Clockwise(A):
+        N = len(A[0])
+        for i in range(N // 2):
+            for j in range(i, N - i - 1):
+                temp = A[i][j]
+                A[i][j] = A[N - 1 - j][i]
+                A[N - 1 - j][i] = A[N - 1 - i][N - 1 - j]
+                A[N - 1 - i][N - 1 - j] = A[j][N - 1 - i]
+                A[j][N - 1 - i] = temp
 
 
 class JoystickWidget(BaseTabWidget):
