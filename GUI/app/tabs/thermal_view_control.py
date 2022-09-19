@@ -110,6 +110,7 @@ class ThermalView(QtWidgets.QWidget):
             for p in pixels
         ]
 
+        # Rotate 90° to orient for mounting correctly
         float_pixels_matrix = np.reshape(float_pixels, (8,8))
         float_pixels_matrix = np.rot90(float_pixels_matrix, 1)
         rotated_float_pixels= float_pixels_matrix.flatten()
