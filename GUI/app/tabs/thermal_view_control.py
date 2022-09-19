@@ -111,12 +111,15 @@ class ThermalView(QtWidgets.QWidget):
         ]
 
         # Rotate 90° to orient for mounting correctly
-        float_pixels_matrix = np.reshape(float_pixels, (8,8))
+        float_pixels_matrix = np.reshape(float_pixels, (8, 8))
         float_pixels_matrix = np.rot90(float_pixels_matrix, 1)
-        rotated_float_pixels= float_pixels_matrix.flatten()
+        rotated_float_pixels = float_pixels_matrix.flatten()
 
         bicubic = scipy.interpolate.griddata(
-            self.points, rotated_float_pixels, (self.grid_x, self.grid_y), method="cubic"
+            self.points,
+            rotated_float_pixels,
+            (self.grid_x, self.grid_y),
+            method="cubic",
         )
 
         pen = QtGui.QPen(QtCore.Qt.NoPen)
@@ -137,6 +140,7 @@ class ThermalView(QtWidgets.QWidget):
                     pen,
                     brush,
                 )
+
 
 class JoystickWidget(BaseTabWidget):
     def __init__(self, parent: QtWidgets.QWidget) -> None:
