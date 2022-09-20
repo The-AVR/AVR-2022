@@ -197,3 +197,15 @@ Once you have done this, you can choose to make a bundle with this by taping the
 Route the cables through the slots on the drone with the small jst connector on the bottom of the drone as this is what will connect to the thermal camera.)
 
 Place your top cables into the 20x2 connector housing on your jetson per the following wiring diagram.
+
+![](thermal_1.jpg)
+
+![](thermal_2.jpg)
+
+![](thermal_3.jpg)
+
+![](thermal_4.jpg)
+
+![](thermal_5.jpg)
+
+![](thermal_6.jpg)
