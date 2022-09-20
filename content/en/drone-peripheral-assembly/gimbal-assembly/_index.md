@@ -137,34 +137,52 @@ Please watch the video below to understand calibrating your gimbal's pan and til
 
 ## Laser Pointer Mounting
 
+![Components for laser mounting and wiring](laser_components.jpg)
+
 Cut a small piece of your 3M double sided tape and place it on the end of your laser pointer being sure not to obstruct the view of the camera
 
 Before doing this take note of which pins are power and which are ground.
+
+![Laser mounted in gimbal](laser_mounted.jpg)
 
 ## Powering Laser and the FPV
 
 Solder 2 PCC leads onto mosfet pins J1.
 
+![Mosfet with header pins soldered](mosfet_header_pins.jpg)
+
 Cut wires (black and red) approximate 4-6 inches (depends on where you mount your mosfet, just needs to be long enough)
 
-Screw wires into the PCC Buck converter output terminal and route through the plate.
+Screw wires into the PCC Buck converter output terminal.
+
+![Leads that will power mosfet](buck_converter_to_mosfet.jpg)
 
 Cut ends of the fpv adapter that was provided in your kit at the connector. (could plug into FPV prior to cutting to ensure you cut the correct side.)
 
+![FPV camera cable ready to connect to mosfet](mosfet_and_fpv_power.jpg)
+
 Place both wire ends into the mosfet input terminals.
+
+![Mosfet input side](mosfet_input_with_fpv_power.jpg)
 
 Mount mosfet using 3M double sided tape. Be sure to pick a mounting location close enough to all the FPV camera to move freely through its complete range of motion (should be semi close to the gimbal base)
 
+![](mosfet_mounting_1.jpg)
+
+![](mosfet_mounting_2.jpg)
+
 Wire mosfet from PCC. Wire A4 will run to the PWM. the Ground pin will run to GND
 
+![](pcc_to_mosfet.jpg)
+
 Cut one side and strip of a black and red Female-Female dupont jumper wire to approximately 4-6 inches length
-
 Screw the black into the negative Out. repeat with the red in the positive out terminal.
-
 Place the black wire on the ground of the laser pointer
 Place the red output wire onto the signal wire of the laser module.
 
-Thermal Camera
+![](mosfet_to_laser.jpg)
+
+## Thermal Camera
 
 Find the thermal camera connecting cable (STEMMA QT / Qwiic JST SH 4-pin to Premium Male Headers Cable) from your kit.
 
