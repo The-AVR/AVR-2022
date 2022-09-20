@@ -1,6 +1,6 @@
 ---
 title: "FPV Projection Camera Mounting"
-weight: 9
+weight: 3
 draft: true
 ---
 

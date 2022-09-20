@@ -123,7 +123,7 @@ Attach a 12 in (might be less, decide at your discretion) servo extender to your
 ![Servos with extenders](image)
 
 First, mount the Gimbal base to the drone using 10mm 3M screws included in your kit.
-Use the 1st and 3rd slotted holes to mount the gimbal base to the drone.
+Use the 1st and 3rd slotted holes from the front of the drone to mount the gimbal base.
 
 ![Gimbal Base Mounted](gimbal_base_mount1.jpg)
 
@@ -139,73 +139,78 @@ Please watch the video below to understand calibrating your gimbal's pan and til
 
 ![Components for laser mounting and wiring](laser_components.jpg)
 
-Cut a small piece of your 3M double sided tape and place it on the end of your laser pointer being sure not to obstruct the view of the camera
-
-Before doing this take note of which pins are power and which are ground.
+Cut a small piece of your 3M double sided tape and place it on the end of your laser pointer being sure not to obstruct the view of the laser barrel.
 
 ![Laser mounted in gimbal](laser_mounted.jpg)
 
 ## Powering Laser and the FPV
 
-Solder 2 PCC leads onto mosfet pins J1.
+Next we will be focusing on the FPV and the Laser wiring as shown in the following wiring diagram.
+
+![PCC Wiring](pcc_wiring.jpg)
+
+Solder extra leads from the PCC section onto mosfet pins J1.
 
 ![Mosfet with header pins soldered](mosfet_header_pins.jpg)
 
-Cut wires (black and red) approximate 4-6 inches (depends on where you mount your mosfet, just needs to be long enough)
+Cut wires (black and red) approximate 2-4 inches.
 
 Screw wires into the PCC Buck converter output terminal.
 
 ![Leads that will power mosfet](buck_converter_to_mosfet.jpg)
 
-Cut ends of the fpv adapter that was provided in your kit at the connector. (could plug into FPV prior to cutting to ensure you cut the correct side.)
+Cut the extender provided with the FPV camera at the connector as shown in the following image.
 
 ![FPV camera cable ready to connect to mosfet](mosfet_and_fpv_power.jpg)
 
-Place both wire ends into the mosfet input terminals.
+Place both the power and FPV wire ends into the mosfet input terminals and screw down to terminal to secure.
 
-![Mosfet input side](mosfet_input_with_fpv_power.jpg)
+![Mosfet Power Supply](mosfet_input_with_fpv_power.jpg)
 
-Mount mosfet using 3M double sided tape. Be sure to pick a mounting location close enough to all the FPV camera to move freely through its complete range of motion (should be semi close to the gimbal base)
+Stack 2 layers of 3M double sided tape on the mosfet as shown in the following image.
 
-![](mosfet_mounting_1.jpg)
+![Mosfet Mounting](mosfet_mounting_1.jpg)
 
-![](mosfet_mounting_2.jpg)
+Next mount your mosfet and plug in your FPV camera.
 
-Wire mosfet from PCC. Wire A4 will run to the PWM. the Ground pin will run to GND
+![Mosfet Mounting Location](mosfet_mounting_2.jpg)
 
-![](pcc_to_mosfet.jpg)
+Wire mosfet from to PCC. Wire A4 will run to the PWM. The Ground pin will run to GND.
 
-Cut one side and strip of a black and red Female-Female dupont jumper wire to approximately 4-6 inches length
-Screw the black into the negative Out. repeat with the red in the positive out terminal.
-Place the black wire on the ground of the laser pointer
-Place the red output wire onto the signal wire of the laser module.
+![Mosfet Diagram](mosfet_diagram.jpg)
 
-![](mosfet_to_laser.jpg)
+![Mosfet Wiring](pcc_to_mosfet.jpg)
+
+Cut and strip one side of a black and red Female-Female dupont jumper wire to approximately 4-6 inches length.
+Screw wires in to their respective terminal blocks.
+Place the black and red wire on the ground and signal pins of the laser pointer respectively as shown in the following image.
+
+![Laser Wiring](mosfet_to_laser.jpg)
 
 ## Thermal Camera
 
-Find the thermal camera connecting cable (STEMMA QT / Qwiic JST SH 4-pin to Premium Male Headers Cable) from your kit.
+Locate the thermal camera JST SH 4-pin connecting cable and 4 12 inch jumper wires with corresponding colors from your kit.
 
-Connect long female-female jumper wires of corresponding colors on to the ends. It may be beneficial to add a little bit of electrical tape to ensure they do not come undone.
+![Thermal Camera Wires](thermal_1.jpg)
 
-Remove your plastic pieces.
+Connect long female-female jumper wires of corresponding colors.
+It may be beneficial to add a little bit of electrical tape to ensure they do not come undone.
+Remove your plastic end pieces.
 
-[Thermal cameras](https://www.adafruit.com/product/4209)
+![Thermal Camera Wiring](thermal_2.jpg)
 
-Once you have done this, you can choose to make a bundle with this by taping the wires together. (not needed but can add cleanliness.)
+![Thermal Camera Bundle](thermal_3.jpg)
 
-Route the cables through the slots on the drone with the small jst connector on the bottom of the drone as this is what will connect to the thermal camera.)
+Attach the JST connector to the thermal camera and route the cables to the top accessory plate.
+
+![Thermal Camera Connection](thermal_4.jpg)
 
 Place your top cables into the 20x2 connector housing on your jetson per the following wiring diagram.
 
-![](thermal_1.jpg)
+![Jetson Pinout ](jetson_20x2_pinout.jpg)
 
-![](thermal_2.jpg)
+![Thermal Camera 20x2 Connector](thermal_5.jpg)
 
-![](thermal_3.jpg)
+The final product should look like the following.
 
-![](thermal_4.jpg)
-
-![](thermal_5.jpg)
-
-![](thermal_6.jpg)
+![Thermal Camera Wiring Overview](thermal_6.jpg)
