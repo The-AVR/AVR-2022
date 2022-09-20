@@ -304,7 +304,7 @@ class JoystickWidget(BaseTabWidget):
             self.update()
 
         moving_offset_y = self.moving_offset.y()
-        if config.joystick_inverted:
+        if not config.joystick_inverted:
             moving_offset_y = self.height() - moving_offset_y
 
         # print(self.joystick_direction())
