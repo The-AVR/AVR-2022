@@ -68,7 +68,6 @@ class ThermalView(QtWidgets.QWidget):
             (math.floor(ix / self.camera_x), (ix % self.camera_y))
             for ix in range(self.camera_total)
         ]
-
         # i'm not fully sure what this does
         self.grid_x, self.grid_y = np.mgrid[
             0 : self.camera_x - 1 : self.camera_total / 2j,
