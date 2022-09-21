@@ -266,13 +266,19 @@ def main(development):
 
 
     print_title("Obtaining ZED Camera Configuration")
-    zed_serial = subprocess.check_output(["docker", "run", "--rm", "--mount", f"type=bind,source={os.path.join(AVR_DIR, 'VMC/vio/settings')},target=/usr/local/zed/settings/", "--privileged", "docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6", "python3", "-c", "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();"]).decode("utf-8").strip()
+    zed_settings_dir = os.path.join(AVR_DIR, 'VMC/vio/settings')
+
+    zed_serial = subprocess.check_output(["docker", "run", "--rm", "--mount", f"type=bind,source={zed_settings_dir},target=/usr/local/zed/settings/", "--privileged", "docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6", "python3", "-c", "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();"]).decode("utf-8").strip()
     if zed_serial == "0":
         print(f"{LIGHTRED}WARNING:{NC} ZED camera not detected, skipping settings download")
     else:
         print("ZED camera settings have been downloaded")
     print_bar()
 
+    # make sure at least one settings file exists
+    if not development and not any(f.endswith(".conf") for f in os.listdir(zed_settings_dir)):
+        print(f"{RED}EROOR:{NC} ZED settings not found. Your drone will NOT fly. Plug in the ZED camera and try again.")
+        sys.exit(1)
 
 
     print_title("Building AVR Software")
