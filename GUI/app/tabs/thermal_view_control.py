@@ -68,6 +68,7 @@ class ThermalView(QtWidgets.QWidget):
             (math.floor(ix / self.camera_x), (ix % self.camera_y))
             for ix in range(self.camera_total)
         ]
+
         # i'm not fully sure what this does
         self.grid_x, self.grid_y = np.mgrid[
             0 : self.camera_x - 1 : self.camera_total / 2j,
@@ -109,8 +110,16 @@ class ThermalView(QtWidgets.QWidget):
             for p in pixels
         ]
 
+        # Rotate 90° to orient for mounting correctly
+        float_pixels_matrix = np.reshape(float_pixels, (self.camera_x, self.camera_y))
+        float_pixels_matrix = np.rot90(float_pixels_matrix, 1)
+        rotated_float_pixels = float_pixels_matrix.flatten()
+
         bicubic = scipy.interpolate.griddata(
-            self.points, float_pixels, (self.grid_x, self.grid_y), method="cubic"
+            self.points,
+            rotated_float_pixels,
+            (self.grid_x, self.grid_y),
+            method="cubic",
         )
 
         pen = QtGui.QPen(QtCore.Qt.NoPen)
@@ -295,7 +304,7 @@ class JoystickWidget(BaseTabWidget):
             self.update()
 
         moving_offset_y = self.moving_offset.y()
-        if config.joystick_inverted:
+        if not config.joystick_inverted:
             moving_offset_y = self.height() - moving_offset_y
 
         # print(self.joystick_direction())
