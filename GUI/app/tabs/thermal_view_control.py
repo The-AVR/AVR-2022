@@ -1,7 +1,6 @@
 import base64
 import json
 import math
-import time
 from enum import Enum, auto
 from typing import List, Optional, Tuple
 
@@ -15,17 +14,14 @@ from bell.avr.mqtt.payloads import (
     AvrPcmSetServoAbsPayload,
     AvrPcmSetServoPctPayload,
 )
+from bell.avr.utils.timing import rate_limit
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from ..lib.calc import constrain
+from ..lib.calc import constrain, map_value
+from ..lib.color import wrap_text
+from ..lib.config import config
 from ..lib.widgets import DoubleLineEdit
 from .base import BaseTabWidget
-
-
-def map_value(
-    x: float, in_min: float, in_max: float, out_min: float, out_max: float
-) -> float:
-    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 
 class Direction(Enum):
@@ -72,6 +68,7 @@ class ThermalView(QtWidgets.QWidget):
             (math.floor(ix / self.camera_x), (ix % self.camera_y))
             for ix in range(self.camera_total)
         ]
+
         # i'm not fully sure what this does
         self.grid_x, self.grid_y = np.mgrid[
             0 : self.camera_x - 1 : self.camera_total / 2j,
@@ -113,8 +110,16 @@ class ThermalView(QtWidgets.QWidget):
             for p in pixels
         ]
 
+        # Rotate 90° to orient for mounting correctly
+        float_pixels_matrix = np.reshape(float_pixels, (self.camera_x, self.camera_y))
+        float_pixels_matrix = np.rot90(float_pixels_matrix, 1)
+        rotated_float_pixels = float_pixels_matrix.flatten()
+
         bicubic = scipy.interpolate.griddata(
-            self.points, float_pixels, (self.grid_x, self.grid_y), method="cubic"
+            self.points,
+            rotated_float_pixels,
+            (self.grid_x, self.grid_y),
+            method="cubic",
         )
 
         pen = QtGui.QPen(QtCore.Qt.NoPen)
@@ -143,12 +148,10 @@ class JoystickWidget(BaseTabWidget):
 
         self.setFixedSize(300, 300)
 
-        self.movingOffset = QtCore.QPointF(0, 0)
+        self.moving_offset = QtCore.QPointF(0, 0)
 
-        self.grabCenter = False
-        self.__maxDistance = 100
-
-        self.lasttime = 0
+        self.grab_center = False
+        self.__max_distance = 100
 
         self.current_y = 0
         self.current_x = 0
@@ -192,12 +195,6 @@ class JoystickWidget(BaseTabWidget):
         """
         Update the servos on joystick movement.
         """
-        ms = int(round(time.time() * 1000))
-        timesince = ms - self.lasttime
-        if timesince < 50:
-            return
-        self.lasttime = ms
-
         # y_reversed = 100 - self.current_y
 
         # x_servo_percent = round(map_value(self.current_x, 0, 100, 10, 99))
@@ -228,10 +225,10 @@ class JoystickWidget(BaseTabWidget):
 
         self.move_gimbal_absolute(x_servo_abs, y_servo_abs)
 
-    def _centerEllipse(self) -> QtCore.QRectF:
+    def _center_ellipse(self) -> QtCore.QRectF:
         # sourcery skip: assign-if-exp
-        if self.grabCenter:
-            center = self.movingOffset
+        if self.grab_center:
+            center = self.moving_offset
         else:
             center = self._center()
 
@@ -241,29 +238,29 @@ class JoystickWidget(BaseTabWidget):
         """
         If the joystick is leaving the widget, bound it to the edge of the widget.
         """
-        if point.x() > (self._center().x() + self.__maxDistance):
-            point.setX(int(self._center().x() + self.__maxDistance))
-        elif point.x() < (self._center().x() - self.__maxDistance):
-            point.setX(int(self._center().x() - self.__maxDistance))
+        if point.x() > (self._center().x() + self.__max_distance):
+            point.setX(int(self._center().x() + self.__max_distance))
+        elif point.x() < (self._center().x() - self.__max_distance):
+            point.setX(int(self._center().x() - self.__max_distance))
 
-        if point.y() > (self._center().y() + self.__maxDistance):
-            point.setY(int(self._center().y() + self.__maxDistance))
-        elif point.y() < (self._center().y() - self.__maxDistance):
-            point.setY(int(self._center().y() - self.__maxDistance))
+        if point.y() > (self._center().y() + self.__max_distance):
+            point.setY(int(self._center().y() + self.__max_distance))
+        elif point.y() < (self._center().y() - self.__max_distance):
+            point.setY(int(self._center().y() - self.__max_distance))
         return point
 
     def joystick_direction(self) -> Optional[Tuple[Direction, float]]:
         """
         Retrieve the direction the joystick is moving
         """
-        if not self.grabCenter:
+        if not self.grab_center:
             return None
 
-        normVector = QtCore.QLineF(self._center(), self.movingOffset)
-        currentDistance = normVector.length()
-        angle = normVector.angle()
+        norm_vector = QtCore.QLineF(self._center(), self.moving_offset)
+        current_distance = norm_vector.length()
+        angle = norm_vector.angle()
 
-        distance = min(currentDistance / self.__maxDistance, 1.0)
+        distance = min(current_distance / self.__max_distance, 1.0)
 
         if 45 <= angle < 135:
             return (Direction.Up, distance)
@@ -277,39 +274,46 @@ class JoystickWidget(BaseTabWidget):
     def paintEvent(self, event: QtGui.QPaintEvent) -> None:
         painter = QtGui.QPainter(self)
         bounds = QtCore.QRectF(
-            -self.__maxDistance,
-            -self.__maxDistance,
-            self.__maxDistance * 2,
-            self.__maxDistance * 2,
+            -self.__max_distance,
+            -self.__max_distance,
+            self.__max_distance * 2,
+            self.__max_distance * 2,
         ).translated(self._center())
 
         # painter.drawEllipse(bounds)
         painter.drawRect(bounds)
         painter.setBrush(QtCore.Qt.black)
 
-        painter.drawEllipse(self._centerEllipse())
+        painter.drawEllipse(self._center_ellipse())
 
     def mousePressEvent(self, event: QtGui.QMouseEvent) -> QtGui.QMouseEvent:
         """
         On a mouse press, check if we've clicked on the center of the joystick.
         """
-        self.grabCenter = self._centerEllipse().contains(event.pos())
+        self.grab_center = self._center_ellipse().contains(event.pos())
         return event
 
     def mouseReleaseEvent(self, event: QtCore.QEvent) -> None:
-        # self.grabCenter = False
-        # self.movingOffset = QtCore.QPointF(0, 0)
+        # self.grab_center = False
+        # self.moving_offset = QtCore.QPointF(0, 0)
         self.update()
 
     def mouseMoveEvent(self, event: QtGui.QMouseEvent) -> None:
-        if self.grabCenter:
-            self.movingOffset = self._bound_joystick(event.pos())
+        if self.grab_center:
+            self.moving_offset = self._bound_joystick(event.pos())
             self.update()
 
+        moving_offset_y = self.moving_offset.y()
+        if not config.joystick_inverted:
+            moving_offset_y = self.height() - moving_offset_y
+
         # print(self.joystick_direction())
-        self.current_x = self.movingOffset.x() - self._center().x() + self.__maxDistance
-        self.current_y = self.movingOffset.y() - self._center().y() + self.__maxDistance
-        self.update_servos()
+        self.current_x = (
+            self.moving_offset.x() - self._center().x() + self.__max_distance
+        )
+        self.current_y = moving_offset_y - self._center().y() + self.__max_distance
+
+        rate_limit(self.update_servos, frequency=50)
 
 
 class ThermalViewControlWidget(BaseTabWidget):
@@ -323,6 +327,7 @@ class ThermalViewControlWidget(BaseTabWidget):
         Build the GUI layout
         """
         layout = QtWidgets.QHBoxLayout(self)
+        layout_splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
         self.setLayout(layout)
 
         # viewer
@@ -367,7 +372,7 @@ class ThermalViewControlWidget(BaseTabWidget):
             lambda: self.calibrate_temp()
         )
 
-        layout.addWidget(viewer_groupbox)
+        layout_splitter.addWidget(viewer_groupbox)
 
         # joystick
         joystick_groupbox = QtWidgets.QGroupBox("Joystick")
@@ -380,16 +385,32 @@ class ThermalViewControlWidget(BaseTabWidget):
         self.joystick = JoystickWidget(self)
         sub_joystick_layout.addWidget(self.joystick)
 
-        fire_laser_button = QtWidgets.QPushButton("Laser Fire")
+        fire_laser_button = QtWidgets.QPushButton("Fire Laser")
         joystick_layout.addWidget(fire_laser_button)
 
+        laser_toggle_layout = QtWidgets.QHBoxLayout()
+
         laser_on_button = QtWidgets.QPushButton("Laser On")
-        joystick_layout.addWidget(laser_on_button)
+        laser_toggle_layout.addWidget(laser_on_button)
 
         laser_off_button = QtWidgets.QPushButton("Laser Off")
-        joystick_layout.addWidget(laser_off_button)
+        laser_toggle_layout.addWidget(laser_off_button)
 
-        layout.addWidget(joystick_groupbox)
+        self.laser_toggle_label = QtWidgets.QLabel()
+        self.laser_toggle_label.setAlignment(
+            QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter
+        )
+        laser_toggle_layout.addWidget(self.laser_toggle_label)
+
+        joystick_layout.addLayout(laser_toggle_layout)
+
+        # https://i.imgur.com/yvgNiFE.jpg
+        self.joystick_inverted_checkbox = QtWidgets.QCheckBox("Invert Joystick")
+        joystick_layout.addWidget(self.joystick_inverted_checkbox)
+        self.joystick_inverted_checkbox.setChecked(config.joystick_inverted)
+
+        layout_splitter.addWidget(joystick_groupbox)
+        layout.addWidget(layout_splitter)
 
         # connect signals
         self.joystick.emit_message.connect(self.emit_message.emit)
@@ -398,18 +419,34 @@ class ThermalViewControlWidget(BaseTabWidget):
             lambda: self.send_message("avr/pcm/fire_laser", AvrPcmFireLaserPayload())
         )
 
-        laser_on_button.clicked.connect(  # type: ignore
-            lambda: self.send_message("avr/pcm/set_laser_on", AvrPcmSetLaserOnPayload())
-        )
+        laser_on_button.clicked.connect(lambda: self.set_laser(True))  # type: ignore
+        laser_off_button.clicked.connect(lambda: self.set_laser(False))  # type: ignore
 
-        laser_off_button.clicked.connect(  # type: ignore
-            lambda: self.send_message(
-                "avr/pcm/set_laser_off", AvrPcmSetLaserOffPayload()
-            )
-        )
+        self.joystick_inverted_checkbox.clicked.connect(self.inverted_checkbox_clicked)  # type: ignore
 
         # don't allow us to shrink below size hint
         self.setMinimumSize(self.sizeHint())
+
+    def inverted_checkbox_clicked(self) -> None:
+        """
+        Callback when joystick inverted checkbox is clicked
+        """
+        config.joystick_inverted = self.joystick_inverted_checkbox.isChecked()
+
+    def set_laser(self, state: bool) -> None:
+        if state:
+            topic = "avr/pcm/set_laser_on"
+            payload = AvrPcmSetLaserOnPayload()
+            text = "Laser On"
+            color = "green"
+        else:
+            topic = "avr/pcm/set_laser_off"
+            payload = AvrPcmSetLaserOffPayload()
+            text = "Laser Off"
+            color = "red"
+
+        self.send_message(topic, payload)
+        self.laser_toggle_label.setText(wrap_text(text, color))
 
     def calibrate_temp(self) -> None:
         self.viewer.set_calibrted_temp_range()
