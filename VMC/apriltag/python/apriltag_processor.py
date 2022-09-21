@@ -24,11 +24,11 @@ class AprilTagModule(MQTTModule):
 
         self.config: dict = {
             "cam": {
-                "pos": [13, 0, 8.5],  # cm from FC forward, right, down
+                "pos": [0, 0, 8.5],  # cm from FC forward, right, down
                 "rpy": [
                     0,
                     0,
-                    -math.pi / 2,
+                    math.pi / 2,
                 ],  # cam x = body -y; cam y = body x, cam z = body z
             },
             "tag_truth": {"0": {"rpy": [0, 0, 0], "xyz": [0, 0, 0]}},
