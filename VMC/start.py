@@ -217,9 +217,12 @@ def prepare_compose_file(local: bool = False) -> str:
     mqtt_service(compose_services, local)
     pcm_service(compose_services, local)
     sandbox_service(compose_services)
-    status_service(compose_services, local)
     thermal_service(compose_services, local)
     vio_service(compose_services, local)
+
+    # nvpmodel not available on Windows
+    if os.name != "nt":
+        status_service(compose_services, local)
 
     # construct full dict
     compose_data = {"version": "3", "services": compose_services}
