@@ -31,7 +31,7 @@ Fasten lower prop guard bracket to motor arm using agreed upon method.
 
 {{% alert title="Warning" color="warning" %}}
 Do not allow wet Loctite to come in contact with the polycarbonate prop guards.
-Loctite is caustic to  polycarbonate and can cause the prop guards to crack and ultimately fail.
+Loctite is caustic to polycarbonate and can cause the prop guards to crack and ultimately fail.
 {{% /alert %}}
 
 ![Lower Bracket Fastened to Motor Arm](Lower_bracket_mounting.jpeg)
@@ -76,13 +76,13 @@ Teams may choose from the list of solutions below, but are also encouraged to th
   - Pros: Quick fix, doesn’t require any modifications to drone parts
   - Cons: Spend money and coordinate travel to store
 - Repurpose the M3 x 22mm bolts currently used on the upper landing gear mounts for mounting the prop guards.
-The M3 x 20mm Nylon bolts included in your kit will act as a substitute for the Aluminum bolts on the upper landing gear mount.
+  The M3 x 20mm Nylon bolts included in your kit will act as a substitute for the Aluminum bolts on the upper landing gear mount.
   - Pros: Does not require purchase of additional supplies
   - Cons: Nylon hardware prone to breaking in substitute of Aluminum on landing gear mounting brackets
 - Use Nylon M3 x 20mm bolts and nuts included in your kit to fasten prop guards to motor arms
   - Pros: Does not require purchase of additional supplies
   - Cons: Nylon hardware prone to loosening in a high vibration environment next to the motor.
-          Loosening can be prevented by using a non-loctite thread locker applied to Nylon nuts and bolts. (See previous note about loctite being caustic to poly carbonate.)
+    Loosening can be prevented by using a non-loctite thread locker applied to Nylon nuts and bolts. (See previous note about loctite being caustic to poly carbonate.)
 - Counterbore prop guard motor arm mounting holes to accommodate shorter length Aluminum fasteners included in your kit.
   - Pros: Does not require purchase of any additional supplies.
   - Cons: Run the risk of ruining prop guard components if done improperly, it is aesy. If this approach is attempted, a drill press and appropriately sized end mill are suggested to perform this operation.
