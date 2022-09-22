@@ -133,6 +133,19 @@ Please watch the video below to understand calibrating your gimbal's pan and til
 
 {{< youtube _mtDJYaxGYs >}}
 
+{{% alert title="Note" color="note" %}}
+If you do not have the "invert joystick" option in your GUI be sure you have the
+[latest stable release](https://github.com/bellflight/AVR-2022/releases/tag/stable)
+of the GUI.
+{{% /alert %}}
+
+Code to connect to GUI:
+
+```bash
+cd AVR-2022/VMC
+./start.py run mqtt pcm
+```
+
 ### Pan and Tilt Servo Wiring
 
 You can clean up your servo wiring by using 12" servo extenders. You will run them up through the bottom, mid, and top plates and finally connect them to your PCC as shown in the photo below.
