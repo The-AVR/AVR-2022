@@ -8,11 +8,9 @@ For Bell employees and partners, work items are tracked on [Trello](https://trel
 
 - `.github`: GitHub Actions files
 - `.vscode`: VS Code settings
-- `3DPrints`: 3D printing files and source CAD files
 - `GUI`: All-in-one GUI
 - `PCC`: PCC firmware
 - `PX4`: PX4 and MAVLink files
-- `RVR`: RVR files
 - `scripts`: Development scripts
 - `VMC`: VMC flight software
 

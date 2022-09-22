@@ -25,17 +25,27 @@ class _Config:
         if not os.path.isfile(self.config_file):
             return {}
 
-        with open(self.config_file) as fp:
-            return json.load(fp)
+        try:
+            with open(self.config_file) as fp:
+                return json.load(fp)
+        except json.JSONDecodeError:
+            # on invalid files, just delete it
+            os.remove(self.config_file)
+            return {}
 
     def __write(self, data: dict) -> None:
         with open(self.config_file, "w") as fp:
-            json.dump(data, fp)
+            json.dump(data, fp, indent=4)
 
     def __get(self, key: str, default: Any = None) -> Any:
         data = self.__read()
         if key in data:
             return data[key]
+
+        # if we have a set default value that is not None, write it out
+        if default is not None:
+            self.__set(key, default)
+
         return default
 
     def __set(self, key: str, value: Any) -> None:
@@ -98,6 +108,14 @@ class _Config:
     @log_file_directory.setter
     def log_file_directory(self, value: str) -> None:
         return self.__set("log_file_directory", value)
+
+    @property
+    def joystick_inverted(self) -> bool:
+        return self.__get("joystick_inverted", False)
+
+    @joystick_inverted.setter
+    def joystick_inverted(self, value: bool) -> None:
+        return self.__set("joystick_inverted", value)
 
 
 config = _Config()

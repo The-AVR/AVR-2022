@@ -1,6 +1,5 @@
-black==22.6.0
+black==22.8.0
 isort==5.10.1
-autoflake==1.4
+autoflake==1.5.3
 pyleft==1.1.1
-pyproject-flake8==0.0.1a4
-flake8<5 # https://github.com/csachs/pyproject-flake8/issues/13
+pyproject-flake8==0.0.1a5
