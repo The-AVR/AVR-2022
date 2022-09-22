@@ -1,5 +1,5 @@
 ---
-title: "CSI Camera (Coming Soon)"
+title: "LED Ring (Coming Soon)"
 weight: 6
 ---
 
