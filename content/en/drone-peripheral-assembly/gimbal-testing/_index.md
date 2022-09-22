@@ -52,3 +52,5 @@ cd AVR-2022/VMC/
 navigate to the thermal view tab. You should see your thermal screen be populated.
 Pass your hand in from of the camera to ensure it is seeing heat.
 If it does not, feel free to try the auto-calibrate function or manually tune you calibration.
+
+{{< youtube 0rK_F5VAFig >}}
