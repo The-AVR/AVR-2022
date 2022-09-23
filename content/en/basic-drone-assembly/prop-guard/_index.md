@@ -68,13 +68,13 @@ Repeat on the remaining three motor arms.
 Congrats, you have now properly assembled the prop guards to your AVR drone!
 
 {{% alert title="Note" color="note" %}}
-There are not enough M3 x 22mm bolts included in your kit to assemble the prop guards.
+There are not enough [M3 x 22mm bolts](https://www.mcmaster.com/92095A473/) included in your kit to assemble the prop guards.
 Teams may choose from the list of solutions below, but are also encouraged to think of alternative solutions that are not listed.
 {{% /alert %}}
 
 - Purchase the remaining M3 x 22mm bolts **(Recommended solution)**
   - Pros: Quick fix, doesn’t require any modifications to drone parts
-  - Cons: Spend money and coordinate travel to store
+  - Cons: Spend money and coordinate travel to store or [buy online](https://www.amazon.com/m3-assortment/s?k=m3+assortment)
 - Repurpose the M3 x 22mm bolts currently used on the upper landing gear mounts for mounting the prop guards.
   The M3 x 20mm Nylon bolts included in your kit will act as a substitute for the Aluminum bolts on the upper landing gear mount.
   - Pros: Does not require purchase of additional supplies
