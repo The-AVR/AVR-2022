@@ -1,6 +1,6 @@
 ---
-title: "FPV Camera Testing (Coming Soon)"
-weight: 3
+title: "LED Ring (Coming Soon)"
+weight: 6
 ---
 
 {{% alert title="Stay tuned!" color="success" %}}

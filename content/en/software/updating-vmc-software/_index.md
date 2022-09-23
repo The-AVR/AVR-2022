@@ -56,7 +56,7 @@ directory the repo is cloned to, pull the latest code, and re-run the setup scri
 {{% pageinfo color="warning" %}}
 There have been a lot of changes since your Jetson was preloaded with software.
 Please ensure that you successfully run `git pull` in the following steps.
-{{% /pageinfo %}}D
+{{% /pageinfo %}}
 
 ```bash
 cd ~/AVR-2022/VMC/scripts
