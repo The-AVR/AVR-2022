@@ -139,7 +139,7 @@ If you do not have the "invert joystick" option in your GUI be sure you have the
 of the GUI.
 {{% /alert %}}
 
-Code to connect to GUI:
+Command used in video for starting the services
 
 ```bash
 cd AVR-2022/VMC
