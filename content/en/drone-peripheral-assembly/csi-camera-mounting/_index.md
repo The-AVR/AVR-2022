@@ -1,6 +1,6 @@
 ---
 title: "CSI Camera (Coming Soon)"
-weight: 6
+weight: 4
 ---
 
 {{% alert title="Stay tuned!" color="success" %}}
