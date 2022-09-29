@@ -12,3 +12,5 @@ weight: 5
 ![Adhesive for mounting LED](led_status_4.jpg)
 
 ![LED mounted on rear side of cooling fan](led_status_5.jpg)
+
+{{< youtube 7TZ5N8Uggcs >}}
