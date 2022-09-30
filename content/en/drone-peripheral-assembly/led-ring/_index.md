@@ -3,7 +3,7 @@ title: "LED Ring"
 weight: 6
 ---
 
-This sections how to hook assemble your LED light ring which will be used to communicate from the field back to teams.
+In this section we cover how to install your LED light ring which will be used to communicate from the field back to teams.
 
 ![LED ring](led_ring_1.jpg)
 
