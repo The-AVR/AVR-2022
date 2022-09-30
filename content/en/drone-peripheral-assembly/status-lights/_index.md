@@ -11,7 +11,7 @@ To complete the status light installation you will need the following.
 
 ## Wiring
 
-Wire the green wire to DIN, red wire to 5VDC, and black wire to Ground.
+Wire the green wire to DIN, red wire to 5VDC, and black wire to Ground. Remove the plastic housing from other end of the wires.
 
 ![LED soldered and ready for VMC wiring](led_status_2.jpg)
 
@@ -25,7 +25,7 @@ This should result in the following.
 
 ## Mounting
 
-Use 3M double sided tape foam tape to mount to the fan of the jetson facing  towards the rear of the drone.
+Use 3M double-sided foam tape to mount to the fan of the Jetson facing towards the rear of the drone.
 
 ![Adhesive for mounting LED](led_status_4.jpg)
 
@@ -42,8 +42,8 @@ cd AVR-2022/VMC/
 ./start.py run -n
 ```
 
-Feel free to explore and try different combinations for what you thing is the most useful information.
-For instance is you are doing just a flight test with no peripherals you may want to try the following.
+Feel free to explore and try different combinations for what you think is the most useful information.
+For instance if you are doing just a flight test with no peripherals you may want to try the following.
 
 ```bash
 cd AVR-2022/VMC/
@@ -52,10 +52,10 @@ cd AVR-2022/VMC/
 
 ## Light Definition
 
-| Module:     | Message:        | LED:    | Color:|
-|-------------|-----------------|---------|-------|
-| VIO:        | "avr/vio"       | 1       | PURPLE|
-| PCM:        | "avr/pcm"       | 2       | AQUA  |
-| Thermal:    | "avr/thermal"   | 3       | BLUE  |
-| FCC:        | "avr/fcm"       | 4       | ORANGE|
-| AprilTag:   | "avr/apriltags" | 5       | YELLOW|
+| Module:   | Message:        | LED: | Color: |
+| --------- | --------------- | ---- | ------ |
+| VIO:      | "avr/vio"       | 1    | PURPLE |
+| PCM:      | "avr/pcm"       | 2    | AQUA   |
+| Thermal:  | "avr/thermal"   | 3    | BLUE   |
+| FCC:      | "avr/fcm"       | 4    | ORANGE |
+| AprilTag: | "avr/apriltags" | 5    | YELLOW |
