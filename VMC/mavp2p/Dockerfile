@@ -1,6 +1,6 @@
 FROM docker.io/arm64v8/alpine:3
 
-ENV MAVP2P_VERSION=0.7.0
+ENV MAVP2P_VERSION=0.6.5
 WORKDIR /app
 
 RUN apk add wget tar
