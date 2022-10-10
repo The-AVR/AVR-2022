@@ -226,7 +226,7 @@ class JoystickWidget(BaseTabWidget):
             map_value(y_reversed, 25, 225, self.SERVO_ABS_MIN, self.SERVO_ABS_MAX)
         )
 
-        self.move_gimbal_absolute(x_servo_abs, y_servo_abs)
+        # self.move_gimbal_absolute(x_servo_abs, y_servo_abs)
 
     def _centerEllipse(self) -> QtCore.QRectF:
         # sourcery skip: assign-if-exp
