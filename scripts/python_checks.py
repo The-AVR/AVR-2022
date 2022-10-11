@@ -25,7 +25,6 @@ def main(directory: str, checks: List[str]) -> None:
                 sys.executable,
                 "-m",
                 "autoflake",
-                "--recursive",
                 directory,
                 "--check",
             ]

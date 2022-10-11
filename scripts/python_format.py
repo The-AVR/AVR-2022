@@ -22,8 +22,6 @@ def main(directory: str, formatters: List[str]) -> None:
                 sys.executable,
                 "-m",
                 "autoflake",
-                "--recursive",
-                "--in-place",
                 "--remove-all-unused-imports",
                 directory,
             ]
