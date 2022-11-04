@@ -31,7 +31,7 @@ class MainConnectionWidget(BaseTabWidget):
         mqtt_layout.addWidget(self.mqtt_connection_widget)
 
         mqtt_groupbox.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed
         )
         layout.addWidget(mqtt_groupbox)
 
@@ -44,6 +44,6 @@ class MainConnectionWidget(BaseTabWidget):
         serial_layout.addWidget(self.serial_connection_widget)
 
         serial_groupbox.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed
         )
         layout.addWidget(serial_groupbox)

@@ -153,19 +153,19 @@ class MQTTDebugWidget(BaseTabWidget):
         layout = QtWidgets.QVBoxLayout(self)
         self.setLayout(layout)
 
-        main_layout = QtWidgets.QSplitter(QtCore.Qt.Vertical)
+        main_layout = QtWidgets.QSplitter(QtCore.Qt.Orientation.Vertical)
         layout.addWidget(main_layout)
 
         # viewing widget
         viewer_widget = QtWidgets.QGroupBox("Viewer")
         viewer_layout = QtWidgets.QVBoxLayout()
-        viewer_splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
+        viewer_splitter = QtWidgets.QSplitter(QtCore.Qt.Orientation.Horizontal)
         viewer_widget.setLayout(viewer_layout)
 
         self.tree_widget = ExpandCollapseQTreeWidget(self)
         self.tree_widget.setHeaderLabels(["Topic", "# Messages"])
         self.tree_widget.setSortingEnabled(True)
-        self.tree_widget.sortByColumn(0, QtCore.Qt.AscendingOrder)
+        self.tree_widget.sortByColumn(0, QtCore.Qt.SortOrder.AscendingOrder)
         self.tree_widget.setAnimated(True)
         self.tree_widget.setIndentation(10)
         self.tree_widget.itemSelectionChanged.connect(self.connect_topic_to_display)  # type: ignore
@@ -193,10 +193,10 @@ class MQTTDebugWidget(BaseTabWidget):
         self.topic_combo_box.addItems(list(MQTTTopics))
         # allow custom text, but don't modify the original data set
         self.topic_combo_box.setEditable(True)
-        self.topic_combo_box.setInsertPolicy(QtWidgets.QComboBox.NoInsert)
+        self.topic_combo_box.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
         # change completer to have a popup
         self.topic_combo_box.completer().setCompletionMode(
-            QtWidgets.QCompleter.PopupCompletion
+            QtWidgets.QCompleter.CompletionMode.PopupCompletion
         )
         self.topic_combo_box.setCurrentText("")
         sender_layout.addRow(QtWidgets.QLabel("Topic:"), self.topic_combo_box)
@@ -365,8 +365,8 @@ class MQTTDebugWidget(BaseTabWidget):
         """
         topic = _rebuild_topic(item)
 
-        self.clipboard.clear(mode=self.clipboard.Clipboard)
-        self.clipboard.setText(topic, mode=self.clipboard.Clipboard)
+        self.clipboard.clear(mode=self.clipboard.Mode.Clipboard)
+        self.clipboard.setText(topic, mode=self.clipboard.Mode.Clipboard)
 
     def copy_payload(self, item: QtWidgets.QTreeWidgetItem) -> None:
         """
@@ -375,8 +375,8 @@ class MQTTDebugWidget(BaseTabWidget):
         topic = _rebuild_topic(item)
         payload = self.get_payload(topic)
 
-        self.clipboard.clear(mode=self.clipboard.Clipboard)
-        self.clipboard.setText(payload, mode=self.clipboard.Clipboard)
+        self.clipboard.clear(mode=self.clipboard.Mode.Clipboard)
+        self.clipboard.setText(payload, mode=self.clipboard.Mode.Clipboard)
 
     def preload_data(self, item: QtWidgets.QTreeWidgetItem) -> None:
         """
