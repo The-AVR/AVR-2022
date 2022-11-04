@@ -38,7 +38,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         # top groupbox
         top_groupbox = QtWidgets.QGroupBox("FCC Status")
         top_groupbox.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed
         )
         top_layout = QtWidgets.QFormLayout()
         top_groupbox.setLayout(top_layout)
@@ -73,7 +73,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         # bottom groupbox
         bottom_group = QtWidgets.QFrame()
         bottom_group.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed
         )
         bottom_layout = QtWidgets.QHBoxLayout()
         bottom_group.setLayout(bottom_layout)
@@ -163,7 +163,7 @@ class VMCTelemetryWidget(BaseTabWidget):
         # Status
         module_status_groupbox = QtWidgets.QGroupBox("Module Status")
         module_status_groupbox.setSizePolicy(
-            QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Fixed
+            QtWidgets.QSizePolicy.Policy.Expanding, QtWidgets.QSizePolicy.Policy.Fixed
         )
         module_status_layout = QtWidgets.QHBoxLayout()
         module_status_groupbox.setLayout(module_status_layout)

@@ -42,7 +42,7 @@ class AutonomyWidget(BaseTabWidget):
 
         self.autonomous_label = QtWidgets.QLabel()
         self.autonomous_label.setAlignment(
-            QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter
+            QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter
         )
         autonomous_layout.addWidget(self.autonomous_label)
 
@@ -83,7 +83,10 @@ class AutonomyWidget(BaseTabWidget):
             building_layout.addWidget(building_disable_button)
 
             building_label = QtWidgets.QLabel()
-            building_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            building_label.setAlignment(
+                QtCore.Qt.AlignmentFlag.AlignRight
+                | QtCore.Qt.AlignmentFlag.AlignVCenter
+            )
             building_layout.addWidget(building_label)
             self.building_labels.append(building_label)
 
