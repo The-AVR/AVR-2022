@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import contextlib
 import json
-from typing import Any, Dict, List, Optional, Tuple
+import functools
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from bell.avr.mqtt.constants import MQTTTopicPayload, MQTTTopics
 from PySide6 import QtCore, QtGui, QtWidgets
@@ -10,50 +11,24 @@ from PySide6 import QtCore, QtGui, QtWidgets
 from .base import BaseTabWidget
 
 
-def _get_or_create_child(
-    parent: QtWidgets.QTreeWidgetItem, name: str
-) -> QtWidgets.QTreeWidgetItem:
-    """
-    Gets the child QTreeWidgetItem of a QTreeWidgetItem matching the given name.
-    If one does not exists, creates and returns a new one.
-    """
-    # try to find matching item in parent
-    for i in range(parent.childCount()):
-        child = parent.child(i)
-        if child.text(0) == name:
-            return child
+class MQTTQTreeWidgetItem(QtWidgets.QTreeWidgetItem):
 
-    # create new item
-    return QtWidgets.QTreeWidgetItem(parent, [name])
+    @functools.lru_cache()
+    def topic(self) -> str:
+        """
+        Rebuild the MQTT topic of a QTreeWidgetItem.
+        """
+        # build a list of the parents
+        parents: List[QtWidgets.QTreeWidgetItem] = [self]
 
+        parent = self.parent()
+        while parent is not None:
+            parents.insert(0, parent)
+            item = parent
+            parent = item.parent()
 
-def _get_parents(item: QtWidgets.QTreeWidgetItem) -> List[QtWidgets.QTreeWidgetItem]:
-    """
-    Gets a list of parent QTreeWidgetItems of a QTreeWidgetItem.
-    The list will be in order from top down, and include the original item.
-    """
-    # skip if selected item is None
-    if item is None:
-        return []
-
-    # build a list of the parents
-    parents = [item]
-
-    parent = item.parent()
-    while parent is not None:
-        parents.insert(0, parent)
-        item = parent
-        parent = item.parent()
-
-    return parents
-
-
-def _rebuild_topic(item: QtWidgets.QTreeWidgetItem) -> str:
-    """
-    Rebuild the MQTT topic of a QTreeWidgetItem.
-    """
-    return "/".join(p.text(0) for p in _get_parents(item))
-
+        # rejoin everything by slashes
+        return "/".join(p.text(0) for p in parents)
 
 class ExpandCollapseQTreeWidget(QtWidgets.QTreeWidget):
     # This widget is a subclass of QTreeWidget with a right-click menu
@@ -122,6 +97,20 @@ class ExpandCollapseQTreeWidget(QtWidgets.QTreeWidget):
             child.setExpanded(expand)
             self.expand_children(child, expand)
 
+    def currentItem(self) -> MQTTQTreeWidgetItem:
+        return super().currentItem() # type: ignore
+
+    def all_items(self, parent: Optional[Union[MQTTQTreeWidgetItem, ExpandCollapseQTreeWidget]] = None) -> List[MQTTQTreeWidgetItem]:
+        if parent is None:
+            parent  = self
+
+        items = []
+        for i in parent.childCount():
+            item = parent.child(i)
+            items.append(item)
+            items.extend(self.all_items(item))
+
+        return items
 
 class MQTTDebugWidget(BaseTabWidget):
     # This widget is an effective clone of MQTT Explorer for diagnostic purposes.
@@ -161,6 +150,11 @@ class MQTTDebugWidget(BaseTabWidget):
         viewer_layout = QtWidgets.QVBoxLayout()
         viewer_splitter = QtWidgets.QSplitter(QtCore.Qt.Orientation.Horizontal)
         viewer_widget.setLayout(viewer_layout)
+
+        topic_filter_layout = QtWidgets.QFormLayout()
+        self.topic_filter_line_edit = QtWidgets.QLineEdit()
+        topic_filter_layout.addRow(QtWidgets.QLabel("Filter:"), self.topic_filter_line_edit)
+        viewer_layout.addLayout(topic_filter_layout)
 
         self.tree_widget = ExpandCollapseQTreeWidget(self)
         self.tree_widget.setHeaderLabels(["Topic", "# Messages"])
@@ -244,6 +238,23 @@ class MQTTDebugWidget(BaseTabWidget):
         else:
             self.running_button.setText("Paused")
 
+    def _get_or_create_child(
+        self, parent: QtWidgets.QTreeWidgetItem, name: str
+    ) -> MQTTQTreeWidgetItem:
+        """
+        Gets the child QTreeWidgetItem of a QTreeWidgetItem matching the given name.
+        If one does not exists, creates and returns a new one.
+        """
+        # try to find matching item in parent
+        for i in range(parent.childCount()):
+            child = parent.child(i)
+            if child.text(0) == name:
+                return child
+
+        # create new item
+        return MQTTQTreeWidgetItem(parent, [name])
+
+
     def process_message(self, topic: str, payload: str) -> None:
         # sourcery skip: assign-if-exp
         """
@@ -262,7 +273,7 @@ class MQTTDebugWidget(BaseTabWidget):
 
         for i, part in enumerate(topic_parts):
             # get or create the child
-            item = _get_or_create_child(item, part)
+            item = self._get_or_create_child(item, part)
 
             # build the topic name to this part
             partial_topic = "/".join(topic_parts[: i + 1])
@@ -295,7 +306,7 @@ class MQTTDebugWidget(BaseTabWidget):
         When an item is clicked, get the topic for it, and connect it to the data view
         """
         # rebuild the topic name
-        topic = _rebuild_topic(self.tree_widget.currentItem())
+        topic = self.tree_widget.currentItem().topic()
 
         # if the selected item isn't a real topic, clear
         if topic not in self.topic_payloads.keys():
@@ -359,33 +370,29 @@ class MQTTDebugWidget(BaseTabWidget):
 
         self.topic_timer[topic] = timer
 
-    def copy_topic(self, item: QtWidgets.QTreeWidgetItem) -> None:
+    def copy_topic(self, item: MQTTQTreeWidgetItem) -> None:
         """
         Copy the topic of a given QTreeWidgetItem to the clipboard
         """
-        topic = _rebuild_topic(item)
-
         self.clipboard.clear(mode=self.clipboard.Mode.Clipboard)
-        self.clipboard.setText(topic, mode=self.clipboard.Mode.Clipboard)
+        self.clipboard.setText(item.topic(), mode=self.clipboard.Mode.Clipboard)
 
-    def copy_payload(self, item: QtWidgets.QTreeWidgetItem) -> None:
+    def copy_payload(self, item: MQTTQTreeWidgetItem) -> None:
         """
         Copy the payload of a given QTreeWidgetItem to the clipboard
         """
-        topic = _rebuild_topic(item)
-        payload = self.get_payload(topic)
+        payload = self.get_payload(item.topic())
 
         self.clipboard.clear(mode=self.clipboard.Mode.Clipboard)
         self.clipboard.setText(payload, mode=self.clipboard.Mode.Clipboard)
 
-    def preload_data(self, item: QtWidgets.QTreeWidgetItem) -> None:
+    def preload_data(self, item: MQTTQTreeWidgetItem) -> None:
         """
         Preload data into the sender from a selected QTreeWidgetItem.
         """
-        topic = _rebuild_topic(item)
-        payload = self.get_payload(topic)
+        payload = self.get_payload(item.topic())
 
-        self.topic_combo_box.setCurrentText(topic)
+        self.topic_combo_box.setCurrentText(item.topic())
         self.payload_text_edit.setPlainText(payload)
 
     def reset_payload_text_edit_interaction(self) -> None:
@@ -414,3 +421,8 @@ class MQTTDebugWidget(BaseTabWidget):
         self.payload_text_edit.blockSignals(False)
 
         self.payload_text_edit_interaction = False
+
+    def filter_topic(self) -> None:
+        """
+        Filter items in the QTreeWidget based on the given filter.
+        """
