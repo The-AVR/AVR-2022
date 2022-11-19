@@ -32,7 +32,7 @@ class LogFileViewWidget(QtWidgets.QTreeView):
         self.setItemsExpandable(False)
 
         self.setSortingEnabled(True)
-        self.sortByColumn(0, QtCore.Qt.DescendingOrder)
+        self.sortByColumn(0, QtCore.Qt.SortOrder.DescendingOrder)
 
         # open files on double click
         self.doubleClicked.connect(lambda index: os.startfile(self.filesystem_model.filePath(index)))  # type: ignore

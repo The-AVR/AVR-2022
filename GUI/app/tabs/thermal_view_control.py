@@ -121,7 +121,7 @@ class ThermalView(QtWidgets.QWidget):
             method="cubic",
         )
 
-        pen = QtGui.QPen(QtCore.Qt.NoPen)
+        pen = QtGui.QPen(QtCore.Qt.PenStyle.NoPen)
         self.canvas.clear()
 
         for ix, row in enumerate(bicubic):
@@ -281,7 +281,7 @@ class JoystickWidget(BaseTabWidget):
 
         # painter.drawEllipse(bounds)
         painter.drawRect(bounds)
-        painter.setBrush(QtCore.Qt.black)
+        painter.setBrush(QtCore.Qt.GlobalColor.black)
 
         painter.drawEllipse(self._center_ellipse())
 
@@ -326,7 +326,7 @@ class ThermalViewControlWidget(BaseTabWidget):
         Build the GUI layout
         """
         layout = QtWidgets.QHBoxLayout(self)
-        layout_splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
+        layout_splitter = QtWidgets.QSplitter(QtCore.Qt.Orientation.Horizontal)
         self.setLayout(layout)
 
         # viewer
@@ -397,7 +397,7 @@ class ThermalViewControlWidget(BaseTabWidget):
 
         self.laser_toggle_label = QtWidgets.QLabel()
         self.laser_toggle_label.setAlignment(
-            QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter
+            QtCore.Qt.AlignmentFlag.AlignRight | QtCore.Qt.AlignmentFlag.AlignVCenter
         )
         laser_toggle_layout.addWidget(self.laser_toggle_label)
 

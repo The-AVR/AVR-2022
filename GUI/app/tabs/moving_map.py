@@ -82,8 +82,8 @@ class AttitudeIndicator(QtWidgets.QGraphicsView):
         # styling
         self.setFixedSize(self._original_width, self._original_height)
         self.setStyleSheet("background: transparent; border: none")
-        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
         # create a graphics scene to draw on
         self._scene = QtWidgets.QGraphicsScene(self)
@@ -246,7 +246,9 @@ class DroneAltitudeWidget(QtWidgets.QWidget):
         sub_layout.addStretch()
 
         layout.addLayout(sub_layout)
-        self.setSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        self.setSizePolicy(
+            QtWidgets.QSizePolicy.Policy.Fixed, QtWidgets.QSizePolicy.Policy.Fixed
+        )
 
         # put drone on the ground
         self.set_altitude(0)
@@ -302,18 +304,18 @@ class MovingMapGraphicsView(QtWidgets.QGraphicsView):
         """
         Enable panning within the view.
         """
-        self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
-        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
-        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
+        self.setDragMode(QtWidgets.QGraphicsView.DragMode.ScrollHandDrag)
+        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
+        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAsNeeded)
 
     def disable_panning(self) -> None:
         """
         Disable panning within the view, if the viewport is being
         driven programmatically
         """
-        self.setDragMode(QtWidgets.QGraphicsView.NoDrag)
-        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
-        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
+        self.setDragMode(QtWidgets.QGraphicsView.DragMode.NoDrag)
+        self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+        self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
 
 
 class InfiniteGridGraphicsScene(QtWidgets.QGraphicsScene):

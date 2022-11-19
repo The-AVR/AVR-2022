@@ -92,7 +92,10 @@ class VMCControlWidget(BaseTabWidget):
             servo_layout.addWidget(servo_close_button)
 
             servo_label = QtWidgets.QLabel()
-            servo_label.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
+            servo_label.setAlignment(
+                QtCore.Qt.AlignmentFlag.AlignRight
+                | QtCore.Qt.AlignmentFlag.AlignVCenter
+            )
             servo_layout.addWidget(servo_label)
             self.servo_labels.append(servo_label)
 
