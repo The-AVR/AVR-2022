@@ -4,6 +4,8 @@ import argparse
 import contextlib
 import json
 import os
+import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -201,6 +203,21 @@ def main(development):
     # gotten from `sudo /opt/nvidia/jetson-io/config-by-pin.py -l`
     # https://docs.nvidia.com/jetson/archives/r34.1/DeveloperGuide/text/HR/ConfiguringTheJetsonExpansionHeaders.html#config-by-function-configure-header-s-by-special-function
     print("Enabling SPI")
+
+    # fix weird out-of-the-box issues
+    # https://github.com/JetsonHacksNano/SPI-Playground
+    jetson_io_root = "/opt/nvidia/jetson-io/"
+    # touch __init__.py files one directory level down
+    for item in os.listdir(jetson_io_root):
+        if os.path.isdir(os.path.join(jetson_io_root, item)):
+            pathlib.Path(os.path.join(jetson_io_root, item, "__init__.py")).touch()
+    # make sure the "/boot/dtb" folder exists
+    os.makedirs("/boot/dtb", exist_ok=True)
+    # copy tegra210 device tree boot files
+    for item in os.listdir("/boot/"):
+        if re.match("tegra210-p3448-0000-p3449-0000-[ab]0[012].dtb", item):
+            shutil.copy(os.path.join("/boot/", item), "/boot/dtb/")
+
     subprocess.check_call(["python3", "/opt/nvidia/jetson-io/config-by-function.py", "-o", "dtb", '1=spi1'])
     print_bar()
 
@@ -259,8 +276,9 @@ def main(development):
     for service in services:
         print(f"Installing {service}")
         shutil.copy(os.path.join(AVR_DIR, "VMC", "scripts", service), "/etc/systemd/system/")
-        subprocess.check_call(["systemctl", "enable", service])
-        subprocess.check_call(["systemctl", "start", service])
+        # SPI mount service will not work until Jetson is rebooted after enabling SPI
+        subprocess.run(["systemctl", "enable", service], check= service!="spio-mount.service")
+        subprocess.run(["systemctl", "start", service], check= service!="spio-mount.service")
     print_bar()
 
 
@@ -308,6 +326,7 @@ def main(development):
 
 
     print_title("Cleaning Up")
+    subprocess.check_call(["apt-get", "purge", "thunderbird", "libreoffice"])
     subprocess.check_call(["apt-get", "autoremove", "-y"])
     subprocess.check_call(["docker", "system", "prune", "-f"])
     print_bar()
