@@ -326,7 +326,8 @@ def main(development):
 
 
     print_title("Cleaning Up")
-    subprocess.check_call(["apt-get", "purge", "thunderbird", "libreoffice"])
+    # remove some extra software
+    subprocess.check_call(["apt-get", "purge", "vlc*", "leafpad", "rhythmbox*", "thunderbird", "libreoffice*", "-y"])
     subprocess.check_call(["apt-get", "autoremove", "-y"])
     subprocess.check_call(["docker", "system", "prune", "-f"])
     print_bar()
