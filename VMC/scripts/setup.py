@@ -116,8 +116,21 @@ def main(development):
     print(f"{NC}")
     print_bar()
 
-    print_title("Checking git Status")
     orig_username = subprocess.check_output(["id", "-nu", os.environ["SUDO_UID"]]).decode("utf-8").strip()
+
+    print_title("Enabling Passwordless Sudo")
+    new_line = f"{orig_username} ALL=(ALL) NOPASSWD: ALL\n"
+
+    with open("/etc/sudoers", "r") as fp:
+        lines = fp.readlines()
+
+    if new_line not in lines:
+        with open("/etc/sudoers", "w") as fp:
+            fp.writelines(lines + [new_line])
+    print_bar()
+
+
+    print_title("Checking git Status")
     # run a few commands as the original user, so as not to break permissons
     print("Configuring credential cache")
     subprocess.check_call(original_user_cmd(orig_username, ["git", "config", "--global", "credential.helper", "cache"]))
