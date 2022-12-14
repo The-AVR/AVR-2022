@@ -162,6 +162,18 @@ def main(development):
     subprocess.check_call(original_user_cmd(orig_username, ["git", f"--git-dir={os.path.join(AVR_DIR, '.git')}", "--work-tree=.", "-C", AVR_DIR, "submodule", "update", "--init", "--recursive"]), cwd=AVR_DIR)
     print_bar()
 
+    print_title("Creating symlinks")
+    symlink_sources = [
+        os.path.join(AVR_DIR, "VMC", "start.py"),
+        os.path.join(AVR_DIR, "VMC", "scripts", "setup.py"),
+        os.path.join(AVR_DIR, "VMC", "scripts", "wifi.py")]
+
+    for source in symlink_sources:
+        if not os.path.isfile(source):
+            os.link(source, os.path.join(os.path.expanduser("~"), os.path.basename(source)))
+    print_bar()
+
+
 
     print_title("Updating Package Index")
     subprocess.check_call(["apt-get", "update"])
@@ -170,9 +182,7 @@ def main(development):
 
 
     print_title("Upgrading System Packages")
-    non_interactive_env = os.environ.copy()
-    non_interactive_env["DEBIAN_FRONTEND"] = "noninteractive"
-    subprocess.check_call(["apt-get", "upgrade", "-y"], env=non_interactive_env)
+    subprocess.check_call(["apt-get", "upgrade", "-y"], env={**os.environ, "DEBIAN_FRONTEND": "noninteractive"})
     print_bar()
 
 
@@ -193,7 +203,7 @@ def main(development):
         "python3-pip",
     ]
     print("Installing apt Packages")
-    subprocess.check_call(["apt-get", "install", "-y"] + packages)
+    subprocess.check_call(["apt-get", "install", "-y"] + packages, env={**os.environ, "DEBIAN_FRONTEND": "noninteractive"})
 
     # install pip packages
     print("Installing Python Packages")
@@ -219,17 +229,26 @@ def main(development):
 
     # fix weird out-of-the-box issues
     # https://github.com/JetsonHacksNano/SPI-Playground
+
     jetson_io_root = "/opt/nvidia/jetson-io/"
     # touch __init__.py files one directory level down
+
     for item in os.listdir(jetson_io_root):
         if os.path.isdir(os.path.join(jetson_io_root, item)):
             pathlib.Path(os.path.join(jetson_io_root, item, "__init__.py")).touch()
+
     # make sure the "/boot/dtb" folder exists
     os.makedirs("/boot/dtb", exist_ok=True)
+
     # copy tegra210 device tree boot files
     for item in os.listdir("/boot/"):
         if re.match("tegra210-p3448-0000-p3449-0000-[ab]0[012].dtb", item):
+            print(f"Copying {item}")
             shutil.copy(os.path.join("/boot/", item), "/boot/dtb/")
+
+    # delete this file that seems to cause problems
+    if os.path.isfile("/boot/dtb/kernel_tegra210-p3448-0000-p3449-0000-b00.dtb"):
+        os.remove("/boot/dtb/kernel_tegra210-p3448-0000-p3449-0000-b00.dtb")
 
     subprocess.check_call(["python3", "/opt/nvidia/jetson-io/config-by-function.py", "-o", "dtb", '1=spi1'])
     print_bar()
