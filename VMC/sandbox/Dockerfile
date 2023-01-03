@@ -29,4 +29,5 @@ RUN python -m pip install pip wheel --upgrade && \
 COPY . .
 
 # Finally, start the container running our code.
-CMD ["python", "sandbox.py"]
+CMD ["python", "armed_indicator_threaded.py"]
+#CMD ["python", "armed_indicator_callback.py"]
