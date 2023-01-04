@@ -19,3 +19,8 @@ jobs:
     uses: ./.github/workflows/container.yml
     with:
       image: "fcm"
+
+  fcm_x86:
+    uses: ./.github/workflows/container_x86_64.yml
+    with:
+      image: "fcm"

@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import warnings
+import json
 from typing import Any, List
 
 import yaml
@@ -222,6 +223,20 @@ def vio_service(compose_services: dict, local: bool = False) -> None:
 
     compose_services["vio"] = vio_data
 
+def px4_service(compose_services: dict, local: bool = False) -> None:
+    with open(os.path.join(THIS_DIR, "..", "PX4", "version.json"), "r") as fp:
+        PX4_VERSION = json.load(fp)
+
+    px4_data = {
+        "build" : {
+            "context" :  os.path.join(THIS_DIR, "..", "PX4", "docker"),
+            "args" : {
+                        "PX4_VER" : PX4_VERSION,
+                    }
+            }
+        }   
+    compose_services["px4"] = px4_data
+             
 
 def prepare_compose_file(local: bool = False, sim: bool = False) -> str:
     # prepare compose services dict
@@ -236,6 +251,7 @@ def prepare_compose_file(local: bool = False, sim: bool = False) -> str:
     sandbox_service(compose_services)
     thermal_service(compose_services, local)
     vio_service(compose_services, local)
+    px4_service(compose_services, local)
 
     # nvpmodel not available on Windows
     if os.name != "nt":
@@ -304,7 +320,7 @@ if __name__ == "__main__":
 
     min_modules = ["fcm", "fusion", "mavp2p", "mqtt", "vio"]
     norm_modules = min_modules + ["apriltag", "pcm", "status", "thermal"]
-    sim_modules = ["fcm", "mavp2p", "mqtt"]
+    sim_modules = [ "fcm", "mavp2p", "mqtt", "px4"]
     all_modules = norm_modules + ["sandbox"]
 
 

@@ -6,6 +6,7 @@ import json
 import os
 import shutil
 import subprocess
+from subprocess import Popen, PIPE, CalledProcessError
 import sys
 
 # colors
@@ -313,7 +314,14 @@ def main(development, sim):
 
     if development or sim:
         cmd.append("--local")
-    subprocess.check_call(cmd)
+
+    with Popen(cmd, stdout=PIPE, bufsize=1, universal_newlines=True) as p:
+        for line in p.stdout:
+            print(line, end='') # process line here
+
+    if p.returncode != 0:
+        raise CalledProcessError(p.returncode, p.args)
+    # subprocess.check_call(cmd)
     print_bar()
 
 

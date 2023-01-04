@@ -1,0 +1,74 @@
+name: Build Container
+
+on:
+  workflow_call:
+    inputs:
+      image:
+        required: true
+        type: string
+
+jobs:
+  container-build:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, 'ci skip')"
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+        with:
+          platforms: amd64
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Cache PX4
+        if: inputs.image == 'fcm'
+        uses: actions/cache@v3
+        with:
+          path: PX4/build
+          # can't run hashfiles on the build directory because the contents change
+          key: px4-pymavlink-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+          # changing PX4 version requires a full re-checkout
+          restore-keys: |
+            px4-pymavlink-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}
+            px4-pymavlink-${{ hashFiles('PX4/version.json') }}
+            px4-firmware-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}-${{ hashFiles('PX4/bell.xml') }}
+            px4-firmware-${{ hashFiles('PX4/version.json') }}-${{ hashFiles('PX4/patches/**') }}
+            px4-firmware-${{ hashFiles('PX4/version.json') }}
+
+      - name: Build Custom Pymavlink Package
+        if: inputs.image == 'fcm'
+        run: python PX4/build.py --pymavlink
+
+      - name: Github CR Login
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Date
+        run: echo "DATE_TAG=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
+
+      - name: Build Container
+        uses: docker/build-push-action@v3
+        with:
+          context: VMC/${{ inputs.image }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ghcr.io/bellflight/avr/2022/${{ inputs.image }}:x86_64.latest
+            ghcr.io/bellflight/avr/2022/${{ inputs.image }}:x86_64.${{ env.DATE_TAG }}
+          platforms: linux/amd64
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
