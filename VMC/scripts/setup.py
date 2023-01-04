@@ -60,8 +60,8 @@ def original_user_cmd(username, cmd):
     return ["sudo", "-u", username, "-i"] + cmd
 
 
-def main(development):
-    if not os.path.isdir(AVR_DIR):
+def main(development, sim):
+    if not os.path.isdir(AVR_DIR) and not sim:
         print(f"AVR repository has not been cloned to {AVR_DIR}")
         print(f"Do this with 'git clone --recurse-submodules https://github.com/bellflight/AVR-2022 {AVR_DIR}'")
         sys.exit(1)
@@ -126,7 +126,7 @@ def main(development):
     # because of weird situations
     with contextlib.suppress(subprocess.CalledProcessError):
         # check if we're on the main branch
-        if not development:
+        if not development and not sim:
             print("Making sure we're on the main branch")
             current_branch = subprocess.check_output(original_user_cmd(orig_username, ["git", "rev-parse", "--abbrev-ref", "HEAD"]), cwd=AVR_DIR).decode("utf-8").strip()
             if current_branch != "main":
@@ -190,19 +190,19 @@ def main(development):
     print_bar()
 
 
+    if not sim:
+        print_title("Configuring Jetson Settings")
+        # set to high-power 10W mode. 1 is 5W mode
+        print("Setting power mode")
+        subprocess.check_call(["nvpmodel", "-m", "0"])
 
-    print_title("Configuring Jetson Settings")
-    # set to high-power 10W mode. 1 is 5W mode
-    print("Setting power mode")
-    subprocess.check_call(["nvpmodel", "-m", "0"])
-
-    # make sure SPI is enabled
-    # header 1 is the 40pin header
-    # gotten from `sudo /opt/nvidia/jetson-io/config-by-pin.py -l`
-    # https://docs.nvidia.com/jetson/archives/r34.1/DeveloperGuide/text/HR/ConfiguringTheJetsonExpansionHeaders.html#config-by-function-configure-header-s-by-special-function
-    print("Enabling SPI")
-    subprocess.check_call(["python3", "/opt/nvidia/jetson-io/config-by-function.py", "-o", "dtb", '1=spi1'])
-    print_bar()
+        # make sure SPI is enabled
+        # header 1 is the 40pin header
+        # gotten from `sudo /opt/nvidia/jetson-io/config-by-pin.py -l`
+        # https://docs.nvidia.com/jetson/archives/r34.1/DeveloperGuide/text/HR/ConfiguringTheJetsonExpansionHeaders.html#config-by-function-configure-header-s-by-special-function
+        print("Enabling SPI")
+        subprocess.check_call(["python3", "/opt/nvidia/jetson-io/config-by-function.py", "-o", "dtb", '1=spi1'])
+        print_bar()
 
 
 
@@ -225,65 +225,65 @@ def main(development):
     print_bar()
 
 
+    if not sim:
+        print_title("Configuring the Nvidia Docker Runtime")
+        # set the nvidia runtime to be default
+        # https://lukeyeager.github.io/2018/01/22/setting-the-default-docker-runtime-to-nvidia.html
+        daemon_json = "/etc/docker/daemon.json"
+        with open(daemon_json, "r") as fp:
+            daemon_data = json.load(fp)
 
-    print_title("Configuring the Nvidia Docker Runtime")
-    # set the nvidia runtime to be default
-    # https://lukeyeager.github.io/2018/01/22/setting-the-default-docker-runtime-to-nvidia.html
-    daemon_json = "/etc/docker/daemon.json"
-    with open(daemon_json, "r") as fp:
-        daemon_data = json.load(fp)
+        if daemon_data.get("default-runtime", "") != "nvidia":
+            print(f"Updating {daemon_json}")
 
-    if daemon_data.get("default-runtime", "") != "nvidia":
-        print(f"Updating {daemon_json}")
+            daemon_data["default-runtime"] = "nvidia"
+            assert "nvidia" in daemon_data["runtimes"]
 
-        daemon_data["default-runtime"] = "nvidia"
-        assert "nvidia" in daemon_data["runtimes"]
+            with open(daemon_json, "w") as fp:
+                json.dump(daemon_data, fp, indent=2)
 
-        with open(daemon_json, "w") as fp:
-            json.dump(daemon_data, fp, indent=2)
+        # needed so that the shared libs are included in the docker container creation from the host
+        print("Copying Docker runtime libraries definition")
+        shutil.copy(os.path.join(AVR_DIR, "VMC/apriltag/linux/avr.csv"), "/etc/nvidia-container-runtime/host-files-for-container.d/")
 
-    # needed so that the shared libs are included in the docker container creation from the host
-    print("Copying Docker runtime libraries definition")
-    shutil.copy(os.path.join(AVR_DIR, "VMC/apriltag/linux/avr.csv"), "/etc/nvidia-container-runtime/host-files-for-container.d/")
-
-    # restart docker so new runtime takes into effect
-    print("Restarting Docker service")
-    subprocess.check_call(["service", "docker", "stop"])
-    subprocess.check_call(["service", "docker", "start"])
-    print_bar()
-
-
-
-    print_title("Installing Boot Services")
-    services = ["spio-mount.service", "fan-100.service"]
-    for service in services:
-        print(f"Installing {service}")
-        shutil.copy(os.path.join(AVR_DIR, "VMC", "scripts", service), "/etc/systemd/system/")
-        subprocess.check_call(["systemctl", "enable", service])
-        subprocess.check_call(["systemctl", "start", service])
-    print_bar()
+        # restart docker so new runtime takes into effect
+        print("Restarting Docker service")
+        subprocess.check_call(["service", "docker", "stop"])
+        subprocess.check_call(["service", "docker", "start"])
+        print_bar()
 
 
 
-    print_title("Obtaining ZED Camera Configuration")
-    zed_settings_dir = os.path.join(AVR_DIR, 'VMC/vio/settings')
+        print_title("Installing Boot Services")
+        services = ["spio-mount.service", "fan-100.service"]
+        for service in services:
+            print(f"Installing {service}")
+            shutil.copy(os.path.join(AVR_DIR, "VMC", "scripts", service), "/etc/systemd/system/")
+            subprocess.check_call(["systemctl", "enable", service])
+            subprocess.check_call(["systemctl", "start", service])
+        print_bar()
 
-    zed_serial = subprocess.check_output(["docker", "run", "--rm", "--mount", f"type=bind,source={zed_settings_dir},target=/usr/local/zed/settings/", "--privileged", "docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6", "python3", "-c", "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();"]).decode("utf-8").strip()
-    if zed_serial == "0":
-        print(f"{LIGHTRED}WARNING:{NC} ZED camera not detected, skipping settings download")
-    else:
-        print("ZED camera settings have been downloaded")
-    print_bar()
+
+
+        print_title("Obtaining ZED Camera Configuration")
+        zed_settings_dir = os.path.join(AVR_DIR, 'VMC/vio/settings')
+
+        zed_serial = subprocess.check_output(["docker", "run", "--rm", "--mount", f"type=bind,source={zed_settings_dir},target=/usr/local/zed/settings/", "--privileged", "docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6", "python3", "-c", "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();"]).decode("utf-8").strip()
+        if zed_serial == "0":
+            print(f"{LIGHTRED}WARNING:{NC} ZED camera not detected, skipping settings download")
+        else:
+            print("ZED camera settings have been downloaded")
+        print_bar()
 
     # make sure at least one settings file exists
-    if not development and not any(f.endswith(".conf") for f in os.listdir(zed_settings_dir)):
+    if not development and not sim and not any(f.endswith(".conf") for f in os.listdir(zed_settings_dir)):
         print(f"{RED}EROOR:{NC} ZED settings not found. Your drone will NOT fly. Plug in the ZED camera and try again.")
         sys.exit(1)
 
 
     print_title("Building AVR Software")
     # build pymavlink
-    if development:
+    if development or sim:
         subprocess.check_call(["python3", os.path.join(AVR_DIR, "PX4", "build.py"), "--pymavlink"])
 
     # make sure docker is logged in
@@ -293,14 +293,25 @@ def main(development):
         subprocess.check_call(["docker", "login", "ghcr.io"])
 
     # pull images
-    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "pull", "--norm"]
-    if development:
+    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "pull"]
+    if sim:
+        cmd.append("--sim")
+    else:
+        cmd.append("--norm")
+
+    if development or sim:
         cmd.append("--local")
     subprocess.check_call(cmd)
 
     # build images
-    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "build", "--norm"]
-    if development:
+    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "build"]
+
+    if sim:
+        cmd.append("--sim")
+    else:
+        cmd.append("--norm")
+
+    if development or sim:
         cmd.append("--local")
     subprocess.check_call(cmd)
     print_bar()
@@ -313,13 +324,13 @@ def main(development):
     print_bar()
 
 
-
-    print_title("Performing Self-Test")
-    print("Testing Nvidia container runtime:")
-    proc = subprocess.run(["docker", "run", "--rm", "--gpus", "all", "--env", "NVIDIA_DISABLE_REQUIRE=1", "nvcr.io/nvidia/cuda:11.4.1-base-ubuntu18.04", "echo", "-e", f"{LIGHTGREEN}Passed!{NC}"])
-    if proc.returncode != 0:
-        print(f"{LIGHTRED}FAILED{NC}")
-    print_bar()
+    if not sim:
+        print_title("Performing Self-Test")
+        print("Testing Nvidia container runtime:")
+        proc = subprocess.run(["docker", "run", "--rm", "--gpus", "all", "--env", "NVIDIA_DISABLE_REQUIRE=1", "nvcr.io/nvidia/cuda:11.4.1-base-ubuntu18.04", "echo", "-e", f"{LIGHTGREEN}Passed!{NC}"])
+        if proc.returncode != 0:
+            print(f"{LIGHTRED}FAILED{NC}")
+        print_bar()
 
 
 
@@ -333,7 +344,11 @@ if __name__ == "__main__":
     check_sudo()
 
     parser = argparse.ArgumentParser(description="Setup the Jetson for AVR")
-    parser.add_argument("--development", "--dev", action="store_true", help="Development setup")
+    parser.add_argument("--development", "--dev", action="store_true", help="Jetson Development setup")
+    parser.add_argument("--sim", action="store_true", help="Desktop Development setup")
+    parser.add_argument("--avr-dir")
 
     args = parser.parse_args()
-    main(args.development)
+    if args.avr_dir:
+        AVR_DIR = args.avr_dir
+    main(args.development, args.sim)

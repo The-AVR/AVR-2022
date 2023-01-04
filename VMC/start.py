@@ -82,16 +82,33 @@ def fusion_service(compose_services: dict, local: bool = False) -> None:
     compose_services["fusion"] = fusion_data
 
 
-def mavp2p_service(compose_services: dict, local: bool = False) -> None:
-    mavp2p_data = {
-        "restart": "unless-stopped",
-        "devices": ["/dev/ttyTHS1:/dev/ttyTHS1"],
-        "ports": ["5760:5760/tcp"],
-        "command": "serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 udpc:fcm:14541 udpc:fcm:14542",
-    }
+def mavp2p_service(compose_services: dict, local: bool = False, sim: bool = False) -> None:
+    if sim:
+        mavp2p_data = {
+            "restart": "unless-stopped",
+            "ports": ["5760:5760/tcp"],
+            "command": " udpc:fcm:14541 udpc:fcm:14542",
+
+        }
+    else:
+        mavp2p_data = {
+            "restart": "unless-stopped",
+            "devices": ["/dev/ttyTHS1:/dev/ttyTHS1"],
+            "ports": ["5760:5760/tcp"],
+            "command": "serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 udpc:fcm:14541 udpc:fcm:14542",
+        }
 
     if local:
-        mavp2p_data["build"] = os.path.join(THIS_DIR, "mavp2p")
+        if sim:
+            mavp2p_data["build"] = {
+            "context" :  os.path.join(THIS_DIR, "mavp2p"),
+            "args" : {
+                        "ARCH" : "amd64",
+                        "MAVP2P_ARCH" : "amd64"
+                    }
+            } 
+        else:
+            mavp2p_data["build"] = os.path.join(THIS_DIR, "mavp2p")
     else:
         mavp2p_data["image"] = f"{IMAGE_BASE}mavp2p:latest"
 
@@ -206,14 +223,14 @@ def vio_service(compose_services: dict, local: bool = False) -> None:
     compose_services["vio"] = vio_data
 
 
-def prepare_compose_file(local: bool = False) -> str:
+def prepare_compose_file(local: bool = False, sim: bool = False) -> str:
     # prepare compose services dict
     compose_services = {}
 
     apriltag_service(compose_services)
     fcm_service(compose_services, local)
     fusion_service(compose_services, local)
-    mavp2p_service(compose_services, local)
+    mavp2p_service(compose_services, local, sim)
     mqtt_service(compose_services, local)
     pcm_service(compose_services, local)
     sandbox_service(compose_services)
@@ -229,7 +246,7 @@ def prepare_compose_file(local: bool = False) -> str:
 
     # write compose file
     compose_file = tempfile.mkstemp(prefix="docker-compose-", suffix=".yml")[1]
-
+    print(compose_file)
     with open(compose_file, "w") as fp:
         yaml.dump(compose_data, fp)
 
@@ -237,8 +254,8 @@ def prepare_compose_file(local: bool = False) -> str:
     return compose_file
 
 
-def main(action: str, modules: List[str], local: bool = False) -> None:
-    compose_file = prepare_compose_file(local)
+def main(action: str, modules: List[str], local: bool = False, sim: bool = False) -> None:
+    compose_file = prepare_compose_file(local, sim)
 
     # run docker-compose
     project_name = "AVR-2022"
@@ -287,7 +304,9 @@ if __name__ == "__main__":
 
     min_modules = ["fcm", "fusion", "mavp2p", "mqtt", "vio"]
     norm_modules = min_modules + ["apriltag", "pcm", "status", "thermal"]
+    sim_modules = ["fcm", "mavp2p", "mqtt"]
     all_modules = norm_modules + ["sandbox"]
+
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -325,6 +344,13 @@ if __name__ == "__main__":
         action="store_true",
         help=f"Perform action on all modules ({', '.join(sorted(all_modules))}). Adds to any modules explicitly specified.",
     )
+    exgroup.add_argument(
+        "-s",
+        "--sim",
+        action="store_true",
+        help=f"Perform action on simulation modules ({', '.join(sorted(sim_modules))}).",
+    )
+
 
     args = parser.parse_args()
 
@@ -334,6 +360,9 @@ if __name__ == "__main__":
     elif args.norm:
         # normal modules selected
         args.modules += norm_modules
+    elif args.sim:
+        # sim modules selected
+        args.modules = sim_modules
     elif args.all:
         # all modules selected
         args.modules += all_modules
@@ -341,5 +370,6 @@ if __name__ == "__main__":
         # nothing specified, default to normal
         args.modules = norm_modules
 
+
     args.modules = list(set(args.modules))  # remove duplicates
-    main(action=args.action, modules=args.modules, local=args.local)
+    main(action=args.action, modules=args.modules, local=args.local, sim=args.sim)
