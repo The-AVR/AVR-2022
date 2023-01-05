@@ -24,4 +24,4 @@ jobs:
     uses: ./.github/workflows/container_x86_64.yml
     with:
       image: "fcm"
-      context_path: "VMC"
+      context_path: "VMC/fcm"
