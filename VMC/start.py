@@ -233,6 +233,7 @@ def px4_service(compose_services: dict, local: bool = False) -> None:
     px4_data = {
         "stdin_open": True, # docker run -i
         "tty": True,        # docker run -t
+        "restart": "unless-stopped",
         "build" : {
             "context" :  os.path.join(THIS_DIR, "..", "PX4", "docker"),
             "args" : {

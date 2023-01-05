@@ -284,7 +284,7 @@ def main(development, sim):
 
     print_title("Building AVR Software")
     # build pymavlink
-    if development or sim:
+    if development:
         subprocess.check_call(["python3", os.path.join(AVR_DIR, "PX4", "build.py"), "--pymavlink"])
 
     # make sure docker is logged in
