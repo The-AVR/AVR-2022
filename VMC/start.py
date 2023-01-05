@@ -55,16 +55,19 @@ def apriltag_service(compose_services: dict) -> None:
     compose_services["apriltag"] = apriltag_data
 
 
-def fcm_service(compose_services: dict, local: bool = False) -> None:
+def fcm_service(compose_services: dict, local: bool = False, sim: bool = False) -> None:
     fcm_data = {
         "depends_on": ["mqtt", "mavp2p"],
         "restart": "unless-stopped",
     }
+    if sim:
+        fcm_data["image"] = f"{IMAGE_BASE}fcm:x86_64.latest"
 
-    if local:
-        fcm_data["build"] = os.path.join(THIS_DIR, "fcm")
     else:
-        fcm_data["image"] = f"{IMAGE_BASE}fcm:latest"
+        if local:
+            fcm_data["build"] = os.path.join(THIS_DIR, "fcm")
+        else:
+            fcm_data["image"] = f"{IMAGE_BASE}fcm:latest"
 
     compose_services["fcm"] = fcm_data
 
@@ -88,7 +91,7 @@ def mavp2p_service(compose_services: dict, local: bool = False, sim: bool = Fals
         mavp2p_data = {
             "restart": "unless-stopped",
             "ports": ["5760:5760/tcp"],
-            "command": " udpc:fcm:14541 udpc:fcm:14542",
+            "command": "udps:0.0.0.0:14540 tcps:0.0.0.0:5760 tcps:0.0.0.0:5761 udpc:fcm:14541 udpc:fcm:14542",
 
         }
     else:
@@ -228,12 +231,14 @@ def px4_service(compose_services: dict, local: bool = False) -> None:
         PX4_VERSION = json.load(fp)
 
     px4_data = {
+        "stdin_open": True, # docker run -i
+        "tty": True,        # docker run -t
         "build" : {
             "context" :  os.path.join(THIS_DIR, "..", "PX4", "docker"),
             "args" : {
                         "PX4_VER" : PX4_VERSION,
                     }
-            }
+            },
         }   
     compose_services["px4"] = px4_data
              
@@ -243,7 +248,7 @@ def prepare_compose_file(local: bool = False, sim: bool = False) -> str:
     compose_services = {}
 
     apriltag_service(compose_services)
-    fcm_service(compose_services, local)
+    fcm_service(compose_services, local, sim)
     fusion_service(compose_services, local)
     mavp2p_service(compose_services, local, sim)
     mqtt_service(compose_services, local)
@@ -320,7 +325,7 @@ if __name__ == "__main__":
 
     min_modules = ["fcm", "fusion", "mavp2p", "mqtt", "vio"]
     norm_modules = min_modules + ["apriltag", "pcm", "status", "thermal"]
-    sim_modules = [ "fcm", "mavp2p", "mqtt", "px4"]
+    sim_modules = [ "fcm", "mavp2p", "mqtt", "px4", "sandbox"]
     all_modules = norm_modules + ["sandbox"]
 
 
