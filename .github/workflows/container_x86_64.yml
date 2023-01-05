@@ -67,7 +67,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           context: ${{inputs.context_path}}
-          push: ${{ github.event_name != 'pull_request' }}
+          push: ${{ github.event_name != '' }}
           tags: |
             ghcr.io/bellflight/avr/2022/${{ inputs.image }}:x86_64.latest
             ghcr.io/bellflight/avr/2022/${{ inputs.image }}:x86_64.${{ env.DATE_TAG }}
