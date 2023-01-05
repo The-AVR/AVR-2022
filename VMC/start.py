@@ -280,15 +280,19 @@ def prepare_compose_file(local: bool = False, sim: bool = False, sip: str = "") 
     return compose_file
 
 def configure_airsim(sip: str = ""):
-    with open(os.path.join(THIS_DIR, "..", "sim", "windows", "settings.json"), "rw") as f:
+    config_data = {}
+    with open(os.path.join(THIS_DIR, "..", "sim", "windows", "settings.json"), "r") as f:
         config_data = json.load(f)
-        config_data["LocalHostIp"] = sip
+        print(config_data)
+        config_data["Vehicles"]["PX4"]["LocalHostIp"] = sip
+
+    with open(os.path.join(THIS_DIR, "..", "sim", "windows", "settings.json"), "w") as f:
         f.write(json.dumps(config_data, indent=4))
 
 
 def main(action: str, modules: List[str], local: bool = False, sim: bool = False, sip: str = "") -> None:
     compose_file = prepare_compose_file(local, sim, sip)
-
+    configure_airsim(sip)
     # run docker-compose
     project_name = "AVR-2022"
     if os.name == "nt":

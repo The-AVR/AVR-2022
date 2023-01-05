@@ -177,6 +177,7 @@ def main(development, sim):
         "python3",
         "python3-wheel",
         "python3-pip",
+        "unzip"
     ]
     print("Installing apt Packages")
     subprocess.check_call(["apt-get", "install", "-y"] + packages)
