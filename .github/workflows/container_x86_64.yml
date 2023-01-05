@@ -64,7 +64,7 @@ jobs:
       - name: Build Container
         uses: docker/build-push-action@v3
         with:
-          context: VMC/${{ inputs.image }}
+          context: ${{inputs.context_path}}/${{ inputs.image }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: |
             ghcr.io/bellflight/avr/2022/${{ inputs.image }}:x86_64.latest
