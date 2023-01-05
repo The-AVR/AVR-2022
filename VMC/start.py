@@ -233,6 +233,7 @@ def px4_service(compose_services: dict, local: bool = False, sip: str = "") -> N
     host_ip_str = f"HOST_IP={sip}"
     print(host_ip_str)
     px4_data = {
+        "depends_on": ["mavp2p"],
         "stdin_open": True, # docker run -i
         "tty": True,        # docker run -t
         "restart": "unless-stopped",
