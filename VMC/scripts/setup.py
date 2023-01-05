@@ -330,7 +330,7 @@ def main(development, sim):
         if not os.path.exists(SIM_DIR):
             os.makedirs(SIM_DIR)
 
-        id = "1E8whi3dhq4kmMIjwl04UQDeBCTvrwpBs"
+        id = "1SZiwiudzSRgIg5EuPFilLBpKaIFklGcq"
         subprocess.check_call(["gdown", id], cwd=SIM_DIR)
         subprocess.check_call(["unzip", os.path.join(SIM_DIR, "build*.zip")], cwd=SIM_DIR)
         print_bar()

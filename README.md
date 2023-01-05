@@ -93,3 +93,34 @@ script and add `--dev` for development.
 
 Note, with `start.py` commands, make sure to add `--local` to the command.
 This builds the Docker images locally rather than using prebuilt ones from GitHub CR.
+
+## SITL Setup 
+
+The AVR sitl has been developed and tested using Windows Subsystem for Linux (WSL). 
+
+In WSL navigate to where you have cloned your repo then run the setup.py with the following options
+```sh
+cd VMC/scripts
+python3 setup.py --sim --avr-dir `pwd`/../../
+```
+
+you will need to get the ip address of your windows host for your WSL subnet. in cmd run the following 
+```
+ipconfig 
+```
+look for the WSL section output 
+```
+Ethernet adapter vEthernet (WSL):
+
+   Connection-specific DNS Suffix  . :
+   IPv4 Address. . . . . . . . . . . : 172.26.0.1
+   Subnet Mask . . . . . . . . . . . : 255.255.240.0
+   Default Gateway . . . . . . . . . :
+
+``` 
+
+now in wsl run the sitl with the following from the `VMC` folder using the WSL ip address you got from above for the -sip option
+
+```
+sudo python3 start.py run -l -s -sip 172.26.0.1
+```
