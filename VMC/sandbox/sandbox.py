@@ -4,6 +4,8 @@
 # and is receiving the proper payload as well.
 from bell.avr.mqtt.client import MQTTModule
 from bell.avr.mqtt.payloads import AvrFcmVelocityPayload
+from threading import Thread
+import time
 
 # This imports the third-party Loguru library which helps make logging way easier
 # and more useful.
@@ -65,6 +67,28 @@ class Sandbox(MQTTModule):
             {"servo": 0, "action": "open"},
         )
 
+    def loop(self):
+        r_val = 0
+        g_val = 0
+        b_val = 0
+        while 1:
+            time.sleep(0.5)
+            r_val = r_val + 10 
+            g_val = g_val + 5 
+            b_val = b_val + 7 
+            if r_val > 100:
+                r_val = 0 
+            
+            if g_val > 100:
+                g_val = 0
+
+            if b_val > 100:
+                b_val = 0
+
+            self.send_message(
+            "avr/pcm/set_base_color",
+            {"wrgb": [255, r_val, g_val, b_val]},
+        )
 
 if __name__ == "__main__":
     # This is what actually initializes the Sandbox class, and executes it.
@@ -76,4 +100,8 @@ if __name__ == "__main__":
     box = Sandbox()
     # The `run` method is defined by the inherited `MQTTModule` class and is a
     # convience function to start processing incoming MQTT messages infinitely.
+    loop_thread = Thread(target=box.loop)
+    loop_thread.setDaemon(True)
+    loop_thread.start()
     box.run()
+    

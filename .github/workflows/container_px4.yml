@@ -1,4 +1,4 @@
-name: Build Container FCM
+name: Build Container PX4
 
 on:
   workflow_dispatch:
@@ -7,21 +7,16 @@ on:
       - main
       - develop
     paths:
-      - "VMC/fcm/**"
+      - "PX4/**"
   push:
     branches:
       - main
     paths:
-      - "VMC/fcm/**"
+      - "PX4/**"
 
 jobs:
-  fcm:
-    uses: ./.github/workflows/container.yml
-    with:
-      image: "fcm"
-
-  fcm_x86:
+  px4_x86:
     uses: ./.github/workflows/container_x86_64.yml
     with:
-      image: "fcm"
-      context_path: "VMC/fcm"
+      image: "px4"
+      context_path: "PX4/docker"

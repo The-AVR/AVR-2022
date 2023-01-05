@@ -8,6 +8,7 @@ import subprocess
 import sys
 import tempfile
 import warnings
+import json
 from typing import Any, List
 
 import yaml
@@ -54,16 +55,19 @@ def apriltag_service(compose_services: dict) -> None:
     compose_services["apriltag"] = apriltag_data
 
 
-def fcm_service(compose_services: dict, local: bool = False) -> None:
+def fcm_service(compose_services: dict, local: bool = False, sim: bool = False) -> None:
     fcm_data = {
         "depends_on": ["mqtt", "mavp2p"],
         "restart": "unless-stopped",
     }
+    if sim:
+        fcm_data["image"] = f"{IMAGE_BASE}fcm:x86_64.latest"
 
-    if local:
-        fcm_data["build"] = os.path.join(THIS_DIR, "fcm")
     else:
-        fcm_data["image"] = f"{IMAGE_BASE}fcm:latest"
+        if local:
+            fcm_data["build"] = os.path.join(THIS_DIR, "fcm")
+        else:
+            fcm_data["image"] = f"{IMAGE_BASE}fcm:latest"
 
     compose_services["fcm"] = fcm_data
 
@@ -82,16 +86,33 @@ def fusion_service(compose_services: dict, local: bool = False) -> None:
     compose_services["fusion"] = fusion_data
 
 
-def mavp2p_service(compose_services: dict, local: bool = False) -> None:
-    mavp2p_data = {
-        "restart": "unless-stopped",
-        "devices": ["/dev/ttyTHS1:/dev/ttyTHS1"],
-        "ports": ["5760:5760/tcp"],
-        "command": "serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 udpc:fcm:14541 udpc:fcm:14542",
-    }
+def mavp2p_service(compose_services: dict, local: bool = False, sim: bool = False) -> None:
+    if sim:
+        mavp2p_data = {
+            "restart": "unless-stopped",
+            "ports": ["5760:5760/tcp"],
+            "command": "udps:0.0.0.0:14540 tcps:0.0.0.0:5760 tcps:0.0.0.0:5761 udpc:fcm:14541 udpc:fcm:14542",
+
+        }
+    else:
+        mavp2p_data = {
+            "restart": "unless-stopped",
+            "devices": ["/dev/ttyTHS1:/dev/ttyTHS1"],
+            "ports": ["5760:5760/tcp"],
+            "command": "serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 udpc:fcm:14541 udpc:fcm:14542",
+        }
 
     if local:
-        mavp2p_data["build"] = os.path.join(THIS_DIR, "mavp2p")
+        if sim:
+            mavp2p_data["build"] = {
+            "context" :  os.path.join(THIS_DIR, "mavp2p"),
+            "args" : {
+                        "ARCH" : "amd64",
+                        "MAVP2P_ARCH" : "amd64"
+                    }
+            } 
+        else:
+            mavp2p_data["build"] = os.path.join(THIS_DIR, "mavp2p")
     else:
         mavp2p_data["image"] = f"{IMAGE_BASE}mavp2p:latest"
 
@@ -205,20 +226,42 @@ def vio_service(compose_services: dict, local: bool = False) -> None:
 
     compose_services["vio"] = vio_data
 
+def px4_service(compose_services: dict, local: bool = False, sip: str = "") -> None:
+    with open(os.path.join(THIS_DIR, "..", "PX4", "version.json"), "r") as fp:
+        PX4_VERSION = json.load(fp)
 
-def prepare_compose_file(local: bool = False) -> str:
+    host_ip_str = f"HOST_IP={sip}"
+    print(host_ip_str)
+    px4_data = {
+        "depends_on": ["mavp2p"],
+        "stdin_open": True, # docker run -i
+        "tty": True,        # docker run -t
+        "restart": "unless-stopped",
+        "build" : {
+            "context" :  os.path.join(THIS_DIR, "..", "PX4", "docker"),
+            "args" : {
+                        "PX4_VER" : PX4_VERSION,
+                    }
+            },
+        "environment" : [host_ip_str]
+        }   
+    compose_services["px4"] = px4_data
+             
+
+def prepare_compose_file(local: bool = False, sim: bool = False, sip: str = "") -> str:
     # prepare compose services dict
     compose_services = {}
 
     apriltag_service(compose_services)
-    fcm_service(compose_services, local)
+    fcm_service(compose_services, local, sim)
     fusion_service(compose_services, local)
-    mavp2p_service(compose_services, local)
+    mavp2p_service(compose_services, local, sim)
     mqtt_service(compose_services, local)
     pcm_service(compose_services, local)
     sandbox_service(compose_services)
     thermal_service(compose_services, local)
     vio_service(compose_services, local)
+    px4_service(compose_services, local, sip)
 
     # nvpmodel not available on Windows
     if os.name != "nt":
@@ -229,16 +272,22 @@ def prepare_compose_file(local: bool = False) -> str:
 
     # write compose file
     compose_file = tempfile.mkstemp(prefix="docker-compose-", suffix=".yml")[1]
-
+    print(compose_file)
     with open(compose_file, "w") as fp:
         yaml.dump(compose_data, fp)
 
     # return file path
     return compose_file
 
+def configure_airsim(sip: str = ""):
+    with open(os.path.join(THIS_DIR, "..", "sim", "windows", "settings.json"), "rw") as f:
+        config_data = json.load(f)
+        config_data["LocalHostIp"] = sip
+        f.write(json.dumps(config_data, indent=4))
 
-def main(action: str, modules: List[str], local: bool = False) -> None:
-    compose_file = prepare_compose_file(local)
+
+def main(action: str, modules: List[str], local: bool = False, sim: bool = False, sip: str = "") -> None:
+    compose_file = prepare_compose_file(local, sim, sip)
 
     # run docker-compose
     project_name = "AVR-2022"
@@ -287,7 +336,9 @@ if __name__ == "__main__":
 
     min_modules = ["fcm", "fusion", "mavp2p", "mqtt", "vio"]
     norm_modules = min_modules + ["apriltag", "pcm", "status", "thermal"]
+    sim_modules = [ "fcm", "mavp2p", "mqtt", "px4", "sandbox"]
     all_modules = norm_modules + ["sandbox"]
+
 
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -304,6 +355,19 @@ if __name__ == "__main__":
         "modules",
         nargs="*",
         help="Explicitly list which module(s) to perform the action one",
+    )
+    parser.add_argument(
+        "-s",
+        "--sim",
+        action="store_true",
+        help=f"Perform action on simulation modules ({', '.join(sorted(sim_modules))}).",
+    )
+    parser.add_argument(
+        "-sip",
+        "--simhost-ip",
+        action="store",
+        default="127.0.0.1",
+        help=f"ip address of the machine running the simulation world",
     )
 
     exgroup = parser.add_mutually_exclusive_group()
@@ -325,6 +389,8 @@ if __name__ == "__main__":
         action="store_true",
         help=f"Perform action on all modules ({', '.join(sorted(all_modules))}). Adds to any modules explicitly specified.",
     )
+    
+
 
     args = parser.parse_args()
 
@@ -334,6 +400,9 @@ if __name__ == "__main__":
     elif args.norm:
         # normal modules selected
         args.modules += norm_modules
+    elif args.sim:
+        # sim modules selected
+        args.modules = sim_modules
     elif args.all:
         # all modules selected
         args.modules += all_modules
@@ -341,5 +410,6 @@ if __name__ == "__main__":
         # nothing specified, default to normal
         args.modules = norm_modules
 
+
     args.modules = list(set(args.modules))  # remove duplicates
-    main(action=args.action, modules=args.modules, local=args.local)
+    main(action=args.action, modules=args.modules, local=args.local, sim=args.sim, sip=args.simhost_ip)
