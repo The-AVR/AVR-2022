@@ -68,7 +68,7 @@ ENV HOST_IP 172.20.1.83
 
 COPY entrypoint.sh /
 RUN chmod +x /entrypoint.sh
-ENTRYPOINT /entrypoint.sh 
+ENTRYPOINT /entrypoint.sh ${HOST_IP}
 
 # Entrypoint
 # ENTRYPOINT make px4_sitl_default none_iris

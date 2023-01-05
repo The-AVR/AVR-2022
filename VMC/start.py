@@ -226,10 +226,12 @@ def vio_service(compose_services: dict, local: bool = False) -> None:
 
     compose_services["vio"] = vio_data
 
-def px4_service(compose_services: dict, local: bool = False) -> None:
+def px4_service(compose_services: dict, local: bool = False, sip: str = "") -> None:
     with open(os.path.join(THIS_DIR, "..", "PX4", "version.json"), "r") as fp:
         PX4_VERSION = json.load(fp)
 
+    host_ip_str = f"HOST_IP={sip}"
+    print(host_ip_str)
     px4_data = {
         "stdin_open": True, # docker run -i
         "tty": True,        # docker run -t
@@ -240,11 +242,12 @@ def px4_service(compose_services: dict, local: bool = False) -> None:
                         "PX4_VER" : PX4_VERSION,
                     }
             },
+        "environment" : [host_ip_str]
         }   
     compose_services["px4"] = px4_data
              
 
-def prepare_compose_file(local: bool = False, sim: bool = False) -> str:
+def prepare_compose_file(local: bool = False, sim: bool = False, sip: str = "") -> str:
     # prepare compose services dict
     compose_services = {}
 
@@ -257,7 +260,7 @@ def prepare_compose_file(local: bool = False, sim: bool = False) -> str:
     sandbox_service(compose_services)
     thermal_service(compose_services, local)
     vio_service(compose_services, local)
-    px4_service(compose_services, local)
+    px4_service(compose_services, local, sip)
 
     # nvpmodel not available on Windows
     if os.name != "nt":
@@ -275,9 +278,15 @@ def prepare_compose_file(local: bool = False, sim: bool = False) -> str:
     # return file path
     return compose_file
 
+def configure_airsim(sip: str = ""):
+    with open(os.path.join(THIS_DIR, "..", "sim", "windows", "settings.json"), "rw") as f:
+        config_data = json.load(f)
+        config_data["LocalHostIp"] = sip
+        f.write(json.dumps(config_data, indent=4))
 
-def main(action: str, modules: List[str], local: bool = False, sim: bool = False) -> None:
-    compose_file = prepare_compose_file(local, sim)
+
+def main(action: str, modules: List[str], local: bool = False, sim: bool = False, sip: str = "") -> None:
+    compose_file = prepare_compose_file(local, sim, sip)
 
     # run docker-compose
     project_name = "AVR-2022"
@@ -346,6 +355,19 @@ if __name__ == "__main__":
         nargs="*",
         help="Explicitly list which module(s) to perform the action one",
     )
+    parser.add_argument(
+        "-s",
+        "--sim",
+        action="store_true",
+        help=f"Perform action on simulation modules ({', '.join(sorted(sim_modules))}).",
+    )
+    parser.add_argument(
+        "-sip",
+        "--simhost-ip",
+        action="store",
+        default="127.0.0.1",
+        help=f"ip address of the machine running the simulation world",
+    )
 
     exgroup = parser.add_mutually_exclusive_group()
     exgroup.add_argument(
@@ -366,12 +388,7 @@ if __name__ == "__main__":
         action="store_true",
         help=f"Perform action on all modules ({', '.join(sorted(all_modules))}). Adds to any modules explicitly specified.",
     )
-    exgroup.add_argument(
-        "-s",
-        "--sim",
-        action="store_true",
-        help=f"Perform action on simulation modules ({', '.join(sorted(sim_modules))}).",
-    )
+    
 
 
     args = parser.parse_args()
@@ -394,4 +411,4 @@ if __name__ == "__main__":
 
 
     args.modules = list(set(args.modules))  # remove duplicates
-    main(action=args.action, modules=args.modules, local=args.local, sim=args.sim)
+    main(action=args.action, modules=args.modules, local=args.local, sim=args.sim, sip=args.simhost_ip)

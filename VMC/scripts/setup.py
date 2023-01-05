@@ -323,8 +323,18 @@ def main(development, sim):
         raise CalledProcessError(p.returncode, p.args)
     # subprocess.check_call(cmd)
     print_bar()
+    # down load simulation world model
+    if sim:
+        print_title("download simulation world")
+        SIM_DIR = os.path.join(AVR_DIR, "sim")
+        if not os.path.exists(SIM_DIR):
+            os.makedirs(SIM_DIR)
 
-
+        id = "1E8whi3dhq4kmMIjwl04UQDeBCTvrwpBs"
+        subprocess.check_call(["gdown", id], cwd=SIM_DIR)
+        subprocess.check_call(["unzip", os.path.join(SIM_DIR, "build*.zip")], cwd=SIM_DIR)
+        print_bar()
+    
 
     print_title("Cleaning Up")
     subprocess.check_call(["apt-get", "autoremove", "-y"])
@@ -345,8 +355,10 @@ def main(development, sim):
     print(f"{GREEN}AVR setup has completed{NC}")
     print(f"{GREEN}Please reboot your VMC{NC}")
 
-    if input("Would you like to reboot now? (y/n): ").lower() == "y":
-        subprocess.run(["reboot"])
+   
+    if not sim:
+        if input("Would you like to reboot now? (y/n): ").lower() == "y":
+            subprocess.run(["reboot"])
 
 if __name__ == "__main__":
     check_sudo()
