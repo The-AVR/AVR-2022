@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y git
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Need sudo and lsb-release for the installation prerequisites
-RUN apt-get install -y sudo lsb-release tzdata wget
+RUN apt-get install -y sudo lsb-release tzdata wget gnupg2
 
 # Now grab PX4 from GitHub
 RUN git clone https://github.com/PX4/Firmware.git
