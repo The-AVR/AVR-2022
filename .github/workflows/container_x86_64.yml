@@ -6,7 +6,9 @@ on:
       image:
         required: true
         type: string
-
+      context_path:
+        required: true
+        type: string
 jobs:
   container-build:
     runs-on: ubuntu-latest
