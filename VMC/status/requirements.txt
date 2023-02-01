@@ -1,4 +1,4 @@
 loguru==0.6.0
-bell-avr-libraries[mqtt]==0.1.9
+bell-avr-libraries[mqtt]==0.1.13
 adafruit-circuitpython-neopixel-spi==1.0.2
 Jetson.GPIO==2.0.20; sys_platform == 'linux' # implict dependency of adafruit modules
