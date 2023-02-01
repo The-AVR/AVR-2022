@@ -62,7 +62,7 @@ jobs:
         run: echo "DATE_TAG=$(date +'%Y-%m-%d-%H-%M-%S')" >> $GITHUB_ENV
 
       - name: Build Container
-        uses: docker/build-push-action@v3
+        uses: docker/build-push-action@v4
         with:
           context: VMC/${{ inputs.image }}
           push: ${{ github.event_name != 'pull_request' }}
