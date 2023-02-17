@@ -67,6 +67,19 @@ def fcm_service(compose_services: dict, local: bool = False) -> None:
 
     compose_services["fcm"] = fcm_data
 
+def simulator_service(compose_services: dict, local: bool = False) -> None:
+    sim_data = {
+        "restart": "unless-stopped",
+        "ports": ["5760:5760/tcp","5761:5761/tcp", "14541:14541/udp"],
+    }
+
+    if local:
+        sim_data["build"] = os.path.join(THIS_DIR, "simulator")
+    else:
+        sim_data["image"] = f"{IMAGE_BASE}simulator:latest"
+
+    compose_services["fcm"] = sim_data
+
 
 def fusion_service(compose_services: dict, local: bool = False) -> None:
     fusion_data = {
@@ -219,6 +232,7 @@ def prepare_compose_file(local: bool = False) -> str:
     sandbox_service(compose_services)
     thermal_service(compose_services, local)
     vio_service(compose_services, local)
+    simulator_service(compose_services, local)
 
     # nvpmodel not available on Windows
     if os.name != "nt":
@@ -289,6 +303,7 @@ if __name__ == "__main__":
     norm_modules = min_modules + ["apriltag", "pcm", "status", "thermal"]
     all_modules = norm_modules + ["sandbox"]
 
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-l",
@@ -326,6 +341,13 @@ if __name__ == "__main__":
         help=f"Perform action on all modules ({', '.join(sorted(all_modules))}). Adds to any modules explicitly specified.",
     )
 
+    exgroup.add_argument(
+        "-s",
+        "--sim",
+        action="store_true",
+        help=f"Run system in simulation",
+    )
+
     args = parser.parse_args()
 
     if args.min:
@@ -340,6 +362,11 @@ if __name__ == "__main__":
     elif not args.modules:
         # nothing specified, default to normal
         args.modules = norm_modules
+
+    if args.sim:
+        min_modules.remove("mavp2p")
+        min_modules.append("simulator")
+    
 
     args.modules = list(set(args.modules))  # remove duplicates
     main(action=args.action, modules=args.modules, local=args.local)
