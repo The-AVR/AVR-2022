@@ -78,7 +78,7 @@ def simulator_service(compose_services: dict, local: bool = False) -> None:
     else:
         sim_data["image"] = f"{IMAGE_BASE}simulator:latest"
 
-    compose_services["fcm"] = sim_data
+    compose_services["simulator"] = sim_data
 
 
 def fusion_service(compose_services: dict, local: bool = False) -> None:
@@ -255,7 +255,7 @@ def main(action: str, modules: List[str], local: bool = False) -> None:
     compose_file = prepare_compose_file(local)
 
     # run docker-compose
-    project_name = "AVR-2022"
+    project_name = "avr2022"
     if os.name == "nt":
         # for some reason on Windows docker-compose doesn't like upper case???
         project_name = project_name.lower()
