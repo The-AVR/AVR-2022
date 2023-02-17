@@ -86,8 +86,8 @@ def mavp2p_service(compose_services: dict, local: bool = False) -> None:
     mavp2p_data = {
         "restart": "unless-stopped",
         "devices": ["/dev/ttyTHS1:/dev/ttyTHS1"],
-        "ports": ["5760:5760/tcp"],
-        "command": "serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 udpc:fcm:14541 udpc:fcm:14542",
+        "ports": ["5760:5760/tcp","5761:5761/tcp", "14541:14541/udp"],
+        "command": "serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 tcps:0.0.0.0:5761 udps:0.0.0.0:14541",
     }
 
     if local:
