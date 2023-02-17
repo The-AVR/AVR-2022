@@ -18,4 +18,4 @@ jobs:
   simulator:
     uses: ./.github/workflows/container.yml
     with:
-      image: "fcm"
+      image: "simulator"
