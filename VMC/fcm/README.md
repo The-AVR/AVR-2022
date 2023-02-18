@@ -13,7 +13,7 @@ drone, or sending it missions.
 
 
 # MQTT Endpoints
-Topic: `/avr/fcm/actions/`
+Topic: `/avr/fcm/actions`
 
 ### Arm
 
