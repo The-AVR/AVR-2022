@@ -54,9 +54,9 @@ def apriltag_service(compose_services: dict) -> None:
     compose_services["apriltag"] = apriltag_data
 
 
-def fcm_service(compose_services: dict, local: bool = False) -> None:
+def fcm_service(compose_services: dict, local: bool = False, simulation=False) -> None:
     fcm_data = {
-        "depends_on": ["mqtt", "mavp2p"],
+        "depends_on": ["mqtt", "mavp2p" if not simulation else "simulator"],
         "restart": "unless-stopped",
     }
 
@@ -219,12 +219,12 @@ def vio_service(compose_services: dict, local: bool = False) -> None:
     compose_services["vio"] = vio_data
 
 
-def prepare_compose_file(local: bool = False) -> str:
+def prepare_compose_file(local: bool = False, simulation=False) -> str:
     # prepare compose services dict
     compose_services = {}
 
     apriltag_service(compose_services)
-    fcm_service(compose_services, local)
+    fcm_service(compose_services, local, simulation)
     fusion_service(compose_services, local)
     mavp2p_service(compose_services, local)
     mqtt_service(compose_services, local)
@@ -251,8 +251,8 @@ def prepare_compose_file(local: bool = False) -> str:
     return compose_file
 
 
-def main(action: str, modules: List[str], local: bool = False) -> None:
-    compose_file = prepare_compose_file(local)
+def main(action: str, modules: List[str], local: bool = False, simulation: bool = False) -> None:
+    compose_file = prepare_compose_file(local, simulation)
 
     # run docker-compose
     project_name = "avr2022"
@@ -368,4 +368,4 @@ if __name__ == "__main__":
         min_modules.append("simulator")
 
     args.modules = list(set(args.modules))  # remove duplicates
-    main(action=args.action, modules=args.modules, local=args.local)
+    main(action=args.action, modules=args.modules, local=args.local, simulation=args.sim)
