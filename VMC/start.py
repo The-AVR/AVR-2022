@@ -58,6 +58,7 @@ def fcm_service(compose_services: dict, local: bool = False, simulation=False) -
     fcm_data = {
         "depends_on": ["mqtt", "mavp2p" if not simulation else "simulator"],
         "restart": "unless-stopped",
+        "network_mode": "host"
     }
 
     if local:
@@ -70,6 +71,8 @@ def fcm_service(compose_services: dict, local: bool = False, simulation=False) -
 def simulator_service(compose_services: dict, local: bool = False) -> None:
     sim_data = {
         "restart": "unless-stopped",
+        "tty": True,
+        "stdin_open": True,
         "ports": ["5760:5760/tcp","5761:5761/tcp", "14541:14541/udp"],
     }
 
