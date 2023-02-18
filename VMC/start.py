@@ -366,7 +366,6 @@ if __name__ == "__main__":
     if args.sim:
         min_modules.remove("mavp2p")
         min_modules.append("simulator")
-    
 
     args.modules = list(set(args.modules))  # remove duplicates
     main(action=args.action, modules=args.modules, local=args.local)
