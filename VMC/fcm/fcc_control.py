@@ -1,9 +1,6 @@
 import asyncio
 import contextlib
-import json
-import math
 import queue
-import time
 from typing import Any, Callable, List
 
 import mavsdk
@@ -11,14 +8,17 @@ from mavsdk.geofence import Point, Polygon
 from mavsdk.mission_raw import MissionItem, MissionRawError
 from pymavlink import mavutil
 
-from bell.avr.mqtt.client import MQTTModule
-from bell.avr.mqtt.payloads import AvrFcmEventsPayload
-from bell.avr.utils.decorators import async_try_except, try_except
-from bell.avr.utils.timing import rate_limit
+# from bell.avr.mqtt.client import MQTTModule
+# from bell.avr.mqtt.payloads import AvrFcmEventsPayload
+from bell.avr.utils.decorators import async_try_except  # , try_except
+
+# from bell.avr.utils.timing import rate_limit
 from loguru import logger
 from mavsdk.action import ActionError
 from fcc_mqtt import FCMMQTTModule
-import sys
+
+# import sys
+import pymap3d
 
 
 class DispatcherBusy(Exception):
@@ -145,6 +145,7 @@ class ControlManager(FCMMQTTModule):
             "reboot": self.set_reboot,
             "takeoff": self.set_takeoff,
             "goto_location": self.goto_location,
+            "goto_location_ned": self.goto_location_ned,
             "upload_mission": self.build_and_upload,
             "start_mission": self.start_mission,
         }
@@ -281,6 +282,34 @@ class ControlManager(FCMMQTTModule):
         )
 
     @async_try_except(reraise=True)
+    async def goto_location_ned(self, **kwargs) -> None:
+        """
+        Commands the drone to go to a location.
+        """
+        logger.warning("Sending go to location (NED)")
+        # NED needs to be in METERS
+
+        source_pos = self.home_pos
+
+        if "rel" in kwargs.keys():
+            if kwargs["rel"] is True:
+                source_pos = self.curr_pos
+
+        new_lat, new_lon, new_alt = pymap3d.ned2geodetic(
+            kwargs["n"],
+            kwargs["e"],
+            kwargs["d"],
+            source_pos["lat"],
+            source_pos["lon"],
+            source_pos["alt"],
+            ell=pymap3d.Ellipsoid(model="wgs84"),
+        )
+
+        await self.drone.action.goto_location(
+            new_lat, new_lon, new_alt, kwargs["heading"]
+        )
+
+    @async_try_except(reraise=True)
     async def build(self, waypoints: List[dict]) -> List[MissionItem]:
         # sourcery skip: hoist-statement-from-loop, switch, use-assigned-variable
         """
@@ -327,7 +356,7 @@ class ControlManager(FCMMQTTModule):
                 command = mavutil.mavlink.MAV_CMD_NAV_WAYPOINT
                 param1 = 0  # hold time
                 param2 = 0  # accepteance radius
-                param3 = 0  # pass radius, 0 goes straight through
+                param3 = 0  # pass radius, 0 goes straight through / is ignored if hold time > 0
                 param4 = float("nan")  # yaw angle. NaN uses current yaw heading mode
 
             elif waypoint_type == "land":
