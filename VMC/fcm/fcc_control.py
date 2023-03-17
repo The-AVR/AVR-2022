@@ -119,12 +119,39 @@ class ControlManager(FCMMQTTModule):
         return asyncio.gather(
             # uncomment the following lines to enable outside control
             self.action_dispatcher(),
+            self.position_lla_telemetry(),
+            self.home_lla_telemetry(),
         )
 
     async def run(self) -> asyncio.Future:
         asyncio.gather(self.run_non_blocking())
         while True:
             await asyncio.sleep(1)
+
+    # region ################## T E L E M E T R Y  ############################
+
+    @async_try_except()
+    async def position_lla_telemetry(self) -> None:
+        """
+        Runs the position_lla telemetry loop
+        """
+        logger.debug("position_lla telemetry loop started")
+        async for position in self.drone.telemetry.position():
+            self.curr_pos["lat"] = position.latitude_deg,
+            self.curr_pos["lon"] = position.longitude_deg,
+            self.curr_pos["alt"] = position.relative_altitude_m
+
+
+    @async_try_except()
+    async def home_lla_telemetry(self) -> None:
+        """
+        Runs the home_lla telemetry loop
+        """
+        logger.debug("home_lla telemetry loop started")
+        async for home_position in self.drone.telemetry.home():
+            self.home_pos["lat"] = home_position.latitude_deg,
+            self.home_pos["lon"] = home_position.longitude_deg,
+            self.home_pos["alt"] = home_position.relative_altitude_m
 
     # region ################## D I S P A T C H E R  ##########################
 
