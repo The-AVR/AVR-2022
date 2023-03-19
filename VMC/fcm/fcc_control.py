@@ -89,13 +89,21 @@ class ControlManager(FCMMQTTModule):
         # queues
         self.action_queue = queue.Queue()
 
-        self.topic_map = {"avr/fcm/actions": self.handle_action_message}
+        self.topic_map = {
+            "avr/fcm/actions": self.handle_action_message,
+            "avr/fcm/capture_home": self.set_home_capture
+            }
+
+        self.home_pos = dict()
+        self.home_pos_init = False
+        self.curr_pos = dict()
+        self.curr_pos_init = False
 
     async def connect(self) -> None:
         """
         Connect the Drone object.
         """
-        logger.debug("Control: Connecting to the FCC")
+        logger.debug("FCM Control: Connecting to the FCC")
 
         # mavsdk does not support dns
         await self.drone.connect(system_address="tcp://127.0.0.1:5761")
@@ -135,23 +143,35 @@ class ControlManager(FCMMQTTModule):
         """
         Runs the position_lla telemetry loop
         """
-        logger.debug("position_lla telemetry loop started")
+        logger.debug("FCM Control: position_lla telemetry loop started")
         async for position in self.drone.telemetry.position():
-            self.curr_pos["lat"] = position.latitude_deg,
-            self.curr_pos["lon"] = position.longitude_deg,
+            self.curr_pos["lat"] = position.latitude_deg
+            self.curr_pos["lon"] = position.longitude_deg
             self.curr_pos["alt"] = position.relative_altitude_m
-
+            if not self.curr_pos_init:
+                if self.curr_pos["lat"] is not None:
+                    self.curr_pos_init = True
+                    logger.info("FCM Control: current position initialized")
 
     @async_try_except()
     async def home_lla_telemetry(self) -> None:
         """
         Runs the home_lla telemetry loop
         """
-        logger.debug("home_lla telemetry loop started")
+        logger.debug("FCM Control: home_lla telemetry loop started")
         async for home_position in self.drone.telemetry.home():
-            self.home_pos["lat"] = home_position.latitude_deg,
-            self.home_pos["lon"] = home_position.longitude_deg,
-            self.home_pos["alt"] = home_position.relative_altitude_m
+            if not self.home_pos_init:
+                self.home_pos["lat"] = home_position.latitude_deg
+                self.home_pos["lon"] = home_position.longitude_deg
+                self.home_pos["alt"] = home_position.absolute_altitude_m
+                if self.home_pos["lat"] is not None:
+                        self.home_pos_init = True
+                        logger.info("FCM Control: home position captured")
+
+    def set_home_capture(self, payload) -> None:
+        self.home_pos_init = False
+
+    # endregion ###############################################################
 
     # region ################## D I S P A T C H E R  ##########################
 
@@ -313,6 +333,8 @@ class ControlManager(FCMMQTTModule):
         """
         Commands the drone to go to a location.
         """
+        if not self.home_pos_init or not self.curr_pos_init:
+            logger.error("FCM CONTROL: The position telemetry has not been received yet")
         logger.warning("Sending go to location (NED)")
         # NED needs to be in METERS
 
@@ -321,6 +343,17 @@ class ControlManager(FCMMQTTModule):
         if "rel" in kwargs.keys():
             if kwargs["rel"] is True:
                 source_pos = self.curr_pos
+                source_pos["alt"] += self.home_pos[
+                    "alt"
+                ]  # add in the absolute alt from home since alt is shown as relative for current position and go to needs absolute
+
+        # observed this weird issue in development
+        # if isinstance(source_pos["lat"], tuple):
+        #     source_pos["lat"] = source_pos["lat"][0]
+        # if isinstance(source_pos["lon"], tuple):
+        #     source_pos["lon"] = source_pos["lon"][0]
+
+        # logger.info(f"source data: Lat:{} Lon:{} Alt:{}")
 
         new_lat, new_lon, new_alt = pymap3d.ned2geodetic(
             kwargs["n"],
@@ -329,8 +362,9 @@ class ControlManager(FCMMQTTModule):
             source_pos["lat"],
             source_pos["lon"],
             source_pos["alt"],
-            ell=pymap3d.Ellipsoid(model="wgs84"),
         )
+
+        logger.info(f"Sending drone to Lat:{new_lat} Lon:{new_lon} Alt:{new_alt}")
 
         await self.drone.action.goto_location(
             new_lat, new_lon, new_alt, kwargs["heading"]

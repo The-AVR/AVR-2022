@@ -320,7 +320,7 @@ class FusionModule(MQTTModule):
 
             if d_dist > self.config["POS_D_THRESHOLD"]:
                 # don't resync Z if del_d is too great,
-                # reject AT readings that are extraineous
+                # reject AT readings that are extraneous
                 at_ned["d"] = cam_ned["d"]
 
             resync = AvrVioResyncPayload(
