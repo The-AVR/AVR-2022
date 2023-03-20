@@ -16,6 +16,7 @@ drone, or sending it missions.
 Topic: `/avr/fcm/actions`
 
 ### Arm
+Description: Arms the drone
 
 Schema: 
 ```json
@@ -26,6 +27,7 @@ Schema:
 ```
 
 ### Disarm
+Description: Disarms the drone
 
 Schema: 
 ```json
@@ -36,6 +38,8 @@ Schema:
 ```
 
 ### Kill 
+Description: Similar to disarm, however this will force stop the motors even if PX4 is airborne. This is an EMERGENCY only action that could result in damage to your drone if not used appropriately.
+
 Schema: 
 ```json
 {
@@ -44,6 +48,9 @@ Schema:
 }
 ```
 ### Land
+
+Description: Requests the drone to land in place
+
 Schema: 
 ```json
 {
@@ -52,6 +59,9 @@ Schema:
 }
 ```
 ### Reboot
+
+Description: Reboots the flight controller
+
 Schema: 
 ```json
 {
@@ -61,6 +71,9 @@ Schema:
 ```
 
 ### Go To Location
+
+Description: Sends the drone to the location prescribed by lat/lon/alt. The drone will fly a straight line to this point while pointing its nose in the `heading` direction.
+
 Schema: 
 ```json
 {
@@ -75,6 +88,9 @@ Schema:
 ```
 
 ### Upload Mission
+
+Description: Upload a mission to the flight controller. Waypoints can be one of `goto`, `takeoff`, or `land`. The waypoints use latitude, longitude, and relative altitude (from the drones "home" position, which can be manually updated by sending a message to avr/fcm/capture_home. Home is automatically captured on FCM boot so make sure you capture home before taking off for the first time. Waypoints can optionally use the `n` `e` `d` paradigm, in which missions are defined in the NED coordinate system relative to the home position.
+
 Schema: 
 ```json
 {
@@ -99,6 +115,9 @@ Schema:
 ```
 
 ### Start Mission
+
+Description: Requests the drone to start the mission.
+
 Schema: 
 ```json
 {

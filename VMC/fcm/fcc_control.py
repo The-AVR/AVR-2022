@@ -91,8 +91,8 @@ class ControlManager(FCMMQTTModule):
 
         self.topic_map = {
             "avr/fcm/actions": self.handle_action_message,
-            "avr/fcm/capture_home": self.set_home_capture
-            }
+            "avr/fcm/capture_home": self.set_home_capture,
+        }
 
         self.home_pos = dict()
         self.home_pos_init = False
@@ -165,8 +165,8 @@ class ControlManager(FCMMQTTModule):
                 self.home_pos["lon"] = home_position.longitude_deg
                 self.home_pos["alt"] = home_position.absolute_altitude_m
                 if self.home_pos["lat"] is not None:
-                        self.home_pos_init = True
-                        logger.info("FCM Control: home position captured")
+                    self.home_pos_init = True
+                    logger.info("FCM Control: home position captured")
 
     def set_home_capture(self, payload) -> None:
         self.home_pos_init = False
@@ -334,7 +334,9 @@ class ControlManager(FCMMQTTModule):
         Commands the drone to go to a location.
         """
         if not self.home_pos_init or not self.curr_pos_init:
-            logger.error("FCM CONTROL: The position telemetry has not been received yet")
+            logger.error(
+                "FCM CONTROL: The position telemetry has not been received yet"
+            )
         logger.warning("Sending go to location (NED)")
         # NED needs to be in METERS
 
@@ -346,14 +348,6 @@ class ControlManager(FCMMQTTModule):
                 source_pos["alt"] += self.home_pos[
                     "alt"
                 ]  # add in the absolute alt from home since alt is shown as relative for current position and go to needs absolute
-
-        # observed this weird issue in development
-        # if isinstance(source_pos["lat"], tuple):
-        #     source_pos["lat"] = source_pos["lat"][0]
-        # if isinstance(source_pos["lon"], tuple):
-        #     source_pos["lon"] = source_pos["lon"][0]
-
-        # logger.info(f"source data: Lat:{} Lon:{} Alt:{}")
 
         new_lat, new_lon, new_alt = pymap3d.ned2geodetic(
             kwargs["n"],
@@ -377,11 +371,6 @@ class ControlManager(FCMMQTTModule):
         Convert a list of waypoints (dict) to a list of MissionItems.
         """
         mission_items = []
-
-        # # if the first waypoint is not a takeoff waypoint, create one
-        # if waypoints[0]["type"] != "takeoff":
-        #     # use the altitude of the first waypoint
-        #     waypoints.insert(0, {"type": "takeoff", "alt": waypoints[0]["alt"]})
 
         # now, check if first waypoint has a lat/lon
         # and if not, add lat lon of current position
@@ -431,12 +420,28 @@ class ControlManager(FCMMQTTModule):
                 param4 = float("nan")  # yaw angle. NaN uses current yaw heading mode
 
             # https://mavlink.io/en/messages/common.html#MAV_FRAME
-            frame = mavutil.mavlink.MAV_FRAME_GLOBAL_RELATIVE_ALT_INT
+            frame = mavutil.mavlink.MAV_FRAME_GLOBAL_INT
             current = int(seq == 0)  # boolean
             autocontinue = int(True)
+
+            if any(x in waypoint.keys() for x in ["n", "e", "d"]):
+                waypoint["lat"], waypoint["lon"], new_alt = pymap3d.ned2geodetic(
+                    waypoint["n"],
+                    waypoint["e"],
+                    waypoint["d"],
+                    self.home_pos["lat"],
+                    self.home_pos["lon"],
+                    self.home_pos["alt"],
+                )
+                waypoint["alt"] = float(
+                    new_alt
+                    - self.home_pos[
+                        "alt"
+                    ]  # this is.. weird but sets up the next section to be able to reuse code
+                )
             x = int(float(waypoint["lat"]) * 10000000)
             y = int(float(waypoint["lon"]) * 10000000)
-            z = float(waypoint["alt"])
+            z = float(waypoint["alt"]) + self.home_pos["alt"]
             # https://mavlink.io/en/messages/common.html#MAV_MISSION_TYPE
             mission_type = mavutil.mavlink.MAV_MISSION_TYPE_MISSION
 
