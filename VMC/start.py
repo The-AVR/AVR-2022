@@ -221,6 +221,19 @@ def vio_service(compose_services: dict, local: bool = False) -> None:
 
     compose_services["vio"] = vio_data
 
+def web_service(compose_services: dict, local: bool = False) -> None:
+    web_data = {
+        "depends_on": ["mqtt"],
+        "ports": ["8080:8080"],
+        "restart": "unless-stopped",
+    }
+
+    if local:
+        web_data["build"] = os.path.join(THIS_DIR, "web")
+    else:
+        print("There is no remote image for the web container")
+
+    compose_services["web"] = web_data
 
 def prepare_compose_file(local: bool = False, simulation=False) -> str:
     # prepare compose services dict
@@ -236,6 +249,7 @@ def prepare_compose_file(local: bool = False, simulation=False) -> str:
     thermal_service(compose_services, local)
     vio_service(compose_services, local)
     simulator_service(compose_services, local)
+    web_service(compose_services, local)
 
     # nvpmodel not available on Windows
     if os.name != "nt":
@@ -302,7 +316,7 @@ def main(action: str, modules: List[str], local: bool = False, simulation: bool 
 if __name__ == "__main__":
     check_sudo()
 
-    min_modules = ["fcm", "fusion", "mavp2p", "mqtt", "vio"]
+    min_modules = ["fcm", "fusion", "mavp2p", "mqtt", "vio", "web"]
     norm_modules = min_modules + ["apriltag", "pcm", "status", "thermal"]
     all_modules = norm_modules + ["sandbox"]
 
