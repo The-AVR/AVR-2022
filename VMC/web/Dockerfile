@@ -14,4 +14,4 @@ RUN npm run build
 
 EXPOSE 8080
 
-CMD [ "http-server", "dist" ]
+CMD [ "http-server", "--proxy", "http://127.0.0.1:8080?", "dist" ]
