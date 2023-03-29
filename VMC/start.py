@@ -116,7 +116,7 @@ def mavp2p_service(compose_services: dict, local: bool = False) -> None:
 
 def mqtt_service(compose_services: dict, local: bool = False) -> None:
     mqtt_data = {
-        "ports": ["18830:18830"],
+        "ports": ["18830:18830", "9001:9001"],
         "restart": "unless-stopped",
     }
 

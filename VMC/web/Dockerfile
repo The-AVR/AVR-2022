@@ -1,0 +1,17 @@
+FROM node:lts-alpine
+
+RUN apk update && apk add git
+
+RUN npm install -g http-server
+
+WORKDIR /app
+
+RUN git -c http.sslVerify=False clone https://github.com/dbaldwin/AVR-2023-Web-Vue .
+
+RUN npm install
+
+RUN npm run build
+
+EXPOSE 8080
+
+CMD [ "http-server", "dist" ]
