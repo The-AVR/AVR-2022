@@ -6,7 +6,7 @@ RUN npm install -g http-server
 
 WORKDIR /app
 
-RUN git -c http.sslVerify=False clone https://github.com/dbaldwin/AVR-2023-Web-Vue .
+RUN git -c http.sslVerify=False clone https://github.com/dbaldwin/DroneBlocks-Bell-AVR-Vue .
 
 RUN npm install
 
