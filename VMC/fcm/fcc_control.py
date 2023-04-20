@@ -19,6 +19,7 @@ from fcc_mqtt import FCMMQTTModule
 
 # import sys
 import pymap3d
+import numpy as np
 
 
 class DispatcherBusy(Exception):
@@ -99,6 +100,8 @@ class ControlManager(FCMMQTTModule):
         self.curr_pos = dict()
         self.curr_pos_init = False
 
+        self.target_pos = dict()
+
     async def connect(self) -> None:
         """
         Connect the Drone object.
@@ -129,6 +132,7 @@ class ControlManager(FCMMQTTModule):
             self.action_dispatcher(),
             self.position_lla_telemetry(),
             self.home_lla_telemetry(),
+            self.go_to_monitor()
         )
 
     async def run(self) -> asyncio.Future:
@@ -136,6 +140,19 @@ class ControlManager(FCMMQTTModule):
         while True:
             await asyncio.sleep(1)
 
+    async def go_to_monitor(self):
+        while True:
+            #check curr pos vs target pos
+            scalar_dist = self.pos_norm(self.target_pos, self.curr_pos)
+            #if within .5m set to nans
+            if scalar_dist < 0.5:
+                #we made it
+                pass
+            await asyncio.sleep(1)
+
+    async def pos_norm(self, lla_1, lla_2):
+        n, e, d = pymap3d.geodetic2ned(self.target_pos["lat"], self.target_pos["lat"], self.target_pos["lat"], self.curr_pos["lat"], self.curr_pos["lon"], self.curr_pos["alt"])
+        return np.linalg.norm([n, e, d])
     # region ################## T E L E M E T R Y  ############################
 
     @async_try_except()
@@ -327,6 +344,9 @@ class ControlManager(FCMMQTTModule):
         await self.drone.action.goto_location(
             kwargs["lat"], kwargs["lon"], kwargs["alt"], kwargs["heading"]
         )
+        self.target_pos["lat"] = kwargs["lat"]
+        self.target_pos["lon"] = kwargs["lon"]
+        self.target_pos["lat"] = kwargs["lat"]
 
     @async_try_except(reraise=True)
     async def goto_location_ned(self, **kwargs) -> None:
@@ -363,6 +383,10 @@ class ControlManager(FCMMQTTModule):
         await self.drone.action.goto_location(
             new_lat, new_lon, new_alt, kwargs["heading"]
         )
+
+        self.target_pos["lat"] = new_lat
+        self.target_pos["lon"] = new_lon
+        self.target_pos["lat"] = new_alt
 
     @async_try_except(reraise=True)
     async def build(self, waypoints: List[dict]) -> List[MissionItem]:
