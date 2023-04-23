@@ -2,6 +2,7 @@ import asyncio
 import contextlib
 import queue
 from typing import Any, Callable, List
+import math
 
 import mavsdk
 from mavsdk.geofence import Point, Polygon
@@ -101,6 +102,9 @@ class ControlManager(FCMMQTTModule):
         self.curr_pos_init = False
 
         self.target_pos = dict()
+        self.target_pos["lat"] = math.nan
+        self.target_pos["lon"] = math.nan
+        self.target_pos["alt"] = math.nan
 
     async def connect(self) -> None:
         """
@@ -123,9 +127,6 @@ class ControlManager(FCMMQTTModule):
         # connect to the fcc
         await self.connect()
 
-        # start the mission api MQTT client
-        # self.mission_api.run_non_blocking()
-
         # start tasks
         return asyncio.gather(
             # uncomment the following lines to enable outside control
@@ -140,18 +141,31 @@ class ControlManager(FCMMQTTModule):
         while True:
             await asyncio.sleep(1)
 
+    @async_try_except()
     async def go_to_monitor(self):
         while True:
-            #check curr pos vs target pos
-            scalar_dist = self.pos_norm(self.target_pos, self.curr_pos)
-            #if within .5m set to nans
-            if scalar_dist < 0.5:
-                #we made it
-                pass
+            #check if were actively chasing a target pos
+            if ( not math.isnan(self.target_pos["lat"]) ) and self.curr_pos_init:
+                scalar_dist = await self.pos_norm(self.target_pos, self.curr_pos)
+                #if within .5m set to nans
+                if scalar_dist < 0.5:
+                    #we made it
+                    self.target_pos["lat"] = math.nan
+                    self.target_pos["lon"] = math.nan
+                    self.target_pos["alt"] = math.nan
+                    self._publish_event("goto_complete_event")
             await asyncio.sleep(1)
 
     async def pos_norm(self, lla_1, lla_2):
-        n, e, d = pymap3d.geodetic2ned(self.target_pos["lat"], self.target_pos["lat"], self.target_pos["lat"], self.curr_pos["lat"], self.curr_pos["lon"], self.curr_pos["alt"])
+        n, e, d = pymap3d.geodetic2ned(self.target_pos["lat"], self.target_pos["lon"], self.target_pos["alt"], self.curr_pos["lat"], self.curr_pos["lon"], self.curr_pos["alt"])
+        logger.debug(self.target_pos["lat"])
+        logger.debug(self.target_pos["lon"])
+        logger.debug(self.target_pos["alt"])
+        logger.debug(self.curr_pos["lat"])
+        logger.debug(self.curr_pos["lon"])
+        logger.debug(self.curr_pos["alt"])
+
+        # logger.debug(f"FCM Control: (N: {n}) -- (E: {e}) -- (D: {d})")
         return np.linalg.norm([n, e, d])
     # region ################## T E L E M E T R Y  ############################
 
@@ -346,7 +360,8 @@ class ControlManager(FCMMQTTModule):
         )
         self.target_pos["lat"] = kwargs["lat"]
         self.target_pos["lon"] = kwargs["lon"]
-        self.target_pos["lat"] = kwargs["lat"]
+        self.target_pos["alt"] = kwargs["alt"]
+        self._publish_event("go_to_started_event")
 
     @async_try_except(reraise=True)
     async def goto_location_ned(self, **kwargs) -> None:
@@ -386,7 +401,8 @@ class ControlManager(FCMMQTTModule):
 
         self.target_pos["lat"] = new_lat
         self.target_pos["lon"] = new_lon
-        self.target_pos["lat"] = new_alt
+        self.target_pos["alt"] = -1 * kwargs["d"]
+        self._publish_event("go_to_started_event")
 
     @async_try_except(reraise=True)
     async def build(self, waypoints: List[dict]) -> List[MissionItem]:
