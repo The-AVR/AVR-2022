@@ -89,7 +89,7 @@ Schema:
 
 ### Go To Location NED
 
-Description: Sends the drone to the location prescribed by lat/lon/alt. The drone will fly a straight line to this point while pointing its nose in the `heading` direction.
+Description: Sends the drone to the location prescribed by n/e/d relative to the "home" position. The drone will fly a straight line to this point while pointing its nose in the direction of the point.
 
 Schema: 
 ```json
