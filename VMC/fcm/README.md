@@ -87,6 +87,23 @@ Schema:
 }
 ```
 
+### Go To Location NED
+
+Description: Sends the drone to the location prescribed by lat/lon/alt. The drone will fly a straight line to this point while pointing its nose in the `heading` direction.
+
+Schema: 
+```json
+{
+    "action": "goto_location_ned",
+    "payload": {
+        "n": <decimal_meters_north>,
+        "e": <decimal_meters_east>,
+        "d": <decimal_meters_*down*>,
+        "heading": <decimal degrees heading>
+    }
+}
+```
+
 ### Upload Mission
 
 Description: Upload a mission to the flight controller. Waypoints can be one of `goto`, `takeoff`, or `land`. The waypoints use latitude, longitude, and relative altitude (from the drones "home" position, which can be manually updated by sending a message to avr/fcm/capture_home. Home is automatically captured on FCM boot so make sure you capture home before taking off for the first time. Waypoints can optionally use the `n` `e` `d` paradigm, in which missions are defined in the NED coordinate system relative to the home position.
