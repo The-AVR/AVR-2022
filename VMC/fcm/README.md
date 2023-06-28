@@ -13,6 +13,14 @@ drone, or sending it missions.
 
 
 # MQTT Endpoints
+Topic: `avr/fcm/capture_home`
+
+Schema: `{}`
+
+Captures the "home" position that represents 0,0,0 in the NED reference frame. 
+By default, the drone will capture this position as soon as the FCM receives data about its location. 
+It is a *prudent* idea to manually trigger this once you have placed the drone on the starting pad.
+
 Topic: `/avr/fcm/actions`
 
 ### Arm
