@@ -236,10 +236,11 @@ class TelemetryManager(FCMMQTTModule):
             self.send_message("avr/fcm/status", update) #type: ignore
 
             if mode != fcc_mode:
-                if mode in fcc_mode_map:
+                try:
                     self._publish_event(fcc_mode_map[str(mode)])
-                else:
+                except Exception as e:
                     self._publish_event("fcc_mode_error_event")
+                    logger.debug(f"Got mode {mode} not in mode map")
 
             fcc_mode = mode
             self.fcc_mode = mode
@@ -276,6 +277,14 @@ class TelemetryManager(FCMMQTTModule):
 
             self.send_message("avr/fcm/location/global", update) #type: ignore
 
+            #TODO - this is an interim solution until the AvrFcmLocationHomePayload object can be updated
+            update = {}
+            update["lat"]=position.latitude_deg
+            update["lon"]=position.longitude_deg
+            update["rel_alt"]=position.relative_altitude_m
+            update["abs_alt"]=position.absolute_altitude_m
+            self.send_message("avr/fcm/location/global_full", update) #type: ignore
+
     @async_try_except()
     async def home_lla_telemetry(self) -> None:
         """
@@ -288,7 +297,14 @@ class TelemetryManager(FCMMQTTModule):
                 lon=home_position.longitude_deg,
                 alt=home_position.relative_altitude_m,
             )
+            self.send_message("avr/fcm/location/home_full", update) #type: ignore
 
+            #TODO - this is an interim solution until the AvrFcmLocationHomePayload object can be updated
+            update = {}
+            update["lat"]=home_position.latitude_deg
+            update["lon"]=home_position.longitude_deg
+            update["rel_alt"]=home_position.relative_altitude_m
+            update["abs_alt"]=home_position.absolute_altitude_m
             self.send_message("avr/fcm/location/home", update) #type: ignore
 
     @async_try_except()

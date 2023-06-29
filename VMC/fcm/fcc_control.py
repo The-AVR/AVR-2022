@@ -94,6 +94,8 @@ class ControlManager(FCMMQTTModule):
         self.topic_map = {
             "avr/fcm/actions": self.handle_action_message,
             "avr/fcm/capture_home": self.set_home_capture,
+            "avr/fcm/location/global_full":self.position_lla_telemetry,
+            "avr/fcm/location/home_full":self.home_lla_telemetry
         }
 
         self.home_pos = dict()
@@ -158,46 +160,42 @@ class ControlManager(FCMMQTTModule):
 
     async def pos_norm(self, lla_1, lla_2):
         n, e, d = pymap3d.geodetic2ned(self.target_pos["lat"], self.target_pos["lon"], self.target_pos["alt"], self.curr_pos["lat"], self.curr_pos["lon"], self.curr_pos["alt"])
-        logger.debug(self.target_pos["lat"])
-        logger.debug(self.target_pos["lon"])
-        logger.debug(self.target_pos["alt"])
-        logger.debug(self.curr_pos["lat"])
-        logger.debug(self.curr_pos["lon"])
-        logger.debug(self.curr_pos["alt"])
+        # logger.debug(self.target_pos["lat"])
+        # logger.debug(self.target_pos["lon"])
+        # logger.debug(self.target_pos["alt"])
+        # logger.debug(self.curr_pos["lat"])
+        # logger.debug(self.curr_pos["lon"])
+        # logger.debug(self.curr_pos["alt"])
 
         # logger.debug(f"FCM Control: (N: {n}) -- (E: {e}) -- (D: {d})")
         return np.linalg.norm([n, e, d])
     # region ################## T E L E M E T R Y  ############################
 
-    @async_try_except()
-    async def position_lla_telemetry(self) -> None:
-        """
-        Runs the position_lla telemetry loop
-        """
-        logger.debug("FCM Control: position_lla telemetry loop started")
-        async for position in self.drone.telemetry.position():
-            self.curr_pos["lat"] = position.latitude_deg
-            self.curr_pos["lon"] = position.longitude_deg
-            self.curr_pos["alt"] = position.relative_altitude_m
-            if not self.curr_pos_init:
-                if self.curr_pos["lat"] is not None:
-                    self.curr_pos_init = True
-                    logger.info("FCM Control: current position initialized")
 
-    @async_try_except()
-    async def home_lla_telemetry(self) -> None:
+    def position_lla_telemetry(self, payload) -> None:
         """
-        Runs the home_lla telemetry loop
+        Handles incoming LLA telemetry from MQTT
         """
-        logger.debug("FCM Control: home_lla telemetry loop started")
-        async for home_position in self.drone.telemetry.home():
-            if not self.home_pos_init:
-                self.home_pos["lat"] = home_position.latitude_deg
-                self.home_pos["lon"] = home_position.longitude_deg
-                self.home_pos["alt"] = home_position.absolute_altitude_m
-                if self.home_pos["lat"] is not None:
-                    self.home_pos_init = True
-                    logger.info("FCM Control: home position captured")
+        self.curr_pos["lat"] = payload["lat"]
+        self.curr_pos["lon"] = payload["lon"]
+        self.curr_pos["alt"] = payload["rel_alt"]
+        if not self.curr_pos_init:
+            if self.curr_pos["lat"] is not None:
+                self.curr_pos_init = True
+                logger.info("FCM Control: current position initialized")
+
+
+    def home_lla_telemetry(self, payload) -> None:
+        """
+        Handles incoming Home LLA telemetry from MQTT
+        """
+        if not self.home_pos_init:
+            self.home_pos["lat"] = payload["lat"]
+            self.home_pos["lon"] = payload["lon"]
+            self.home_pos["alt"] = payload["abs_alt"]
+            if self.home_pos["lat"] is not None:
+                self.home_pos_init = True
+                logger.info("FCM Control: home position captured")
 
     def set_home_capture(self, payload) -> None:
         self.home_pos_init = False
