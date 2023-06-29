@@ -297,7 +297,7 @@ class TelemetryManager(FCMMQTTModule):
                 lon=home_position.longitude_deg,
                 alt=home_position.relative_altitude_m,
             )
-            self.send_message("avr/fcm/location/home_full", update) #type: ignore
+            self.send_message("avr/fcm/location/home", update) #type: ignore
 
             #TODO - this is an interim solution until the AvrFcmLocationHomePayload object can be updated
             update = {}
@@ -305,7 +305,7 @@ class TelemetryManager(FCMMQTTModule):
             update["lon"]=home_position.longitude_deg
             update["rel_alt"]=home_position.relative_altitude_m
             update["abs_alt"]=home_position.absolute_altitude_m
-            self.send_message("avr/fcm/location/home", update) #type: ignore
+            self.send_message("avr/fcm/location/home_full", update) #type: ignore
 
     @async_try_except()
     async def attitude_euler_telemetry(self) -> None:
