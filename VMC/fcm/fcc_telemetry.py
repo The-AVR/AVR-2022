@@ -326,8 +326,7 @@ class TelemetryManager(FCMMQTTModule):
                 yaw=phi,
             )
 
-            heading = (2 * math.pi) + phi if phi < 0 else phi
-            heading = math.degrees(heading)
+            heading = (math.degrees(2 * math.pi)) + phi if phi < 0 else phi
 
             self.heading = heading
 
