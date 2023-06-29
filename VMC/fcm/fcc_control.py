@@ -133,8 +133,6 @@ class ControlManager(FCMMQTTModule):
         return asyncio.gather(
             # uncomment the following lines to enable outside control
             self.action_dispatcher(),
-            self.position_lla_telemetry(),
-            self.home_lla_telemetry(),
             self.go_to_monitor()
         )
 
