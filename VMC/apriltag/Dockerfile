@@ -30,8 +30,15 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} \
 
 WORKDIR /app
 
+# Install OpenSSL and related dependencies
+RUN apt-get install -y libssl-dev
+
 # Copy libraries
-COPY src/c/libraries c/libraries
+COPY c/libraries c/libraries
+
+# Set the OpenSSL root directory
+ENV OPENSSL_ROOT_DIR=/usr/include/openssl
+
 # Install paho C library
 RUN cd c/libraries/paho.mqtt.c \
  && cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON -DPAHO_WITH_SSL=ON -DPAHO_HIGH_PERFORMANCE=ON \
@@ -50,15 +57,18 @@ RUN wget https://developer.nvidia.com/isaac/download/third_party/april_tags_v5_j
  && tar -xf april_tags_v5_jp44_nano-tar-xz --directory c/libraries \
  && rm april_tags_v5_jp44_nano-tar-xz
 # Build the april tag application
-COPY src/c/src c/src
-COPY src/c/CMakeLists.txt c/CMakeLists.txt
+COPY c/src c/src
+COPY c/CMakeLists.txt c/CMakeLists.txt
+
 RUN mkdir -p c/build \
  && cd c/build \
  && cmake .. \
  && make -j$(nproc)
-COPY --from=poetry-exporter /work/requirements.txt requirements.txt
-RUN python${PYTHON_VERSION} -m pip install -r requirements.txt
-COPY src .
+
+COPY python/requirements.txt python/requirements.txt
+RUN python3.10 -m pip install -r python/requirements.txt
+COPY . .
+
 RUN chmod +x ./docker-entrypoint.sh
 RUN rm /usr/bin/python3 && ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python3
 CMD ["./docker-entrypoint.sh"]
