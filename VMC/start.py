@@ -54,10 +54,11 @@ def apriltag_service(compose_services: dict) -> None:
     compose_services["apriltag"] = apriltag_data
 
 
-def fcm_service(compose_services: dict, local: bool = False) -> None:
+def fcm_service(compose_services: dict, local: bool = False, simulation=False) -> None:
     fcm_data = {
-        "depends_on": ["mqtt", "mavp2p"],
+        "depends_on": ["mqtt", "mavp2p" if not simulation else "simulator"],
         "restart": "unless-stopped",
+        "network_mode": "host"
     }
 
     if local:
@@ -66,6 +67,21 @@ def fcm_service(compose_services: dict, local: bool = False) -> None:
         fcm_data["image"] = f"{IMAGE_BASE}fcm:latest"
 
     compose_services["fcm"] = fcm_data
+
+def simulator_service(compose_services: dict, local: bool = False) -> None:
+    sim_data = {
+        "restart": "unless-stopped",
+        "tty": True,
+        "stdin_open": True,
+        "ports": ["5760:5760/tcp","5761:5761/tcp", "14541:14541/udp"],
+    }
+
+    if local:
+        sim_data["build"] = os.path.join(THIS_DIR, "simulator")
+    else:
+        sim_data["image"] = f"{IMAGE_BASE}simulator:latest"
+
+    compose_services["simulator"] = sim_data
 
 
 def fusion_service(compose_services: dict, local: bool = False) -> None:
@@ -86,8 +102,8 @@ def mavp2p_service(compose_services: dict, local: bool = False) -> None:
     mavp2p_data = {
         "restart": "unless-stopped",
         "devices": ["/dev/ttyTHS1:/dev/ttyTHS1"],
-        "ports": ["5760:5760/tcp"],
-        "command": "serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 udpc:fcm:14541 udpc:fcm:14542",
+        "ports": ["5760:5760/tcp","5761:5761/tcp", "14541:14541/udp"],
+        "command": "serial:/dev/ttyTHS1:500000 tcps:0.0.0.0:5760 tcps:0.0.0.0:5761 udps:0.0.0.0:14541",
     }
 
     if local:
@@ -206,12 +222,12 @@ def vio_service(compose_services: dict, local: bool = False) -> None:
     compose_services["vio"] = vio_data
 
 
-def prepare_compose_file(local: bool = False) -> str:
+def prepare_compose_file(local: bool = False, simulation=False) -> str:
     # prepare compose services dict
     compose_services = {}
 
     apriltag_service(compose_services)
-    fcm_service(compose_services, local)
+    fcm_service(compose_services, local, simulation)
     fusion_service(compose_services, local)
     mavp2p_service(compose_services, local)
     mqtt_service(compose_services, local)
@@ -219,6 +235,7 @@ def prepare_compose_file(local: bool = False) -> str:
     sandbox_service(compose_services)
     thermal_service(compose_services, local)
     vio_service(compose_services, local)
+    simulator_service(compose_services, local)
 
     # nvpmodel not available on Windows
     if os.name != "nt":
@@ -237,11 +254,11 @@ def prepare_compose_file(local: bool = False) -> str:
     return compose_file
 
 
-def main(action: str, modules: List[str], local: bool = False) -> None:
-    compose_file = prepare_compose_file(local)
+def main(action: str, modules: List[str], local: bool = False, simulation: bool = False) -> None:
+    compose_file = prepare_compose_file(local, simulation)
 
     # run docker-compose
-    project_name = "AVR-2022"
+    project_name = "avr2022"
     if os.name == "nt":
         # for some reason on Windows docker-compose doesn't like upper case???
         project_name = project_name.lower()
@@ -289,6 +306,7 @@ if __name__ == "__main__":
     norm_modules = min_modules + ["apriltag", "pcm", "status", "thermal"]
     all_modules = norm_modules + ["sandbox"]
 
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-l",
@@ -326,6 +344,13 @@ if __name__ == "__main__":
         help=f"Perform action on all modules ({', '.join(sorted(all_modules))}). Adds to any modules explicitly specified.",
     )
 
+    exgroup.add_argument(
+        "-s",
+        "--sim",
+        action="store_true",
+        help=f"Run system in simulation",
+    )
+
     args = parser.parse_args()
 
     if args.min:
@@ -341,5 +366,9 @@ if __name__ == "__main__":
         # nothing specified, default to normal
         args.modules = norm_modules
 
+    if args.sim:
+        min_modules.remove("mavp2p")
+        min_modules.append("simulator")
+
     args.modules = list(set(args.modules))  # remove duplicates
-    main(action=args.action, modules=args.modules, local=args.local)
+    main(action=args.action, modules=args.modules, local=args.local, simulation=args.sim)
