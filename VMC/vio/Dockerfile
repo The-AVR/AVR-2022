@@ -57,7 +57,7 @@ RUN apt-get update -y && apt-get install --no-install-recommends lsb-release wge
  && chmod +x ZED_SDK_Linux_JP.run ; ./ZED_SDK_Linux_JP.run silent runtime_only \
  && rm -rf /usr/local/zed/resources/* \
  && rm -rf ZED_SDK_Linux_JP.run \
- && apt-get remove --purge build-essential python3.9-dev -y && apt-get autoremove -y \
+ && apt-get remove --purge build-essential -y && apt-get autoremove -y \
  && rm -rf /var/lib/apt/lists/*
 
 # This symbolic link is needed to use the streaming features on Jetson inside a container
