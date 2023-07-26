@@ -4,6 +4,7 @@ from bell.avr.mqtt.payloads import (
 )
 from bell.avr.utils.decorators import async_try_except, try_except
 
+
 class FCMMQTTModule(MQTTModule):
     def __init__(self) -> None:
         super().__init__()
@@ -18,4 +19,4 @@ class FCMMQTTModule(MQTTModule):
             name=name,
             payload=payload,
         )
-        self.send_message("avr/fcm/events", event) #type: ignore
+        self.send_message("avr/fcm/events", event)  # type: ignore

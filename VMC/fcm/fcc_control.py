@@ -94,8 +94,8 @@ class ControlManager(FCMMQTTModule):
         self.topic_map = {
             "avr/fcm/actions": self.handle_action_message,
             "avr/fcm/capture_home": self.set_home_capture,
-            "avr/fcm/location/global_full":self.position_lla_telemetry,
-            "avr/fcm/location/home_full":self.home_lla_telemetry
+            "avr/fcm/location/global_full": self.position_lla_telemetry,
+            "avr/fcm/location/home_full": self.home_lla_telemetry,
         }
 
         self.home_pos = dict()
@@ -133,7 +133,7 @@ class ControlManager(FCMMQTTModule):
         return asyncio.gather(
             # uncomment the following lines to enable outside control
             self.action_dispatcher(),
-            self.go_to_monitor()
+            self.go_to_monitor(),
         )
 
     async def run(self) -> asyncio.Future:
@@ -144,12 +144,12 @@ class ControlManager(FCMMQTTModule):
     @async_try_except()
     async def go_to_monitor(self):
         while True:
-            #check if were actively chasing a target pos
-            if ( not math.isnan(self.target_pos["lat"]) ) and self.curr_pos_init:
+            # check if were actively chasing a target pos
+            if (not math.isnan(self.target_pos["lat"])) and self.curr_pos_init:
                 scalar_dist = await self.pos_norm(self.target_pos, self.curr_pos)
-                #if within .5m set to nans
+                # if within .5m set to nans
                 if scalar_dist < 0.5:
-                    #we made it
+                    # we made it
                     self.target_pos["lat"] = math.nan
                     self.target_pos["lon"] = math.nan
                     self.target_pos["alt"] = math.nan
@@ -157,7 +157,14 @@ class ControlManager(FCMMQTTModule):
             await asyncio.sleep(1)
 
     async def pos_norm(self, lla_1, lla_2):
-        n, e, d = pymap3d.geodetic2ned(self.target_pos["lat"], self.target_pos["lon"], self.target_pos["alt"], self.curr_pos["lat"], self.curr_pos["lon"], self.curr_pos["alt"])
+        n, e, d = pymap3d.geodetic2ned(
+            self.target_pos["lat"],
+            self.target_pos["lon"],
+            self.target_pos["alt"],
+            self.curr_pos["lat"],
+            self.curr_pos["lon"],
+            self.curr_pos["alt"],
+        )
         # logger.debug(self.target_pos["lat"])
         # logger.debug(self.target_pos["lon"])
         # logger.debug(self.target_pos["alt"])
@@ -167,8 +174,8 @@ class ControlManager(FCMMQTTModule):
 
         # logger.debug(f"FCM Control: (N: {n}) -- (E: {e}) -- (D: {d})")
         return np.linalg.norm([n, e, d])
-    # region ################## T E L E M E T R Y  ############################
 
+    # region ################## T E L E M E T R Y  ############################
 
     def position_lla_telemetry(self, payload) -> None:
         """
@@ -181,7 +188,6 @@ class ControlManager(FCMMQTTModule):
             if self.curr_pos["lat"] is not None:
                 self.curr_pos_init = True
                 logger.info("FCM Control: current position initialized")
-
 
     def home_lla_telemetry(self, payload) -> None:
         """

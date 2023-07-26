@@ -55,7 +55,6 @@ class TelemetryManager(FCMMQTTModule):
         logger.success("Telemetry: Connected to the FCC")
         self._publish_event("fcc_telemetry_connected_event")
 
-
     async def run_non_blocking(self) -> asyncio.Future:
         """
         Run the Flight Control Computer module
@@ -70,7 +69,7 @@ class TelemetryManager(FCMMQTTModule):
         return asyncio.gather(
             self.telemetry_tasks(),
         )
-    
+
     async def run(self) -> asyncio.Future:
         asyncio.gather(self.run_non_blocking())
         while True:
@@ -139,7 +138,7 @@ class TelemetryManager(FCMMQTTModule):
                 voltage=battery.voltage_v,
                 soc=battery.remaining_percent * 100.0,
             )
-            self.send_message("avr/fcm/battery", update) #type: ignore
+            self.send_message("avr/fcm/battery", update)  # type: ignore
 
     @async_try_except()
     async def in_air_telemetry(self) -> None:
@@ -173,7 +172,7 @@ class TelemetryManager(FCMMQTTModule):
                 mode=str(self.fcc_mode),
             )
 
-            self.send_message("avr/fcm/status", update) #type: ignore
+            self.send_message("avr/fcm/status", update)  # type: ignore
 
     @async_try_except()
     async def landed_state_telemetry(self) -> None:
@@ -233,7 +232,7 @@ class TelemetryManager(FCMMQTTModule):
                 armed=self.is_armed,
             )
 
-            self.send_message("avr/fcm/status", update) #type: ignore
+            self.send_message("avr/fcm/status", update)  # type: ignore
 
             if mode != fcc_mode:
                 try:
@@ -259,7 +258,7 @@ class TelemetryManager(FCMMQTTModule):
 
             update = AvrFcmLocationLocalPayload(dX=n, dY=e, dZ=d)
 
-            self.send_message("avr/fcm/location/local", update) #type: ignore
+            self.send_message("avr/fcm/location/local", update)  # type: ignore
 
     @async_try_except()
     async def position_lla_telemetry(self) -> None:
@@ -275,15 +274,15 @@ class TelemetryManager(FCMMQTTModule):
                 hdg=self.heading,
             )
 
-            self.send_message("avr/fcm/location/global", update) #type: ignore
+            self.send_message("avr/fcm/location/global", update)  # type: ignore
 
-            #TODO - this is an interim solution until the AvrFcmLocationHomePayload object can be updated
+            # TODO - this is an interim solution until the AvrFcmLocationHomePayload object can be updated
             update = {}
-            update["lat"]=position.latitude_deg
-            update["lon"]=position.longitude_deg
-            update["rel_alt"]=position.relative_altitude_m
-            update["abs_alt"]=position.absolute_altitude_m
-            self.send_message("avr/fcm/location/global_full", update) #type: ignore
+            update["lat"] = position.latitude_deg
+            update["lon"] = position.longitude_deg
+            update["rel_alt"] = position.relative_altitude_m
+            update["abs_alt"] = position.absolute_altitude_m
+            self.send_message("avr/fcm/location/global_full", update)  # type: ignore
 
     @async_try_except()
     async def home_lla_telemetry(self) -> None:
@@ -297,15 +296,15 @@ class TelemetryManager(FCMMQTTModule):
                 lon=home_position.longitude_deg,
                 alt=home_position.relative_altitude_m,
             )
-            self.send_message("avr/fcm/location/home", update) #type: ignore
+            self.send_message("avr/fcm/location/home", update)  # type: ignore
 
-            #TODO - this is an interim solution until the AvrFcmLocationHomePayload object can be updated
+            # TODO - this is an interim solution until the AvrFcmLocationHomePayload object can be updated
             update = {}
-            update["lat"]=home_position.latitude_deg
-            update["lon"]=home_position.longitude_deg
-            update["rel_alt"]=home_position.relative_altitude_m
-            update["abs_alt"]=home_position.absolute_altitude_m
-            self.send_message("avr/fcm/location/home_full", update) #type: ignore
+            update["lat"] = home_position.latitude_deg
+            update["lon"] = home_position.longitude_deg
+            update["rel_alt"] = home_position.relative_altitude_m
+            update["abs_alt"] = home_position.absolute_altitude_m
+            self.send_message("avr/fcm/location/home_full", update)  # type: ignore
 
     @async_try_except()
     async def attitude_euler_telemetry(self) -> None:
@@ -332,7 +331,7 @@ class TelemetryManager(FCMMQTTModule):
 
             # publish telemetry every tenth of a second
             rate_limit(
-                lambda: self.send_message("avr/fcm/attitude/euler", update), #type: ignore
+                lambda: self.send_message("avr/fcm/attitude/euler", update),  # type: ignore
                 frequency=10,
             )
 
@@ -350,7 +349,7 @@ class TelemetryManager(FCMMQTTModule):
                 vZ=velocity.down_m_s,
             )
 
-            self.send_message("avr/fcm/velocity", update) #type: ignore
+            self.send_message("avr/fcm/velocity", update)  # type: ignore
 
     @async_try_except()
     async def gps_info_telemetry(self) -> None:
@@ -364,11 +363,11 @@ class TelemetryManager(FCMMQTTModule):
                 fix_type=str(gps_info.fix_type),
             )
 
-            self.send_message("avr/fcm/gps_info", update) #type: ignore
+            self.send_message("avr/fcm/gps_info", update)  # type: ignore
 
     # endregion ###############################################################
+
 
 if __name__ == "__main__":
     telemetry = TelemetryManager()
     asyncio.run(telemetry.run())
-
