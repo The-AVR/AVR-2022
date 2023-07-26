@@ -29,7 +29,7 @@ RUN git -c http.sslVerify=False clone https://github.com/PX4/PX4-Autopilot.git
 WORKDIR /app/PX4-Autopilot
 
 # Checkout the right branch/tag
-RUN git -c http.sslVerify=False checkout ${PX4_VER} 
+RUN git -c http.sslVerify=False checkout ${PX4_VER}
 
 # Pull submodules
 RUN git -c http.sslVerify=False submodule update --init --recursive

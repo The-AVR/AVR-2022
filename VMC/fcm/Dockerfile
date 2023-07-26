@@ -1,7 +1,7 @@
 FROM docker.io/library/python:3.9-buster
 
 #TODO - test removal of this.. dont like that it ties it to armv8 hardware
-ENV OPENBLAS_CORETYPE=ARMV8 
+ENV OPENBLAS_CORETYPE=ARMV8
 
 WORKDIR /app
 

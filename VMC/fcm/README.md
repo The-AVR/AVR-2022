@@ -17,8 +17,8 @@ Topic: `avr/fcm/capture_home`
 
 Schema: `{}`
 
-Captures the "home" position that represents 0,0,0 in the NED reference frame. 
-By default, the drone will capture this position as soon as the FCM receives data about its location. 
+Captures the "home" position that represents 0,0,0 in the NED reference frame.
+By default, the drone will capture this position as soon as the FCM receives data about its location.
 It is a *prudent* idea to manually trigger this once you have placed the drone on the starting pad.
 
 Topic: `/avr/fcm/actions`
@@ -26,7 +26,7 @@ Topic: `/avr/fcm/actions`
 ### Arm
 Description: Arms the drone
 
-Schema: 
+Schema:
 ```json
 {
     "action": "arm",
@@ -37,7 +37,7 @@ Schema:
 ### Disarm
 Description: Disarms the drone
 
-Schema: 
+Schema:
 ```json
 {
     "action": "disarm",
@@ -45,10 +45,10 @@ Schema:
 }
 ```
 
-### Kill 
+### Kill
 Description: Similar to disarm, however this will force stop the motors even if PX4 is airborne. This is an EMERGENCY only action that could result in damage to your drone if not used appropriately.
 
-Schema: 
+Schema:
 ```json
 {
     "action": "kill",
@@ -59,7 +59,7 @@ Schema:
 
 Description: Requests the drone to land in place
 
-Schema: 
+Schema:
 ```json
 {
     "action": "land",
@@ -70,7 +70,7 @@ Schema:
 
 Description: Reboots the flight controller
 
-Schema: 
+Schema:
 ```json
 {
     "action": "reboot",
@@ -82,7 +82,7 @@ Schema:
 
 Description: Sends the drone to the location prescribed by lat/lon/alt. The drone will fly a straight line to this point while pointing its nose in the `heading` direction.
 
-Schema: 
+Schema:
 ```json
 {
     "action": "goto_location",
@@ -99,7 +99,7 @@ Schema:
 
 Description: Sends the drone to the location prescribed by n/e/d relative to the "home" position. The drone will fly a straight line to this point while pointing its nose in the direction of the point.
 
-Schema: 
+Schema:
 ```json
 {
     "action": "goto_location_ned",
@@ -116,7 +116,7 @@ Schema:
 
 Description: Upload a mission to the flight controller. Waypoints can be one of `goto`, `takeoff`, or `land`. The waypoints use latitude, longitude, and relative altitude (from the drones "home" position, which can be manually updated by sending a message to avr/fcm/capture_home. Home is automatically captured on FCM boot so make sure you capture home before taking off for the first time. Waypoints can optionally use the `n` `e` `d` paradigm, in which missions are defined in the NED coordinate system relative to the home position.
 
-Schema: 
+Schema:
 ```json
 {
     "action": "upload_mission",
@@ -143,7 +143,7 @@ Schema:
 
 Description: Requests the drone to start the mission.
 
-Schema: 
+Schema:
 ```json
 {
     "action": "start_mission",
