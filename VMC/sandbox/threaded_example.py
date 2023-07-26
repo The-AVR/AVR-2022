@@ -1,6 +1,10 @@
 # Importing the necessary libraries for the MQTT communication, logging, and threading
-from bell.avr.mqtt.client import MQTTModule  # MQTTModule class from the MQTT client library
-from bell.avr.mqtt.payloads import AvrFcmStatusPayload  # Importing a specific payload class for message handling
+from bell.avr.mqtt.client import (
+    MQTTModule,
+)  # MQTTModule class from the MQTT client library
+from bell.avr.mqtt.payloads import (
+    AvrFcmStatusPayload,
+)  # Importing a specific payload class for message handling
 
 import time
 from threading import Thread
@@ -27,12 +31,16 @@ class Sandbox(MQTTModule):
 
     # Function to handle the status message. It updates the system's armed status
     def handle_status_message(self, payload: AvrFcmStatusPayload) -> None:
-        armed = payload["armed"]  # Extracting the 'armed' status from the message payload
+        armed = payload[
+            "armed"
+        ]  # Extracting the 'armed' status from the message payload
         self.is_armed = armed  # Updating the system's armed status
 
     # Function to handle the vio message. It updates the confidence value
     def handle_vio_message(self, payload: dict) -> None:
-        confidence = payload["tracker"]  # Extracting the 'tracker' value from the message payload
+        confidence = payload[
+            "tracker"
+        ]  # Extracting the 'tracker' value from the message payload
         if confidence >= 0 and confidence <= 100:  # Validating the confidence value
             self.confidence = confidence  # Updating the confidence value
 
@@ -60,7 +68,9 @@ if __name__ == "__main__":
 
     # Create a new thread for running the loop function independently of the main program
     loop_thread = Thread(target=box.loop)
-    loop_thread.setDaemon(True)  # Setting the thread as a Daemon so it will end when the main program ends
+    loop_thread.setDaemon(
+        True
+    )  # Setting the thread as a Daemon so it will end when the main program ends
     loop_thread.start()  # Starting the new thread
 
     box.run()  # Running the main MQTT client
