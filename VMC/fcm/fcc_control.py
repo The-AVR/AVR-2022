@@ -91,11 +91,11 @@ class ControlManager(FCMMQTTModule):
         # queues
         self.action_queue = queue.Queue()
 
-        self.topic_map = { #type: ignore
-            "avr/fcm/actions": self.handle_action_message, #type: ignore
-            "avr/fcm/capture_home": self.set_home_capture, #type: ignore
-            "avr/fcm/location/global_full": self.position_lla_telemetry, #type: ignore
-            "avr/fcm/location/home_full": self.home_lla_telemetry, #type: ignore
+        self.topic_map = {  # type: ignore
+            "avr/fcm/actions": self.handle_action_message,  # type: ignore
+            "avr/fcm/capture_home": self.set_home_capture,  # type: ignore
+            "avr/fcm/location/global_full": self.position_lla_telemetry,  # type: ignore
+            "avr/fcm/location/home_full": self.home_lla_telemetry,  # type: ignore
         }
 
         self.home_pos = dict()
