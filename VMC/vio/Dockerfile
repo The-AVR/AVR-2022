@@ -45,7 +45,8 @@ RUN curl -sS https://bootstrap.pypa.io/get-pip.py | python${PYTHON_VERSION} \
 # I understand this is bad to do, but the ZEDSDK installs a bunch of
 # packages into `python3`, so setting this to our desired version reduces
 # duplicate installs
-RUN rm /usr/bin/python3 && ln -s /usr/bin/python3.9 /usr/bin/python3
+RUN rm /usr/bin/python3 && ln -s /usr/bin/python${PYTHON_VERSION} /usr/bin/python3
+
 
 # This environment variable is needed to use the streaming features on Jetson inside a container
 ENV LOGNAME root
