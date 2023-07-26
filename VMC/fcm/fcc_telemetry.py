@@ -1,14 +1,11 @@
 import asyncio
 import math
 import time
-from typing import Any, Callable, List
 
 import mavsdk
-from bell.avr.mqtt.client import MQTTModule
 from bell.avr.mqtt.payloads import (
     AvrFcmAttitudeEulerPayload,
     AvrFcmBatteryPayload,
-    AvrFcmEventsPayload,
     AvrFcmGpsInfoPayload,
     AvrFcmLocationGlobalPayload,
     AvrFcmLocationHomePayload,
@@ -16,11 +13,10 @@ from bell.avr.mqtt.payloads import (
     AvrFcmStatusPayload,
     AvrFcmVelocityPayload,
 )
-from bell.avr.utils.decorators import async_try_except, try_except
+from bell.avr.utils.decorators import async_try_except
 from bell.avr.utils.timing import rate_limit
-from loguru import logger
 from fcc_mqtt import FCMMQTTModule
-import sys
+from loguru import logger
 
 
 class TelemetryManager(FCMMQTTModule):
