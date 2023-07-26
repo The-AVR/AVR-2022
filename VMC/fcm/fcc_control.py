@@ -91,11 +91,11 @@ class ControlManager(FCMMQTTModule):
         # queues
         self.action_queue = queue.Queue()
 
-        self.topic_map = {
-            "avr/fcm/actions": self.handle_action_message,
-            "avr/fcm/capture_home": self.set_home_capture,
-            "avr/fcm/location/global_full": self.position_lla_telemetry,
-            "avr/fcm/location/home_full": self.home_lla_telemetry,
+        self.topic_map = { #type: ignore
+            "avr/fcm/actions": self.handle_action_message, #type: ignore
+            "avr/fcm/capture_home": self.set_home_capture, #type: ignore
+            "avr/fcm/location/global_full": self.position_lla_telemetry, #type: ignore
+            "avr/fcm/location/home_full": self.home_lla_telemetry, #type: ignore
         }
 
         self.home_pos = dict()
@@ -142,7 +142,7 @@ class ControlManager(FCMMQTTModule):
             await asyncio.sleep(1)
 
     @async_try_except()
-    async def go_to_monitor(self):
+    async def go_to_monitor(self) -> None:
         while True:
             # check if were actively chasing a target pos
             if (not math.isnan(self.target_pos["lat"])) and self.curr_pos_init:
@@ -156,7 +156,7 @@ class ControlManager(FCMMQTTModule):
                     self._publish_event("goto_complete_event")
             await asyncio.sleep(1)
 
-    async def pos_norm(self, lla_1, lla_2):
+    async def pos_norm(self, lla_1: dict, lla_2: dict) -> np.floating[Any]:
         n, e, d = pymap3d.geodetic2ned(
             self.target_pos["lat"],
             self.target_pos["lon"],
@@ -177,7 +177,7 @@ class ControlManager(FCMMQTTModule):
 
     # region ################## T E L E M E T R Y  ############################
 
-    def position_lla_telemetry(self, payload) -> None:
+    def position_lla_telemetry(self, payload: dict) -> None:
         """
         Handles incoming LLA telemetry from MQTT
         """
@@ -189,7 +189,7 @@ class ControlManager(FCMMQTTModule):
                 self.curr_pos_init = True
                 logger.info("FCM Control: current position initialized")
 
-    def home_lla_telemetry(self, payload) -> None:
+    def home_lla_telemetry(self, payload: dict) -> None:
         """
         Handles incoming Home LLA telemetry from MQTT
         """
@@ -201,14 +201,14 @@ class ControlManager(FCMMQTTModule):
                 self.home_pos_init = True
                 logger.info("FCM Control: home position captured")
 
-    def set_home_capture(self, payload) -> None:
+    def set_home_capture(self, payload: dict) -> None:
         self.home_pos_init = False
 
     # endregion ###############################################################
 
     # region ################## D I S P A T C H E R  ##########################
 
-    def handle_action_message(self, payload):
+    def handle_action_message(self, payload: dict) -> None:
         self.action_queue.put(payload)
 
     @async_try_except()
