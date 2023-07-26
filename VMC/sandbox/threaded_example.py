@@ -17,7 +17,7 @@ class Sandbox(MQTTModule):
         # Subscribe to MQTT topics and give them a call back function here
         self.topic_map = {
             "avr/fcm/status": self.handle_status_message,
-            "avr/vio/confidence": self.handle_vio_message,
+            "avr/vio/confidence": self.handle_vio_message,  # type: ignore (to appease type checker)
         }
 
         # Defining a variable to keep track of the vehicle's armed status
@@ -45,7 +45,7 @@ class Sandbox(MQTTModule):
             self.confidence = confidence  # Updating the confidence value
 
     # The main loop where the system checks its status and updates the color accordingly
-    def loop(self):
+    def loop(self) -> None:
         while True:  # Runs in an Infinite loop
             # set the color according to our conditions
             color = self.color_red
@@ -57,7 +57,7 @@ class Sandbox(MQTTModule):
             # Sends a message with the new color
             # this is where you can send your waypoint messages
             # see the FCM for message definition
-            self.send_message("avr/pcm/set_base_color", {"wrgb": color})
+            self.send_message("avr/pcm/set_base_color", {"wrgb": color})  # type: ignore (to appease type checker)
             time.sleep(1)  # Wait for 1 second before the next iteration
 
 
