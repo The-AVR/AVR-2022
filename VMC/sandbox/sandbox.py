@@ -60,7 +60,7 @@ class Sandbox(MQTTModule):
         # Pro-tip, if you set `python.analysis.typeCheckingMode` to `basic` in you
         # VS Code preferences, you'll get a red underline if your payload doesn't
         # match the expected format for the topic.
-        self.send_message(
+        self.send_message(  # type: ignore (to appease type checker)
             "avr/pcm/set_servo_open_close",
             {"servo": 0, "action": "open"},
         )

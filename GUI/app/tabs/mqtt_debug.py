@@ -4,6 +4,7 @@ import contextlib
 import json
 from typing import Any, Dict, List, Optional, Tuple
 
+from bell.avr.mqtt.constants import MQTTTopicPayload, MQTTTopics
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from .base import BaseTabWidget
@@ -61,9 +62,6 @@ class ExpandCollapseQTreeWidget(QtWidgets.QTreeWidget):
     copy_topic: QtCore.SignalInstance = QtCore.Signal(object)  # type: ignore
     copy_payload: QtCore.SignalInstance = QtCore.Signal(object)  # type: ignore
     preload_data: QtCore.SignalInstance = QtCore.Signal(object)  # type: ignore
-
-    def __init__(self, *args, **kwargs) -> None:
-        super().__init__(*args, **kwargs)
 
     def contextMenuEvent(self, event: QtGui.QContextMenuEvent) -> None:
         # override the normal right click event. This only works on the TreeWidget
@@ -155,19 +153,19 @@ class MQTTDebugWidget(BaseTabWidget):
         layout = QtWidgets.QVBoxLayout(self)
         self.setLayout(layout)
 
-        main_layout = QtWidgets.QSplitter(QtCore.Qt.Vertical)
+        main_layout = QtWidgets.QSplitter(QtCore.Qt.Orientation.Vertical)
         layout.addWidget(main_layout)
 
         # viewing widget
         viewer_widget = QtWidgets.QGroupBox("Viewer")
         viewer_layout = QtWidgets.QVBoxLayout()
-        viewer_splitter = QtWidgets.QSplitter(QtCore.Qt.Horizontal)
+        viewer_splitter = QtWidgets.QSplitter(QtCore.Qt.Orientation.Horizontal)
         viewer_widget.setLayout(viewer_layout)
 
         self.tree_widget = ExpandCollapseQTreeWidget(self)
         self.tree_widget.setHeaderLabels(["Topic", "# Messages"])
         self.tree_widget.setSortingEnabled(True)
-        self.tree_widget.sortByColumn(0, QtCore.Qt.AscendingOrder)
+        self.tree_widget.sortByColumn(0, QtCore.Qt.SortOrder.AscendingOrder)
         self.tree_widget.setAnimated(True)
         self.tree_widget.setIndentation(10)
         self.tree_widget.itemSelectionChanged.connect(self.connect_topic_to_display)  # type: ignore
@@ -191,10 +189,22 @@ class MQTTDebugWidget(BaseTabWidget):
         sender_layout = QtWidgets.QFormLayout()
         sender_widget.setLayout(sender_layout)
 
-        self.topic_line_edit = QtWidgets.QLineEdit()
-        sender_layout.addRow(QtWidgets.QLabel("Topic:"), self.topic_line_edit)
+        self.topic_combo_box = QtWidgets.QComboBox()
+        self.topic_combo_box.addItems(list(MQTTTopics))
+        # allow custom text, but don't modify the original data set
+        self.topic_combo_box.setEditable(True)
+        self.topic_combo_box.setInsertPolicy(QtWidgets.QComboBox.InsertPolicy.NoInsert)
+        # change completer to have a popup
+        self.topic_combo_box.completer().setCompletionMode(
+            QtWidgets.QCompleter.CompletionMode.PopupCompletion
+        )
+        self.topic_combo_box.setCurrentText("")
+        sender_layout.addRow(QtWidgets.QLabel("Topic:"), self.topic_combo_box)
+
+        self.payload_text_edit_interaction = False
         self.payload_text_edit = QtWidgets.QPlainTextEdit()
         sender_layout.addRow(QtWidgets.QLabel("Payload:"), self.payload_text_edit)
+
         self.send_button = QtWidgets.QPushButton("Send")
         sender_layout.addRow(self.send_button)
 
@@ -205,9 +215,11 @@ class MQTTDebugWidget(BaseTabWidget):
         self.tree_widget.copy_payload.connect(self.copy_payload)
         self.tree_widget.preload_data.connect(self.preload_data)
 
+        self.topic_combo_box.textActivated.connect(self.topic_selected)  # type: ignore
+        self.payload_text_edit.textChanged.connect(self.reset_payload_text_edit_interaction)  # type: ignore
         self.send_button.clicked.connect(  # type: ignore
             lambda: self.send_message(
-                self.topic_line_edit.text(), self.payload_text_edit.toPlainText()
+                self.topic_combo_box.currentText(), self.payload_text_edit.toPlainText()
             )
         )
 
@@ -353,8 +365,8 @@ class MQTTDebugWidget(BaseTabWidget):
         """
         topic = _rebuild_topic(item)
 
-        self.clipboard.clear(mode=self.clipboard.Clipboard)
-        self.clipboard.setText(topic, mode=self.clipboard.Clipboard)
+        self.clipboard.clear(mode=self.clipboard.Mode.Clipboard)
+        self.clipboard.setText(topic, mode=self.clipboard.Mode.Clipboard)
 
     def copy_payload(self, item: QtWidgets.QTreeWidgetItem) -> None:
         """
@@ -363,8 +375,8 @@ class MQTTDebugWidget(BaseTabWidget):
         topic = _rebuild_topic(item)
         payload = self.get_payload(topic)
 
-        self.clipboard.clear(mode=self.clipboard.Clipboard)
-        self.clipboard.setText(payload, mode=self.clipboard.Clipboard)
+        self.clipboard.clear(mode=self.clipboard.Mode.Clipboard)
+        self.clipboard.setText(payload, mode=self.clipboard.Mode.Clipboard)
 
     def preload_data(self, item: QtWidgets.QTreeWidgetItem) -> None:
         """
@@ -373,5 +385,32 @@ class MQTTDebugWidget(BaseTabWidget):
         topic = _rebuild_topic(item)
         payload = self.get_payload(topic)
 
-        self.topic_line_edit.setText(topic)
+        self.topic_combo_box.setCurrentText(topic)
         self.payload_text_edit.setPlainText(payload)
+
+    def reset_payload_text_edit_interaction(self) -> None:
+        """
+        When the user changes text in the text edit, consider it to have been
+        interacted with. Only exception is if it has been blanked.
+        """
+        # if there is already text, consider the user to have interacted
+        # if there is no text, reset interaction tracker
+        self.payload_text_edit_interaction = self.payload_text_edit.toPlainText() != ""
+
+    def topic_selected(self, text: str) -> None:
+        """
+        When a topic is selected from QCompletor, create an empty JSON structure
+        to help the user.
+        """
+        # skip if the user has edited text since we last set it
+        if self.payload_text_edit_interaction:
+            return
+
+        payload = MQTTTopicPayload[self.topic_combo_box.currentText()]
+        starter_data = {key: None for key in payload.__required_keys__}
+
+        self.payload_text_edit.blockSignals(True)
+        self.payload_text_edit.setPlainText(json.dumps(starter_data, indent=4))
+        self.payload_text_edit.blockSignals(False)
+
+        self.payload_text_edit_interaction = False

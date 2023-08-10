@@ -126,12 +126,12 @@ def main(development):
     # because of weird situations
     with contextlib.suppress(subprocess.CalledProcessError):
         # check if we're on the main branch
-        if not development:
-            print("Making sure we're on the main branch")
-            current_branch = subprocess.check_output(original_user_cmd(orig_username, ["git", "rev-parse", "--abbrev-ref", "HEAD"]), cwd=AVR_DIR).decode("utf-8").strip()
-            if current_branch != "main":
-                print(f"{LIGHTRED}WARNING:{NC} Not currently on the main branch, run 'git checkout main && git pull' then re-run this script")
-                sys.exit(1)
+        # if not development:
+        #     print("Making sure we're on the main branch")
+        #     current_branch = subprocess.check_output(original_user_cmd(orig_username, ["git", "rev-parse", "--abbrev-ref", "HEAD"]), cwd=AVR_DIR).decode("utf-8").strip()
+        #     if current_branch != "main":
+        #         print(f"{LIGHTRED}WARNING:{NC} Not currently on the main branch, run 'git checkout main && git pull' then re-run this script")
+        #         sys.exit(1)
 
         # check if we're on the latest commit
         print("Making sure we have the latest code")
@@ -255,7 +255,8 @@ def main(development):
 
 
     print_title("Installing Boot Services")
-    services = ["spio-mount.service", "fan-100.service"]
+    # services = ["spio-mount.service", "fan-100.service"]
+    services = ["fan-100.service"]
     for service in services:
         print(f"Installing {service}")
         shutil.copy(os.path.join(AVR_DIR, "VMC", "scripts", service), "/etc/systemd/system/")

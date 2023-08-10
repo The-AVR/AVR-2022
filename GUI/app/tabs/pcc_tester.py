@@ -121,7 +121,7 @@ class PCCTesterWidget(BaseTabWidget):
         red_led_label = QtWidgets.QLabel("Red")
         led_layout.addWidget(red_led_label, 0, 0, 1, 1)
 
-        self.red_led_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.red_led_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
         self.red_led_slider.setRange(0, 255)
         led_layout.addWidget(self.red_led_slider, 0, 1, 1, 5)
 
@@ -135,7 +135,7 @@ class PCCTesterWidget(BaseTabWidget):
         green_led_label = QtWidgets.QLabel("Green")
         led_layout.addWidget(green_led_label, 1, 0, 1, 1)
 
-        self.green_led_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.green_led_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
         self.green_led_slider.setRange(0, 255)
         led_layout.addWidget(self.green_led_slider, 1, 1, 1, 5)
 
@@ -149,7 +149,7 @@ class PCCTesterWidget(BaseTabWidget):
         blue_led_label = QtWidgets.QLabel("Blue")
         led_layout.addWidget(blue_led_label, 2, 0, 1, 1)
 
-        self.blue_led_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal)
+        self.blue_led_slider = QtWidgets.QSlider(QtCore.Qt.Orientation.Horizontal)
         self.blue_led_slider.setRange(0, 255)
         led_layout.addWidget(self.blue_led_slider, 2, 1, 1, 5)
 
