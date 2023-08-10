@@ -255,7 +255,8 @@ def main(development):
 
 
     print_title("Installing Boot Services")
-    services = ["spio-mount.service", "fan-100.service"]
+    # services = ["spio-mount.service", "fan-100.service"]
+    services = ["fan-100.service"]
     for service in services:
         print(f"Installing {service}")
         shutil.copy(os.path.join(AVR_DIR, "VMC", "scripts", service), "/etc/systemd/system/")
