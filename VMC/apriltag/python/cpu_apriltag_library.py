@@ -31,11 +31,11 @@ class AprilTagWrapper:
         Takes an image as input and returns the detected apriltags in list format
         """
         return self.detector.detect(
-            frame,
+            frame,  #  type: ignore
             estimate_tag_pose=True,
             camera_params=self.camera_params,
             tag_size=self.tag_size,
-        )
+        )  #  type: ignore
 
 
 class AprilTagVPS:

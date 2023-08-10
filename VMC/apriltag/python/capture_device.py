@@ -58,13 +58,13 @@ class CaptureDevice:
         self.cv = cv2.VideoCapture(connection_string)
 
     def read(self) -> Tuple[bool, Optional[cv2.Mat]]:
-        return self.cv.read()
+        return self.cv.read()  #  type:ignore
 
     def read_gray(self) -> Tuple[bool, Optional[cv2.Mat]]:
         ret, img = self.cv.read()
         if ret:
             img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        return ret, img
+        return ret, img  #  type:ignore
 
     @run_forever(frequency=100)
     def run(self) -> None:
