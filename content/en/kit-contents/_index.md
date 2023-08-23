@@ -17,7 +17,7 @@ assembly of the drone.
 
 ## Boxes in AVR Kit
 
-The first shipment of your AVR kit will contain the following boxes. Be sure to read the label on each box to gain a high level understanding of the components inside.
+The AVR kit will contain the following boxes. Be sure to read the label on each box to gain a high level understanding of the components inside.
 
 ![AVR kit boxes from first shipment](avr_kit_boxes.jpg)
 
