@@ -1,17 +1,9 @@
 ---
 title: "Flashing the SD Card"
-weight: 1
+weight: 2
 ---
 
-{{% pageinfo color="warning" %}}
-Your Jetson should already have the operating system installed and configured for you.
-These instructions are provided in case you need to wipe your Jetson and start fresh.
-{{% /pageinfo %}}
-
-First, you need to download the Jetson's operating system. The file you want is
-[jetson-nano-jp461-sd-card-image.zip](https://developer.nvidia.com/embedded/l4t/r32_release_v7.1/jp_4.6.1_b110_sd_card/jeston_nano/jetson-nano-jp461-sd-card-image.zip).
-For reference, this is the latest "Jetson Nano Developer Kit SD Card Image" from
-[Nvidia's website](https://developer.nvidia.com/embedded/downloads).
+First, you need to download the Jetson's operating system. A custom image with a baseline AVR software can be found here [avr23.zip](https://avr2023storage.blob.core.windows.net/avr-drone/avr23new.zip).
 This is a large file, so it will take a while.
 
 After the `.zip` file finishes downloading, extract this file, and plug in your
@@ -33,8 +25,6 @@ When you launch the application, it should look something like this:
 1. Make sure the correct device is selected. If your microSD card is not blank,
    it will probably have a different label.
 2. Select the `.img` file in the folder you extracted.
-
-![sd-blob-b01.img](2022-05-20-09-38-54.png)
 
 You will now be able to click the "START" button in Rufus. Go ahead and click this.
 You will get a number of warnings that you're about to format and wipe this

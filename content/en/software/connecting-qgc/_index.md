@@ -1,6 +1,6 @@
 ---
 title: "Connecting QGC"
-weight: 4
+weight: 5
 ---
 
 Once you have the VMC software running on your drone,
