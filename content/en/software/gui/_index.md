@@ -1,6 +1,6 @@
 ---
 title: "GUI"
-weight: 6
+weight: 7
 ---
 
 ## Setup

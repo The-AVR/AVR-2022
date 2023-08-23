@@ -1,6 +1,6 @@
 ---
 title: "Connecting to the Jetson"
-weight: 1
+weight: 2
 ---
 
 You'll need to login to your Jetson many times to setup and run software.

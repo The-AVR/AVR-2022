@@ -1,6 +1,6 @@
 ---
 title: "Updating VMC Software"
-weight: 2
+weight: 3
 ---
 
 ## Connecting to Internet

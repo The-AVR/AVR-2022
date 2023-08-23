@@ -1,6 +1,6 @@
 ---
 title: "Flight Controller Parameters"
-weight: 5
+weight: 6
 ---
 
 After configuring the AVR software on your Jetson,
