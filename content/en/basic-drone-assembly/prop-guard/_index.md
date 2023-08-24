@@ -24,9 +24,6 @@ Locate the following items below in both your first and second kit shipments.
 
 ![Prop Guard Components and Hardware](Prop_guard_part_overview.jpeg)
 
-The M3 x 22mm bolts and M3 Nuts can be found in the first shipment.
-The clear polycarbonate prop guard pieces, short stand-offs (the pack of 4), long stand-offs (the multipack), and M3 x 15mm bolts (unlabeled bag) can be found in the wave 2 kit.
-
 Fasten lower prop guard bracket to motor arm using agreed upon method.
 
 {{% alert title="Warning" color="warning" %}}

@@ -4,14 +4,6 @@ weight: 1
 description: "This page will explain how to mount the 4-in-1 ESC to the midplate"
 ---
 
-{{% alert title="Warning" color="warning" %}}
-The Bell AVR team has become aware of a firmware issue with the ESC’s that were shipped
-in the initial kits. A new ESC with the correct firmware will be included in your
-Wave 2 Kit, along with a prepaid shipping label to return the original one.
-Please be aware that if you mount your ESC now,
-there will be additional rework to replace your ESC prior to flight testing.
-{{% /alert %}}
-
 ## Mounting
 
 {{% alert title="Note" color="note" %}}
