@@ -45,7 +45,7 @@ A good kit that contains most of the tools that you will need can be found here:
 ## Useful Links
 
 - [RoboticsEducation.org](https://www.roboticseducation.org/teams/bell-advanced-vertical-robotics/)
-- [Game Manual](https://www.roboticseducation.org/documents/2022/08/emergency-firefighting-challenge-bell-avr-competition-game-manual.pdf/)
-- [Game Video](https://youtu.be/iJml75fcsLg)
+- [Game Manual](https://roboticseducation.org/documents/2023/08/recon-rescue-firefighting-challenge-avr-game-manual.pdf/)
+- [Game Video](https://youtu.be/96G827QqPd8)
 - [Bell AVR Forum](https://www.bellavrforum.org/)
 - [Software Source Code](https://github.com/bellflight/AVR-2022)
