@@ -29,6 +29,6 @@ description: "3D prints for the fire escape platform"
   - STEP FILE: [GOLFBALL-HOLDER-PLATE.step](https://cad.onshape.com/documents/e0418fcfaa11514ea343f796)
 
 The fire escape platform was designed to be assembled using hot glue and should look
-like the image below when completed.
+like the image below when completed. 15% infill should suffice for this assembly.
 
 ![Fire Escape Platform](FireEscapePlatform.jpg)
