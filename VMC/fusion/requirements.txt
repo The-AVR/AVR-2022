@@ -1,4 +1,4 @@
-loguru==0.6.0
+loguru==0.7.2
 numpy==1.23.1
 pymap3d==3.0.1
 bell-avr-libraries[mqtt]==0.1.9
