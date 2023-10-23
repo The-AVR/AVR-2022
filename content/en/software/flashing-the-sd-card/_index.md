@@ -3,7 +3,7 @@ title: "Flashing the SD Card"
 weight: 1
 ---
 
-First, you need to download the Jetson's operating system. A custom image with a baseline AVR software can be found here [avr23.zip](https://avr2023storage.blob.core.windows.net/avr-drone/avr23new.zip).
+First, you need to download the Jetson's operating system. A custom image with a baseline AVR software can be found here [avr23.zip](https://avr2023storage.blob.core.windows.net/avr-drone/avr23new_compat.zip).
 This is a large file, so it will take a while.
 
 After the `.zip` file finishes downloading, extract this file, and plug in your
