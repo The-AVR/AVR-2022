@@ -16,7 +16,7 @@ location prior to launching your autonomous code.
 
 # {{< youtube 7mzvU93jVR0 >}}
 
-This following sections will help you with:
+The following sections will help you with:
 
 - Installing and using VS Code to manage your project
 - Installing and using Python
