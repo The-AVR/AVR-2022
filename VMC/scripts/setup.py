@@ -256,20 +256,20 @@ def main(development):
 
     print_title("Installing Boot Services")
     # services = ["spio-mount.service", "fan-100.service"]
-    services = ["fan-100.service"]
-    for service in services:
-        print(f"Installing {service}")
-        shutil.copy(os.path.join(AVR_DIR, "VMC", "scripts", service), "/etc/systemd/system/")
-        subprocess.check_call(["systemctl", "enable", service])
-        subprocess.check_call(["systemctl", "start", service])
-    print_bar()
+    #services = ["fan-100.service"]
+    #for service in services:
+    #    print(f"Installing {service}")
+    #    shutil.copy(os.path.join(AVR_DIR, "VMC", "scripts", service), "/etc/systemd/system/")
+    #    subprocess.check_call(["systemctl", "enable", service])
+    #    subprocess.check_call(["systemctl", "start", service])
+    #print_bar()
 
 
 
     print_title("Obtaining ZED Camera Configuration")
     zed_settings_dir = os.path.join(AVR_DIR, 'VMC/vio/settings')
 
-    zed_serial = subprocess.check_output(["docker", "run", "--rm", "--mount", f"type=bind,source={zed_settings_dir},target=/usr/local/zed/settings/", "--privileged", "docker.io/stereolabs/zed:3.7-py-runtime-l4t-r32.6", "python3", "-c", "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();"]).decode("utf-8").strip()
+    zed_serial = subprocess.check_output(["docker", "run", "--rm", "--mount", f"type=bind,source={zed_settings_dir},target=/usr/local/zed/settings/", "--privileged", "docker.io/stereolabs/zed:3.8-py-runtime-l4t-r35.1", "python3", "-c", "import pyzed.sl;z=pyzed.sl.Camera();z.open();print(z.get_camera_information().serial_number);z.close();"]).decode("utf-8").strip()
     if zed_serial == "0":
         print(f"{LIGHTRED}WARNING:{NC} ZED camera not detected, skipping settings download")
     else:
@@ -294,13 +294,13 @@ def main(development):
         subprocess.check_call(["docker", "login", "ghcr.io"])
 
     # pull images
-    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "pull", "--norm"]
+    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "pull", "--min"]
     if development:
         cmd.append("--local")
     subprocess.check_call(cmd)
 
     # build images
-    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "build", "--norm"]
+    cmd = ["python3", os.path.join(AVR_DIR, "VMC", "start.py"), "build", "--min"]
     if development:
         cmd.append("--local")
     subprocess.check_call(cmd)
