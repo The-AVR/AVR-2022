@@ -55,7 +55,7 @@ jobs:
 
       - name: Upload Firmware to Pipeline
         if: github.event_name != 'push'
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: PCC Firmware
           path: PCC/.pio/build/adafruit_feather_m4/*.bin
