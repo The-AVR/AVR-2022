@@ -33,7 +33,7 @@ jobs:
           cache-dependency-path: PCC
 
       - name: Cache PlatformIO
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: PCC/.pio
           key: pio-${{ hashFiles('PCC/platformio.ini') }}-${{ hashFiles('PCC/requirements.txt') }}

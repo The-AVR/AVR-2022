@@ -33,7 +33,7 @@ jobs:
 
       - name: Cache PX4
         if: inputs.image == 'fcm'
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: PX4/build
           # can't run hashfiles on the build directory because the contents change
